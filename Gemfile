@@ -10,7 +10,7 @@ gem 'rails', '3.1.3'
 gem "mongoid", "~> 2.3"
 gem "bson_ext", "~> 1.4"
 gem 'unicorn'
-
+#gem instagram .. wait for it to be resolved
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -21,6 +21,18 @@ group :assets do
 end
 
 gem 'jquery-rails'
+
+#for instagram -- instagram was installed has a plugin.. be careful
+gem 'faraday_middleware', '~> 0.3.1'
+#gem 'multi_json', '~> 0.0.5'
+gem 'hashie',  '>= 0.4.0'
+gem "faraday", '~> 0.5.3'
+gem 'haml'
+
+#foursquare api gem
+gem "json"
+gem "typhoeus", '~> 0.2.2'
+gem "quimby"
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

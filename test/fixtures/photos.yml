@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  ig_media_id: MyString
+  url_s: MyString
+  url_l: MyString
+  caption: MyString
+  time_taken: MyString
+  lng: 1.5
+  lat: 1.5
+
+two:
+  ig_media_id: MyString
+  url_s: MyString
+  url_l: MyString
+  caption: MyString
+  time_taken: MyString
+  lng: 1.5
+  lat: 1.5

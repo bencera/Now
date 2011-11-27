@@ -1,5 +1,11 @@
 Ubimachine::Application.routes.draw do
   get "home/index"
+  
+  match "/auth/instagram/callback" => "sessions#callback"
+  
+  resources :photos, :venues
+  
+  #resources :searches, :only => [:index], :as => 'autocomplete'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  email: MyString
+  ig_username: MyString
+  ig_fullname: MyString
+  ig_accesstoken: MyString
+  ig_profilepic: MyString
+  ig_id: MyString
+  ig_bio: MyString
+  ig_website: MyString
+
+two:
+  email: MyString
+  ig_username: MyString
+  ig_fullname: MyString
+  ig_accesstoken: MyString
+  ig_profilepic: MyString
+  ig_id: MyString
+  ig_bio: MyString
+  ig_website: MyString
