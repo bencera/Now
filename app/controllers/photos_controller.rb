@@ -1,6 +1,7 @@
 class PhotosController < ApplicationController
   
   def index
+    #algo de tri... 
     @photos = Photo.all
   end
   

@@ -1,10 +1,10 @@
 class Photo
   include Mongoid::Document
-  field :ig_media_id, :type => String
-  field :url_s, :type => String
-  field :url_l, :type => String
-  field :caption, :type => String
-  field :time_taken, :type => String
+  field :ig_media_id
+  field :url_s
+  field :url_l
+  field :caption
+  field :time_taken, :type => Integer
   field :lng, :type => Float
   field :lat, :type => Float
   belongs_to :venue

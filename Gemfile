@@ -32,8 +32,8 @@ gem 'haml'
 #foursquare api gem
 gem "json"
 gem "typhoeus", '~> 0.2.2'
-gem "quimby"
-
+#installed pierre valade gem as plugin "rails plugin install https://github.com/pierrevalade/quimby.git"
+#gem "quimby"
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

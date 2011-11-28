@@ -1,5 +1,5 @@
-/ index.html.haml for the Autocomplete Controller
-
-/- data = []
-/- data << {:label => "#{h(p.caption)}", :value => "#{h(p.caption)}" }
-/= data.to_json
+- @venues.each do |venue|
+  .venue
+    = link_to venue.name, venue_path(venue.id)
+    %span
+      = "#{venue.location.address} · #{venue.stats['checkinsCount']} checkins"

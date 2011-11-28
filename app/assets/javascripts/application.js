@@ -12,6 +12,13 @@ $(function() {
 	$('.auto_search_complete').autocomplete({
     minLength: 1,
     delay: 300,
+//ne marche pas, faire en sorte que quand clique sur la venue ca va direct sur la venue
+	select: function(event, ui) {
+		
+		$( ".auto_search_complete" ).bind( "autocompleteselect", function(event, ui) {
+			alert("Hello");
+		});
+	},
     source: function(request, response) {
         $.ajax({
             url: "https://api.foursquare.com/v2/venues/suggestCompletion?ll=40.7,-74&query=" + request.term +"&oauth_token=JBU4PLVELHYKL33FXV3Z04NNLNBJX4FZ0IT10VI4OGY5HWUG&v=20111127",

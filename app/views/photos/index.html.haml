@@ -1,1 +1,29 @@
-Here are all the photos taken in "New York" in the last hour...
+#newsfeed_v2
+[Arts & Entertainment, Great Outdoors] - Food - Nightlife Spot - College & University  -  -  - Professional & Other Places - Shop & Service - Gym or Fitness Center - Travel & Transport - General Travel
+.yui-g
+  .yui-g.first
+    .yui-u.first
+      - n = 3.0
+      - @photos[0..19].each do |photo|
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo
+    .yui-u
+      - n = 2.0
+      - @photos[0..19].each do |photo|
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo
+  .yui-g
+    .yui-u.first
+      - n = 1.0
+      - @photos[0..19].each do |photo|
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo
+    .yui-u
+      - n = 0.0
+      - @photos[0..19].each do |photo|
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo

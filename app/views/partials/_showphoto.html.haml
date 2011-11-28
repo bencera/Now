@@ -1,0 +1,12 @@
+%ul.photos
+  %li.photo
+    = link_to (image_tag photo.url_s, :width => '225px'), photo
+    .time_ago
+      = time_ago_in_words Time.at photo.time_taken.to_i
+      ago
+      .location
+      = link_to photo.venue.name, photo.venue
+      .user
+      = photo.user.ig_username
+      .caption
+      = "\"#{photo.caption}\"" unless photo.caption.blank?

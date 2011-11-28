@@ -1,1 +1,10 @@
-Here is a photo
+=image_tag @photo.url_l, :width => '500px'
+.time_ago
+  = time_ago_in_words Time.at @photo.time_taken
+  ago
+  .location
+  = @photo.venue.name
+  .user
+  = @photo.user.ig_username
+  .legend
+  = @photo.caption
