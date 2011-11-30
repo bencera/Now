@@ -1,9 +1,11 @@
 Ubimachine::Application.routes.draw do
+  get "subscriptions/index"
+
   get "home/index"
   
   match "/auth/instagram/callback" => "sessions#callback"
   
-  resources :photos, :venues, :searches
+  resources :photos, :venues, :searches, :subscriptions, :callbacks
   
   #resources :searches, :only => [:index], :as => 'autocomplete'
 

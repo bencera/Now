@@ -1,0 +1,29 @@
+- if flash[:error]
+  .error= flash[:error]
+
+%h1 Create a new subscription
+= form_tag subscriptions_path, :method => :post do
+  = text_field_tag :name, params[:name], :placeholder => 'name of subscription'
+  = text_field_tag :lat, params[:lat], :placeholder => 'latitude'
+  = text_field_tag :lng, params[:lng], :placeholder => 'longitude'
+  = text_field_tag :radius, params[:radius], :placeholder => 'radius'
+  = submit_tag "create", :class => 'button', :id => "create_btn"
+
+
+%ul.subscriptions
+  - Subscription.all.each do |subscription|
+    %li.subscription
+      Name: 
+      = subscription.name
+      Id: 
+      = subscription.sub_id
+      Radius: 
+      = subscription.radius
+      latitude: 
+      = subscription.lat
+      longitude: 
+      = subscription.lng
+      /Delete Subscription:
+      /= form_for subscriptions_url, :method => :destroy do
+      /= submit_tag "Delete Subscription", :class => 'button, :id => "create_btn"
+    

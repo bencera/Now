@@ -21,6 +21,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'localtunnel'
 
 #for instagram -- instagram was installed has a plugin.. be careful
 gem 'faraday_middleware', '~> 0.3.1'

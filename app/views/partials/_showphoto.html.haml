@@ -5,7 +5,7 @@
       = time_ago_in_words Time.at photo.time_taken.to_i
       ago
       .location
-      = link_to photo.venue.name, photo.venue
+      = link_to "#{photo.venue.name}" +" - " + "#{photo.venue.address["address"]}" + ", " +  "#{photo.venue.address["crossStreet"]}", photo.venue
       .user
       = photo.user.ig_username
       .caption

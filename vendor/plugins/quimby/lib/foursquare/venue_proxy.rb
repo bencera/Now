@@ -11,7 +11,7 @@ module Foursquare
     def search(options={})
       raise ArgumentError, "You must include :ll" unless options[:ll]
       # set the API version to get the new search endpoint response format
-      options = options.merge({:v => "20111022"})
+      options = options.merge({:v => "20111127"})
       
       @foursquare.get('venues/search', options)["venues"].map do |json|
         Foursquare::Venue.new(@foursquare, json)
