@@ -49,7 +49,7 @@ class Venue
   def fetch_ig_photos
     photos = Instagram.location_recent_media(self.ig_venue_id)
     photos['data'].each do |media|
-      save_photo media
+      save_photo(media, nil, nil)
     end
   end
   
