@@ -1,5 +1,9 @@
 #newsfeed_v2
-[Arts & Entertainment, Great Outdoors] - Food - Nightlife Spot - College & University  -  -  - Professional & Other Places - Shop & Service - Gym or Fitness Center - Travel & Transport - General Travel
+= image_tag Photo.first(conditions: {tag: "v"}).url_s, :width => '100px'
+= image_tag Photo.first(conditions: {tag: "b"}).url_s, :width => '100px'
+= image_tag Photo.first(conditions: {tag: "i"}).url_s, :width => '100px'
+machine
+
 .yui-g
   .yui-g.first
     .yui-u.first

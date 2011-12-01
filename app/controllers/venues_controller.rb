@@ -10,7 +10,6 @@ class VenuesController < ApplicationController
       #Venue appartient a une subscription? Venue cree a partir dun mode "new york", ou "paris" ?
       v = Venue.new(:fs_venue_id => params[:id])
       v.save
-      v.fetch_ig_photos unless v.ig_venue_id.nil?
       @venue = v
     end
   end

@@ -37,6 +37,7 @@ class Venue
       self.lng = venue.location["lng"]
       self.address = venue.location.json # a verifier....
       self.ig_venue_id = self.ig_venue.id unless self.ig_venue.nil?
+      self.fetch_ig_photos unless self.ig_venue_id.nil?
     end
   end
   
@@ -52,7 +53,7 @@ class Venue
     end
   end
   
-  def save_photo media 
+  def save_photo(media, tag, status)
     p = self.photos.new
     unless media.nil?
       p.ig_media_id = media.id
@@ -60,8 +61,8 @@ class Venue
       p.url_l = media.images.standard_resolution.url
       p.caption = media.caption.text unless media.caption.nil?
       p.time_taken = media.created_time.to_i #time is integer to easy compare. maybe change to Time...
-      p.lat = media.location.latitude
-      p.lng = media.location.longitude
+      p.lat = media.location.latitude unless media.location.nil?
+      p.lng = media.location.longitude unless media.location.nil?
       username_id = media.user.id
       if User.exists?(conditions: { ig_id: username_id  })
         p.user_id = username_id
@@ -70,7 +71,8 @@ class Venue
         u.save
         p.user_id = u.id
       end
-      p.tag = "novenue" unless self.id != "novenue"
+      p.status = status
+      p.tag = tag
       p.save
     end
   end

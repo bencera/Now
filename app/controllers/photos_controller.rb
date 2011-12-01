@@ -1,7 +1,7 @@
 class PhotosController < ApplicationController
   
   def index
-    #algo de tri... 
+    #algo de tri...  a completer
     @photos = Photo.all.excludes(tag: "novenue").order_by([:time_taken, :desc])
   end
   

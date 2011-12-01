@@ -1,0 +1,74 @@
+- if flash[:error]
+  .error= flash[:error]
+
+%h1 Search for a tag
+= form_tag tags_url, :method => :get do
+  = text_field_tag :tag, params[:tag], :placeholder => 'tag'
+  = hidden_field_tag :max_id, nil
+  = submit_tag "get", :class => 'button', :id => "get_btn"
+
+- unless @photos_tagged.nil?
+  .yui-g
+    .yui-g.first
+      .yui-u.first
+        - n = 3.0
+        - @photos_tagged[0..19].each do |photo|
+          - n += 1
+          - if Integer(n/4) == n/4
+            %ul.photos
+              %li.photo
+                = image_tag photo.images.low_resolution.url, :width => '225px'
+                = form_tag tags_url, :method => :post do
+                  = hidden_field_tag :media_id, photo.id
+                  = hidden_field_tag :current_max_id, @current_max_id
+                  = hidden_field_tag :tag, @tag
+                  = text_field_tag :tag_name, params[:tag_name], :placeholder => 'choose a tag for the photo'
+                  = submit_tag "save", :class => 'button', :id => "get_btn"
+      .yui-u
+        - n = 2.0
+        - @photos_tagged[0..19].each do |photo|
+          - n += 1
+          - if Integer(n/4) == n/4
+            %ul.photos
+              %li.photo
+                = image_tag photo.images.low_resolution.url, :width => '225px'
+                = form_tag tags_url, :method => :post do
+                  = hidden_field_tag :media_id, photo.id
+                  = hidden_field_tag :current_max_id, @current_max_id
+                  = hidden_field_tag :tag, @tag
+                  = text_field_tag :tag_name, params[:tag_name], :placeholder => 'choose a tag for the photo'
+                  = submit_tag "save", :class => 'button', :id => "get_btn"
+    .yui-g
+      .yui-u.first
+        - n = 1.0
+        - @photos_tagged[0..19].each do |photo|
+          - n += 1
+          - if Integer(n/4) == n/4
+            %ul.photos
+              %li.photo
+                = image_tag photo.images.low_resolution.url, :width => '225px'
+                = form_tag tags_url, :method => :post do
+                  = hidden_field_tag :media_id, photo.id
+                  = hidden_field_tag :current_max_id, @current_max_id
+                  = hidden_field_tag :tag, @tag
+                  = text_field_tag :tag_name, params[:tag_name], :placeholder => 'choose a tag for the photo'
+                  = submit_tag "save", :class => 'button', :id => "get_btn"
+      .yui-u
+        - n = 0.0
+        - @photos_tagged[0..19].each do |photo|
+          - n += 1
+          - if Integer(n/4) == n/4
+            %ul.photos
+              %li.photo
+                = image_tag photo.images.low_resolution.url, :width => '225px'
+                = form_tag tags_url, :method => :post do
+                  = hidden_field_tag :media_id, photo.id
+                  = hidden_field_tag :current_max_id, @current_max_id
+                  = hidden_field_tag :tag, @tag
+                  = text_field_tag :tag_name, params[:tag_name], :placeholder => 'choose a tag for the photo'
+                  = submit_tag "save", :class => 'button', :id => "get_btn"
+      .more
+        = form_tag tags_url, :method => :get do
+          = hidden_field_tag :max_id, @max_id
+          = hidden_field_tag :tag, @tag
+          = submit_tag "more", :class => 'button', :id => "get_btn"

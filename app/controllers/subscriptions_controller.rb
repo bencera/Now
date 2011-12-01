@@ -13,9 +13,6 @@ class SubscriptionsController < ApplicationController
   def index
   end
   
-  def show
-  end
-  
   def create
     if Rails.env.development?
       #tunnel
@@ -50,6 +47,9 @@ class SubscriptionsController < ApplicationController
     end
     
     redirect_to :back
+  end
+  
+  def show
   end
 
 end
