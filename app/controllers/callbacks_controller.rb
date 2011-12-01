@@ -20,7 +20,7 @@ class CallbacksController < ApplicationController
           #if user updates, need to change
           response = Instagram.geography_recent_media(f["object_id"]) #, options={:min_timestamp => f["time"]})
           response.each do |media|
-            Photo.find_location_and_save media
+            Photo.new.find_location_and_save(media,nil)
           end  
         end 
       #end
