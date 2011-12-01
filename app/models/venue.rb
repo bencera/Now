@@ -9,7 +9,6 @@ class Venue
   field :address, :type => Hash
   key :fs_venue_id
   has_many :photos, dependent: :destroy
-  belongs_to :subscription
   
   #category might not exist for a venue
   #when search with 4sq, if no ig_venue_id means no photos. create venue without ig_venue_id.
@@ -30,7 +29,7 @@ class Venue
   
   def create_new_venue
     return true unless new?
-    unless self.fs_venue_id == "no_venue" #venue for "novenue" photos
+    unless self.fs_venue_id == "novenue" #venue for "novenue" photos
       venue = self.fs_venue
       self.category = venue.categories.first.json
       self.name = venue.name
@@ -71,6 +70,7 @@ class Venue
         u.save
         p.user_id = u.id
       end
+      p.tag = "novenue" unless self.id != "novenue"
       p.save
     end
   end

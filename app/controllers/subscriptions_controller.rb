@@ -19,7 +19,7 @@ class SubscriptionsController < ApplicationController
   def create
     if Rails.env.development?
       #tunnel
-      url = "http://3weq.localtunnel.com/callbacks"
+      url = "http://3nur.localtunnel.com/callbacks"
     else
       # production
       url = callbacks_url
@@ -40,8 +40,8 @@ class SubscriptionsController < ApplicationController
       s.radius = params[:radius]
       s.save
       
-      unless Venue.exists?(conditions: {_id: "no-undscr-venue"})
-        v = Venue.new(:fs_venue_id => "no_venue", :ig_venue_id => "no_venue", :name => "No Venue", :lng => 1, :lat => 1, :address => { "Venue" => "no" })
+      unless Venue.exists?(conditions: {_id: "novenue"})
+        v = Venue.new(:fs_venue_id => "novenue", :ig_venue_id => "novenue", :name => "No Venue", :lng => 1, :lat => 1, :address => { "Venue" => "no" })
         v.save
       end
       

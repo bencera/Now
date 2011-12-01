@@ -7,6 +7,7 @@ class Photo
   field :time_taken, :type => Integer
   field :lng, :type => Float
   field :lat, :type => Float
+  field :tag
   belongs_to :venue
   belongs_to :user
   has_many :requests
