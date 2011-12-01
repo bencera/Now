@@ -30,7 +30,7 @@ class CallbacksController < ApplicationController
                 v.save
                 v.save_photo media
               else
-                unless p.nil? 
+                unless p.first.nil?
                   v = Venue.new(:fs_venue_id => p.first.id)
                   v.save
                   v.save_photo media
