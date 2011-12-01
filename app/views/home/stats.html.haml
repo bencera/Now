@@ -1,0 +1,13 @@
+Stats
+%p
+All Photos 
+= Photo.all.count
+%p
+Photos with venues 
+= Photo.all.excludes(tag: "novenue").count
+%p
+Photos guessed
+= Photo.all.where(:tag => "guessed").count
+%p
+All Venues
+= Venue.all.count
