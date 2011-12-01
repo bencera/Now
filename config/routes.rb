@@ -7,6 +7,8 @@ Ubimachine::Application.routes.draw do
   
   resources :photos, :venues, :searches, :subscriptions, :callbacks
   
+  match "/stats" => "home#stats"
+  
   #resources :searches, :only => [:index], :as => 'autocomplete'
 
   # The priority is based upon order of creation:
