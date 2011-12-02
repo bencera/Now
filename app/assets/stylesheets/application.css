@@ -6,3 +6,7 @@
  *= require_tree . 
 */
 
+
+.title {
+  padding: 10px;
+  border-bottom: 1px solid #eeeeee; }

@@ -16,12 +16,11 @@ class CallbacksController < ApplicationController
     #Instagram.process_subscription(params["_json"].first.to_s) do |handler| #figure out the signature X hub thing
       #handler.on_geography_changed do |geography_id, data|
         #verifier ce que return data...
-        params["_json"].each do |f|
+        params["_json"].each do |json|
           #if user updates, need to change
-          response = Instagram.geography_recent_media(f["object_id"]) #, options={:min_timestamp => f["time"]})
-          response.each do |media|
-            Photo.new.find_location_and_save(media,nil)
-          end  
+          #retarder les callbacks
+          object_id = json["object_id"]
+          HandleIgCallback.new(object_id) #Delayed::Job.enqueue(
         end 
       #end
     #end

@@ -1,4 +1,8 @@
-%h1 Welcome to
+.title
+  = image_tag Photo.first(conditions: {tag: "v"}).url_s, :width => '150px'
+  = image_tag Photo.first(conditions: {tag: "b"}).url_s, :width => '150px'
+  = image_tag Photo.first(conditions: {tag: "i"}).url_s, :width => '150px'
+  machine
 %h2 Ubiquity available now.
 %p Ubiquity definition: the state of being everywhere at once.
 

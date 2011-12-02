@@ -31,7 +31,7 @@ class Venue
     return true unless new?
     unless self.fs_venue_id == "novenue" #venue for "novenue" photos
       venue = self.fs_venue
-      self.category = venue.categories.first.json
+      self.category = venue.categories.first.json unless venues.categories.nil?
       self.name = venue.name
       self.lat = venue.location["lat"]
       self.lng = venue.location["lng"]
