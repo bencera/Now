@@ -24,6 +24,7 @@ gem 'jquery-rails'
 gem 'localtunnel'
 gem 'delayed_job'
 gem 'delayed_job_mongoid'
+gem 'geocoder'
 
 #for instagram -- instagram was installed has a plugin.. be careful
 gem 'faraday_middleware', '~> 0.3.1'

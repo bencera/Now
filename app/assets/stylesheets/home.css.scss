@@ -4,6 +4,122 @@
 
 #title{
     font-weight: bold;
+}
 
+.title{
+  
+  font-family: Times;
+  font-style: italic;
+  font-size: 100px;
+	text-align: center;
+	padding: 20px 0 0 0;
 
 }
+
+.slogan{
+	 font-family: Times;
+  font-size: 20px;
+	text-align: center;
+	padding: 20px 0 0 0;
+	
+}
+
+.cities{
+	text-align: center;
+	
+}
+.newyork{
+	float: left;
+	padding: 20px 0px 20px 40px;
+}
+
+.paris{
+	float:left;
+	padding: 20px 0px 20px 40px;
+}
+
+.tokyo{
+	float: left;
+	padding: 20px 0px 20px 40px;
+}
+
+html {
+  font-family: Helvetica, Arial; }
+
+#header.logo{
+	font-family: Helvetica, Arial;
+	font-style: italic;
+	
+}
+
+
+
+h2.title {
+	font-family: Helvetica;
+  font-size: 30px;
+	padding: 0 0 0 0;
+}
+
+h3{
+	font-size: 20px;
+	
+}
+
+#venue {
+  overflow: auto; }
+  #venue .icon {
+    float: left; }
+  #venue .name, #venue .address {
+    margin-left: 42px; }
+  #venue .name {
+    font-size: 30px;
+    font-weight: bold; }
+  #venue .address a {
+    color: gray;
+    margin-top: 5px; }
+
+.venue {
+  padding: 10px;
+  border-bottom: 1px solid #eeeeee; }
+  .venue span {
+    font-size: 10px;
+    color: gray; }
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0; }
+  ul li {
+    float: left;
+    text-align: center;
+    width: 100%;
+    padding: 0px;
+    border-bottom: 1px solid #eeeeee; }
+
+.time_ago{
+	font-size: 11px;
+	  color: gray;
+	  padding: 5px 0;
+	
+}
+.comment{
+	font-size: 11px;
+	  color: gray;
+	  padding: 5px 0;
+	
+}
+.count {
+  padding: 10px;
+  border-bottom: 2px solid #eeeeee; }
+  .count img {
+    border-radius: 4px;
+    vertical-align: middle; }
+  .count span {
+    font-size: 25px;
+    font-weight: bold; }
+
+/*#foursquare-photos {
+    width: 450px; }
+
+/#instagram-photos {
+    width: 450px; }*/

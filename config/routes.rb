@@ -9,7 +9,7 @@ Ubimachine::Application.routes.draw do
   
   match "/auth/instagram/callback" => "sessions#callback"
   
-  resources :photos, :venues, :searches, :subscriptions, :callbacks, :tags
+  resources :photos, :venues, :searches, :subscriptions, :callbacks, :tags, :requests
   
   match "/stats" => "home#stats"
   

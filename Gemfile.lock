@@ -58,6 +58,7 @@ GEM
       rack (>= 1.1.0, < 2)
     faraday_middleware (0.3.2)
       faraday (~> 0.5.4)
+    geocoder (1.0.5)
     haml (3.1.2)
     hashie (1.1.0)
     hike (1.2.1)
@@ -155,6 +156,7 @@ DEPENDENCIES
   delayed_job_mongoid
   faraday (~> 0.5.3)
   faraday_middleware (~> 0.3.1)
+  geocoder
   haml
   hashie (>= 0.4.0)
   jquery-rails

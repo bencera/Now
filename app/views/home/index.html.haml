@@ -1,29 +1,16 @@
 .title
-  = image_tag Photo.first(conditions: {tag: "v"}).url_s, :width => '150px'
-  = image_tag Photo.first(conditions: {tag: "b"}).url_s, :width => '150px'
-  = image_tag Photo.first(conditions: {tag: "i"}).url_s, :width => '150px'
+  = image_tag Photo.where(tag: "u")[1].url_s, :width => '150px'
+  = image_tag Photo.where(tag: "b")[1].url_s, :width => '150px'
+  = image_tag Photo.where(tag: "i")[1].url_s, :width => '150px'
   machine
-%h2 Ubiquity available now.
-%p Ubiquity definition: the state of being everywhere at once.
+.slogan
+  Ubiquity finally available to the crowds.
 
-%p Unimachine let's you
-%ul
-  %li
-    See what's happening in your city in Real time
-  %li
-    Search for venues to actually see how's it's like there now (if someone is there)
-  %li
-    Ask them a question (they will answer if you're nice!)
-  %li
-    Ask for a photo if they are a user
-    
-.login
-  = link_to "Login with instagram", 'https://api.instagram.com/oauth/authorize/?client_id=583b64d3e53c40ad81b26d9d6edaa10a&redirect_uri=http://localhost:3000/auth/instagram/callback&response_type=code&scope=likes+comments'
   
-.city
-  Choose your city
-  
-  = link_to "New York"
-  = link_to "San Francisco"
-  = link_to "Paris"
-  = link_to "New York"
+.cities
+  .newyork
+    = link_to (image_tag Photo.where(tag: "ny")[1].url_s, :width => '250px') , photos_path
+  .paris
+    = link_to (image_tag Photo.where(tag: "paris")[0].url_s, :width => '250px') , photos_path
+  .tokyo
+    = link_to (image_tag Photo.where(tag: "tokyo")[1].url_s, :width => '250px') , photos_path

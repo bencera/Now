@@ -10,7 +10,7 @@ class User
   field :ig_website
   key :ig_id
   has_many :photos
-  has_many :requests
+  has_and_belongs_to_many :requests
   
   #if not a user of the website, no accesstoken. might not have email. need to tell that wont be notified.
   validates_presence_of :ig_id, :ig_username

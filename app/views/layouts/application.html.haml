@@ -4,6 +4,7 @@
   %title= "UBIMACHINE"
   /= javascript_include_tag :defaults
   = javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js', "application"
+  = javascript_include_tag 'https://raw.github.com/tobia/CrossSlide/master/jquery.cross-slide.min.js'
   = stylesheet_link_tag 'http://yui.yahooapis.com/2.9.0/build/reset-fonts-grids/reset-fonts-grids.css'
   = stylesheet_link_tag 'application'
   = csrf_meta_tag
@@ -19,11 +20,15 @@
 #doc4
   .yui-t7
   #header
-  = link_to "UBIMACHINE", photos_path
+  .logo
+    = link_to "UBIMACHINE", photos_path
   /hide search in home.html
-  = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
-    = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a place...'
-    = submit_tag "search", :name => nil, :class => 'button', :id => "search_btn"
+  .search
+    = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
+      = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a place...'
+      = submit_tag "search", :name => nil, :class => 'button', :id => "search_btn"
+  .login
+    = link_to "Login with instagram", 'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://localhost:3000/auth/instagram/callback&response_type=code&scope=likes+comments'
 
   .notice
     = notice

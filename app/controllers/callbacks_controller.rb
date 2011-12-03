@@ -1,10 +1,5 @@
 #to do : utiliser process_subscription avec signature X hub
 # =>     corriger pour user updates (after)
-# =>     verifier a quoi correspond le time dans la callback instagram
-# =>     corriger save_photo pour inclure un tag (guessed...)
-# =>     faire l'algo de search dans le comment
-# =>     verifier la derniere ligne
-# =>     faire une callback plus propre avec les fonctions dans le model
 
 class CallbacksController < ApplicationController
   
@@ -20,7 +15,12 @@ class CallbacksController < ApplicationController
           #if user updates, need to change
           #retarder les callbacks
           object_id = json["object_id"]
-          HandleIgCallback.new(object_id) #Delayed::Job.enqueue(
+          response = Instagram.geography_recent_media(object_id) #, options={:min_timestamp => f["time"]})
+          response.each do |media|
+            Photo.new.find_location_and_save(media,nil)
+            #face.com ? checker si ya des visages sur la photo?
+          end
+          #HandleIgCallback.new(object_id) #Delayed::Job.enqueue(
         end 
       #end
     #end

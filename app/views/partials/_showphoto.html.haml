@@ -10,3 +10,14 @@
       = photo.user.ig_username
       .caption
       = "\"#{photo.caption}\"" unless photo.caption.blank?
+      - if photo.requests.empty?
+        .question
+        = form_tag requests_url, :method => :post do
+          = label_tag "Ask a question!"
+          = text_field_tag :question, nil, :placeholder => "Nice Picture! How is the crowd at #{photo.venue.name} now?"
+          = hidden_field_tag :ig_media_id, photo.ig_media_id
+      - else
+        .question_answered
+        = photo.requests.first.question
+        .reponse
+        =photo.requests.first.response
