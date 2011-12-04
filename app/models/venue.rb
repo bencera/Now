@@ -102,7 +102,7 @@ class Venue
   
   def self.search(name, lat, lng)
     #changer la lat long en fonction de la ville choisie
-    client.venues.search(:ll => "#{lat}" + "," + "#{lng}", :query => name)
+    client.venues.search(:ll => "#{lat}" + "," + "#{lng}", :query => name, :intent => "browse", :radius => 10000)
   end
   
   def fetch_ig_photos

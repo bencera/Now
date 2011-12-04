@@ -61,6 +61,6 @@ class Photo
   
   def check_new_photos
     test = nil
-    Delayed::Job.enqueue(HandleIgCallback.new(test))
+    Delayed::Job.enqueue(Fetchphotos.new(test))
   end
 end

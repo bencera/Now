@@ -1,10 +1,10 @@
-class HandleIgCallback < Struct.new(:test)
+class Fetchphotos < Struct.new(:test)
   
   def perform
     #Instagram.process_subscription(params["_json"].first.to_s) do |handler| #figure out the signature X hub thing
       #handler.on_geography_changed do |geography_id, data|
         #verifier ce que return data...
-        Delayed::Job.enqueue HandleIgCallback.new(), 0, 30.seconds.from_now.getutc
+        Delayed::Job.enqueue Fetchphotos.new(test), 0, 1.minute.from_now.getutc
         #params["_json"].each do |json|
           #if user updates, need to change
           #retarder les callbacks
