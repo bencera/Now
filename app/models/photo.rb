@@ -32,7 +32,7 @@ class Photo
       if fs_venue_id.nil?
         Venue.first(conditions: {_id: "novenue"}).save_photo(media, tag, "novenue")
       else
-        Venue.first(condition: {fs_venue_id: fs_venue_id}).save_photo(media, tag, "guessed")
+        Venue.first(conditions: {_id: fs_venue_id}).save_photo(media, tag, "guessed")
       end
     elsif Venue.exists?(conditions: {ig_venue_id: media.location.id }) #indexer par ig_venue_id ? ou alors ne rechercher que dans le subset des venues dans le coin?
       #if media has a venue, check if the venue exists. create or not.
