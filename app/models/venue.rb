@@ -50,7 +50,7 @@ class Venue
         name = name.split(/ /)
         real_words = name - stop_words
         real_words.each do |word|
-          if comment.include?(real_words)
+          if comment.include?(word)
               #self = venue
               return venue.fs_venue_id
           end

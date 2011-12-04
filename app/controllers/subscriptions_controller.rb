@@ -16,7 +16,7 @@ class SubscriptionsController < ApplicationController
   def create
     if Rails.env.development?
       #tunnel
-      url = "http://3nur.localtunnel.com/callbacks"
+      url = "http://47wr.localtunnel.com/callbacks"
     else
       # production
       url = callbacks_url
