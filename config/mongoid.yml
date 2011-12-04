@@ -8,7 +8,7 @@ test:
 
 # set these environment variables on your prod server
 production:
-    uri: <%= ENV['MONGOHQ_URL'] %>
+    uri: 'mongodb://heroku:c02c2c3a696b0785f962754467945eed@staff.mongohq.com:10017/app1875752'
   # slaves:
   #   - host: slave1.local
   #     port: 27018

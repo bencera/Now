@@ -58,4 +58,9 @@ class Photo
     end
   end
   
+  
+  def check_new_photos
+    test = nil
+    Delayed::Job.enqueue(HandleIgCallback.new(test))
+  end
 end

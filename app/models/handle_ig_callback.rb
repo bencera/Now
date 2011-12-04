@@ -1,9 +1,34 @@
-class HandleIgCallback < Struct.new(:object_id)
+class HandleIgCallback < Struct.new(:test)
   
   def perform
-    response = Instagram.geography_recent_media(object_id) #, options={:min_timestamp => f["time"]})
-    response.each do |media|
-      Photo.new.find_location_and_save(media,nil)
-    end
+    #Instagram.process_subscription(params["_json"].first.to_s) do |handler| #figure out the signature X hub thing
+      #handler.on_geography_changed do |geography_id, data|
+        #verifier ce que return data...
+        Delayed::Job.enqueue HandleIgCallback.new(), 0, 30.seconds.from_now.getutc
+        #params["_json"].each do |json|
+          #if user updates, need to change
+          #retarder les callbacks
+        #object_id = json["object_id"]
+         #, options={:min_timestamp => f["time"]})
+        n = 0
+        max_id = nil
+        while n==0
+          response = Instagram.geography_recent_media("702469", options={:max_id => max_id})
+          n = response.count
+          max_id = response[n-1].id
+          response.each do |media|
+            if Photo.first(conditions: {ig_media_id: media.id}).nil?
+              Photo.new.find_location_and_save(media,nil)
+              n -= 1
+            #face.com ? checker si ya des visages sur la photo?
+            end
+          end
+        end
+          
+          #HandleIgCallback.new(object_id) #Delayed::Job.enqueue(
+        #end 
+      #end
+    #end
+    #return :text => "Successful"
   end
 end
