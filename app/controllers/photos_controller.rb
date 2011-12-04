@@ -3,7 +3,7 @@ class PhotosController < ApplicationController
   def index
     #algo de tri...  a completer
     #@photos = Photo.all.excludes(tag: "novenue").limit(200).order_by([:time_taken, :desc])
-    last_venues_id = Photo.where(:time_taken.gt => 48.hours.ago.to_i).excludes(tag: "novenue").distinct(:venue_id) #all photos from last 3hours that have venues
+    last_venues_id = Photo.where(:time_taken.gt => 48.hours.ago.to_i).excludes(status: "novenue").distinct(:venue_id) #all photos from last 3hours that have venues
     last_venues = {}
     last_venues_id.each do |venue_id|
       last_venues[venue_id] = Photo.where(:venue_id => venue_id).where(:time_taken.gt => 48.hours.ago.to_i).distinct(:user_id).count 
