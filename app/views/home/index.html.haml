@@ -1,7 +1,7 @@
 .title
   = image_tag Photo.where(tag: "u")[1].url_s, :width => '150px'
-  = image_tag Photo.where(tag: "b")[1].url_s, :width => '150px'
-  = image_tag Photo.where(tag: "i")[1].url_s, :width => '150px'
+  = image_tag Photo.where(tag: "b")[0].url_s, :width => '150px'
+  = image_tag Photo.where(tag: "i")[0].url_s, :width => '150px'
   machine
 .slogan
   Ubiquity finally available to the crowds.
@@ -9,8 +9,8 @@
   
 .cities
   .newyork
-    = link_to (image_tag Photo.where(tag: "ny")[1].url_s, :width => '250px') , photos_path
+    = link_to (image_tag Photo.where(tag: "ny")[0].url_s, :width => '250px') , photos_path
   .paris
     = link_to (image_tag Photo.where(tag: "paris")[0].url_s, :width => '250px') , photos_path
   .tokyo
-    = link_to (image_tag Photo.where(tag: "tokyo")[1].url_s, :width => '250px') , photos_path
+    = link_to (image_tag Photo.where(tag: "tokyo")[0].url_s, :width => '250px') , photos_path

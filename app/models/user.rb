@@ -11,10 +11,11 @@ class User
   key :ig_id
   has_many :photos
   has_and_belongs_to_many :requests
+  has_and_belongs_to_many :venues
   
   #if not a user of the website, no accesstoken. might not have email. need to tell that wont be notified.
   validates_presence_of :ig_id, :ig_username
-  validates_uniqueness_of :ig_id  
+  validates_uniqueness_of :ig_id
   before_validation :complete_ig_info
   
   protected

@@ -33,6 +33,12 @@ module Foursquare
     def explore(ll, options = {})
       response = @foursquare.get('venues/explore', options.merge(:ll => ll))
     end
+    
+    def categories
+      @foursquare.get('venues/categories')["categories"].map do |json|
+        response = json
+      end
+    end
 
     private
 

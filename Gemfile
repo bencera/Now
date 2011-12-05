@@ -25,6 +25,7 @@ gem 'localtunnel'
 gem 'delayed_job'
 gem 'delayed_job_mongoid'
 gem 'geocoder'
+gem "ruby-debug19", :require => 'ruby-debug'
 
 #for instagram -- instagram was installed has a plugin.. be careful
 gem 'faraday_middleware', '~> 0.3.1'

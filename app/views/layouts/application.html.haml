@@ -28,7 +28,7 @@
       = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a place...'
       = submit_tag "search", :name => nil, :class => 'button', :id => "search_btn"
   .login
-    = link_to "Login with instagram", 'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://localhost:3000/auth/instagram/callback&response_type=code&scope=likes+comments'
+    = link_to "Login with instagram", 'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=' + root_url + 'auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
 
   .notice
     = notice

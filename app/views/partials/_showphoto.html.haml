@@ -14,6 +14,7 @@
         .question
         = form_tag requests_url, :method => :post do
           = label_tag "Ask a question!"
+          = select_tag :question, ["Nice picture! How is the crowd at #{photo.venue.name} now?", "Nice picture! Is there a queue to get in at #{photo.venue.name} now?", "What band is playing tonight? "]
           = text_field_tag :question, nil, :placeholder => "Nice Picture! How is the crowd at #{photo.venue.name} now?"
           = hidden_field_tag :ig_media_id, photo.ig_media_id
       - else

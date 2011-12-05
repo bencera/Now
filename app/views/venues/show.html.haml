@@ -1,32 +1,32 @@
 #Venue
-  .name= @venue.name
-  .address= "#{@venue.address["address"]}" + ", " +  "#{@venue.address["crossStreet"]}"
+  .name= @photos.first.venue.name
+  .address= "#{@photos.first.venue.address["address"]}" + ", " +  "#{@photos.first.venue.address["crossStreet"]}"
 
 #Photos
 .yui-g
   .yui-g.first
     .yui-u.first
       - n = 3.0
-      - @venue.photos[0..19].each do |photo|
+      - @photos[0..19].each do |photo|
         - n += 1
         - if Integer(n/4) == n/4
           = render 'partials/showphoto', :photo => photo
     .yui-u
       - n = 2.0
-      - @venue.photos[0..19].each do |photo|
+      - @photos[0..19].each do |photo|
         - n += 1
         - if Integer(n/4) == n/4
           = render 'partials/showphoto', :photo => photo
   .yui-g
     .yui-u.first
       - n = 1.0
-      - @venue.photos[0..19].each do |photo|
+      - @photos[0..19].each do |photo|
         - n += 1
         - if Integer(n/4) == n/4
           = render 'partials/showphoto', :photo => photo
     .yui-u
       - n = 0.0
-      - @venue.photos[0..19].each do |photo|
+      - @photos[0..19].each do |photo|
         - n += 1
         - if Integer(n/4) == n/4
           = render 'partials/showphoto', :photo => photo

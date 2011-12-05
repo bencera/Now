@@ -35,11 +35,11 @@ class SubscriptionsController < ApplicationController
       s.lat = params[:lat]
       s.lng = params[:lng]
       s.radius = params[:radius]
-      s.save
+      s.save!
       
       unless Venue.exists?(conditions: {_id: "novenue"})
-        v = Venue.new(:fs_venue_id => "novenue", :ig_venue_id => "novenue", :name => "No Venue", :lng => 1, :lat => 1, :address => { "Venue" => "no" })
-        v.save
+        v = Venue.new(:fs_venue_id => "novenue", :ig_venue_id => "novenue", :name => "No Venue", :lng => 1, :lat => 1, :coordinates => [1,1], :address => { "Venue" => "no" })
+        v.save!
       end
       
     else

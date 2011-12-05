@@ -4,10 +4,23 @@ All Photos
 = Photo.all.count
 %p
 Photos with venues 
-= Photo.all.excludes(tag: "novenue").count
+= Photo.excludes(status: "novenue").count
 %p
-Photos guessed
-= Photo.all.where(:tag => "guessed").count
+Photos without venues 
+= Photo.where(status: "novenue").count
+%p
+Photos fs_guessed  by first venue in 4sq
+= Photo.where(status: "fs_guess").count
+%p
+Photos guessed by venue - comment
+= Photo.where(status: "guessed").count
 %p
 All Venues
 = Venue.all.count
+
+%p
+Percentage of Photos with Venues today
+= Photo.where(:time_taken.gt => 24.hours.ago.to_i).excludes(status: "novenue").count.to_f / Photo.where(:time_taken.gt => 24.hours.ago.to_i).count
+%p
+Photos per hour
+= Photo.where(:time_taken.gt => 1.hours.ago.to_i).count

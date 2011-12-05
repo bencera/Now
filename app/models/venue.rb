@@ -11,6 +11,7 @@ class Venue
   field :address_geo
   key :fs_venue_id
   has_many :photos, dependent: :destroy
+  has_and_belongs_to_many :users
   
   #do geocoder setup. should improve responsiveness of server.
   include Geocoder::Model::Mongoid
@@ -20,7 +21,7 @@ class Venue
   #category might not exist for a venue
   #when search with 4sq, if no ig_venue_id means no photos. create venue without ig_venue_id.
   #when photo arrives with ig_venue_id, check fs_venue_id (have to anyways) and then check if exists in DB.
-  validates_presence_of :fs_venue_id, :name, :lng, :lat, :address, :coordinates
+  validates_presence_of :fs_venue_id, :name, :lng, :lat, :address, :coordinates, :ig_venue_id
   validates_uniqueness_of :fs_venue_id
   before_validation :create_new_venue
   
@@ -100,15 +101,51 @@ class Venue
     end
   end
   
-  def self.search(name, lat, lng)
+  def self.search(name, lat, lng, browse)
     #changer la lat long en fonction de la ville choisie
-    client.venues.search(:ll => "#{lat}" + "," + "#{lng}", :query => name, :intent => "browse", :radius => 10000)
+    if browse
+      client.venues.search(:ll => "#{lat}" + "," + "#{lng}", :query => name, :intent => "browse", :radius => 10000)
+    else
+      client.venues.search(:ll => "#{lat}" + "," + "#{lng}", :query => name)
+    end
   end
   
   def fetch_ig_photos
     photos = Instagram.location_recent_media(self.ig_venue_id)
     photos['data'].each do |media|
       save_photo(media, nil, nil)
+    end
+  end
+  
+  def fs_categories
+    Rails.cache.fetch "foursquare-categories", :compress => true do
+      response = Foursquare::Base.new("RFBT1TT41OW1D22SNTR21BGSWN2SEOUNELL2XKGBFLVMZ5X2", "W1FN2P3PR30DIKSWEKFEJVF51NJMZTBUY3KY3T0JNCG51QD0").venues.categories
+      categories = {}
+      response.each do |response1|
+        general_category = response1["name"]
+        response1["categories"].each do |response2|
+          unless response2["categories"].blank?
+            response2["categories"].each do |response3|
+              unless response3["categories"].blank?
+                response3["categories"].each do |response4|
+                  unless response4["categories"].blank?
+                    response4["categories"].each do |response5|
+                      categories[response5["name"]] = general_category
+                    end
+                  else
+                    categories[response4["name"]] = general_category
+                  end
+                end
+              else
+                categories[response3["name"]] = general_category
+              end
+            end
+          else
+            categories[response2["name"]] = general_category
+          end
+        end
+      end 
+      categories
     end
   end
   
@@ -128,7 +165,7 @@ class Venue
         p.user_id = username_id
       else
         u = User.new(:ig_id => username_id)
-        u.save
+        u.save!
         p.user_id = u.id
       end
       p.status = status
