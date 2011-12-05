@@ -12,7 +12,7 @@
         = photo.user.ig_username
         .caption
         = "\"#{photo.caption}\"" unless photo.caption.blank?
-        - if photo.requests.empty?
+        - if photo.requests.empty? and photo.venue.blank?
           .question
           = form_tag requests_url, :method => :post do
             = label_tag "Ask a question!"
