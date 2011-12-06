@@ -1,6 +1,7 @@
 class Getlastphotos < Struct.new(:category, :time)
   
   def perform
+    Delayed::Job.enqueue Getlastphotos.new(category, time), 0, 2.minute.from_now.getutc
       #take all the distinct venues from the photos from the last 3 hours
     last_venues_id = Photo.last_hours(time).excludes(status: "novenue").distinct(:venue_id)
     if !(category.nil?) and category != "myfeed"
@@ -43,7 +44,6 @@ class Getlastphotos < Struct.new(:category, :time)
         $redis.rpush("feed:all", "#{photo.id}")
       end
     end
-    Delayed::Job.enqueue Getlastphotos.new(category, time), 0, 1.minute.from_now.getutc
   end
   
   
