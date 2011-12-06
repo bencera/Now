@@ -34,13 +34,11 @@ class Getlastphotos < Struct.new(:category, :time)
     photos.in_groups_of(20) do |group|
       photos_random += group.sort_by { rand }.compact
     end
+    $redis.del("feed:all")
     photos_random.each do |photo|
-      
       unless category.nil?
-        $redis.del("feed:#{category.gsub(/ /,'')}")
         $redis.rpush("feed:#{category.gsub(/ /,'')}", "#{photo.id}")
       else
-        $redis.del("feed:all")
         $redis.rpush("feed:all", "#{photo.id}")
       end
     end
