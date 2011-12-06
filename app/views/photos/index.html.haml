@@ -10,26 +10,30 @@
   .yui-g.first
     .yui-u.first
       - n = 3.0
-      - @photos[0..19].each do |photo|
+      - @photos[0..19].each do |photo_id|
+        - photo = Photo.first(conditions: {_id: photo_id})
         - n += 1
         - if Integer(n/4) == n/4
           = render 'partials/showphoto', :photo => photo
     .yui-u
       - n = 2.0
-      - @photos[0..19].each do |photo|
+      - @photos[0..19].each do |photo_id|
+        - photo = Photo.first(conditions: {_id: photo_id})
         - n += 1
         - if Integer(n/4) == n/4
           = render 'partials/showphoto', :photo => photo
   .yui-g
     .yui-u.first
       - n = 1.0
-      - @photos[0..19].each do |photo|
+      - @photos[0..19].each do |photo_id|
+        - photo = Photo.first(conditions: {_id: photo_id})
         - n += 1
         - if Integer(n/4) == n/4
           = render 'partials/showphoto', :photo => photo
     .yui-u
       - n = 0.0
-      - @photos[0..19].each do |photo|
+      - @photos[0..19].each do |photo_id|
+        - photo = Photo.first(conditions: {_id: photo_id})
         - n += 1
         - if Integer(n/4) == n/4
           = render 'partials/showphoto', :photo => photo

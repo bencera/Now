@@ -171,6 +171,7 @@ class Venue
       p.status = status
       p.tag = tag
       p.save
+      #User.exclude(:access_token =>all.each do
     end
   end
   

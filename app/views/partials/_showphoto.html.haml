@@ -1,26 +1,20 @@
-- unless photo.blank?
-  %ul.photos
-    %li.photo
-      = link_to (image_tag photo.url_s, :width => '225px'), photo
-      .time_ago
-        = time_ago_in_words Time.at photo.time_taken.to_i
-        ago
-        - unless photo.venue.blank?
-          .location
-          = link_to "#{photo.venue.name}" +" - " + "#{photo.venue.address["address"]}" + ", " +  "#{photo.venue.address["crossStreet"]}", photo.venue
-        .user
-        = photo.user.ig_username
-        .caption
-        = "\"#{photo.caption}\"" unless photo.caption.blank?
-        - if photo.requests.empty? and photo.venue.blank?
-          .question
-          = form_tag requests_url, :method => :post do
-            = label_tag "Ask a question!"
-            = select_tag :question, ["Nice picture! How is the crowd at #{photo.venue.name} now?", "Nice picture! Is there a queue to get in at #{photo.venue.name} now?", "What band is playing tonight? "]
-            = text_field_tag :question, nil, :placeholder => "Nice Picture! How is the crowd at #{photo.venue.name} now?"
-            = hidden_field_tag :ig_media_id, photo.ig_media_id
-        - else
-          .question_answered
-          = photo.requests.first.question
-          .reponse
-          =photo.requests.first.response
+%ul.photos
+  %li.photo
+    = link_to (image_tag photo.url_s, :width => '225px'), photo
+    .time_ago
+      = time_ago_in_words Time.at photo.time_taken.to_i
+      ago
+      - unless photo.venue.blank?
+        .location
+        = link_to "#{photo.venue.name}" +" - " + "#{photo.venue.address["address"]}" + ", " +  "#{photo.venue.address["crossStreet"]}", photo.venue
+      .user
+      = photo.user.ig_username
+      .caption
+      = "\"#{photo.caption}\"" unless photo.caption.blank?
+      - if photo.requests.empty? and photo.venue.blank?
+        .question
+        = form_tag requests_url, :method => :post do
+          = label_tag "Ask a question!"
+          = select_tag :question, ["Nice picture! How is the crowd at #{photo.venue.name} now?", "Nice picture! Is there a queue to get in at #{photo.venue.name} now?", "What band is playing tonight? "]
+          = text_field_tag :question, nil, :placeholder => "Nice Picture! How is the crowd at #{photo.venue.name} now?"
+          = hidden_field_tag :ig_media_id, photo.ig_media_id

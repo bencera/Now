@@ -30,4 +30,8 @@ class User
     self.ig_website = data.website
   end
   
+  def redis_key(str)
+    "user:#{self.id}:#{str}"
+  end
+  
 end
