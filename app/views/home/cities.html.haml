@@ -1,0 +1,10 @@
+.title
+  Choose a city to explore...
+
+.cities
+  .newyork
+    = link_to (image_tag Photo.where(tag: "ny")[0].url_s, :width => '250px') , photos_path
+  .paris
+    = link_to (image_tag Photo.where(tag: "paris")[0].url_s, :width => '250px') , photos_path
+  .tokyo
+    = link_to (image_tag Photo.where(tag: "tokyo")[1].url_s, :width => '250px') , photos_path
