@@ -8,7 +8,7 @@ class Getlastphotos < Struct.new(:category, :time)
       #look at categories for these venues
       last_venues = {}
       last_venues_id.each do |venue_id|
-        last_venues[venue_id] =  Venue.new.fs_categories[Venue.first(conditions: {_id: venue_id}).category["name"]] unless Venue.first(conditions: {_id: venue_id}).nil?
+        last_venues[venue_id] =  Venue.new.fs_categories[Venue.first(conditions: {_id: venue_id}).categories.first["name"]] unless Venue.first(conditions: {_id: venue_id}).nil?
       end
       #extract only the venues relative to "Food"
       last_venues = last_venues.map{ |k,v| v==category ? k : nil }.compact
@@ -30,17 +30,21 @@ class Getlastphotos < Struct.new(:category, :time)
       photos += Photo.where(:venue_id => venue[0]).order_by([:time_taken, :desc]).take(n)      
     end
     #randomly shack them by stacks of 20
-    photos_random = []
-    photos.in_groups_of(20) do |group|
-      photos_random += group.sort_by { rand }.compact
-    end
-    $redis.del("feed:all")
-    photos_random.each do |photo|
-      unless category.nil?
-        $redis.rpush("feed:#{category.gsub(/ /,'')}", "#{photo.id}")
+    # photos_random = []
+    # photos.in_groups_of(20) do |group|
+    #   photos_random += group.sort_by { rand }.compact
+    # end
+    photos[0..19].each do |photo|
+      if category.nil?
+        $redis.zadd("feed:all", photo.time_taken, "#{photo.id}")
       else
-        $redis.rpush("feed:all", "#{photo.id}")
+        $redis.zadd("feed:#{category.gsub(/ /,'')}", photo.time_taken, "#{photo.id}")
       end
+    end
+    if category.nil?
+      $redis.zremrangebyscore("feed:all", 24.hours.from_now.to_i, 48.hours.from_now.to_i)
+    else
+      $redis.zremrangebyscore("feed:#{category.gsub(/ /,'')}", 24.hours.from_now.to_i, 48.hours.from_now.to_i)
     end
   end
   

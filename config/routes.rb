@@ -14,6 +14,7 @@ Ubimachine::Application.routes.draw do
   resources :photos, :venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows
   
   match "/stats" => "home#stats"
+  match "/cities" => "home#cities"
   
   # match "/restaurants" => "photos#restaurants" 
   # match "/nightlife" => "photos#nightlife"  

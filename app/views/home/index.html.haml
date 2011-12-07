@@ -7,10 +7,5 @@
   Ubiquity finally available to the crowds.
 
   
-.cities
-  .newyork
-    = link_to (image_tag Photo.where(tag: "ny")[0].url_s, :width => '250px') , photos_path
-  .paris
-    = link_to (image_tag Photo.where(tag: "paris")[0].url_s, :width => '250px') , photos_path
-  .tokyo
-    = link_to (image_tag Photo.where(tag: "tokyo")[0].url_s, :width => '250px') , photos_path
+.signin
+  = link_to (image_tag 'signininstagram.png', :width => '250px'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=' + root_url + 'auth/instagram/callback&response_type=code&scope=likes+comments+relationships'

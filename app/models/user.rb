@@ -1,13 +1,10 @@
 class User
   include Mongoid::Document
-  field :email
-  field :ig_username
-  field :ig_fullname
-  field :ig_accesstoken
-  field :ig_profilepic
-  field :ig_id
-  field :ig_bio
-  field :ig_website
+  field :email #impt
+  field :ig_username #impt
+  field :ig_accesstoken #impt
+  field :ig_id #impt
+  field :ig_details, :type => Array
   key :ig_id
   has_many :photos
   has_and_belongs_to_many :requests
@@ -21,13 +18,12 @@ class User
   protected
   
   def complete_ig_info
+    #do it only at the first save (maybe update sometimes..)
     return true unless new?
     data = Instagram.user(self.ig_id)
     self.ig_username = data.username
-    self.ig_fullname = data.full_name
-    self.ig_profilepic = data.profile_picture
-    self.ig_bio = data.bio
-    self.ig_website = data.website
+    self.ig_details = [data.full_name, data.profile_picture, data.bio, data.website, 
+                      data.counts.followed_by, data.counts.follows, data.counts.media]
   end
   
   def redis_key(str)

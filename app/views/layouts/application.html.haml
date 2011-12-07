@@ -20,20 +20,22 @@
 #doc4
   .yui-t7
   #header
-  .logo
-    = link_to "UBIMACHINE", photos_path
-  /hide search in home.html
-  .search
-    = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
-      = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a place...'
-      = submit_tag "search", :name => nil, :class => 'button', :id => "search_btn"
-  .login
-    = link_to "Login with instagram", 'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=' + root_url + 'auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
+    .logo
+      = link_to "UBIMACHINE", photos_path
+      /hide search in home.html
+    .search
+      = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
+        = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a place...'
+        = submit_tag "search", :name => nil, :class => 'button', :id => "search_btn"
 
-  .notice
-    = notice
-  .alert
-    = alert
+    .notice
+      = notice
+    .alert
+      = alert
+    .loginout
+      - if ig_logged_in
+        = link_to "logout", 'https://instagram.com/accounts/logout/'
+      - else
+        = link_to "login", 'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=' + root_url + 'auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
   #body
-
-  = yield
+    = yield

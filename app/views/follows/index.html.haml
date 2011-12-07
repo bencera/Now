@@ -1,12 +1,16 @@
-Add Places to Follow
+.title
+  Add Places to Follow
+.done
+  =link_to "Done", '/cities'
 - if ig_logged_in
-  - @best_places.each do |place|
-    /- unless Venue.first(conditions: {ig_venue_id: place[1][1]}).nil?
-    .place
-    = place[0]
-    - unless User.first(conditions: {ig_username: "bencera"}).venues.distinct(:ig_venue_id).include?(place[1][1].to_s)
-      = form_tag follows_path, :method => :post do
-        = hidden_field_tag :ig_venue_id, place[1][1]
-        = submit_tag "follow", :class => 'button', :id => "follow_btn"
-    - else
-      You follow this Venue
+  %ul.places
+    - @best_places.each do |place|
+      %li.place
+        = place[0]
+        - unless User.first(conditions: {ig_username: "bencera"}).venues.distinct(:ig_venue_id).include?(place[1][1].to_s)
+          = form_tag follows_path, :method => :post do
+            = hidden_field_tag :ig_venue_id, place[1][1]
+            = submit_tag "follow", :class => 'button', :id => "follow_btn"
+        - else
+          .follow
+            You follow this Venue

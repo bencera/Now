@@ -1,4 +1,4 @@
-=image_tag @photo.url_l, :width => '500px'
+=image_tag @photo.url[1], :width => '500px'
 .time_ago
   = time_ago_in_words Time.at @photo.time_taken
   ago

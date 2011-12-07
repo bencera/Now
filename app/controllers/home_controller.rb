@@ -4,6 +4,8 @@ class HomeController < ApplicationController
 
   def stats
   end
-
+  
+  def cities
+  end
 
 end

@@ -6,3 +6,7 @@
  *= require_tree . 
 */
 
+#header.loginout{
+	float: right;
+	
+}

@@ -2,10 +2,8 @@ class Venue
   include Mongoid::Document
   field :ig_venue_id
   field :fs_venue_id
-  field :category, :type => Hash
+  field :categories, :type => Array
   field :name
-  field :lng, :type => Float #a supprimer
-  field :lat, :type => Float #a supprimer
   field :coordinates, :type => Array
   field :address, :type => Hash
   field :address_geo
@@ -13,15 +11,11 @@ class Venue
   has_many :photos, dependent: :destroy
   has_and_belongs_to_many :users
   
-  #do geocoder setup. should improve responsiveness of server.
   include Geocoder::Model::Mongoid
-  reverse_geocoded_by :coordinates
   reverse_geocoded_by :coordinates, :address => :address_geo
   
   #category might not exist for a venue
-  #when search with 4sq, if no ig_venue_id means no photos. create venue without ig_venue_id.
-  #when photo arrives with ig_venue_id, check fs_venue_id (have to anyways) and then check if exists in DB.
-  validates_presence_of :fs_venue_id, :name, :lng, :lat, :address, :coordinates, :ig_venue_id
+  validates_presence_of :fs_venue_id, :name, :coordinates, :ig_venue_id #, :address 
   validates_uniqueness_of :fs_venue_id
   before_validation :create_new_venue
   
@@ -40,22 +34,22 @@ class Venue
         end
         #check if the event is in the comment
         #check if part of the full name is in the comment
-        name = venue.name.downcase
-        stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-        stop_words = ["bar", "the", "a", "cafe", "on", "the", "hotel", "avenue", "street", "st", "ave", "NY", "at", "park","theater", "of", "in", 
-                      "th", "east", "west", "ave", "my", "is", "a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p",
-                      "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ""]
-        stop_characters.each do |c|
-          name = name.gsub(c, '')
-        end
-        name = name.split(/ /)
-        real_words = name - stop_words
-        real_words.each do |word|
-          if comment.include?(word)
-              #self = venue
-              return venue.fs_venue_id
-          end
-        end
+        # name = venue.name.downcase
+        # stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+        # stop_words = ["bar", "the", "a", "cafe", "on", "the", "hotel", "avenue", "street", "st", "ave", "NY", "at", "park","theater", "of", "in", 
+        #               "th", "east", "west", "ave", "my", "is", "a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p",
+        #               "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", ""]
+        # stop_characters.each do |c|
+        #   name = name.gsub(c, '')
+        # end
+        # name = name.split(/ /)
+        # real_words = name - stop_words
+        # real_words.each do |word|
+        #   if comment.include?(word)
+        #       #self = venue
+        #       return venue.fs_venue_id
+        #   end
+        # end
         #if flat_comment.includes?(venue.event.gsub(//, ''))
         #  self = venue
         #  return true
@@ -85,19 +79,31 @@ class Venue
   end
   
   def create_new_venue
+    #done to do this before validation and before save
     return true unless new?
+    #special case if the photo has no venue..
     unless self.fs_venue_id == "novenue" #venue for "novenue" photos
-      venue = self.fs_venue
-      self.category = venue.categories.first.json unless venue.categories.empty?
-      self.name = venue.name
-      self.lat = venue.location["lat"] #a supprimer
-      self.lng = venue.location["lng"] #a supprimer
-      self.coordinates = [self.lng, self.lat]
-      #if venue.location["isFuzzed"]
-      #  self.address = 
-      self.address = venue.location.json # a verifier....
-      self.ig_venue_id = self.ig_venue.id unless self.ig_venue.nil?
-      self.fetch_ig_photos unless self.ig_venue_id.nil?
+      #first verify if there is a corresponding ig_venue_id. if not will not validate and not create
+      ig_venue_id = nil
+      ig_venue_id = self.ig_venue.id unless self.ig_venue.nil?
+      unless ig_venue_id.nil?
+        self.ig_venue_id = ig_venue_id
+        venue = self.fs_venue
+        #venue can have many categories, array of jsons
+        categories = []
+        unless venue.categories.empty?
+          venue.categories.each do |category|
+            categories << category.json
+          end
+          self.categories = categories
+        end
+        self.name = venue.name
+        #coordinates in mongodb is inverted, [lng, lat]
+        self.coordinates = [venue.location["lng"], venue.location["lat"]]
+        #if venue doesnt have an address, add it with geocoder?
+        self.address = venue.location.json unless venue.location.nil?
+        self.fetch_ig_photos
+      end
     end
   end
   
@@ -113,7 +119,7 @@ class Venue
   def fetch_ig_photos
     photos = Instagram.location_recent_media(self.ig_venue_id)
     photos['data'].each do |media|
-      save_photo(media, nil, nil)
+      save_photo(media, nil, "new_venue")
     end
   end
   
@@ -130,7 +136,13 @@ class Venue
                 response3["categories"].each do |response4|
                   unless response4["categories"].blank?
                     response4["categories"].each do |response5|
-                      categories[response5["name"]] = general_category
+                       unless response5["categories"].blank?
+                         response5["categories"].each do |response6|
+                           categories[response6["name"]] = general_category
+                         end
+                       else
+                         categories[response5["name"]] = general_category
+                       end
                     end
                   else
                     categories[response4["name"]] = general_category
@@ -152,26 +164,29 @@ class Venue
   def save_photo(media, tag, status)
     p = self.photos.new
     unless media.nil?
-      p.ig_media_id = media.id
-      p.url_s = media.images.low_resolution.url #stocker urls dans un hash
-      p.url_l = media.images.standard_resolution.url
-      p.caption = media.caption.text unless media.caption.nil?
-      p.time_taken = media.created_time.to_i #time is integer to easy compare. maybe change to Time...
-      p.lat = media.location.latitude unless media.location.nil?
-      p.lng = media.location.longitude unless media.location.nil?
-      p.coordinates = [p.lng, p.lat] unless media.location.nil?
-      username_id = media.user.id
-      if User.exists?(conditions: { ig_id: username_id  })
-        p.user_id = username_id
-      else
-        u = User.new(:ig_id => username_id)
-        u.save!
-        p.user_id = u.id
+      if !(media.location.nil?)
+        if !(media.location.longitude.nil?) #case where there is a location name but not geotagged
+          p.coordinates = [media.location.longitude, media.location.latitude]
+        end
       end
-      p.status = status
-      p.tag = tag
-      p.save
-      #User.exclude(:access_token =>all.each do
+      unless p.coordinates.nil? #si pas de coordonnes, pas de validation
+        p.ig_media_id = media.id
+        p.url = [media.images.low_resolution.url, media.images.standard_resolution.url, media.images.thumbnail.url]
+        p.caption = media.caption.text unless media.caption.nil?
+        p.time_taken = media.created_time.to_i #UNIX timestamp
+        username_id = media.user.id
+        if User.exists?(conditions: { ig_id: username_id  })
+          p.user_id = username_id
+        else
+          u = User.new(:ig_id => username_id)
+          u.save
+          p.user_id = u.id
+        end
+        p.status = status
+        p.tag = tag
+        p.save
+        #User.exclude(:access_token =>all.each do
+      end
     end
   end
   
