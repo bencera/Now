@@ -12,10 +12,12 @@ class FollowsController < ApplicationController
         response.each do |media|
           unless media.location.nil?
             unless media.location.name.nil?
-              if places[media.location.name].nil?
-                places[media.location.name] = [1, media.location.id]
-              else
-                places[media.location.name][0] += 1
+              if Venue.exists?(conditions: {ig_venue_id: media.location.id.to_s})
+                if places[media.location.name].nil?
+                  places[media.location.name] = [1, media.location.id]
+                else
+                  places[media.location.name][0] += 1
+                end
               end
             end
           end
@@ -26,13 +28,9 @@ class FollowsController < ApplicationController
   end
 
   def create
-    current_user = User.first(conditions: {ig_username: "bencera"})#User.first(conditions: {access_token: session[:access_token]})
-    if Venue.first(conditions: {ig_venue_id: params[:ig_venue_id]}).nil?
-      response = Instagram.location_recent_media(params[:ig_venue_id])
-      Photo.new.find_location_and_save(response["data"].first,nil)
-    end
-      current_user.venue_ids << Venue.first(conditions: {ig_venue_id: params[:ig_venue_id]}).id
-      current_user.save!
+    current_user = User.first(conditions: {access_token: session[:access_token]})#User.first(conditions: {access_token: session[:access_token]})
+    current_user.venue_ids << Venue.first(conditions: {ig_venue_id: params[:ig_venue_id]}).id
+    current_user.save
     redirect_to :back
   end
 

@@ -21,7 +21,7 @@ class Fetchphotos < Struct.new(:test)
           n = response.count
           max_id = response[n-1].id
           response.each do |media|
-            if Photo.first(conditions: {ig_media_id: media.id}).nil?
+            if !(Photo.exists?(conditions: {ig_media_id: media.id}))
               Photo.new.find_location_and_save(media,nil)
               n -= 1
             #face.com ? checker si ya des visages sur la photo?
