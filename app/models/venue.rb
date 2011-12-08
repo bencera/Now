@@ -124,18 +124,22 @@ class Venue
   end
   
   def fs_categories
-    Rails.cache.fetch "foursquare-categories", :compress => true do
+    Rails.cache.fetch "foursquare-categories", :compress => true, :expires_in => 7*24*3600 do
       response = Foursquare::Base.new("RFBT1TT41OW1D22SNTR21BGSWN2SEOUNELL2XKGBFLVMZ5X2", "W1FN2P3PR30DIKSWEKFEJVF51NJMZTBUY3KY3T0JNCG51QD0").venues.categories
       categories = {}
       response.each do |response1|
         general_category = response1["name"]
         response1["categories"].each do |response2|
+          categories[response2["name"]] = general_category
           unless response2["categories"].blank?
             response2["categories"].each do |response3|
+              categories[response3["name"]] = general_category
               unless response3["categories"].blank?
                 response3["categories"].each do |response4|
+                  categories[response4["name"]] = general_category
                   unless response4["categories"].blank?
                     response4["categories"].each do |response5|
+                      categories[response5["name"]] = general_category
                        unless response5["categories"].blank?
                          response5["categories"].each do |response6|
                            categories[response6["name"]] = general_category
