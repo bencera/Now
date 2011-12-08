@@ -25,8 +25,12 @@ class TagsController < ApplicationController
     response["data"].each do |photo| #ameliorer cette boucle
       media = photo unless photo.id != params[:media_id]
     end
-    Photo.new.find_location_and_save(media, params[:tag_name])
-    flash[:error] = "The Photo was succefully saved"
+    response = Photo.new.find_location_and_save(media, params[:tag_name])
+    if response == true
+      flash[:error] = "The Photo was succefully saved"
+    else
+      flash[:error] = "There was an error"
+    end
     redirect_to :back
     
   end

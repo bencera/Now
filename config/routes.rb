@@ -15,6 +15,7 @@ Ubimachine::Application.routes.draw do
   
   match "/stats" => "home#stats"
   match "/cities" => "home#cities"
+  match "/nophotos" => "venues#nophotos"
   
   # match "/restaurants" => "photos#restaurants" 
   # match "/nightlife" => "photos#nightlife"  

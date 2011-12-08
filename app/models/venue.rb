@@ -166,30 +166,35 @@ class Venue
   end
   
   def save_photo(media, tag, status)
-    p = self.photos.new
-    unless media.nil?
-      if !(media.location.nil?)
-        if !(media.location.longitude.nil?) #case where there is a location name but not geotagged
-          p.coordinates = [media.location.longitude, media.location.latitude]
+    #si la photo existe deja, juste rajouter le tag ou le status
+    if Photo.exists?(conditions: {ig_media_id: media.id.to_s})
+      Photo.first(conditions: {ig_media_id: media.id.to_s}).update_attributes(:tag => tag, :status => status)
+    else
+      p = self.photos.new
+      unless media.nil?
+        if !(media.location.nil?)
+          if !(media.location.longitude.nil?) #case where there is a location name but not geotagged
+            p.coordinates = [media.location.longitude, media.location.latitude]
+          end
         end
-      end
-      unless p.coordinates.nil? #si pas de coordonnes, pas de validation
-        p.ig_media_id = media.id
-        p.url = [media.images.low_resolution.url, media.images.standard_resolution.url, media.images.thumbnail.url]
-        p.caption = media.caption.text unless media.caption.nil?
-        p.time_taken = media.created_time.to_i #UNIX timestamp
-        username_id = media.user.id
-        if User.exists?(conditions: { ig_id: username_id  })
-          p.user_id = username_id
-        else
-          u = User.new(:ig_id => username_id)
-          u.save
-          p.user_id = u.id
+        unless p.coordinates.nil? #si pas de coordonnes, pas de validation
+          p.ig_media_id = media.id
+          p.url = [media.images.low_resolution.url, media.images.standard_resolution.url, media.images.thumbnail.url]
+          p.caption = media.caption.text unless media.caption.nil?
+          p.time_taken = media.created_time.to_i #UNIX timestamp
+          username_id = media.user.id
+          if User.exists?(conditions: { ig_id: username_id.to_s  })
+            p.user_id = username_id
+          else
+            u = User.new(:ig_id => username_id)
+            u.save
+            p.user_id = u.id
+          end
+          p.status = status
+          p.tag = tag
+          p.save
+          #User.exclude(:access_token =>all.each do
         end
-        p.status = status
-        p.tag = tag
-        p.save
-        #User.exclude(:access_token =>all.each do
       end
     end
   end

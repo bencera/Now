@@ -35,9 +35,9 @@ class Photo
       # else
       #   Venue.first(conditions: {_id: fs_venue_id}).save_photo(media, tag, "guessed")
       # end
-    elsif Venue.exists?(conditions: {ig_venue_id: media.location.id }) #indexer par ig_venue_id ? ou alors ne rechercher que dans le subset des venues dans le coin?
+    elsif Venue.exists?(conditions: {ig_venue_id: media.location.id.to_s }) #indexer par ig_venue_id ? ou alors ne rechercher que dans le subset des venues dans le coin?
       #if media has a venue, check if the venue exists. create or not.
-      Venue.first(conditions: {ig_venue_id: media.location.id }).save_photo(media, tag, "existing_venue")
+      Venue.first(conditions: {ig_venue_id: media.location.id.to_s }).save_photo(media, tag, "existing_venue")
     elsif media.location.longitude.blank? #for now nothing
       #Venue.first(conditions: {_id: "novenue"}).save_photo(media, tag, "novenue")
     else
@@ -49,11 +49,12 @@ class Photo
         break if fs_venue_id != nil
       end
       unless fs_venue_id.nil?
-        if Venue.exists?(conditions: {_id: fs_venue_id}) #should not happen..
-          Venue.first(conditions: {_id: fs_venue_id}).save_photo(media, tag, nil)
+        if Venue.exists?(conditions: {_id: fs_venue_id.to_s}) #should not happen..
+          Venue.first(conditions: {_id: fs_venue_id.to_s}).save_photo(media, tag, nil)
         else
-          v = Venue.new(:fs_venue_id => fs_venue_id)
-          if v.save == true
+          v = Venue.new(:fs_venue_id => fs_venue_id.to_s)
+          v.save
+          if v.new? == false
             v.save_photo(media, tag, nil)
           else #for now do nothing
             #Venue.first(conditions: {_id: "novenue"}).save_photo(media, tag, "novenue")

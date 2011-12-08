@@ -18,6 +18,7 @@
             %ul.photos
               %li.photo
                 = image_tag photo.images.low_resolution.url, :width => '225px'
+                = photo.location unless photo.location.nil?
                 = form_tag tags_url, :method => :post do
                   = hidden_field_tag :media_id, photo.id
                   = hidden_field_tag :current_max_id, @current_max_id
@@ -32,6 +33,7 @@
             %ul.photos
               %li.photo
                 = image_tag photo.images.low_resolution.url, :width => '225px'
+                = photo.location unless photo.location.nil?
                 = form_tag tags_url, :method => :post do
                   = hidden_field_tag :media_id, photo.id
                   = hidden_field_tag :current_max_id, @current_max_id
@@ -47,6 +49,7 @@
             %ul.photos
               %li.photo
                 = image_tag photo.images.low_resolution.url, :width => '225px'
+                = photo.location unless photo.location.nil?
                 = form_tag tags_url, :method => :post do
                   = hidden_field_tag :media_id, photo.id
                   = hidden_field_tag :current_max_id, @current_max_id
@@ -61,6 +64,7 @@
             %ul.photos
               %li.photo
                 = image_tag photo.images.low_resolution.url, :width => '225px'
+                = photo.location unless photo.location.nil?
                 = form_tag tags_url, :method => :post do
                   = hidden_field_tag :media_id, photo.id
                   = hidden_field_tag :current_max_id, @current_max_id

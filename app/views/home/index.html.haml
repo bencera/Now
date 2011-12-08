@@ -1,7 +1,7 @@
 .title
-  = image_tag Photo.where(tag: "u")[1].url_s, :width => '150px'
-  = image_tag Photo.where(tag: "b")[0].url_s, :width => '150px'
-  = image_tag Photo.where(tag: "i")[0].url_s, :width => '150px'
+  = image_tag Photo.where(tag: "u")[0].url[0], :width => '150px'
+  = image_tag Photo.where(tag: "b")[0].url[0], :width => '150px'
+  = image_tag Photo.where(tag: "i")[0].url[0], :width => '150px'
   machine
 .slogan
   Ubiquity finally available to the crowds.

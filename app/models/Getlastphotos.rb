@@ -38,7 +38,7 @@ class Getlastphotos < Struct.new(:category, :time)
     # photos.in_groups_of(20) do |group|
     #   photos_random += group.sort_by { rand }.compact
     # end
-    photos[0..19].each do |photo|
+    photos.each do |photo|
       if category.nil?
         $redis.zadd("feed:all", photo.time_taken, "#{photo.id}")
       else
