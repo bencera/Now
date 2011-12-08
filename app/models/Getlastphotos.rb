@@ -8,7 +8,11 @@ class Getlastphotos < Struct.new(:category, :time)
       #look at categories for these venues
       last_venues = {}
       last_venues_id.each do |venue_id|
-        last_venues[venue_id] =  Venue.new.fs_categories[Venue.first(conditions: {_id: venue_id}).categories.first["name"]] unless Venue.first(conditions: {_id: venue_id}).nil?
+        unless Venue.first(conditions: {_id: venue_id}).nil?
+          unless Venue.first(conditions: {_id: venue_id}).categories.nil?
+            last_venues[venue_id] =  Venue.new.fs_categories[Venue.first(conditions: {_id: venue_id}).categories.first["name"]] 
+          end
+        end
       end
       #extract only the venues relative to "Food"
       last_venues = last_venues.map{ |k,v| v==category ? k : nil }.compact
