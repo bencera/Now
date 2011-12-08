@@ -20,7 +20,11 @@ class User
   def complete_ig_info
     #do it only at the first save (maybe update sometimes..)
     return true unless new?
+    data = nil
     data = Instagram.user(self.ig_id)
+    if data.nil?
+      return true
+    end
     self.ig_username = data.username
     self.ig_details = [data.full_name, data.profile_picture, data.bio, data.website, 
                       data.counts.followed_by, data.counts.follows, data.counts.media]
