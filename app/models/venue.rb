@@ -187,6 +187,9 @@ class Venue
             p.user_id = username_id
           else
             u = User.new(:ig_id => username_id)
+            u.ig_username = media.user.username
+            u.ig_details = [media.user.full_name, media.user.profile_picture, media.user.bio, media.user.website, 
+                      "", "", ""]
             u.save
             p.user_id = u.id
           end

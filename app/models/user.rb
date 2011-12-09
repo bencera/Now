@@ -13,7 +13,7 @@ class User
   #if not a user of the website, no accesstoken. might not have email. need to tell that wont be notified.
   validates_presence_of :ig_id, :ig_username
   validates_uniqueness_of :ig_id
-  before_validation :complete_ig_info
+  #before_validation :complete_ig_info
   
   protected
   

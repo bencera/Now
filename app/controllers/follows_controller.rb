@@ -12,13 +12,13 @@ class FollowsController < ApplicationController
         response.each do |media|
           unless media.location.nil?
             unless media.location.name.nil?
-              if Venue.exists?(conditions: {ig_venue_id: media.location.id.to_s})
+              #if Venue.exists?(conditions: {ig_venue_id: media.location.id.to_s})
                 if places[media.location.name].nil?
                   places[media.location.name] = [1, media.location.id]
                 else
                   places[media.location.name][0] += 1
                 end
-              end
+              #end
             end
           end
         end

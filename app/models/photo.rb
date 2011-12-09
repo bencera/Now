@@ -83,6 +83,4 @@ class Photo
     Delayed::Job.enqueue(Getlastphotos.new(category, time))
   end
   
- 
-  
 end

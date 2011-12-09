@@ -31,7 +31,7 @@ class Getlastphotos < Struct.new(:category, :time)
     last_specific_venues.each do |venue|
       n = 1
       n = 1 + venue[1] / 5 unless venue[1] < 5
-      photos += Photo.where(:venue_id => venue[0]).order_by([:time_taken, :desc]).take(n)      
+      photos += Photo.where(:venue_id => venue[0]).order_by([:time_taken, :desc]).take(n)
     end
     #randomly shack them by stacks of 20
     # photos_random = []
