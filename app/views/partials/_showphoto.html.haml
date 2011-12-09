@@ -6,15 +6,17 @@
         = time_ago_in_words Time.at photo.time_taken.to_i
         ago
         - unless photo.venue.blank?
-          .location
-          = link_to "#{photo.venue.name}" +" - " + "#{photo.venue.address["address"]}" + ", " +  "#{photo.venue.address["crossStreet"]}", photo.venue
-        .user
-        = photo.user.ig_username
+          .name
+          = link_to "#{photo.venue.name}", photo.venue
+          .neighborhood
+          - unless photo.venue.neighborhood.nil?
+            = photo.venue.neighborhood
         .caption
         = "\"#{photo.caption}\"" unless photo.caption.blank?
         - if photo.requests.empty? and !(photo.venue.blank?)
           .question
-          = form_tag requests_url, :method => :post do
-            = label_tag "Ask a question!"
-            = select_tag :question, ["Nice picture! How is the crowd at #{photo.venue.name} now?", "Nice picture! Is there a queue to get in at #{photo.venue.name} now?", "What band is playing tonight? "]
-            = hidden_field_tag :ig_media_id, photo.ig_media_id
+            = form_tag requests_url, :method => :post do
+              = label_tag "Ask a question!"
+              = select_tag :question_id, options_for_select([["How is the crowd tonight?", 1], ["Comment tu vas", 2]])
+              = hidden_field_tag :ig_media_id, photo.ig_media_id
+              = hidden_field_tag :venue_name, photo.venue.name

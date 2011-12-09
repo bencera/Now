@@ -7,6 +7,7 @@ class Venue
   field :coordinates, :type => Array
   field :address, :type => Hash
   field :address_geo
+  field :neighborhood
   key :fs_venue_id
   has_many :photos, dependent: :destroy
   has_and_belongs_to_many :users
@@ -102,6 +103,7 @@ class Venue
         self.coordinates = [venue.location["lng"], venue.location["lat"]]
         #if venue doesnt have an address, add it with geocoder?
         self.address = venue.location.json unless venue.location.nil?
+        self.neighborhood = self.find_neighborhood
         self.fetch_ig_photos
       end
     end
@@ -202,6 +204,37 @@ class Venue
     end
   end
   
+  
+  def find_neighborhood
+    results = Geocoder.search("#{coordinates[1]},#{coordinates[0]}")
+    unless results.blank?
+      n = 0
+      m = 0
+      has_neighborhood = false
+      (0..(results.count-1)).each do |i|
+        if results[i].types.include?("neighborhood")
+          has_neighborhood = true
+          n = i
+          break
+        end
+      end
+      if has_neighborhood
+        (0..(results[n].address_components.count-1)).each do |i|
+          if results[n].address_components[i]["types"].include?("neighborhood")
+            m = i
+            break
+          end
+        end
+        results[n].address_components[m]["long_name"]
+      else
+        return nil
+      end
+    else
+      return nil
+    end
+      
+  end
+
   private
   
   def self.client

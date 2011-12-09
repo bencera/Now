@@ -11,11 +11,12 @@ Ubimachine::Application.routes.draw do
   
   match "/auth/instagram/callback" => "sessions#callback"
   
-  resources :photos, :venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows
+  resources :photos, :venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions
   
   match "/stats" => "home#stats"
   match "/cities" => "home#cities"
   match "/nophotos" => "venues#nophotos"
+  match "/signup" => "home#signup"
   
   # match "/restaurants" => "photos#restaurants" 
   # match "/nightlife" => "photos#nightlife"  

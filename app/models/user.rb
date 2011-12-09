@@ -15,11 +15,8 @@ class User
   validates_uniqueness_of :ig_id
   #before_validation :complete_ig_info
   
-  protected
-  
   def complete_ig_info
-    #do it only at the first save (maybe update sometimes..)
-    return true unless new?
+    #do it only when new user signs up
     data = nil
     data = Instagram.user(self.ig_id)
     if data.nil?
@@ -29,6 +26,8 @@ class User
     self.ig_details = [data.full_name, data.profile_picture, data.bio, data.website, 
                       data.counts.followed_by, data.counts.follows, data.counts.media]
   end
+  
+  protected
   
   def redis_key(str)
     "user:#{self.id}:#{str}"

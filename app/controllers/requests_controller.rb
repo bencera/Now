@@ -1,6 +1,7 @@
 class RequestsController < ApplicationController
   
   def create
+    question = Request.new.find_question(params[:question_id], params[:venue_name])
     media = Instagram.media_item(params[:ig_media_id], :access_token => session[:access_token])
     count = media.comments["count"].to_i
     photo_user_id = media.user.id
