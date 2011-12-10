@@ -1,10 +1,12 @@
 =image_tag @photo.url[1], :width => '500px'
 .time_ago
-  = time_ago_in_words Time.at @photo.time_taken
+  = time_ago_in_words Time.at @photo.time_taken.to_i
   ago
-  .location
-  = @photo.venue.name
-  .user
-  = @photo.user.ig_username
-  .legend
-  = @photo.caption
+  - unless @photo.venue.blank?
+    .name
+    = link_to "#{@photo.venue.name}", @photo.venue
+    .neighborhood
+    - unless @photo.venue.neighborhood.nil?
+      = @photo.venue.neighborhood
+  .caption
+  = "\"#{@photo.caption}\"" unless @photo.caption.blank?

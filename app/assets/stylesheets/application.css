@@ -10,3 +10,40 @@
 	float: right;
 	
 }
+
+.ui-autocomplete{
+	background:#fff;
+	border:1px solid #3990bb;
+	margin:0;
+	position:fixed;
+	top:40px !important;
+	width:255px;
+	-moz-box-shadow:rgba(0, 0, 0, 0.1) 0 0 2px 0px;
+	-webkit-box-shadow:rgba(0, 0, 0, 0.1) 0 0 2px 0px;
+	box-shadow:rgba(0, 0, 0, 0.1) 0 0 2px 0px;
+	-moz-border-radius:0px 0px 5px 5px;
+	-webkit-border-radius:0px 0px 5px 5px;
+	border-radius:0px 0px 5px 5px;
+	}
+.ui-autocomplete-more-results,.ui-autocomplete-category{
+	background:#f5f5f5;
+	border-bottom:1px solid #e8e9eb;
+	margin:0 0 5px;
+	padding:5px 10px;}
+.ui-autocomplete-more-results{
+	border-bottom:0 !important;
+	border-top:1px solid #e8e9eb;
+	margin-top:5px !important;
+	-moz-border-radius:0px 0px 5px 5px;
+	-webkit-border-radius:0px 0px 5px 5px;
+	border-radius:0px 0px 5px 5px;
+	}
+	.ui-autocomplete-more-results a{
+		background:#f5f5f5 !important;
+		font-size:11px;
+		padding:4px 0 5px !important;
+		text-align:center;
+	}
+.ui-autocomplete-element a{
+	min-height:32px;
+	}

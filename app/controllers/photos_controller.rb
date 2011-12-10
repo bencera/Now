@@ -12,9 +12,9 @@ class PhotosController < ApplicationController
       @photos = photos[(n-1)*19..n*19]
     else
       if params[:id].nil?
-         photos = $redis.zrevrangebyscore("feed:all",Time.now.to_i,24.hours.ago.to_i)
-         @photos = photos[(n-1)*19..n*19]
-         #@photos = Photo.new.get_last_photos(nil,1)   
+        photos = $redis.zrevrangebyscore("feed:all",Time.now.to_i,24.hours.ago.to_i)
+        @photos = photos[(n-1)*19..n*19]
+        #@photos = Photo.new.get_last_photos(nil,1)   
       elsif params[:id] == "food"
         photos = $redis.zrevrangebyscore("feed:Food",Time.now.to_i,24.hours.ago.to_i)
         @photos = photos[(n-1)*19..n*19]
