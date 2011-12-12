@@ -1,5 +1,5 @@
 .title
-  Add Places to Follow
+  Follow places
 .done
   =link_to "Done", '/cities'
 - if ig_logged_in
@@ -7,10 +7,11 @@
     - @best_places.each do |place|
       %li.place
         = place[0]
-        - unless User.first(conditions: {ig_username: "bencera"}).venues.distinct(:ig_venue_id).include?(place[1][1].to_s)
+        - unless User.first(conditions: {ig_username: "bencera"}).venues.distinct(:_id).include?(place[1][1].to_s)
           = form_tag follows_path, :method => :post do
-            = hidden_field_tag :ig_venue_id, place[1][1]
+            = hidden_field_tag :id, place[1][1]
             = submit_tag "follow", :class => 'button', :id => "follow_btn"
         - else
-          .follow
-            You follow this Venue
+          = form_tag root_url + "follows/#{place[1][1]}", :method => :delete do
+            = hidden_field_tag :ig_venue_id, place[1][1]
+            = submit_tag "unfollow", :class => 'button', :id => "follow_btn"

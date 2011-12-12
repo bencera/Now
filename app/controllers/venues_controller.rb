@@ -25,12 +25,11 @@ class VenuesController < ApplicationController
       if (n_photos - (n-1)*20) <= 0
         @photos = []
       else
-        @photos = v.photos.order_by([:time_taken, :desc])[((n-1)*19+1)..n*19]
+        @photos = v.photos.order_by([:time_taken, :desc])[(n-1)*20..(n*20-1)]
       end  
-      @venue = v    
+      @venue = v
     else
       #if venue doesnt exist, create a new one, fetch it's last IG photos, put them in the DB and then show this venue. 
-      #Venue appartient a une subscription? Venue cree a partir dun mode "new york", ou "paris" ?
       v = Venue.new(:fs_venue_id => params[:id])
       v.save
       if v.new? == false

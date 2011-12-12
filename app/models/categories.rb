@@ -1,9 +1,8 @@
-class Getlastphotos < Struct.new(:category, :time)
-  
   def perform
-    Delayed::Job.enqueue Getlastphotos.new(category, time), 0, 2.minute.from_now.getutc
+    Delayed::Job.enqueue Getlastphotos.new(category), 0, 2.minute.from_now.getutc
       #take all the distinct venues from the photos from the last 3 hours
-    last_venues_id = Photo.last_hours(time).excludes(status: "novenue").distinct(:venue_id)
+    time = Time.now.to_i - Time.local(Time.now.year, Time.now.month, Time.now.day, 6, 0) 
+    last_venues_id = Photo.last_seconds(time).distinct(:venue_id)
     if !(category.nil?) and category != "myfeed"
       #look at categories for these venues
       last_venues = {}
@@ -23,7 +22,7 @@ class Getlastphotos < Struct.new(:category, :time)
     last_specific_venues = {}
     #count for each "Food" venue the number of single users
     last_venues_id.each do |venue_id|
-      last_specific_venues[venue_id] = Photo.where(:venue_id => venue_id).last_hours(time).distinct(:user_id).count 
+      last_specific_venues[venue_id] = Photo.where(:venue_id => venue_id).last_seconds(time).count
     end
     last_specific_venues = last_specific_venues.sort_by { |k,v| v}.reverse
     #for each venue take 1 photo for each 5 taken from the most recent photos
@@ -53,4 +52,3 @@ class Getlastphotos < Struct.new(:category, :time)
   end
   
   
-end

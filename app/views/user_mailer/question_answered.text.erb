@@ -1,3 +1,10 @@
-UserMailer#question_answered
+Hi <%= @user.ig_username%>,
 
-<%= @greeting %>, find me in app/views/app/views/user_mailer/question_answered.text.erb
+Your question on <%= @request.photo.venue.name%> has been answered!
+
+Question: @request.question
+Answer: @request.response
+
+Hope this was useful!
+
+ubimachine.com

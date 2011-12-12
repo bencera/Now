@@ -17,7 +17,7 @@ class Photo
   reverse_geocoded_by :coordinates
   
   #scopes
-  scope :last_hours, ->(h) { where(:time_taken.gt => h.hours.ago.to_i) }
+  scope :last_seconds, ->(s) { where(:time_taken.gt => s.seconds.ago.to_i) }
   scope :with_venues, excludes(status: "novenue")
   
   #photo doesnt always have caption, but needs to be geolocated (for now)
@@ -74,10 +74,10 @@ class Photo
   end
   
   #to start the process of checking photos every minute
-  def check_new_photos
-    test = nil
-    Delayed::Job.enqueue(Fetchphotos.new(test))
-  end
+  #def check_new_photos
+  #  Resque.enqueue_in(30.seconds, Fetchphotos2)
+    #Delayed::Job.enqueue(Fetchphotos.new(test))
+  #end
   #to start the process of generating feeds
   def get_last_photos(category, time)  
     Delayed::Job.enqueue(Getlastphotos.new(category, time))

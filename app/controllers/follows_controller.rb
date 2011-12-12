@@ -14,7 +14,7 @@ class FollowsController < ApplicationController
             unless media.location.name.nil?
               if Venue.exists?(conditions: {ig_venue_id: media.location.id.to_s})
                 if places[media.location.name].nil?
-                  places[media.location.name] = [1, media.location.id]
+                  places[media.location.name] = [1, Venue.first(conditions: {ig_venue_id: media.location.id.to_s}).id]
                 else
                   places[media.location.name][0] += 1
                 end
@@ -28,7 +28,13 @@ class FollowsController < ApplicationController
   end
 
   def create
-    current_user.venue_ids << Venue.first(conditions: {ig_venue_id: params[:ig_venue_id]}).id
+    current_user.venue_ids << params[:id]
+    current_user.save
+    redirect_to :back
+  end
+  
+  def destroy
+    current_user.venue_ids.delete(params[:id])
     current_user.save
     redirect_to :back
   end

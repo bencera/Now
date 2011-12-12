@@ -8,6 +8,7 @@ class Venue
   field :address, :type => Hash
   field :address_geo
   field :neighborhood
+  field :week_stats, :type => Hash
   key :fs_venue_id
   has_many :photos, dependent: :destroy
   has_and_belongs_to_many :users
@@ -19,6 +20,60 @@ class Venue
   validates_presence_of :fs_venue_id, :name, :coordinates, :ig_venue_id #, :address 
   validates_uniqueness_of :fs_venue_id
   before_validation :create_new_venue
+  
+  def week_day(time_s) #time in seconds
+    time = Time.at(time_s.to_i)
+    week_day = time.wday
+    hour = time.hour
+    if hour <= 5 #days start at 6am
+      week_day -= 1
+      week_day = week_day.modulo(7)
+    end
+    week_day
+  end
+  
+  def day_to_text(day_i)
+    case day_i
+      when 0
+        "sunday"
+      when 1
+        "monday"
+      when 2
+        "tuesday"
+      when 3
+        "wednesday"
+      when 4
+        "thursday"
+      when 5
+        "friday"
+      when 6
+        "saturday"
+    end
+  end
+  
+  def run_stats
+    counts = {1 => {}, 2 => {},2 => {},3 => {},4 => {},5 => {},6 => {}, 0 => {}}
+    photos.each do |photo|
+      time = Time.at(photo.time_taken.to_i)
+      day = time.yday.to_s + time.year.to_s #unique id per day
+      week_day = week_day(photo.time_taken.to_i)
+      if counts[week_day][day].nil?
+        counts[week_day][day] = 1
+      else
+        counts[week_day][day] += 1
+      end
+    end
+    
+    weekly_statistics = {"monday_a" => Mathstats.average(counts[1].values), "monday_s" => Mathstats.standard_deviation(counts[1].values),
+                         "tuesday_a" => Mathstats.average(counts[2].values), "tuesday_s" => Mathstats.standard_deviation(counts[2].values),
+                         "wednesday_a" => Mathstats.average(counts[3].values), "wednesday_s" => Mathstats.standard_deviation(counts[3].values),
+                         "thursday_a" => Mathstats.average(counts[4].values), "thursday_s" => Mathstats.standard_deviation(counts[4].values),
+                         "friday_a" => Mathstats.average(counts[5].values), "friday_s" => Mathstats.standard_deviation(counts[5].values),
+                         "saturday_a" => Mathstats.average(counts[6].values), "saturday_s" => Mathstats.standard_deviation(counts[6].values),
+                         "sunday_a" => Mathstats.average(counts[0].values), "sunday_s" => Mathstats.standard_deviation(counts[0].values)
+                        }
+    weekly_statistics
+  end
   
   def search_venue(media)
     #amelioration: fuzzy search de la venue name  sur le comment

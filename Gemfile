@@ -28,6 +28,11 @@ gem 'geocoder'
 #gem "ruby-debug19", :require => 'ruby-debug'
 gem 'redis'
 
+#gem 'infinitescrolling-rails'
+gem 'mathstats'
+gem 'resque', :require => "resque/server"
+gem 'resque-scheduler'
+
 #for instagram -- instagram was installed has a plugin.. be careful
 gem 'faraday_middleware', '~> 0.3.1'
 #gem 'multi_json', '~> 0.0.5'

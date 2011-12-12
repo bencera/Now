@@ -12,7 +12,7 @@
     .yui-g.first
       .yui-u.first
         - n = 3.0
-        - @photos_tagged[0..19].each do |photo|
+        - @photos_tagged.each do |photo|
           - n += 1
           - if Integer(n/4) == n/4
             %ul.photos
@@ -27,7 +27,7 @@
                   = submit_tag "save", :class => 'button', :id => "get_btn"
       .yui-u
         - n = 2.0
-        - @photos_tagged[0..19].each do |photo|
+        - @photos_tagged.each do |photo|
           - n += 1
           - if Integer(n/4) == n/4
             %ul.photos
@@ -43,7 +43,7 @@
     .yui-g
       .yui-u.first
         - n = 1.0
-        - @photos_tagged[0..19].each do |photo|
+        - @photos_tagged.each do |photo|
           - n += 1
           - if Integer(n/4) == n/4
             %ul.photos
@@ -58,7 +58,7 @@
                   = submit_tag "save", :class => 'button', :id => "get_btn"
       .yui-u
         - n = 0.0
-        - @photos_tagged[0..19].each do |photo|
+        - @photos_tagged.each do |photo|
           - n += 1
           - if Integer(n/4) == n/4
             %ul.photos

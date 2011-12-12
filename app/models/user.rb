@@ -29,6 +29,10 @@ class User
   
   protected
   
+  def question_answered_email
+    UserMailer.question_answered(self).deliver
+  end
+  
   def redis_key(str)
     "user:#{self.id}:#{str}"
   end

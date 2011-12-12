@@ -33,10 +33,3 @@ $(function() {
 });
 })
 
-$('.slide_image1').crossSlide({
-  sleep: 2,
-  fade: 1
-}, [
-  { src: 'http://distilleryimage9.s3.amazonaws.com/edbd255e195711e1abb01231381b65e3_6.jpg',
- 		src: 'http://distilleryimage8.instagram.com/0fe9d6721c2311e1abb01231381b65e3_6.jpg'},
-]);

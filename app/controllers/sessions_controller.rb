@@ -16,11 +16,11 @@ class SessionsController < ApplicationController
       user_data = access_token["user"]
       #creer lutilisateur
       if User.where(:ig_id =>user_data.id).empty?
-        u = User.new(:ig_access_token => access_token["access_token"], :ig_username => user_data.username, :ig_id => user_data.id)
+        u = User.new(:ig_accesstoken => access_token["access_token"], :ig_username => user_data.username, :ig_id => user_data.id)
         u.save
       else
         u = User.first(conditions: {ig_id: user_data.id})
-        u.update_attributes(:ig_access_token => access_token["access_token"])
+        u.update_attributes(:ig_accesstoken => access_token["access_token"])
         u.complete_ig_info
         u.save
       end
