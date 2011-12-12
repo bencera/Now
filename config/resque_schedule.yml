@@ -2,7 +2,7 @@ fetch_photos_every_minute:
   cron: "60 * * * * *"
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
-  class: Fetchphotos2
+  class: FetchIgPhotos
   queue: fetchphotos_queue
   args: 
   description: "Fetchs instagram pics every minute"
