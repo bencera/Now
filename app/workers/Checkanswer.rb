@@ -1,4 +1,4 @@
-class CheckAnswer
+class Checkanswer
   @queue = :checkanswers_queue
   def self.perform(ig_media_id, media_comment_count, photo_user_id, access_token)
     comments = Instagram.media_comments(ig_media_id, :access_token => access_token)
@@ -20,7 +20,7 @@ class CheckAnswer
     Photo.first(conditions: {ig_media_id: ig_media_id}).requests.first.update_attributes(:nb_requests => nb_requests + 1)
     #if nb_requests < 60
     unless success == true
-      Resque.enqueue_in(1.minutes, CheckAnswer, ig_media_id, media_comment_count, photo_user_id, access_token)
+      Resque.enqueue_in(1.minutes, Checkanswer, ig_media_id, media_comment_count, photo_user_id, access_token)
     end
     #elsif nb_requests < 
   end

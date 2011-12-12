@@ -1,4 +1,4 @@
-class FetchIgPhotos
+class Fetchigphotos
   @queue = :fetchigphotos_queue
   def self.perform
     n = 0

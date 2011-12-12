@@ -12,7 +12,7 @@ class RequestsController < ApplicationController
                                                                                   :media_comment_count => count, 
                                                                                   :type => "question", 
                                                                                   :user_ids => [current_user.id, photo_user_id] )
-    Resque.enqueue(CheckAnswer, params[:ig_media_id], count, photo_user_id, current_user.ig_accesstoken)
+    Resque.enqueue(Checkanswer, params[:ig_media_id], count, photo_user_id, current_user.ig_accesstoken)
     flash[:notice] = "Your question was succesfully asked!"
     redirect_to :back
   end
