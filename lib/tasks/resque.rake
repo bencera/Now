@@ -1,4 +1,5 @@
 task "resque:setup" => :environment
+task "resque:scheduler_setup" => :environment
 
 #Resque tasks
 require 'resque/tasks'
