@@ -14,7 +14,7 @@ namespace :resque do
     #if Rails.env == "development"
     #  Resque.redis = 'localhost:6379'
     #else
-    Resque.redis = 'redis://redistogo:ea140da2aecd9e0c20f410b1be6bfdb1@viperfish.redistogo.com:9774/'
+    #Resque.redis = 'redis://redistogo:ea140da2aecd9e0c20f410b1be6bfdb1@viperfish.redistogo.com:9774/'
     #end
 
     # If you want to be able to dynamically change the schedule,
