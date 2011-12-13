@@ -5,7 +5,6 @@ class Categoryfeeds
 
   def self.perform(category)
       #take all the distinct venues from the photos from the last 3 hours
-    time = Time.now.to_i - Time.local(Time.now.year, Time.now.month, Time.now.day, 6, 0) 
     last_venues_id = Photo.last_hours(3).distinct(:venue_id)
     if !(category.nil?)
       #look at categories for these venues

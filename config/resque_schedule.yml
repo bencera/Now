@@ -11,7 +11,7 @@ Do_all_feed:
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
   class: Categoryfeeds
-  args: 
+  args: nil
   description: "create feed for all"
 
 Do_food_feed:
