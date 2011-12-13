@@ -5,6 +5,10 @@ $redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.passwo
 
 Resque.redis = $redis
 
+# $redis = Redis.new
+# 
+# Resque.redis = $redis
+
 Dir["#{Rails.root}/app/jobs/*.rb"].each { |file| require file }
 
 require 'resque_scheduler'
