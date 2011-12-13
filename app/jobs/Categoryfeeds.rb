@@ -6,7 +6,7 @@ class Categoryfeeds
   def self.perform(category)
       #take all the distinct venues from the photos from the last 3 hours
     last_venues_id = Photo.last_hours(3).distinct(:venue_id)
-    if !(category.nil?)
+    if category != "all"
       #look at categories for these venues
       last_venues = {}
       last_venues_id.each do |venue_id|
@@ -39,13 +39,13 @@ class Categoryfeeds
     #   photos_random += group.sort_by { rand }.compact
     # end
     photos.each do |photo|
-      if category.nil?
+      if category == "all"
         $redis.zadd("feed:all", photo.time_taken, "#{photo.id}")
       else
         $redis.zadd("feed:#{category.gsub(/ /,'')}", photo.time_taken, "#{photo.id}")
       end
     end
-    if category.nil?
+    if category == "all"
       $redis.zremrangebyscore("feed:all", 24.hours.from_now.to_i, 48.hours.from_now.to_i)
     else
       $redis.zremrangebyscore("feed:#{category.gsub(/ /,'')}", 24.hours.from_now.to_i, 48.hours.from_now.to_i)
