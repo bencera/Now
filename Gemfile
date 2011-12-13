@@ -30,7 +30,9 @@ gem 'redis'
 
 #gem 'infinitescrolling-rails'
 gem 'mathstats'
-gem 'resque', :require => "resque/server"
+#gem 'resque', :require => "resque/server"
+#gem 'resque', :git => 'git://github.com/defunkt/resque.git'
+gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'keepalive'
 gem 'resque-scheduler'
 
 #for instagram -- instagram was installed has a plugin.. be careful
