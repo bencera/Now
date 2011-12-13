@@ -1,5 +1,7 @@
+require 'resque_scheduler'
+
 class Fetchigphotos
-  @queue = :fetchigphotos_queue
+  @queue = :fetchphotos_queue
   def self.perform
     n = 0
     max_id = nil

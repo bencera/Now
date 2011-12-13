@@ -1,5 +1,2 @@
 development: localhost:6379
-test: localhost:6379
-staging: redis1.se.github.com:6379
-fi: localhost:6379
 production: redis://redistogo:ea140da2aecd9e0c20f410b1be6bfdb1@viperfish.redistogo.com:9774/
