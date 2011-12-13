@@ -12,7 +12,7 @@ class Checkanswer
         if n > media_comment_count.to_i + 1 
           if comment.from.id.to_i == photo_user_id.to_i
             Photo.first(conditions: {ig_media_id: ig_media_id}).requests.first.update_attributes(:response => comment.text, :time_answered => Time.now.to_i)
-            UserMailer.question_answered(current_user, ig_media_id).deliver
+            UserMailer.question_answered(User.first(conditions: {ig_accesstoken: access_token}), ig_media_id).deliver
             success = true
           end
         end

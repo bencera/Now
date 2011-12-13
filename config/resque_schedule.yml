@@ -1,5 +1,5 @@
 fetch_photos_every_minute:
-  every: "1m"
+  cron: "*/1 * * * *"
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
   class: Fetchigphotos
@@ -7,7 +7,7 @@ fetch_photos_every_minute:
   description: "Fetchs instagram pics every minute"
   
 Do_all_feed:
-  every: "2m"
+  cron: "*/1 * * * *"
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
   class: Categoryfeeds
@@ -15,7 +15,7 @@ Do_all_feed:
   description: "create feed for all"
 
 Do_food_feed:
-  every: "2m"
+  cron: "*/1 * * * *"
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
   class: Categoryfeeds
@@ -23,7 +23,7 @@ Do_food_feed:
   description: "create feed for food"
 
 Do_nightlife_feed:
-  every: "2m"
+  cron: "*/1 * * * *"
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
   class: Categoryfeeds
@@ -31,7 +31,7 @@ Do_nightlife_feed:
   description: "create feed for nightlife"
   
 Do_arts_feed:
-  every: "2m"
+  cron: "*/1 * * * *"
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
   class: Categoryfeeds
@@ -39,7 +39,7 @@ Do_arts_feed:
   description: "create feed for arts"
   
 Do_outdoors_feed:
-  every: "2m"
+  cron: "*/1 * * * *"
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
   class: Categoryfeeds
