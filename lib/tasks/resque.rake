@@ -6,4 +6,4 @@ task "resque:setup" => :environment do
 end
 
 desc "Alias for resque:work (To run workers on Heroku)"
-task "jobs:work" => "resque:work"
+task "jobs:work" => ["resque:work", "resque:scheduler"]
