@@ -18,6 +18,7 @@ class Photo
   
   #scopes
   scope :last_seconds, ->(s) { where(:time_taken.gt => s.seconds.ago.to_i) }
+  scope :last_hours, ->(h) { where(:time_taken.gt => h.hours.ago.to_i) }
   scope :with_venues, excludes(status: "novenue")
   
   #photo doesnt always have caption, but needs to be geolocated (for now)
