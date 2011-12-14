@@ -8,7 +8,7 @@ class PhotosController < ApplicationController
     end
     n = n.to_i
     if Rails.env == "development"
-      photos = $redis.zrange("feed:all", 0, -1)
+      #photos = $redis.zrange("feed:all", 0, -1)
       #@photos = photos[(n-1)*20..(n*20-1)]
       @photos = Photo.all.order_by([[:time_taken, :desc]]).distinct(:id)
     else
@@ -33,8 +33,13 @@ class PhotosController < ApplicationController
         @photos = photos[(n-1)*20..(n*20-1)]
         #@photos = Photo.new.get_last_photos("Great Outdoors",1)
       elsif params[:id] == "myfeed"
-        photos = $redis.zrevrangebyscore("feed:myfeed",Time.now.to_i, 24.hours.ago.to_i)
-        @photos = photos[(n-1)*20..(n*20-1)]
+        if ig_logged_in
+          photos = $redis.zrevrangebyscore("userfeed:#{current_user.id}",Time.now.to_i, 24.hours.ago.to_i)
+          @photos = photos[(n-1)*20..(n*20-1)]
+        else
+          @photos = []
+          flash[:notice] = "You must be logged in to have a feed"
+        end
         #@photos = Photo.new.get_last_photos("myfeed",1)
       end
     end

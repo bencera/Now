@@ -1,10 +1,10 @@
 #newsfeed_v2
-<select id="mySelect" onchange="if(this.options[this.selectedIndex].value !=''){window.top.location.href=this.options[this.selectedIndex].value}"> <option value="http://pure-sky-4808.heroku.com/photos">All New York</option> 
-<option value="http://pure-sky-4808.heroku.com/photos?id=food">Restaurants</option> 
-<option value="http://pure-sky-4808.heroku.com/photos?id=nightlife">Nighlife</option> 
-<option value="http://pure-sky-4808.heroku.com/photos?id=entertainment">Arts & Entertainment</option> 
-<option value="http://pure-sky-4808.heroku.com/photos?id=myfeed">My feed</option> 
-</select>
+= link_to "Trending venues", '/photos'
+= link_to "My feed", '/photos?id=myfeed'
+= link_to "Restaurants ideas", '/photos?id=food'
+= link_to "Going out", '/photos?id=nightlife'
+= link_to "Museums", '/photos?id=entertainment'
+= link_to "Fresh air", '/photos?id=outdoors'
 
 .yui-g
   .yui-g.first

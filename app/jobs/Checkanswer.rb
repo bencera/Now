@@ -20,9 +20,16 @@ class Checkanswer
     Photo.first(conditions: {ig_media_id: ig_media_id}).requests.first.update_attributes(:nb_requests => nb_requests + 1)
     #if nb_requests < 60
     unless success == true
-      Resque.enqueue_in(1.minutes, Checkanswer, ig_media_id, media_comment_count, photo_user_id, access_token)
+      if nb_requests < 60
+        Resque.enqueue_in(1.minutes, Checkanswer, ig_media_id, media_comment_count, photo_user_id, access_token)
+      elsif nb_requests < 78
+        Resque.enqueue_in(10.minutes, Checkanswer, ig_media_id, media_comment_count, photo_user_id, access_token)
+      elsif nb_requests < 100
+        Resque.enqueue_in(1.hour, Checkanswer, ig_media_id, media_comment_count, photo_user_id, access_token)
+      elsif nb_requests < 105
+        Resque.enqueue_in(1.day, Checkanswer, ig_media_id, media_comment_count, photo_user_id, access_token)
+      end     
     end
-    #elsif nb_requests < 
   end
 
 end

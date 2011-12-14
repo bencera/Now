@@ -1,47 +1,52 @@
 fetch_photos_every_minute:
-  cron: "* * * * *"
+  every: "1m"
+  #cron: "* * * * *"
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
   class: Fetchigphotos
   args: 
   description: "Fetchs instagram pics every minute"
   
-Do_all_feed:
-  cron: "* * * * *"
+Do_trending_feed:
+  every: "5m"
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
-  class: Categoryfeeds
-  args: "all"
-  description: "create feed for all"
-
-Do_food_feed:
-  cron: "* * * * *"
-  # you can use rufus-scheduler "every" syntax in place of cron if you prefer
-  # every: 1min
-  class: Categoryfeeds
-  args: "Food"
-  description: "create feed for food"
-
-Do_nightlife_feed:
-  cron: "* * * * *"
-  # you can use rufus-scheduler "every" syntax in place of cron if you prefer
-  # every: 1min
-  class: Categoryfeeds
-  args: "Nightlife Spot"
-  description: "create feed for nightlife"
+  class: Trending
+  args:
+  description: "create trending feed"
   
-Do_arts_feed:
-  cron: "* * * * *"
+Do_food_feed:
+  every: "2m"
+  #cron: "*10/ * * * *"
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
-  class: Categoryfeeds
-  args: "Arts & Entertainment"
-  description: "create feed for arts"
+  class: Categories
+  args: "Food"
+  description: "create feed"
+  
+Do_nightlife_feed:
+  every: "2m"
+  #cron: "*10/ * * * *"
+  # you can use rufus-scheduler "every" syntax in place of cron if you prefer
+  # every: 1min
+  class: Categories
+  args: "Nightlife Spot"
+  description: "create feed"
   
 Do_outdoors_feed:
-  cron: "* * * * *"
+  every: "2m"
+  #cron: "*10/ * * * *"
   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
   # every: 1min
-  class: Categoryfeeds
+  class: Categories
   args: "Great Outdoors"
-  description: "create feed for outdoors"
+  description: "create feed"
+
+Do_arts_feed:
+  every: "2m"
+  #cron: "*10/ * * * *"
+  # you can use rufus-scheduler "every" syntax in place of cron if you prefer
+  # every: 1min
+  class: Categories
+  args: "Arts & Entertainment"
+  description: "create feed"
