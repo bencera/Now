@@ -1,6 +1,6 @@
 class FollowsController < ApplicationController
   def index
-    client = Instagram.client(:access_token => session[:access_token])
+    client = Instagram.client(:access_token => current_user.ig_accesstoken)
     max_id = nil
     places = {}
     n = 1

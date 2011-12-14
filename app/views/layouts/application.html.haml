@@ -27,8 +27,10 @@
       = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
         = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a place...'
         = submit_tag "search", :name => nil, :class => 'button', :id => "search_btn"
-    .inbox
-      = link_to "Inbox", '/inbox'
+    -if ig_logged_in
+      .inbox
+        = link_to "Inbox", '/inbox'
+        
 
     .notice
       = notice

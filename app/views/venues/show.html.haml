@@ -10,15 +10,16 @@
     = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=700x250&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false"
   .map_right
     = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=40.763,-73.98&zoom=11&size=200x250&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false"
-  .follow
-  - unless User.first(conditions: {_id: current_user.id}).venues.distinct(:_id).include?(@venue.id)
-    = form_tag follows_path, :method => :post do
-      = hidden_field_tag :id, @venue.id
-      = submit_tag "follow", :class => 'button', :id => "follow_btn"
-  - else
-    = form_tag root_url + "follows/#{@venue.id}", :method => :delete do
-      = hidden_field_tag :id, @venue.id
-      = submit_tag "unfollow", :class => 'button', :id => "follow_btn"
+  - if ig_logged_in 
+    .follow
+    - unless User.first(conditions: {_id: current_user.id}).venues.distinct(:_id).include?(@venue.id)
+      = form_tag follows_path, :method => :post do
+        = hidden_field_tag :id, @venue.id
+        = submit_tag "follow", :class => 'button', :id => "follow_btn"
+    - else
+      = form_tag root_url + "follows/#{@venue.id}", :method => :delete do
+        = hidden_field_tag :id, @venue.id
+        = submit_tag "unfollow", :class => 'button', :id => "follow_btn"
 #Photos
 .yui-g
   .yui-g.first
