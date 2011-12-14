@@ -256,7 +256,7 @@ class Venue
           
           unless p.new?
             p.venue.users.each do |user|
-              $redis.zadd("userfeed:#{{user.id}}", p.time_taken, "#{p.id}")
+              $redis.zadd("userfeed:#{user.id}", p.time_taken, "#{p.id}")
             end
           end
           #User.exclude(:access_token =>all.each do
