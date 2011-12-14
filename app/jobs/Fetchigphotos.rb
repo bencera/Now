@@ -1,5 +1,3 @@
-require 'resque_scheduler'
-
 class Fetchigphotos
   @queue = :fetchphotos_queue
   def self.perform
@@ -8,9 +6,6 @@ class Fetchigphotos
     response = nil
     while n==0
       response = Instagram.geography_recent_media("702469", options={:max_id => max_id})
-      if response.nil?
-        return true
-      end
       n = response.count
       max_id = response[n-1].id
       response.each do |media|

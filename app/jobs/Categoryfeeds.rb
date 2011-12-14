@@ -1,5 +1,3 @@
-require 'resque_scheduler'
-
 class Categoryfeeds
   @queue = :categoryfeeds_queue
 
