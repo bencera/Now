@@ -15,7 +15,7 @@ class Request
   
   
   def find_question(question_id, venue_name)
-    question_start = ["Nice picture! ", "Hi, I have a question.. ", "Beautiful picture! " ]
+    question_start = ["Hi, quick question for you.. ", "Hi, I have a question.. ", "Hi, can i ask you something? " ]
     question_end = [" Thanks!", " Thank you!"]
     case question_id
       #Food questions
