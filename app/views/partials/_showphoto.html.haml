@@ -33,3 +33,12 @@
               = hidden_field_tag :ig_media_id, photo.ig_media_id
               = hidden_field_tag :venue_name, photo.venue.name
               = submit_tag "Ask", :class => 'button', :id => "ask_btn"
+        - else
+          .question
+            = photo.requests.first.question
+          .response
+            = photo.requests.first.response
+          .time_answered
+            = time_ago_in_words Time.at photo.requests.first.time_answered.to_i
+            ago
+          

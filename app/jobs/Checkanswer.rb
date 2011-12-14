@@ -12,6 +12,7 @@ class Checkanswer
             Photo.first(conditions: {ig_media_id: ig_media_id}).requests.first.update_attributes(:response => comment.text, :time_answered => Time.now.to_i)
             UserMailer.question_answered(User.first(conditions: {ig_accesstoken: access_token}), ig_media_id).deliver
             success = true
+            $redis.zadd("feed:answered", Photo.first(conditions: {ig_media_id: ig_media_id}).time_taken, "#{Photo.first(conditions: {ig_media_id: ig_media_id}).id}")
           end
         end
       end

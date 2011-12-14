@@ -32,6 +32,10 @@ class PhotosController < ApplicationController
         photos = $redis.zrevrangebyscore("feed:GreatOutdoors",Time.now.to_i,24.hours.ago.to_i)
         @photos = photos[(n-1)*20..(n*20-1)]
         #@photos = Photo.new.get_last_photos("Great Outdoors",1)
+      elsif params[:id] == "answered"
+        photos = $redis.zrevrangebyscore("feed:answered",Time.now.to_i,1000.hours.ago.to_i)
+        @photos = photos[(n-1)*20..(n*20-1)]
+        #@photos = Photo.new.get_last_photos("Great Outdoors",1)
       elsif params[:id] == "myfeed"
         if ig_logged_in
           photos = $redis.zrevrangebyscore("userfeed:#{current_user.id}",Time.now.to_i, 24.hours.ago.to_i)
