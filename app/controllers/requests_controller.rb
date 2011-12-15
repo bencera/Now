@@ -26,6 +26,6 @@ class RequestsController < ApplicationController
   end
   
   def index
-    @requests = Request.where(:user_ids => current_user.id)
+    @requests = Request.where(:user_ids => current_user.id).order_by([[:time_asked, :desc]])
   end
 end
