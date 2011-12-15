@@ -8,16 +8,6 @@
         - unless photo.venue.blank?
           .name
           = link_to "#{photo.venue.name}", photo.venue
-            - if ig_logged_in 
-              .follow
-                - unless User.first(conditions: {_id: current_user.id}).venues.distinct(:_id).include?(@venue.id)
-                  = form_tag follows_path, :method => :post do
-                    = hidden_field_tag :id, @venue.id
-                    = submit_tag "follow", :class => 'button', :id => "follow_btn"
-                - else
-                  = form_tag root_url + "follows/#{@venue.id}", :method => :delete do
-                    = hidden_field_tag :id, @venue.id
-                    = submit_tag "unfollow", :class => 'button', :id => "follow_btn"
           .neighborhood
           - unless photo.venue.neighborhood.nil?
             = photo.venue.neighborhood
