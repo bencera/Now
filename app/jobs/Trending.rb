@@ -21,7 +21,7 @@ class Trending
     last_specific_venues = {}
     #count for each "Food" venue the number of single users
     last_venues_id.each do |venue_id|
-      last_specific_venues[venue_id] = Photo.where(:venue_id => venue_id).last_hours(3).count
+      last_specific_venues[venue_id] = Photo.where(:venue_id => venue_id).last_hours(3).distinct(:user_id).count
     end
     last_specific_venues = last_specific_venues.sort_by { |k,v| v}.reverse
     #for each venue take 1 photo for each 5 taken from the most recent photos

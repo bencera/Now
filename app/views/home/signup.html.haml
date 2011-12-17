@@ -1,6 +1,24 @@
-Welcome to UBImachine!
-Enter your email to get notified when someone answers a question you asked
-= form_tag '/signup' do
-  = text_field_tag :email,  nil, :placeholder => "Enter your email"
-  = submit_tag "submit", :class => 'button', :id => "get_btn"
-= link_to "Skip", '/follows'
+.container
+  .content_below
+    %h1 Welcome to ubimachine!
+    %h4 Ubiquity finally available to the crowds.
+
+.container
+  .content_below
+    %h3 Ubimachine let's you:
+    %ul
+      %li explore the world through pictures taken every second
+      %li follow your favourite venues to get updated on what's happening there
+      %li ask people who are there or who have been what is happening
+    
+    
+.container
+  .content_below
+    %p Enter your email to get notified when someone answers a question you asked:
+    = form_tag '/signup' do
+      = text_field_tag :email,  nil, :placeholder => "ben@ubimachine.com"
+      = submit_tag "submit", :class => 'btn'
+    = link_to "skip", '/follows'
+
+%footer
+  = render 'partials/footer'

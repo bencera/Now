@@ -1,5 +1,12 @@
-- @venues.each do |venue|
-  .venue
-    = link_to venue.name, venue_path(venue.id)
-    %span
-      = "#{venue.location.address} · #{venue.stats['checkinsCount']} checkins"
+.container
+  .content_below
+    %h1 Search results in New York
+    - @venues.each do |venue|
+      .venue
+        = link_to venue["name"], venue_path(venue["id"])
+        %span
+          - unless venue["category"].nil?
+            = venue["category"]["name"]
+      
+%footer
+  = render 'partials/footer'

@@ -10,7 +10,7 @@ class PhotosController < ApplicationController
     if Rails.env == "development"
       #photos = $redis.zrange("feed:all", 0, -1)
       #@photos = photos[(n-1)*20..(n*20-1)]
-      @photos = ["4edefd75b65339c0d2000004"] #all.order_by([[:time_taken, :desc]]).distinct(:id)
+      @photos = Photo.all.order_by([[:time_taken, :desc]]).distinct(:_id).take(12)
     else
       if params[:id].nil?
         photos = $redis.zrevrangebyscore("feed:all",Time.now.to_i,24.hours.ago.to_i)

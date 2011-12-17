@@ -17,6 +17,10 @@ module Foursquare
         Foursquare::Venue.new(@foursquare, json)
       end
     end
+    
+    def autocomplete(options={})
+      @foursquare.get('venues/suggestCompletion', options)
+    end
 
     def trending(options={})
       search_group("trending", options)

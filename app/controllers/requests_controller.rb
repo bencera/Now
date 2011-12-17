@@ -26,6 +26,10 @@ class RequestsController < ApplicationController
   end
   
   def index
-    @requests = Request.where(:user_ids => current_user.id).order_by([[:time_asked, :desc]])
+    if ig_logged_in
+      @requests = Request.where(:user_ids => current_user.id).order_by([[:time_asked, :desc]])
+    else
+      @requests = Request.all
+    end
   end
 end

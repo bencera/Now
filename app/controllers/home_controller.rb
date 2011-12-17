@@ -1,5 +1,8 @@
 class HomeController < ApplicationController
   def index
+    if ig_logged_in
+      redirect_to '/photos'
+    end
   end
 
   def stats
@@ -12,11 +15,15 @@ class HomeController < ApplicationController
     if params[:email] !=nil
       u = User.first(conditions: {ig_id: current_user.ig_id})
       u.update_attributes(:ig_details[0] => params[:full_name], :email => params[:email])
-      redirect_to '/follows'
+      if u.venue_ids.blank?
+        redirect_to '/follows'
+      else
+        redirect_to '/photos'
+      end
     elsif User.first(conditions: {ig_id: current_user.ig_id}).email.blank?
       @user = current_user
     else
-      redirect_to '/follows'
+      redirect_to '/photos'
     end
 
   end

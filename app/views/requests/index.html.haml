@@ -1,18 +1,11 @@
-%ul.requests
-  - @requests.each do |request|
-    %li.request
-      = image_tag request.photo.url[0], :width => '300px'
-      .time_ago
-        = time_ago_in_words Time.at request.photo.time_taken.to_i
-        ago
-      .name
-        = link_to "#{request.photo.venue.name}", request.photo.venue
-      .neighborhood
-        - unless request.photo.venue.neighborhood.nil?
-          = request.photo.venue.neighborhood
-      .caption
-        = "\"#{request.photo.caption}\"" unless request.photo.caption.blank?
-      .question
-        = request.question
-      .response
-        = request.response
+.container
+  .content_below#main
+    %h1 Inbox
+    %ul.media-grid
+      %ul.requests
+        - @requests.each do |request|
+          = render 'partials/showphoto', :photo => request.photo
+        
+      
+%footer
+  = render 'partials/footer'

@@ -1,0 +1,57 @@
+#newsfeed_v2
+= link_to "Trending venues", '/photos'
+| 
+= link_to "Answered questions", '/photos?id=answered'
+| 
+= link_to "My feed", '/photos?id=myfeed'
+| 
+= link_to "Restaurants ideas", '/photos?id=food'
+| 
+= link_to "Going out", '/photos?id=nightlife'
+| 
+= link_to "Museums", '/photos?id=entertainment'
+| 
+= link_to "Fresh air", '/photos?id=outdoors'
+
+.span10
+
+.yui-g
+  .yui-g.first
+    .yui-u.first
+      - n = 3.0
+      - @photos.each do |photo_id|
+        - photo = Photo.first(conditions: {_id: photo_id})
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo
+    .yui-u
+      - n = 2.0
+      - @photos.each do |photo_id|
+        - photo = Photo.first(conditions: {_id: photo_id})
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo
+  .yui-g
+    .yui-u.first
+      - n = 1.0
+      - @photos.each do |photo_id|
+        - photo = Photo.first(conditions: {_id: photo_id})
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo
+    .yui-u
+      - n = 0.0
+      - @photos.each do |photo_id|
+        - photo = Photo.first(conditions: {_id: photo_id})
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo
+          
+.more
+  = form_tag photos_url, :method => :get do
+    - if params[:page].nil?
+      = hidden_field_tag :page, 2
+    - else
+      = hidden_field_tag :page, (params[:page].to_i + 1)
+    = hidden_field_tag :id, params[:id]
+    = submit_tag "more", :class => 'button', :id => "get_btn"

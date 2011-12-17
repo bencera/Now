@@ -38,8 +38,9 @@ class SessionsController < ApplicationController
   end
   
  
-  #def destroy
-  #  session[:access_token] = nil
-  #  redirect_to root_url
-  #end
+  def logout
+   session[:user_id] = nil
+   redirect_to root_url, :id => "/accounts/logout"
+  end
+
 end

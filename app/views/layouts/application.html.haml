@@ -1,45 +1,100 @@
 !!! Strict
 %html
 %head
-  %title= "UBIMACHINE"
-  /= javascript_include_tag :defaults
-  = javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.js', "application"
+  %title= "ubimachine"
+  = javascript_include_tag :defaults
+  = javascript_include_tag  "application"
+  = javascript_include_tag  'autocomplete'
   = javascript_include_tag 'https://raw.github.com/tobia/CrossSlide/master/jquery.cross-slide.min.js'
-  = stylesheet_link_tag 'http://yui.yahooapis.com/2.9.0/build/reset-fonts-grids/reset-fonts-grids.css'
-  = stylesheet_link_tag 'application'
-  = csrf_meta_tag
-  /= stylesheet_link_tag 'web'
-  /= stylesheet_link_tag 'http://yui.yahooapis.com/2.9.0/build/reset-fonts-grids/reset-fonts-grids.css'
+  = stylesheet_link_tag 'bootstrap'
+  = stylesheet_link_tag 'reset'
+  = stylesheet_link_tag "application"
   %script{ :type => "text/javascript", :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'}
   %script{ :type => "text/javascript", :src => 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js'}
 
-  
-<meta name = "viewport" content = "initial-scale = 1.0">
-
 %body
-#doc4
-  .yui-t7
-  #header
-    .logo
-      = link_to "UBIMACHINE", photos_path
-      /hide search in home.html
-    .search
-      = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
-        = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a place...'
-        = submit_tag "search", :name => nil, :class => 'button', :id => "search_btn"
-    -if ig_logged_in
-      .inbox
-        = link_to "Inbox", '/inbox'
-        
-
-    .notice
-      = notice
-    .alert
-      = alert
-    .loginout
+.topbar
+  .topbar-inner
+    .container
+      %a.brand{:href=>"/photos"} ubimachine
       - if ig_logged_in
-        = link_to "logout", 'https://instagram.com/accounts/logout/'
+        %ul.nav
+          %li
+            = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
+              = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a venue...'
+          %li.dropdown{ :'data-dropdown' => "dropdown"}
+            %a.dropdown-toggle New York
+            %ul.dropdown-menu
+              %li
+                %a New York
+              / %li
+              /   %a Paris
+              / %li
+              /   %a Tokyo
+          %li.dropdown{ :'data-dropdown' => "dropdown"}
+            %a.dropdown-toggle
+              - if params[:id].nil?
+                My feed
+              - elsif params[:id] == "food"
+                Restaurants
+              - elsif params[:id] == "nightlife"
+                Nightlife
+              - elsif params[:id] == "entertainment"
+                Arts & Entertainment
+              - elsif params[:id] == "outdoors"
+                Outdoors
+                
+            %ul.dropdown-menu
+              %li
+                %a{:href=>"/photos"} My feed
+              %li
+                %a{:href=>"/photos?id=food"} Restaurants
+              %li
+                %a{:href=>"/photos?id=nightlife"} Nightlife
+              %li
+                %a{:href=>"/photos?id=entertainment"} Arts & Entertainment
+              %li
+                %a{:href=>"/photos?id=outdoors"} Outdoors
+        %ul.nav.secondary-nav
+          %li
+            %a{:href=>"/inbox"} Inbox
+          %li.dropdown{ :'data-dropdown' => "dropdown"}
+            %a.dropdown-toggle
+              - unless current_user.ig_details[1].blank?
+                .profilepic
+                  = image_tag current_user.ig_details[1], :width => '25px'
+              - if current_user.ig_details[0].blank?
+                - current_user.ig_username
+              - else
+                = current_user.ig_details[0]
+            %ul.dropdown-menu
+              %li
+                %a{:href=>"/settings"} Settings
+              %li.divider
+              %li
+                %a{:href=>'/logout'} Log out
       - else
-        = link_to "login", 'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=' + root_url + 'auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
-  #body
-    = yield
+        %ul.nav
+          %li
+            = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
+              = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a venue...'
+          %li.dropdown{ :'data-dropdown' => "dropdown"}
+            %a.dropdown-toggle New York
+            %ul.dropdown-menu
+              %li
+                %a New York
+              / %li
+              /   %a Paris
+              / %li
+              /   %a Tokyo
+        %ul.nav.secondary-nav
+          %li
+            %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=' + root_url + 'auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
+%iframe{:frameborder => "0", :height => "0", :width => "0", :name => "iframe"}
+= unless alert.nil?
+  .alert-message.success.fade.in{:'data-alert' => "alert"}
+    %a.close
+      x
+    %p=alert
+
+= yield

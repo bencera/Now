@@ -173,6 +173,15 @@ class Venue
     end
   end
   
+  def self.autocomplete(name, lat, lng, browse)
+    #changer la lat long en fonction de la ville choisie
+    if browse
+      client.venues.search(:ll => "#{lat}" + "," + "#{lng}", :query => name, :intent => "browse", :radius => 10000)
+    else
+      client.venues.search(:ll => "#{lat}" + "," + "#{lng}", :query => name)
+    end
+  end
+  
   def fetch_ig_photos
     photos = Instagram.location_recent_media(self.ig_venue_id)
     photos['data'].each do |media|

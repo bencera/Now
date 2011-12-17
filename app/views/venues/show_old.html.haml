@@ -1,0 +1,59 @@
+- if @photos == []
+  Sorry no more photos...
+
+#Venue
+  .name= @venue.name
+  .address= "#{@venue.address["address"]}" + ", " +  "#{@venue.address["crossStreet"]}"
+  .neighborhood= @venue.neighborhood unless @venue.neighborhood.nil?
+  .category= @venue.categories.first["name"] unless @venue.categories.nil?
+  .map_left 
+    = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=700x250&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false"
+  .map_right
+    = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=40.763,-73.98&zoom=11&size=200x250&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false"
+  - if ig_logged_in 
+    .follow
+    - unless User.first(conditions: {_id: current_user.id}).venues.distinct(:_id).include?(@venue.id)
+      = form_tag follows_path, :method => :post do
+        = hidden_field_tag :id, @venue.id
+        = submit_tag "follow", :class => 'button', :id => "follow_btn"
+    - else
+      = form_tag root_url + "follows/#{@venue.id}", :method => :delete do
+        = hidden_field_tag :id, @venue.id
+        = submit_tag "unfollow", :class => 'button', :id => "follow_btn"
+#Photos
+.yui-g
+  .yui-g.first
+    .yui-u.first
+      - n = 3.0
+      - @photos.each do |photo|
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo
+    .yui-u
+      - n = 2.0
+      - @photos.each do |photo|
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo
+  .yui-g
+    .yui-u.first
+      - n = 1.0
+      - @photos.each do |photo|
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo
+    .yui-u
+      - n = 0.0
+      - @photos.each do |photo|
+        - n += 1
+        - if Integer(n/4) == n/4
+          = render 'partials/showphoto', :photo => photo
+          
+- unless @photos.count < 20
+  .more
+    = form_tag @venue, :method => :get do
+      - if params[:page].nil?
+        = hidden_field_tag :page, 2
+      - else
+        = hidden_field_tag :page, (params[:page].to_i + 1)
+      = submit_tag "more", :class => 'button', :id => "get_btn"

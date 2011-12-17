@@ -1,17 +1,17 @@
-.title
-  Follow places
-.done
-  =link_to "Done", '/cities'
-- if ig_logged_in
-  %ul.places
-    - @best_places.each do |place|
-      %li.place
-        = place[0]
-        - unless User.first(conditions: {ig_username: "bencera"}).venues.distinct(:_id).include?(place[1][1].to_s)
-          = form_tag follows_path, :method => :post do
-            = hidden_field_tag :id, place[1][1]
-            = submit_tag "follow", :class => 'button', :id => "follow_btn"
-        - else
-          = form_tag root_url + "follows/#{place[1][1]}", :method => :delete do
-            = hidden_field_tag :ig_venue_id, place[1][1]
-            = submit_tag "unfollow", :class => 'button', :id => "follow_btn"
+.container
+  .content_below
+    %h1 ipsum ipsum
+    %ul
+      %li 
+        venue 1
+        = form_tag follows_path, :method => :post do
+          = hidden_field_tag :id, nil
+          = submit_tag "follow", :class => 'primary btn'
+      %li
+        venue 2
+        = form_tag follows_path, :method => :post do
+          = hidden_field_tag :id, nil
+          = submit_tag "follow", :class => 'primary btn'
+
+%footer
+  = render 'partials/footer'

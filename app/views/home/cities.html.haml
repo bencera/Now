@@ -1,10 +1,14 @@
-.title
-  Choose a city to explore...
+.container
+  .content_below
+    %h1 Pick a city to explore
+    %ul.media-grid
+      .intro
+        - photo = Photo.where(tag: "ny")[0]
+        = render 'partials/showphoto', :photo => photo
+        - photo = Photo.where(tag: "paris")[0]
+        = render 'partials/showphoto', :photo => photo
+        - photo = Photo.where(tag: "tokyo")[0]
+        = render 'partials/showphoto', :photo => photo
 
-.cities
-  .newyork
-    = link_to (image_tag Photo.where(tag: "ny")[0].url[0], :width => '250px') , photos_path
-  .paris
-    = link_to (image_tag Photo.where(tag: "paris")[0].url[0], :width => '250px') , photos_path
-  .tokyo
-    = link_to (image_tag Photo.where(tag: "tokyo")[0].url[0], :width => '250px') , photos_path
+%footer
+  = render 'partials/footer'
