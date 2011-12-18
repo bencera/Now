@@ -2,13 +2,19 @@
 %html
 %head
   %title= "ubimachine"
-  = javascript_include_tag :defaults
-  = javascript_include_tag  "application"
+  /= javascript_include_tag :defaults
+  /= javascript_include_tag  "application"
+  = javascript_include_tag  'autocomplete'
+  = javascript_include_tag  'bootstrap-alerts'
+  = javascript_include_tag  'bootstrap-buttons'
+  = javascript_include_tag  'bootstrap-dropdown'
+  = javascript_include_tag  'bootstrap-modal'
   = javascript_include_tag  'autocomplete'
   = javascript_include_tag 'https://raw.github.com/tobia/CrossSlide/master/jquery.cross-slide.min.js'
   = stylesheet_link_tag 'bootstrap'
   = stylesheet_link_tag 'reset'
-  = stylesheet_link_tag "application"
+  = stylesheet_link_tag 'autocomplete'  
+  /= stylesheet_link_tag "application"
   %script{ :type => "text/javascript", :src => 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'}
   %script{ :type => "text/javascript", :src => 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js'}
 

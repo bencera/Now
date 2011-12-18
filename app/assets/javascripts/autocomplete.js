@@ -3,7 +3,7 @@ $(function() {
     minLength: 3,
     delay: 300,
 		select: function(event, ui) {
-			window.location.href = 'http://0.0.0.0:3000/venues/' + ui.item.value;
+			window.location.href = 'http://pure-sky-4808.herokuapp.com/venues/' + ui.item.value;
 		},
     source: function(request, response) {
         $.ajax({
