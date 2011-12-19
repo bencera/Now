@@ -20,7 +20,7 @@ class FollowsController < ApplicationController
   def destroy
     current_user.venue_ids.delete(params[:id])
     current_user.save
-    Venue.first(conditions: {_id: params[:id]).photos.last_hours(24*7).each do |photo|
+    Venue.first(conditions: {_id: params[:id]}).photos.last_hours(24*7).each do |photo|
       $redis.zrem("userfeed:#{current_user.id}", "#{photo.id.to_s}")
     end
     #Resque.enqueue(Unfollow, current_user, params[:id])
