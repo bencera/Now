@@ -60,6 +60,13 @@ class PhotosController < ApplicationController
         else
           @photos = photos[(n-1)*21..(n*21-1)]
         end
+      elsif params[:id] == "trending"
+        photos = $redis.zrevrangebyscore("feed:all",Time.now.to_i,24.hours.ago.to_i)
+        if photos[(n-1)*21..(n*21-1)].nil?
+          @photos = []
+        else
+          @photos = photos[(n-1)*21..(n*21-1)]
+        end
       end
     end
     if Rails.env == "development"
@@ -72,6 +79,7 @@ class PhotosController < ApplicationController
       end
       @venues_trending = venues_trending.uniq.take(10)
     end
+    @answered = Request.excludes(:time_answered => nil).order_by([:time_answered, :desc]).take(7)
 
   end
   

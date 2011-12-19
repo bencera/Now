@@ -19,8 +19,12 @@
           -elsif @photo.requests.first.response.nil?
             %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
           -else
-            %p.question= @photo.requests.first.question
-            %p.answer= @photo.requests.first.response
+            %p.question
+              Q: 
+              = Request.new.short_question(@photo.requests.first.question_id.to_i)
+            %p.answer
+              A: 
+              = "\"#{@photo.requests.first.response}\""
       
 %footer
   = render 'partials/footer'

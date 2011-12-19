@@ -52,6 +52,10 @@ class Request
         question_middle = "Still raining?"
       when 32
         question_middle = "What is going on?"
+      when 1000
+        question_middle = "What is ubimachine?"
+      when 1001
+        question_middle = "Sounds cool! Is it hard to get in?"
     end
   end
   

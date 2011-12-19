@@ -26,7 +26,21 @@
           = submit_tag "more", :class => 'btn'
         
   .content_below#right
-    %h3 Trending venues
+    .page-header
+      %h3= link_to "Answered questions", '/photos?id=answered'
+    %ul.unstyled
+      - @answered.each do |request|
+        %li
+          = link_to request.photo.venue.name, request.photo
+          %br
+          = time_ago_in_words(Time.at request.time_answered)
+          ago
+          %br
+          Q:
+          = Request.new.short_question(request.question_id.to_i)
+  .content_below#right
+    .page-header
+      %h3= link_to "Trending venues", '/photos?id=trending'
     %ul.unstyled
       - @venues_trending.each do |venue|
         %li

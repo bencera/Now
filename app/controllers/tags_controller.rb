@@ -1,5 +1,5 @@
 class TagsController < ApplicationController
-  
+  http_basic_authenticate_with :name => "ben_cera", :password => "London123"
   
   def index
     if params[:max_id] == nil
