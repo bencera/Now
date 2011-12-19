@@ -29,7 +29,6 @@
     %h3 Trending venues
     %ul.unstyled
       - @venues_trending.each do |venue|
-        - venue = Venue.first(conditions: {_id: venue})
         %li
           = link_to venue.name, venue
           %br
