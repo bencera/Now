@@ -10,7 +10,7 @@ class PhotosController < ApplicationController
     if Rails.env == "development"
       @photos = Photo.all.order_by([[:time_taken, :desc]]).distinct(:_id).take(12)
     else
-      if params[:id].nil? #my feed
+      if params[:id].blank? #my feed
         if ig_logged_in
           photos = $redis.zrevrangebyscore("userfeed:#{current_user.id}",Time.now.to_i, 24.hours.ago.to_i)
           if photos[(n-1)*21..(n*21-1)].nil?
@@ -21,13 +21,6 @@ class PhotosController < ApplicationController
         else
           redirect_to '/photos?id=food'
         end
-        # photos = $redis.zrevrangebyscore("feed:all",Time.now.to_i,24.hours.ago.to_i)
-        # if photos[(n-1)*20..(n*20-1)].nil?
-        #   @photos = []
-        # else
-        #   @photos = photos[(n-1)*20..(n*20-1)]
-        # end
-        #@photos = Photo.new.get_last_photos(nil,1)   
       elsif params[:id] == "food"
         photos = $redis.zrevrangebyscore("feed:Food",Time.now.to_i,24.hours.ago.to_i)
         if photos[(n-1)*21..(n*21-1)].nil?

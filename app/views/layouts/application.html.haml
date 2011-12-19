@@ -94,7 +94,6 @@
         %ul.nav.secondary-nav
           %li
             %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=' + root_url + 'auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
-%iframe{:frameborder => "0", :height => "0", :width => "0", :name => "iframe"}
 - unless flash[:notice].nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}
     %a.close

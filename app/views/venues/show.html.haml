@@ -10,8 +10,9 @@
           .address= "#{@venue.address["address"]}" + ", cross w/ " +  "#{@venue.address["crossStreet"]}"
         .category= @venue.categories.first["name"] unless @venue.categories.nil?
         .followers
-          = @venue.users.count 
-          followers
+          - unless @venue.users.count == 0
+            = @venue.users.count 
+            followers
         - if ig_logged_in
           .follow
             %a
