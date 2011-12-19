@@ -8,8 +8,6 @@ class PhotosController < ApplicationController
     end
     n = n.to_i
     if Rails.env == "development"
-      #photos = $redis.zrange("feed:all", 0, -1)
-      #@photos = photos[(n-1)*20..(n*20-1)]
       @photos = Photo.all.order_by([[:time_taken, :desc]]).distinct(:_id).take(12)
     else
       if params[:id].nil? #my feed
@@ -71,12 +69,16 @@ class PhotosController < ApplicationController
         end
       end
     end
-    photos_trending = $redis.zrevrangebyscore("feed:all",Time.now.to_i,1.hours.ago.to_i)
-    venues_trending = []
-    photos_trending.each do |photo_id|
-      venues_trending << Photo.first(conditions: {_id: photo_id}).venue
+    if Rails.env == "development"
+      @venues_trending = []
+    else
+      photos_trending = $redis.zrevrangebyscore("feed:all",Time.now.to_i,1.hours.ago.to_i)
+      venues_trending = []
+      photos_trending.each do |photo_id|
+        venues_trending << Photo.first(conditions: {_id: photo_id}).venue
+      end
+      @venues_trending = venues_trending.uniq.take(10)
     end
-    @venues_trending = venues_trending.uniq.take(10)
 
     
   end
