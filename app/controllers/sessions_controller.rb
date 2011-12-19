@@ -17,6 +17,7 @@ class SessionsController < ApplicationController
       #creer lutilisateur
       if User.where(:ig_id =>user_data.id).empty?
         u = User.new(:ig_accesstoken => access_token["access_token"], :ig_username => user_data.username, :ig_id => user_data.id)
+        u.complete_ig_info
         u.save
       else
         u = User.first(conditions: {ig_id: user_data.id})

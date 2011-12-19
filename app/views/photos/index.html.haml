@@ -12,10 +12,10 @@
       %h1= "New York" + " - " + "Outdoors"
       
     %ul.media-grid
-      - @photos[0..19].each do |photo_id|
+      - @photos[0..20].each do |photo_id|
         - photo = Photo.first(conditions: {_id: photo_id.to_s})
         = render 'partials/showphoto', :photo => photo
-    - unless @photos.count < 20
+    - unless @photos.count < 21
       .more
         = form_tag photos_url, :method => :get do
           - if params[:page].nil?
