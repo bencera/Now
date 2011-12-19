@@ -1,6 +1,9 @@
 class FollowsController < ApplicationController
   def index
-    @suggestfollows = $redis.smembers("suggestfollow:#{current_user.id}")
+    suggestfollows = $redis.smembers("suggestfollow:#{current_user.id}")
+    if suggestfollows.count < 10
+      suggestfollows << Venue.excludes(:user_ids => []).distinct(:_id).take(10)
+    end
   end
 
   def create
