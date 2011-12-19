@@ -8,8 +8,6 @@
         .neighborhood= @venue.neighborhood unless @venue.neighborhood.nil?
         .address= "#{@venue.address["address"]}" + ", cross w/ " +  "#{@venue.address["crossStreet"]}"
         .category= @venue.categories.first["name"] unless @venue.categories.nil?
-        .questions
-          25 questions asked
         .followers
           = @venue.users.count 
           followers

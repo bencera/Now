@@ -15,23 +15,25 @@
       - @photos[0..19].each do |photo_id|
         - photo = Photo.first(conditions: {_id: photo_id.to_s})
         = render 'partials/showphoto', :photo => photo
+    .more
+      = form_tag photos_url, :method => :get do
+        - if params[:page].nil?
+          = hidden_field_tag :page, 2
+        - else
+          = hidden_field_tag :page, (params[:page].to_i + 1)
+        = hidden_field_tag :id, params[:id]
+        = submit_tag "more", :class => 'btn'
         
   .content_below#right
     %h3 Trending venues
-    %ul
-      %li venue 1
-      %li venue 2
-      %li venue 3
-      %li venue 4
-  - if ig_logged_in
-    .content_below#right
-      %h3 Recommended venues
-      %ul.unstyled
-        %li Max Fish
-        %a.follow
-          = form_tag follows_path, :method => :post do
-            = hidden_field_tag :id, nil
-            = submit_tag "follow", :class => 'btn primary'
+    %ul.unstyled
+      - @venues_trending.each do |venue|
+        - venue = Venue.first(conditions: {_id: venue})
+        %li
+          = link_to venue.name, venue
+          %br
+          = venue.photos.last_hours(3).distinct(:user_id).count
+          users
         
 %footer
   = render 'partials/footer'

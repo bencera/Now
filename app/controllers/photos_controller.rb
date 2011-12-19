@@ -12,13 +12,24 @@ class PhotosController < ApplicationController
       #@photos = photos[(n-1)*20..(n*20-1)]
       @photos = Photo.all.order_by([[:time_taken, :desc]]).distinct(:_id).take(12)
     else
-      if params[:id].nil?
-        photos = $redis.zrevrangebyscore("feed:all",Time.now.to_i,24.hours.ago.to_i)
-        if photos[(n-1)*20..(n*20-1)].nil?
-          @photos = []
+      if params[:id].nil? #my feed
+        if ig_logged_in
+          photos = $redis.zrevrangebyscore("userfeed:#{current_user.id}",Time.now.to_i, 24.hours.ago.to_i)
+          if photos[(n-1)*20..(n*20-1)].nil?
+            @photos = []
+          else
+            @photos = photos[(n-1)*20..(n*20-1)]
+          end
         else
-          @photos = photos[(n-1)*20..(n*20-1)]
+          @photos = []
+          flash[:notice] = "You must be logged in to have a feed"
         end
+        # photos = $redis.zrevrangebyscore("feed:all",Time.now.to_i,24.hours.ago.to_i)
+        # if photos[(n-1)*20..(n*20-1)].nil?
+        #   @photos = []
+        # else
+        #   @photos = photos[(n-1)*20..(n*20-1)]
+        # end
         #@photos = Photo.new.get_last_photos(nil,1)   
       elsif params[:id] == "food"
         photos = $redis.zrevrangebyscore("feed:Food",Time.now.to_i,24.hours.ago.to_i)
@@ -59,22 +70,16 @@ class PhotosController < ApplicationController
         else
           @photos = photos[(n-1)*20..(n*20-1)]
         end
-        #@photos = Photo.new.get_last_photos("Great Outdoors",1)
-      elsif params[:id] == "myfeed"
-        if ig_logged_in
-          photos = $redis.zrevrangebyscore("userfeed:#{current_user.id}",Time.now.to_i, 24.hours.ago.to_i)
-        if photos[(n-1)*20..(n*20-1)].nil?
-          @photos = []
-        else
-          @photos = photos[(n-1)*20..(n*20-1)]
-        end
-        else
-          @photos = []
-          flash[:notice] = "You must be logged in to have a feed"
-        end
-        #@photos = Photo.new.get_last_photos("myfeed",1)
       end
     end
+    # photos_trending = $redis.zrevrangebyscore("feed:all",Time.now.to_i,1.hours.ago.to_i)
+    # venues_trending = []
+    # photos_trending.each do |photo_id|
+    #   venues_trending << Photo.first(conditions: {_id: photo_id}).venue
+    # end
+    # @venues_trending = venues_trending.uniq.take(10)
+    @venues_trending =[]
+    
   end
   
   def show

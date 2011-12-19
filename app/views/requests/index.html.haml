@@ -1,10 +1,56 @@
 .container
-  .content_below#main
+  .content_below
     %h1 Inbox
-    %ul.media-grid
-      %ul.requests
-        - @requests.each do |request|
-          = render 'partials/showphoto', :photo => request.photo
+    %ul.requests.unstyled
+      - @requests.each do |request|
+        - unless request.time_answered.nil?
+          - photo = request.photo
+          %li#image
+            %h3
+              Asked 
+              = time_ago_in_words(Time.at request.time_asked)
+              ago
+            %div#inbox_image
+              = image_tag photo.url[1], :width => '300px'
+            %div#inbox_text
+              %p.venue= link_to "#{truncate(photo.venue.name, :length => 27)}", photo.venue
+              %p.neighborhood
+                - unless photo.venue.neighborhood.nil?
+                  = photo.venue.neighborhood
+              %p.comment= "\"#{truncate(photo.caption, :length => 75)}\"" unless photo.caption.blank?
+              %p.question
+                - if current_user.ig_details[1].blank?
+                  = current_user.ig_username
+                - else
+                  = image_tag current_user.ig_details[1], :width => '50px'
+                = request.question
+              %h5
+                Answered
+                = time_ago_in_words(Time.at request.time_answered)
+                ago
+              %br
+              = image_tag photo.user.ig_details[1], :width => '50px'
+              = "\"#{request.response}\""
+              %p.rest_conversation
+                %h6 Continue the conversation!
+                - response = Instagram.media_comments(photo.ig_media_id, :access_token => current_user.ig_accesstoken)
+                - response.each do |comment|
+                  - unless comment.created_time.to_i < request.time_answered.to_i
+                    %p.question
+                      = image_tag comment.from.profile_picture, :width => '50px'
+                      = comment.text
+                      %br
+              = form_tag requests_url, :id => 'reply_form', :method => :post do
+                = text_field_tag :message, nil,  :placeholder => 'reply...' , :class => 'xlarge', :id => 'xlInput'
+                = hidden_field_tag :ig_media_id, photo.ig_media_id
+                = hidden_field_tag :type, 'reply'
+                = submit_tag "Reply", :class => 'btn'
+              = form_tag requests_url, :id => 'thanks', :method => :post do
+                = hidden_field_tag :ig_media_id, photo.ig_media_id            
+                = hidden_field_tag :type, 'thanks'
+                = submit_tag "Say thanks!", :class => 'btn small primary'
+              
+            
         
       
 %footer

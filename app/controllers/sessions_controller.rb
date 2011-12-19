@@ -25,6 +25,7 @@ class SessionsController < ApplicationController
         u.save
       end
       session[:user_id] = u.id
+      Resque.enqueue(Suggestfollow, u)
       redirect_to '/signup'
     end
   end

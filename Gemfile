@@ -36,6 +36,7 @@ gem 'mathstats'
 #gem 'resque', :git => 'git://github.com/defunkt/resque.git'
 gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'keepalive'
 gem 'resque-scheduler'
+gem 'god'
 
 #for instagram -- instagram was installed has a plugin.. be careful
 gem 'faraday_middleware', '~> 0.3.1'

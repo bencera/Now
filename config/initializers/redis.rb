@@ -1,7 +1,7 @@
 ENV["REDISTOGO_URL"] ||= "redis://redistogo:ea140da2aecd9e0c20f410b1be6bfdb1@viperfish.redistogo.com:9774/"
 
 uri = URI.parse(ENV["REDISTOGO_URL"])
-$redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+$redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password, :thread_safe => true)
 
 Resque.redis = $redis
 # 

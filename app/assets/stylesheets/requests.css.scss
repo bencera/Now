@@ -1,3 +1,44 @@
 // Place all the styles related to the Requests controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+h3 {
+	width: 300px;
+	
+}
+#inbox_image {
+	float: right;	
+}
+
+#inbox_text {
+	width: 900px;
+	
+}
+
+p.text {
+	padding: 20px 0 0 10px;
+}
+
+#reply_form{
+	height: 100px;
+	float: left;
+	padding: 0 5px;
+}
+
+p.time{
+	float: right;
+	font-size: 10px;
+	
+}
+
+.comment_text{
+	width: 500px;
+	height: 60px;
+	
+}
+
+.img{
+	float:left;
+	height: 55px;
+}

@@ -70,6 +70,7 @@ GEM
     faraday_middleware (0.3.2)
       faraday (~> 0.5.4)
     geocoder (1.0.5)
+    god (0.11.0)
     haml (3.1.2)
     hashie (1.1.0)
     heroku (2.14.0)
@@ -197,6 +198,7 @@ DEPENDENCIES
   faraday (~> 0.5.3)
   faraday_middleware (~> 0.3.1)
   geocoder
+  god
   haml
   hashie (>= 0.4.0)
   heroku

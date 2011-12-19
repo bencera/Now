@@ -1,17 +1,20 @@
 .container
   .content_below
     - unless @photo.nil?
-      %li
-        %a
-          = image_tag @photo.url[0], :width => '220px'
-        %div
-          %p.venue= link_to "#{truncate(@photo.venue.name, :length => 27)}", @photo.venue
-          %p.time= time_ago_in_words(Time.at @photo.time_taken.to_i).to_s.gsub('seconds', 's').gsub('second', 's').gsub('minutes', 'm').gsub('minute', 'm').gsub('hours', 'h').gsub('hour', 'h').gsub('days', 'd').gsub('day', 'd').gsub('weeks', 'w').gsub('week', 'w').gsub('months', 'mo').gsub('month', 'mo').gsub('years', 'y').gsub('year', 'y').gsub('about', '').gsub(' ', '')
+      #img
+        .img= image_tag @photo.url[1], :width => '500px'
+        %div#img_details
+          %p.venue= link_to @photo.venue.name, @photo.venue
+          #map_left
+            = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=420x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false", :id => "map"
+          %p.time
+            = time_ago_in_words(Time.at @photo.time_taken.to_i)
+            ago
           %p.neighborhood
             - unless @photo.venue.neighborhood.nil?
               = @photo.venue.neighborhood
           -if @photo.requests.blank?
-            %p.comment= "\"#{truncate(@photo.caption, :length => 75)}\"" unless @photo.caption.blank?
+            %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
             = render 'partials/showquestion', :photo => @photo
           -elsif @photo.requests.first.response.nil?
             %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?

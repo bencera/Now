@@ -1,17 +1,20 @@
 .container
   .content_below
-    %h1 ipsum ipsum
-    %ul
-      %li 
-        venue 1
-        = form_tag follows_path, :method => :post do
-          = hidden_field_tag :id, nil
-          = submit_tag "follow", :class => 'primary btn'
-      %li
-        venue 2
-        = form_tag follows_path, :method => :post do
-          = hidden_field_tag :id, nil
-          = submit_tag "follow", :class => 'primary btn'
+    - if ig_logged_in
+      %h1 Follow venues you love
+      %ul
+        - @suggestfollows.each do |venue_id|
+          %li 
+            - venue = Venue.first(conditions: {_id: venue_id})
+            = venue.name
+            - unless User.first(conditions: {ig_username: "bencera"}).venues.distinct(:_id).include?(venue_id)
+              = form_tag follows_path, :method => :post do
+                = hidden_field_tag :id, venue_id
+                = submit_tag "follow", :class => 'primary btn'
+            - else
+              = form_tag root_url + "follows/#{venue_id}", :method => :delete do
+                = hidden_field_tag :ig_venue_id, venue_id
+                = submit_tag "following", :class => 'btn success'
 
 %footer
   = render 'partials/footer'
