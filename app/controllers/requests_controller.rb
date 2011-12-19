@@ -18,6 +18,7 @@ class RequestsController < ApplicationController
           Instagram.create_media_comment(params[:ig_media_id], question, :access_token => current_user.ig_accesstoken )
           Instagram.like_media(params[:ig_media_id], :access_token => current_user.ig_accesstoken )
           Photo.first(conditions: {ig_media_id: params[:ig_media_id]}).requests.create( :question => question,
+                                                                                        :question_id => params[:question_id],
                                                                                         :time_asked => Time.now.to_i,
                                                                                         :media_comment_count => count, 
                                                                                         :type => "question", 

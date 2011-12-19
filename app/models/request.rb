@@ -2,6 +2,7 @@ class Request
   include Mongoid::Document
   field :type
   field :question
+  field :question_id
   field :time_asked
   field :media_comment_count
   field :response
@@ -13,6 +14,46 @@ class Request
   
   #need to do validation
   
+  
+  def short_question(question_id)
+    case question_id
+      when 1
+        question_middle = "Name of the plate?"
+      when 2
+        question_middle = "Easy to get a table?"
+      when 3
+        question_middle = "Good place?"
+      when 4
+        question_middle = "What is going on?"
+      when 5
+        question_middle = "What's the best?"
+      #nighlife questions
+      when 10
+        question_middle = "How's the crowd?"
+      when 11
+        question_middle = "Hard to get in?"
+      when 12
+        question_middle = "Drinks expensive?"
+      when 13
+        question_middle = "Girl/boy ratio?"
+      when 14
+        question_middle = "Tip to get in?"
+      #arts and entertainment questions
+      when 20
+        question_middle = "What is going on?"
+      when 21
+        question_middle = "Exhibition?"
+      when 22
+        question_middle = "Free to enter?"
+      #outdoors questions
+      when 30
+        question_middle = "Weather?"
+      when 31
+        question_middle = "Still raining?"
+      when 32
+        question_middle = "What is going on?"
+    end
+  end
   
   def find_question(question_id, venue_name)
     question_start = ["Hi, quick question for you.. ", "Hi, I have a question.. ", "Hi, can i ask you something? " ]
