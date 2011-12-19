@@ -27,6 +27,7 @@ class RequestsController < ApplicationController
             flash[:notice] = "Your question was succesfully asked! We will send you an email when it's answered."
           else
             flash[:notice] = "Your question was succesfully asked! Tell us your email in Settings to get notified when it's answered."
+          end
         else
           flash[:notice] = "Sorry, somebody already asked a question on this photo.. Try another one!"
         end
