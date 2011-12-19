@@ -20,10 +20,6 @@
             %ul.dropdown-menu
               %li
                 %a New York
-              / %li
-              /   %a Paris
-              / %li
-              /   %a Tokyo
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle
               - if params[:id].nil?
@@ -76,15 +72,31 @@
             %ul.dropdown-menu
               %li
                 %a New York
-              / %li
-              /   %a Paris
-              / %li
-              /   %a Tokyo
+          %li.dropdown{ :'data-dropdown' => "dropdown"}
+            %a.dropdown-toggle
+              - if params[:id] == "food"
+                Restaurants
+              - elsif params[:id] == "nightlife"
+                Nightlife
+              - elsif params[:id] == "entertainment"
+                Arts & Entertainment
+              - elsif params[:id] == "outdoors"
+                Outdoors
+                
+            %ul.dropdown-menu
+              %li
+                %a{:href=>"/photos?id=food"} Restaurants
+              %li
+                %a{:href=>"/photos?id=nightlife"} Nightlife
+              %li
+                %a{:href=>"/photos?id=entertainment"} Arts & Entertainment
+              %li
+                %a{:href=>"/photos?id=outdoors"} Outdoors
         %ul.nav.secondary-nav
           %li
             %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=' + root_url + 'auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
 %iframe{:frameborder => "0", :height => "0", :width => "0", :name => "iframe"}
-= unless alert.nil?
+- unless alert.nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}
     %a.close
       x

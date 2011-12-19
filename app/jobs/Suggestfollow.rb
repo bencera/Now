@@ -2,7 +2,7 @@ class Suggestfollow
   @queue = :follow_queue
 
   def self.perform(user)
-    client = Instagram.client(:access_token => user.ig_accesstoken)
+    client = Instagram.client(:access_token => user["ig_accesstoken"])
     max_id = nil
     places = {}
     n = 1
@@ -15,7 +15,7 @@ class Suggestfollow
           unless media.location.nil?
             unless media.location.name.nil?
               if Venue.exists?(conditions: {ig_venue_id: media.location.id.to_s})
-                $redis.sadd("suggestfollow:#{user.id}", Venue.first(conditions: {ig_venue_id: media.location.id.to_s}).id)
+                $redis.sadd("suggestfollow:#{user["_id"]}", Venue.first(conditions: {ig_venue_id: media.location.id.to_s}).id)
               end
             end
           end

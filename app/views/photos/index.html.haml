@@ -15,14 +15,15 @@
       - @photos[0..19].each do |photo_id|
         - photo = Photo.first(conditions: {_id: photo_id.to_s})
         = render 'partials/showphoto', :photo => photo
-    .more
-      = form_tag photos_url, :method => :get do
-        - if params[:page].nil?
-          = hidden_field_tag :page, 2
-        - else
-          = hidden_field_tag :page, (params[:page].to_i + 1)
-        = hidden_field_tag :id, params[:id]
-        = submit_tag "more", :class => 'btn'
+    - unless @photos.count < 20
+      .more
+        = form_tag photos_url, :method => :get do
+          - if params[:page].nil?
+            = hidden_field_tag :page, 2
+          - else
+            = hidden_field_tag :page, (params[:page].to_i + 1)
+          = hidden_field_tag :id, params[:id]
+          = submit_tag "more", :class => 'btn'
         
   .content_below#right
     %h3 Trending venues

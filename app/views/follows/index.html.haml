@@ -7,7 +7,7 @@
           %li 
             - venue = Venue.first(conditions: {_id: venue_id})
             = venue.name
-            - unless User.first(conditions: {ig_username: "bencera"}).venues.distinct(:_id).include?(venue_id)
+            - unless current_user.venues.distinct(:_id).include?(venue_id)
               = form_tag follows_path, :method => :post do
                 = hidden_field_tag :id, venue_id
                 = submit_tag "follow", :class => 'primary btn'
