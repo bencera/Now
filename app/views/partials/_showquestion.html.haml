@@ -4,9 +4,10 @@
     .modal-header
       %a.close
         x
-      %h3
-        Ask a question on
+      %h5
+        Ask the photographer a question on
         = photo.venue.name
+        !
     .modal-footer
       - if ig_logged_in
         #profilepic
@@ -29,3 +30,4 @@
         = hidden_field_tag :ig_media_id, photo.ig_media_id
         = hidden_field_tag :venue_name, photo.venue.name
         = submit_tag "Ask!", :class => 'btn large primary', :id => 'bigbouton'
+      = link_to "Suggest us a question!", "mailto:ben@ubimachine.com?subject=Suggested question for #{photo.venue.name}"

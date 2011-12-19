@@ -15,10 +15,8 @@ $(function() {
                 response( $.map( data.response.minivenues, function(item){
 								
 						return{
-								value: item.id,
-								label: item.name
-								
-								
+								label: item.name,
+								value: item.id		
 						}
 }) );
             }
