@@ -80,7 +80,6 @@ class PhotosController < ApplicationController
       @venues_trending = venues_trending.uniq.take(10)
     end
 
-    
   end
   
   def show

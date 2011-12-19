@@ -15,18 +15,19 @@ class SessionsController < ApplicationController
       access_token = Instagram.get_access_token(params[:code], :redirect_uri => url)
       user_data = access_token["user"]
       #creer lutilisateur
-      if User.where(:ig_id =>user_data.id).empty?
+      if User.first(conditions: {ig_id: user_data.id}).nil?
         u = User.new(:ig_accesstoken => access_token["access_token"], :ig_username => user_data.username, :ig_id => user_data.id)
         u.complete_ig_info
         u.save
-      else
+        Resque.enqueue(Suggestfollow, u)
+      elsif User.first(conditions: {ig_id: user_data.id}).ig_accesstoken.nil?
         u = User.first(conditions: {ig_id: user_data.id})
         u.update_attributes(:ig_accesstoken => access_token["access_token"])
         u.complete_ig_info
         u.save
+        Resque.enqueue(Suggestfollow, u)
       end
-      session[:user_id] = u.id
-      Resque.enqueue(Suggestfollow, u)
+      session[:user_id] = User.first(conditions: {ig_id: user_data.id}).id
       redirect_to '/signup'
     end
   end

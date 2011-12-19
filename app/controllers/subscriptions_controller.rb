@@ -5,7 +5,7 @@ class SubscriptionsController < ApplicationController
   
   def verify_params
     unless params[:name].nil? == false and params[:lat].nil? == false and params[:lng].nil? == false and params[:radius].nil? == false
-      flash[:error] = "You didn't enter all the fields"
+      flash[:notice] = "You didn't enter all the fields"
       redirect_to subscriptions_url
     end
   end
@@ -43,7 +43,7 @@ class SubscriptionsController < ApplicationController
       end
       
     else
-      flash[:error] = "There was an error in create_subscription."
+      flash[:notice] = "There was an error in create_subscription."
     end
     
     redirect_to :back

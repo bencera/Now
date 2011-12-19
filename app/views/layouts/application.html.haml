@@ -49,9 +49,8 @@
             %a{:href=>"/inbox"} Inbox
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle
-              - unless current_user.ig_details[1].blank?
-                .profilepic
-                  = image_tag current_user.ig_details[1], :width => '25px'
+              .profilepic
+                = image_tag current_user.ig_details[1], :width => '25px'
               - if current_user.ig_details[0].blank?
                 - current_user.ig_username
               - else
@@ -96,10 +95,10 @@
           %li
             %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=' + root_url + 'auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
 %iframe{:frameborder => "0", :height => "0", :width => "0", :name => "iframe"}
-- unless alert.nil?
+- unless flash[:notice].nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}
     %a.close
       x
-    %p=alert
+    %p= flash[:notice]
 
 = yield

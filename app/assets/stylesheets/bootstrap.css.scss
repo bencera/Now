@@ -2620,17 +2620,27 @@ ul#venue_info {
 
 
 #select_question{
-	
+	margin-top: 5px;
 	width: 200px;
+	padding: 0 10px 0 10px;
 }
 
 #bouton_ask{
-	margin-bottom: 10px;
+	margin-bottom: 15px;
 	
 }
 .btn#ask{
 	width: 215px;
 	text-align: center;
+	
+}
+
+#profilepic{
+	float:left;
+	margin-right: 10px;
+}
+
+#bigbouton{
 	
 }
 

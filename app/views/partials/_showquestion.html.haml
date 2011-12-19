@@ -8,6 +8,9 @@
         Ask a question on
         = photo.venue.name
     .modal-footer
+      - if ig_logged_in
+        #profilepic
+          = image_tag current_user.ig_details[1], :width => '40px'
       = form_tag requests_url, :method => :post do
         - unless photo.venue.categories.blank?
           - category = Venue.new.fs_categories[photo.venue.categories.first["name"]]
@@ -25,4 +28,4 @@
           = select_tag :question_id, options_for_select([["What's going on here now?", 32], ["What do you think of this place?", 3]]), :id => "select_question"
         = hidden_field_tag :ig_media_id, photo.ig_media_id
         = hidden_field_tag :venue_name, photo.venue.name
-        = submit_tag "Ask", :class => 'btn primary'
+        = submit_tag "Ask!", :class => 'btn large primary', :id => 'bigbouton'
