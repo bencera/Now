@@ -4,8 +4,10 @@ class FollowsController < ApplicationController
       @suggestfollows = ["3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3" ]
     else
       suggestfollows = $redis.smembers("suggestfollow:#{current_user.id}")
-      if suggestfollows.count < 20
-        suggestfollows << Venue.excludes(:user_ids => []).distinct(:_id).take(20) #run the most popular venues every week. helps for suggest also.
+      if suggestfollows.count < 20 #run the most popular venues every week. helps for suggest also.
+        Venue.excludes(:user_ids => []).distinct(:_id).take(20).each do |venue_id|
+          suggestfollows << venue_id
+        end
       end
       @suggestfollows = suggestfollows[0..19]
     end
