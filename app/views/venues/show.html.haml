@@ -23,7 +23,7 @@
               - else
                 = form_tag root_url + "follows/#{@venue.id}", :method => :delete do
                   = hidden_field_tag :ig_venue_id, @venue.id
-                  = submit_tag "following", :class => 'btn success'
+                  = submit_tag "following", :class => 'btn large success'
 
       %li#map_left
         = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=500x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"

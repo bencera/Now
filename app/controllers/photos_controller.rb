@@ -12,7 +12,7 @@ class PhotosController < ApplicationController
     else
       if params[:id].blank? #my feed
         if ig_logged_in
-          photos = $redis.zrevrangebyscore("userfeed:#{current_user.id}",Time.now.to_i, 24.hours.ago.to_i)
+          photos = $redis.zrevrangebyscore("userfeed:#{current_user.id}",Time.now.to_i, 720.hours.ago.to_i)
           if photos[(n-1)*21..(n*21-1)].nil?
             @photos = []
           else

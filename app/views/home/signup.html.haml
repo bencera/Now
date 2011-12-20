@@ -1,11 +1,11 @@
 .container
   .content_below
     %h1 Welcome to ubimachine!
-    %h4 Ubiquity finally available to the crowds.
+    %h4 Ubiquity finally available to you.
 
 .container
   .content_below
-    %h3 Ubimachine let's you:
+    %h3 Ubimachine is the Ubiquity machine.
     %ul
       %li explore the world through pictures taken every second
       %li follow your favourite venues to get updated on what's happening there
@@ -16,7 +16,7 @@
   .content_below
     %p Enter your email to get notified when someone answers a question you asked:
     = form_tag '/signup' do
-      = text_field_tag :email,  nil, :placeholder => "ben@ubimachine.com"
+      = text_field_tag :email,  nil, :placeholder => "Your email..."
       = submit_tag "submit", :class => 'btn'
     = link_to "skip", '/follows'
 
