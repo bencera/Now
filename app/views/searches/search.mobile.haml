@@ -1,5 +1,8 @@
 .container
   .content_below
+    %h1 Search
+.container
+  .content_below    
     .bouton
       = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
         = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a venue...'
