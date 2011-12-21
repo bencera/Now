@@ -20,6 +20,9 @@ Ubimachine::Application.routes.draw do
   match "/inbox" => "requests#index"
   match "/settings" => "users#settings"
   match "/logout" => "sessions#logout"
+  match "/search" => "searches#search"
+  match "/menu" => "home#menu"
+  match "/ask" => "requests#ask"
   
   require 'resque_scheduler'
   mount Resque::Server, :at => "/resque"

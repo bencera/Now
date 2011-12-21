@@ -1,0 +1,23 @@
+!!! Strict
+%html
+%head
+  %title= "ubimachine"
+  = stylesheet_link_tag "mobile"
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+%body
+.topbar
+  .topbar-inner
+    .container
+      %a.menu_icon{:href=>"/menu"}
+        = image_tag 'menu.png', :width => '20px'
+      %a.brand{:href=>"/photos"} ubimachine
+      %a.search_icon{:href=>"/search"}
+        = image_tag 'search.png', :width => '20px'
+- unless flash[:notice].nil?
+  .alert-message.success.fade.in{:'data-alert' => "alert"}
+    %a.close
+      x
+    %p= flash[:notice]
+
+= yield

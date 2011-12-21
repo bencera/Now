@@ -50,4 +50,8 @@ class RequestsController < ApplicationController
       @requests = Request.all
     end
   end
+  
+  def ask
+    @photo = Photo.first(conditions: {_id: params[:id]})
+  end
 end

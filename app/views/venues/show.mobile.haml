@@ -1,0 +1,44 @@
+.container
+  .content_below
+    %ul#venue_info.clearfix
+      %li#venue
+        .name= @venue.name
+        .neighborhood= @venue.neighborhood unless @venue.neighborhood.nil?
+        - unless @venue.address["address"].blank?
+          .address= "#{@venue.address["address"]}" + ", cross w/ " +  "#{@venue.address["crossStreet"]}"
+        .category= @venue.categories.first["name"] unless @venue.categories.nil?
+        .followers
+          - unless @venue.users.count == 0
+            = @venue.users.count 
+            followers
+        - if ig_logged_in
+          .follow
+            %a
+              - unless current_user.venues.distinct(:_id).include?(@venue.id)
+                = form_tag follows_path, :method => :post do
+                  = hidden_field_tag :id, @venue.id
+                  = submit_tag "follow", :class => 'btn large primary'
+              - else
+                = form_tag root_url + "follows/#{@venue.id}", :method => :delete do
+                  = hidden_field_tag :ig_venue_id, @venue.id
+                  = submit_tag "following", :class => 'btn large success'
+              
+.container
+  .content_below
+    - if @photos == []
+      Sorry no more photos...
+    - @photos.each do |photo|
+      %a#photo_wrapper.clearfix{:href => "/photos/#{photo.id.to_s}"}
+        = render 'partials/showphoto', :photo => photo
+        
+    - unless @photos.count < 20
+      .more
+        = form_tag @venue, :method => :get do
+          - if params[:page].nil?
+            = hidden_field_tag :page, 2
+          - else
+            = hidden_field_tag :page, (params[:page].to_i + 1)
+          = submit_tag "more", :class => 'btn'
+
+%footer
+  = render 'partials/footer'

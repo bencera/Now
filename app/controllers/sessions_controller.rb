@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
   def callback
     if Rails.env.development?
       # tunnel
-      url = 'http://0.0.0.0:3000/auth/instagram/callback'
+      url = 'http://localhost:3000/auth/instagram/callback' #warning!!!!
     else
       # production
       url = "http://pure-sky-4808.herokuapp.com/auth/instagram/callback" #root_url + 'auth/instagram/callback'

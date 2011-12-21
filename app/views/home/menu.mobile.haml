@@ -1,0 +1,35 @@
+.container
+  .content_below
+    %h1 Categories
+    %ul.unstyled#menu
+      - if ig_logged_in
+        %a{:href=>"/photos"}
+          %li My feed
+      %a{:href=>"/photos?id=food"}
+        %li Restaurants
+      %a{:href=>"/photos?id=nightlife"} 
+        %li Nightlife
+      %a{:href=>"/photos?id=entertainment"}
+        %li Arts & Entertainment
+      %a{:href=>"/photos?id=outdoors"}
+        %li Outdoors
+      %a{:href=>"/photos?id=trending"}
+        %li Trending
+      %a{:href=>"/photos?id=answered"}
+        %li Answered
+- if ig_logged_in
+  .container
+    .content_below
+      %h1
+        = image_tag current_user.ig_details[1], :width => '50px'
+        = current_user.ig_username
+      %ul.unstyled#menu
+        %a{:href=>"/inbox"}
+          %li Inbox
+        %a{:href=>"/settings"}  
+          %li Settings
+        %a{:href=>"/logout"}
+          %li Log out
+        
+%footer
+  = render 'partials/footer'

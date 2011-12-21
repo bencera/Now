@@ -1,0 +1,24 @@
+.container
+  .content_below
+    - if ig_logged_in
+      %h2 Follow venues you love
+      %ul.unstyled#follow
+        - @suggestfollows[0..19].each do |venue_id|
+          .bouton
+            %li
+              %h3
+                - venue = Venue.first(conditions: {_id: venue_id})
+                = venue.name
+              - unless current_user.venues.distinct(:_id).include?(venue_id)
+                = form_tag follows_path, :method => :post do
+                  = hidden_field_tag :id, venue_id
+                  = submit_tag "follow", :class => 'primary btn large'
+              - else
+                = form_tag root_url + "follows/#{venue_id}", :method => :delete do
+                  = hidden_field_tag :ig_venue_id, venue_id
+                  = submit_tag "following", :class => 'btn success large'
+      %h1#follow
+        = link_to "Done", '/photos'
+
+%footer
+  = render 'partials/footer'

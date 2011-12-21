@@ -8,6 +8,7 @@ class PhotosController < ApplicationController
     end
     n = n.to_i
     if Rails.env == "development"
+      #@photos = [Request.first.photo.id.to_s]
       @photos = Photo.all.order_by([[:time_taken, :desc]]).distinct(:_id).take(12)
     else
       if params[:id].blank? #my feed

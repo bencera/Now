@@ -9,5 +9,8 @@ class SearchesController < ApplicationController
                 :v => "201112")
     @venues = response["minivenues"]
   end
+  
+  def search
+  end
 
 end

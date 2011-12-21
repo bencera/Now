@@ -1,0 +1,33 @@
+#bouton_ask  
+  %a.btn#ask{:'data-controls-modal' => "modal-from-dom", :'data-backdrop' => "true", :'data-keyboard' => "true"} Ask a question
+  .modal.hide.fade#modal-from-dom
+    .modal-header
+      %a.close
+        x
+      %h5
+        Ask the photographer a question on
+        = photo.venue.name
+        !
+    .modal-footer
+      - if ig_logged_in
+        #profilepic
+          = image_tag current_user.ig_details[1], :width => '40px'
+      = form_tag requests_url, :method => :post do
+        - unless photo.venue.categories.blank?
+          - category = Venue.new.fs_categories[photo.venue.categories.first["name"]]
+        - else
+          - category = "none"
+        - if category == "Nightlife Spot"
+          = select_tag :question_id, options_for_select([["How's the crowd?", 10], ["Is it hard to get in?", 11], ["Are the drinks expensive?",12], ["How is the girl/boy ratio?",13], ["Do you have a tip to get in?",14]]), :id => "select_question"
+        - elsif category == "Food"
+          = select_tag :question_id, options_for_select([["What is the name of the plate?", 1], ["Is it easy to get a table now?", 2], ["What do you think of this place?",3], ["What is going on here now?",4], ["What's the best item on the menu?",5]]), :id => "select_question"
+        - elsif category == "Arts & Entertainment"
+          = select_tag :question_id, options_for_select([["What is going on here now?", 20], ["What is the exhibition today?", 21], ["Is it free to enter?",22]]), :id => "select_question"
+        - elsif category == "Great Outdoors"
+          = select_tag :question_id, options_for_select([["How's the weather here?", 30], ["Is it still raining here?", 31], ["What's going on here now?", 32]]), :id => "select_question"
+        - else
+          = select_tag :question_id, options_for_select([["What's going on here now?", 32], ["What do you think of this place?", 3]]), :id => "select_question"
+        = hidden_field_tag :ig_media_id, photo.ig_media_id
+        = hidden_field_tag :venue_name, photo.venue.name
+        = submit_tag "Ask!", :class => 'btn large primary', :id => 'bigbouton'
+      = link_to "Suggest us a question!", "mailto:ben@ubimachine.com?subject=Suggested question for #{photo.venue.name}"

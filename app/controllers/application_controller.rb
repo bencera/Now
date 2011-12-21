@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
+  has_mobile_fu
   http_basic_authenticate_with :name => "ubimachine", :password => "labonnecause123"
   
   private

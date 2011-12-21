@@ -1,0 +1,23 @@
+.container
+  .content_below
+    %h1 Welcome to ubimachine!
+    %h4 Ubiquity finally available to you.
+
+.container
+  .content_below
+    %h6 Explore your city through Instagram pictures
+    %h6 Follow your favorite venues
+    %h6 Ask what's happening there
+    
+    
+.container
+  .content_below
+    %h3 Enter your email to get notified when someone answers a question you asked:
+    .bouton
+      = form_tag '/signup' do
+        = text_field_tag :email,  nil, :placeholder => "Your email..."
+        = submit_tag "submit", :class => 'btn'
+      = link_to "skip", '/follows'
+
+%footer
+  = render 'partials/footer'

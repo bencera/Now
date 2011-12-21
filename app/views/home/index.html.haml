@@ -13,7 +13,7 @@
     .signin
       = link_to (image_tag 'ubimachine_btn.png'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=' + root_url + 'auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
     .or
-      = link_to "or skip for a reduced experience", '/cities'
+      = link_to "or skip for a reduced experience", '/photos'
       
 %footer
   = render 'partials/footer'
