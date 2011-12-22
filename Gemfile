@@ -46,6 +46,9 @@ gem "faraday", '~> 0.5.3'
 gem 'haml'
 
 gem 'newrelic_rpm'
+group :production do
+  gem 'rack-google_analytics', :require => "rack/google_analytics"
+end
 
 #foursquare api gem
 gem "json"
