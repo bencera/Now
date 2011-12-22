@@ -45,6 +45,8 @@ gem 'hashie',  '>= 0.4.0'
 gem "faraday", '~> 0.5.3'
 gem 'haml'
 
+gem 'newrelic_rpm'
+
 #foursquare api gem
 gem "json"
 gem "typhoeus", '~> 0.2.2'
