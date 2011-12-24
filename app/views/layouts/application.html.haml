@@ -93,7 +93,7 @@
                 %a{:href=>"/photos?id=outdoors"} Outdoors
         %ul.nav.secondary-nav
           %li
-            %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=' + root_url + 'auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
+            %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
 - unless flash[:notice].nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}
     %a.close
