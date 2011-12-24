@@ -1,5 +1,5 @@
 rails_env   = ENV['RAILS_ENV']  || "production"
-rails_root  = ENV['RAILS_ROOT'] || File.dirname(File.dirname(__FILE__))  #"/data/github/current"
+rails_root  = ENV['RAILS_ROOT'] || "File.dirname(File.dirname(__FILE__))"  #"/data/github/current"
 num_workers = rails_env == 'production' ? 5 : 2
 
 num_workers.times do |num|
