@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
       url = 'http://localhost:3000/auth/instagram/callback' #warning!!!!
     else
       # production
-      url = "http://pure-sky-4808.herokuapp.com/auth/instagram/callback" #root_url + 'auth/instagram/callback'
+      url = "http://www.ubimachine.com/auth/instagram/callback" #root_url + 'auth/instagram/callback'
     end
     
     if params[:error_description] == "The user denied your request"
