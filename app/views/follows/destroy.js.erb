@@ -1,2 +1,2 @@
-$("follow_form").update("<%= escape_javascript(render('partials/follow')) %>")
+$("follow_form").update("<%= escape_javascript(render('partials/follow'), :venue => @venue) %>")
 $("followers").update('<%= "#{@venue.users.count} followers" %>')
