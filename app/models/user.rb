@@ -18,7 +18,8 @@ class User
   def complete_ig_info(accesstoken)
     #do it only when new user signs up
     data = nil
-    data = Instagram.user(self.ig_id, :access_token => accesstoken)
+    client = Instagram.client(:access_token => accesstoken)
+    data = client.user(self.ig_id)
     if data.nil?
       return true
     end
