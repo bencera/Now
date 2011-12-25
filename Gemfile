@@ -50,6 +50,8 @@ group :production do
   gem 'rack-google_analytics', :require => "rack/google_analytics"
 end
 
+gem "airbrake"
+
 #foursquare api gem
 gem "json"
 gem "typhoeus", '~> 0.2.2'
