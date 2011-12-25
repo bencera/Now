@@ -17,5 +17,11 @@
     %ul
       - @user.venues.each do |venue|
         %li
-          = venue.name
-        
+          - @venue = venue
+          = @venue.name
+          - if ig_logged_in
+            .follow_form{:id => "venue#{@venue.id}"}
+              - unless current_user.venues.distinct(:_id).include?(@venue.id)
+                = render 'partials/follow', :venue => @venue
+              - else
+                = render 'partials/unfollow', :venue => @venue
