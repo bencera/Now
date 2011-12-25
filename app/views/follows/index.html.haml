@@ -9,56 +9,44 @@
               %li 
                 - venue = Venue.first(conditions: {_id: venue_id})
                 = venue.name
-                - unless current_user.venues.distinct(:_id).include?(venue_id)
-                  = form_tag follows_path, :method => :post do
-                    = hidden_field_tag :id, venue_id
-                    = submit_tag "follow", :class => 'primary btn'
-                - else
-                  = form_tag root_url + "follows/#{venue_id}", :method => :delete do
-                    = hidden_field_tag :ig_venue_id, venue_id
-                    = submit_tag "following", :class => 'btn success'
+                .follow_form
+                  - unless current_user.venues.distinct(:_id).include?(venue.id)
+                    = render 'partials/follow', :venue => venue
+                  - else
+                    = render 'partials/unfollow', :venue => venue
         .span4
           %ul.unstyled#follow
             - @suggestfollows[5..9].each do |venue_id|
               %li 
                 - venue = Venue.first(conditions: {_id: venue_id})
                 = venue.name
-                - unless current_user.venues.distinct(:_id).include?(venue_id)
-                  = form_tag follows_path, :method => :post do
-                    = hidden_field_tag :id, venue_id
-                    = submit_tag "follow", :class => 'primary btn'
-                - else
-                  = form_tag root_url + "follows/#{venue_id}", :method => :delete do
-                    = hidden_field_tag :ig_venue_id, venue_id
-                    = submit_tag "following", :class => 'btn success'
+                .follow_form
+                  - unless current_user.venues.distinct(:_id).include?(venue.id)
+                    = render 'partials/follow', :venue => venue
+                  - else
+                    = render 'partials/unfollow', :venue => venue
         .span4
           %ul.unstyled#follow
             - @suggestfollows[10..14].each do |venue_id|
               %li 
                 - venue = Venue.first(conditions: {_id: venue_id})
                 = venue.name
-                - unless current_user.venues.distinct(:_id).include?(venue_id)
-                  = form_tag follows_path, :method => :post do
-                    = hidden_field_tag :id, venue_id
-                    = submit_tag "follow", :class => 'primary btn'
-                - else
-                  = form_tag root_url + "follows/#{venue_id}", :method => :delete do
-                    = hidden_field_tag :ig_venue_id, venue_id
-                    = submit_tag "following", :class => 'btn success'
+                .follow_form
+                  - unless current_user.venues.distinct(:_id).include?(venue.id)
+                    = render 'partials/follow', :venue => venue
+                  - else
+                    = render 'partials/unfollow', :venue => venue
         .span4
           %ul.unstyled#follow
             - @suggestfollows[15..19].each do |venue_id|
               %li 
                 - venue = Venue.first(conditions: {_id: venue_id})
                 = venue.name
-                - unless current_user.venues.distinct(:_id).include?(venue_id)
-                  = form_tag follows_path, :method => :post do
-                    = hidden_field_tag :id, venue_id
-                    = submit_tag "follow", :class => 'primary btn'
-                - else
-                  = form_tag root_url + "follows/#{venue_id}", :method => :delete do
-                    = hidden_field_tag :ig_venue_id, venue_id
-                    = submit_tag "following", :class => 'btn success'
+                .follow_form
+                  - unless current_user.venues.distinct(:_id).include?(venue.id)
+                    = render 'partials/follow', :venue => venue
+                  - else
+                    = render 'partials/unfollow', :venue => venue
       %h1#follow
         = link_to "Done", '/photos'
 
