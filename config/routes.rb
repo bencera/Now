@@ -23,6 +23,8 @@ Ubimachine::Application.routes.draw do
   match "/search" => "searches#search"
   match "/menu" => "home#menu"
   match "/ask" => "requests#ask"
+  match "users/:ig_username" => "users#show"
+  
   
   require 'resque_scheduler'
   mount Resque::Server, :at => "/resque"

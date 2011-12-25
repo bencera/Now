@@ -1,0 +1,21 @@
+.container
+  .content_below
+    %h1
+      = image_tag @user.ig_details[1], :width => '150px'
+      = @user.ig_username
+    %h2
+      = @user.requests.count
+      Questions asked-answered
+    
+  
+.container
+  .content_below
+    %h1
+      Following
+      = @user.venues.count
+      venues
+    %ul
+      - @user.venues.each do |venue|
+        %li
+          = venue.name
+        

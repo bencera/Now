@@ -15,10 +15,10 @@ class User
   validates_uniqueness_of :ig_id
   #before_validation :complete_ig_info
   
-  def complete_ig_info
+  def complete_ig_info(accesstoken)
     #do it only when new user signs up
     data = nil
-    data = Instagram.user(self.ig_id)
+    data = Instagram.user(self.ig_id, :access_token => accesstoken)
     if data.nil?
       return true
     end

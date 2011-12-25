@@ -19,7 +19,7 @@ class SubscriptionsController < ApplicationController
       url = "http://47wr.localtunnel.com/callbacks"
     else
       # production
-      url = callbacks_url
+      url = "http://morning-waterfall-7539.herokuapp.com/auth/instagram/callback"
     end
     response = Instagram.create_subscription(options={:object => "geography", 
                                                       :callback_url => url, 

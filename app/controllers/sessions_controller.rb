@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
       #creer lutilisateur
       if User.first(conditions: {ig_id: user_data.id}).nil?
         u = User.new(:ig_accesstoken => access_token["access_token"], :ig_username => user_data.username, :ig_id => user_data.id)
-        u.complete_ig_info
+        u.complete_ig_info(access_token["access_token"])
         u.save
         Resque.enqueue(Suggestfollow, u)
       elsif User.first(conditions: {ig_id: user_data.id}).ig_accesstoken.nil?

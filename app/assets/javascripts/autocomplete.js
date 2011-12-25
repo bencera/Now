@@ -1,9 +1,9 @@
 $(function() {
 	$('.auto_search_complete').autocomplete({
     minLength: 3,
-    delay: 300,
+    delay: 100,
 		select: function(event, ui) {
-			window.location.href = 'http://pure-sky-4808.herokuapp.com/venues/' + ui.item.value;
+			window.location.href = 'http://www.ubimachine.com/venues/' + ui.item.value;
 		},
     source: function(request, response) {
         $.ajax({
