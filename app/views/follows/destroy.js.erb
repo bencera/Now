@@ -1,2 +1,2 @@
-$("#venue" + <%= @venue.id %>).replaceWith("<%= escape_javascript(render('partials/follow')) %>")
+$("#venue" + "<%= "#{@venue.id}" %>").replaceWith("<%= escape_javascript(render('partials/follow')) %>")
 $(".followers").replaceWith('<%= "#{@venue.users.count} followers" %>')
