@@ -20,7 +20,10 @@ class FollowsController < ApplicationController
       $redis.zadd("userfeed:#{current_user.id}", photo.time_taken, "#{photo.id.to_s}")
     end
     #Resque.enqueue(Follow, current_user, params[:id])
-    redirect_to :back
+    respond_to do |format|
+      format.html { redirect_to :back }
+      format.js
+    end
   end
   
   def destroy
@@ -30,7 +33,10 @@ class FollowsController < ApplicationController
       $redis.zrem("userfeed:#{current_user.id}", "#{photo.id.to_s}")
     end
     #Resque.enqueue(Unfollow, current_user, params[:id])
-    redirect_to :back
+    respond_to do |format|
+      format.html { redirect_to :back }
+      format.js
+    end
   end
 
 end
