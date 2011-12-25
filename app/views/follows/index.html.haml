@@ -9,7 +9,7 @@
               %li 
                 - @venue = Venue.first(conditions: {_id: venue_id})
                 = @venue.name
-                .follow_form{:id => "venue_#{@venue.id}"}
+                .follow_form{:id => "venue#{@venue.id}"}
                   - unless current_user.venues.distinct(:_id).include?(@venue.id)
                     = render 'partials/follow', :venue => @venue
                   - else
@@ -20,7 +20,7 @@
               %li 
                 - @venue = Venue.first(conditions: {_id: venue_id})
                 = @venue.name
-                .follow_form{:id => "venue_#{@venue.id}"}
+                .follow_form{:id => "venue#{@venue.id}"}
                   - unless current_user.venues.distinct(:_id).include?(@venue.id)
                     = render 'partials/follow', :venue => @venue
                   - else
@@ -31,7 +31,7 @@
               %li 
                 - @venue = Venue.first(conditions: {_id: venue_id})
                 = @venue.name
-                .follow_form{:id => "venue_#{@venue.id}"}
+                .follow_form{:id => "venue#{@venue.id}"}
                   - unless current_user.venues.distinct(:_id).include?(@venue.id)
                     = render 'partials/follow', :venue => @venue
                   - else
@@ -42,7 +42,7 @@
               %li 
                 - @venue = Venue.first(conditions: {_id: venue_id})
                 = @venue.name
-                .follow_form{:id => "venue_#{@venue.id}"}
+                .follow_form{:id => "venue#{@venue.id}"}
                   - unless current_user.venues.distinct(:_id).include?(@venue.id)
                     = render 'partials/follow', :venue => @venue
                   - else

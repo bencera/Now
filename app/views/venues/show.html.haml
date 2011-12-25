@@ -14,7 +14,7 @@
             = @venue.users.count 
             followers
         - if ig_logged_in
-          .follow_form{:id => "venue_#{@venue.id}"}
+          .follow_form{:id => "venue#{@venue.id}"}
             - unless current_user.venues.distinct(:_id).include?(@venue.id)
               = render 'partials/follow'
             - else
