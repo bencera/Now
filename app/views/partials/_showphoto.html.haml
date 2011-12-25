@@ -1,6 +1,8 @@
 - unless photo.nil?
   %li
-    = link_to (image_tag photo.url[1], :width => '220px'), photo
+    .image
+      = link_to (image_tag photo.url[1], :width => '220px'), photo
+      = render 'partials/showquestion', :photo => photo
     %div
       %p.venue= link_to "#{truncate(photo.venue.name, :length => 27)}", photo.venue
       %p.time= time_ago_in_words(Time.at photo.time_taken.to_i).to_s.gsub('seconds', 's').gsub('second', 's').gsub('minutes', 'm').gsub('minute', 'm').gsub('hours', 'h').gsub('hour', 'h').gsub('days', 'd').gsub('day', 'd').gsub('weeks', 'w').gsub('week', 'w').gsub('months', 'mo').gsub('month', 'mo').gsub('years', 'y').gsub('year', 'y').gsub('about', '').gsub(' ', '')
@@ -9,7 +11,6 @@
           = photo.venue.neighborhood
       -if photo.requests.blank?
         %p.comment= "\"#{truncate(photo.caption, :length => 75)}\"" unless photo.caption.blank?
-        = render 'partials/showquestion', :photo => photo
       -elsif photo.requests.first.response.nil?
         %p.comment= "\"#{photo.caption}\"" unless photo.caption.blank?
       -else

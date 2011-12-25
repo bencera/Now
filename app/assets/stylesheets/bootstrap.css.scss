@@ -2644,3 +2644,12 @@ ul#venue_info {
 	
 }
 
+#bouton_ask{
+	position: absolute;
+	display: none;
+	
+}
+.image:hover #bouton_ask{
+	display: block;
+}
+
