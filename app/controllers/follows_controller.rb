@@ -4,12 +4,14 @@ class FollowsController < ApplicationController
       @suggestfollows = ["3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3" ]
     else
       suggestfollows = $redis.smembers("suggestfollow:#{current_user.id}")
+      suggestfollows = suggestfollows - current_user.venue_ids
       if suggestfollows.count < 20 #run the most popular venues every week. helps for suggest also.
         Venue.excludes(:user_ids => []).distinct(:_id).take(20).each do |venue_id|
           suggestfollows << venue_id
         end
       end
-      @suggestfollows = suggestfollows[0..19]
+      suggestfollows = suggestfollows - current_user.venue_ids
+      @suggestfollows = suggestfollows.paginate(:page => params[:page], :per_page => 20)
     end
   end
 

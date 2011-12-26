@@ -55,6 +55,7 @@
                     = render 'partials/follow', :venue => @venue
                   - else
                     = render 'partials/unfollow', :venue => @venue
+      = will_paginate @suggestfollows
       %h1#follow
         = link_to "Done", '/photos'
 
