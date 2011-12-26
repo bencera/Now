@@ -226,4 +226,4 @@ DEPENDENCIES
   typhoeus (~> 0.2.2)
   uglifier (>= 1.0.3)
   unicorn
-  will_paginate
+  will_paginate (~> 3.0.0)

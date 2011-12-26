@@ -11,6 +11,7 @@ class FollowsController < ApplicationController
         end
       end
       suggestfollows = suggestfollows - current_user.venue_ids
+      require 'will_paginate/array'
       @suggestfollows = suggestfollows.paginate(:page => params[:page], :per_page => 20)
     end
   end

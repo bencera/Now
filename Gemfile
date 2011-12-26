@@ -51,7 +51,7 @@ group :production do
 end
 
 gem "airbrake"
-gem 'will_paginate'
+gem 'will_paginate', '~> 3.0.0'
 
 #foursquare api gem
 gem "json"

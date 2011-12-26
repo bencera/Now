@@ -32,7 +32,7 @@ module Instagram
       # @return [Array]
       # @see TODO:doc url
       # @example Return users that match "Shayne Sweeney"
-      #   Instagram.user_search("Shayne Sweeney")
+      #   a
       def user_search(query, options={})
         response = get('users/search', options.merge(:q => query))
         response["data"]
