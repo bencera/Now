@@ -19,7 +19,7 @@ class HomeController < ApplicationController
         u = User.first(conditions: {ig_id: current_user.ig_id})
         u.update_attributes(:email => params[:email], :username => params[:username])
         if u.venue_ids.blank?
-          redirect_to '/follows'
+          redirect_to '/follow_signup'
         else
           redirect_to '/photos'
         end
