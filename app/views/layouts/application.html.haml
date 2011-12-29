@@ -14,36 +14,12 @@
         %ul.nav
           %li
             = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
-              = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a venue...'
+              = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search venues...'
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle New York
             %ul.dropdown-menu
               %li
                 %a New York
-          %li.dropdown{ :'data-dropdown' => "dropdown"}
-            %a.dropdown-toggle
-              - if params[:id].nil?
-                My feed
-              - elsif params[:id] == "food"
-                Restaurants
-              - elsif params[:id] == "nightlife"
-                Nightlife
-              - elsif params[:id] == "entertainment"
-                Arts & Entertainment
-              - elsif params[:id] == "outdoors"
-                Outdoors
-                
-            %ul.dropdown-menu
-              %li
-                %a{:href=>"/photos"} My feed
-              %li
-                %a{:href=>"/photos?id=food"} Restaurants
-              %li
-                %a{:href=>"/photos?id=nightlife"} Nightlife
-              %li
-                %a{:href=>"/photos?id=entertainment"} Arts & Entertainment
-              %li
-                %a{:href=>"/photos?id=outdoors"} Outdoors
         %ul.nav.secondary-nav
           %li
             %a{:href=>"/follows"} Venues to follow
@@ -67,39 +43,56 @@
         %ul.nav
           %li
             = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
-              = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search for a venue...'
+              = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search venues...'
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle New York
             %ul.dropdown-menu
               %li
                 %a New York
-          %li.dropdown{ :'data-dropdown' => "dropdown"}
-            %a.dropdown-toggle
-              - if params[:id] == "food"
-                Restaurants
-              - elsif params[:id] == "nightlife"
-                Nightlife
-              - elsif params[:id] == "entertainment"
-                Arts & Entertainment
-              - elsif params[:id] == "outdoors"
-                Outdoors
-                
-            %ul.dropdown-menu
-              %li
-                %a{:href=>"/photos?id=food"} Restaurants
-              %li
-                %a{:href=>"/photos?id=nightlife"} Nightlife
-              %li
-                %a{:href=>"/photos?id=entertainment"} Arts & Entertainment
-              %li
-                %a{:href=>"/photos?id=outdoors"} Outdoors
         %ul.nav.secondary-nav
           %li
-            %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
+          %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
 - unless flash[:notice].nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}
     %a.close
       x
     %p= flash[:notice]
-
+    
+.container
+  .content_below
+    #main_title
+      %ul#menu
+        - if ig_logged_in
+          %li 
+            %a{:href=>"/photos"} Venues you follow
+        %li.dropdown{ :'data-dropdown' => "dropdown"}
+          %a.dropdown-toggle
+            - if params[:id] == "food"
+              Going out ideas - Restaurants
+            - elsif params[:id] == "nightlife"
+              Going out ideas - Nightlife
+            - elsif params[:id] == "entertainment"
+              Going out ideas - Arts & Entertainment
+            - elsif params[:id] == "outdoors"
+              Going out ideas - Outdoors
+            - elsif params[:id] == "shopping"
+              Going out ideas - Shopping 
+            - else
+              Going out ideas
+          %ul.dropdown-menu
+            %li
+              %a{:href=>"/photos?id=food"} Restaurants
+            %li
+              %a{:href=>"/photos?id=nightlife"} Nightlife
+            %li
+              %a{:href=>"/photos?id=entertainment"} Arts & Entertainment
+            %li
+              %a Shopping
+            %li
+              %a{:href=>"/photos?id=outdoors"} Outdoors
+        %li
+          %a{:href=>"/photos?id=answered"} Recent tips
+        %li
+          %a Useful pics
+  
 = yield

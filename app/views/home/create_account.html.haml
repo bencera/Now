@@ -1,0 +1,21 @@
+.container
+  .content_below
+    #main_title
+      %h1 Oups! You must sign up to do this
+      %p and if you think you had fun so far, well you're up for so much more
+
+.container
+  .content_below
+    #main_title
+      %h1 Sign up with your instagram account!
+    .signin
+      = link_to (image_tag 'ubimachine_btn.png'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
+
+.container
+  .content_below  
+    #main_title
+      %h2 Q: Insta..what?
+      %p A: Instagram is an awesome way to take pictures...Instagram speech
+      
+%footer
+  = render 'partials/footer'  

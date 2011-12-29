@@ -1,24 +1,32 @@
 .container
   .content_below
-    %h1 Welcome to ubimachine!
-    %h4 Ubiquity finally available to you.
-
-.container
-  .content_below
-    %h3 Ubimachine let's you:
-    %ul
-      %li Explore your city and the world through pictures taken via Instagram every second
-      %li Follow your favorite venues to always know what's happening there
-      %li Ask people who are there now (or who have been) questions about the venue
-    
+    .row.show-grid
+      .span4 
+        %h2 ubimachine
+      .span4
+        %h5 1. Account
+      .span4
+        %h5#selected 2. Venues
+      .span4
+        %h5#selected 3. Question
     
 .container
   .content_below
-    %p Enter your email to get notified when someone answers a question you asked:
-    = form_tag '/signup' do
-      = text_field_tag :email,  nil, :placeholder => "Your email..."
-      = submit_tag "submit", :class => 'btn'
-    = link_to "skip", '/follows'
+    %h1#main_title Create your ubimachine account
+    %br
+    #profile_pic.clearfix
+      = image_tag current_user.ig_details[1], :width => '180px'
+    #email_form
+      = form_tag '/signup' do
+        = text_field_tag :username, current_user.ig_username, :placeholder => "Username", :class => 'xlarge', :id => "xlInput"
+        %br
+        %br
+        %br
+        = text_field_tag :email,  nil, :placeholder => "Email", :class => 'xlarge', :id => "xlInput"
+        %br
+        %br
+        %br
+        = submit_tag "Create account", :class => 'btn large signup'
 
 %footer
   = render 'partials/footer'

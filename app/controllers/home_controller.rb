@@ -17,7 +17,7 @@ class HomeController < ApplicationController
     else
       if params[:email] !=nil
         u = User.first(conditions: {ig_id: current_user.ig_id})
-        u.update_attributes(:ig_details[0] => params[:full_name], :email => params[:email])
+        u.update_attributes(:email => params[:email], :username => params[:username])
         if u.venue_ids.blank?
           redirect_to '/follows'
         else
@@ -33,6 +33,23 @@ class HomeController < ApplicationController
   end
   
   def menu
+  end
+  
+  def ask_signup
+    if Rails.env.development?
+      @photo = Photo.first
+    else  
+      current_user.venues.each do |venue|
+        if venue.photos.last_hours(12) != nil
+          @photo = venue.photos.last_hours(12).order_by([[:time_taken, :desc]]).first
+          break
+        end
+      end
+      @photo = Photo.first(conditions: {_id: $redis.zrevrangebyscore("feed:all",Time.now.to_i,1.hours.ago.to_i).first})
+    end
+  end
+  
+  def create_account
   end
 
 end

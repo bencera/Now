@@ -1,4 +1,4 @@
-#bouton_ask  
+- if ig_logged_in
   %a.btn#ask{:'data-controls-modal' => "modal-from-dom", :'data-backdrop' => "true", :'data-keyboard' => "true"} Ask a question
   .modal.hide.fade#modal-from-dom
     .modal-header
@@ -31,3 +31,5 @@
         = hidden_field_tag :venue_name, photo.venue.name
         = submit_tag "Ask!", :class => 'btn large primary', :id => 'bigbouton'
       = link_to "Suggest us a question!", "mailto:ben@ubimachine.com?subject=Suggested question for #{photo.venue.name}"
+- else
+  %a.btn#ask{:href => "/create_account"} Ask a question  

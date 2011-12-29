@@ -11,7 +11,7 @@ Ubimachine::Application.routes.draw do
   
   match "/auth/instagram/callback" => "sessions#callback"
   
-  resources :photos, :venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions
+  resources :photos, :venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls
   
   match "/stats" => "home#stats"
   match "/cities" => "home#cities"
@@ -24,6 +24,9 @@ Ubimachine::Application.routes.draw do
   match "/menu" => "home#menu"
   match "/ask" => "requests#ask"
   match "users/:ig_username" => "users#show"
+  match "follow_signup" => "follows#follow_signup"
+  match "ask_signup" => "home#ask_signup"
+  match "create_account" => "home#create_account"
   
   
   require 'resque_scheduler'

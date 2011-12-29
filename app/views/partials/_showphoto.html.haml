@@ -1,12 +1,21 @@
 - unless photo.nil?
+  - @photo = photo
   %li
     .image
       = link_to (image_tag photo.url[1], :width => '220px'), photo
-      - if photo.requests.blank?
-        = render 'partials/showquestion', :photo => photo
+      #boutons
+        - if User.where(ig_username: "bencera").first.usefuls.where(photo_id: photo.id).empty? #to be replaced by current_user
+          .useful_btn{:id => "photo#{@photo.id.to_s}"}
+            = render 'partials/useful', :photo => @photo
+        - else
+          .useful_btn{:id => "photo#{@photo.id.to_s}"}
+            = render 'partials/unuseful', :photo => @photo
+        - if photo.requests.blank?
+          = render 'partials/showquestion', :photo => @photo
     %div
+      %p.useful_count{:id => "photo#{@photo.id.to_s}"}= pluralize(photo.usefuls.count, 'useful') unless photo.usefuls.count == 0
       %p.venue= link_to "#{truncate(photo.venue.name, :length => 27)}", photo.venue
-      %p.time= time_ago_in_words(Time.at photo.time_taken.to_i).to_s.gsub('seconds', 's').gsub('second', 's').gsub('minutes', 'm').gsub('minute', 'm').gsub('hours', 'h').gsub('hour', 'h').gsub('days', 'd').gsub('day', 'd').gsub('weeks', 'w').gsub('week', 'w').gsub('months', 'mo').gsub('month', 'mo').gsub('years', 'y').gsub('year', 'y').gsub('about', '').gsub(' ', '')
+      %p.time= timeago_small(Time.at photo.time_taken.to_i)
       %p.neighborhood
         - unless photo.venue.neighborhood.nil?
           = photo.venue.neighborhood

@@ -1,13 +1,19 @@
 .container
   .content_below
+    #main_title
+      %h1 Ask what is happening before going.
+      %br
+      %br
     %ul.media-grid
-      .intro
-        - photo = Photo.where(tag: "u")[0]
-        = render 'partials/showphoto', :photo => photo
-        - photo = Photo.where(tag: "b")[0]
-        = render 'partials/showphoto', :photo => photo
-        - photo = Photo.where(tag: "i")[0]
-        = render 'partials/showphoto', :photo => photo
+      %li#photo_explain
+        = image_tag 'follow.png', :width => '200px', :height => '200px'
+        %p Follow the venues you love
+      %li#photo_explain
+        = image_tag 'venues.png', :width => '200px', :height => '200px'
+        %p See pictures taken there recently
+      %li#photo_explain
+        = image_tag 'ask.png', :width => '200px', :height => '200px'
+        %p Ask what's happening there now
   
   .content_below
     .signin

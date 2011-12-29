@@ -12,6 +12,7 @@ class Photo
   belongs_to :venue
   belongs_to :user
   has_many :requests
+  has_many :usefuls
   
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates

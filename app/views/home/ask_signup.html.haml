@@ -1,0 +1,48 @@
+.container
+  .content_below
+    .row.show-grid
+      .span4 
+        %h2 ubimachine
+      .span4
+        %h5#selected 1. Account
+      .span4
+        %h5#selected 2. Venues
+      .span4
+        %h5 3. Question
+    
+.container
+  .content_below
+    %h1#main_title Ask the photographer a question!
+    - unless @photo.nil?
+      #img
+        .img= image_tag @photo.url[1], :width => '500px'
+        %div#img_details
+          %p.venue= link_to @photo.venue.name, @photo.venue
+          #map_left
+            = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=420x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false", :id => "map"
+          %p.time
+            = time_ago_in_words(Time.at @photo.time_taken.to_i)
+            ago
+          %p.neighborhood
+            - unless @photo.venue.neighborhood.nil?
+              = @photo.venue.neighborhood
+          -if @photo.requests.blank?
+            %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
+            = render 'partials/showquestion', :photo => @photo
+          -elsif @photo.requests.first.response.nil?
+            %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
+          -else
+            %p.question
+              Q: 
+              = Request.new.short_question(@photo.requests.first.question_id.to_i)
+            %p.answer
+              A: 
+              = "\"#{@photo.requests.first.response}\""
+    %br
+    %br
+    #main_title
+      %a.btn.large{:href => '/photos'} I'm done, this was fun!
+
+  
+%footer
+  = render 'partials/footer'

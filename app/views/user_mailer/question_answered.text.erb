@@ -1,13 +1,21 @@
-Hi <%= @user.ig_username%>,
+- headers = ["So cool!", "Celebration!", "Awesome!", "I'm loving it!"]
+- answer_user = User.first(conditions: {_id: @request.user_ids[1]}).ig_username
+
+= headers[rand(headers.size)]
 
 Your question on <%= @request.photo.venue.name%> has been answered!
 
-Your question: 
+You asked: 
 <%=@request.question%>
 
-Answer: 
+<%= answer_user%> answered: 
 <%=@request.response%>
 
+Say thanks to <%= answer_user%> and continue the conversation:
+http://www.ubimachine.com/inbox
+
+See the picture:
+<%= "http://www.ubimachine.com/photos/" + @request.photo.id %>
 
 Hope this was useful!
-ubimachine.com
+Ubimachine bot

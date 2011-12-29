@@ -1,0 +1,2 @@
+$(".useful_btn#photo" + "<%= "#{@photo.id.to_s}" %>").html("<%= escape_javascript(render('partials/unuseful')) %>")
+$(".useful_count#photo" + "<%= "#{@photo.id.to_s}" %>").html('<%= pluralize(@photo.usefuls.count, 'useful') unless @photo.usefuls.count == 0 %>')
