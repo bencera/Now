@@ -69,7 +69,7 @@ class PhotosController < ApplicationController
           @photos = photos[(n-1)*21..(n*21-1)]
         end
       elsif params[:id] == "useful"
-        photos = Photo.where(:useful_count.gt => 0).order_by([[:time_taken, :desc]])
+        photos = Photo.where(:useful_count.gt => 0).order_by([[:time_taken, :desc]]).distinct(:_id)
         @photos = photos[(n-1)*21..(n*21-1)]
       end
     end
