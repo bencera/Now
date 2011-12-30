@@ -83,7 +83,6 @@ class PhotosController < ApplicationController
         
       elsif params[:id] == "answered"
         photos = Photo.where(answered: true).order_by([[:time_taken, :desc]]).distinct(:_id).reverse
-        raise "#{photos}"
         @photos = photos[(n-1)*21..(n*21-1)]
         # photos = $redis.zrevrangebyscore("feed:answered",Time.now.to_i,1000.hours.ago.to_i)
         # if photos[(n-1)*21..(n*21-1)].nil?
