@@ -65,6 +65,10 @@
         Going out ideas - Nightlife
       - elsif params[:id] == 'entertainment'
         Going out ideas - Arts & Entertainment    
+      - elsif params[:id] == 'outdoors'
+        Going out ideas - Outdoors
+      - elsif params[:id] == 'shopping'
+        Going out ideas - Shopping 
       - else
         Going out ideas
     %ul
@@ -74,10 +78,14 @@
         %a{:href=>"/photos?id=nightlife"} Nightlife
       %li
         %a{:href=>"/photos?id=entertainment"} Arts & Entertainment
+      %li
+        %a{:href=>"/photos?id=outdoors"} Outdoors
+      %li
+        %a{:href=>"/photos?id=shopping"} Shopping
   %li
-    %a Useful pics
+    %a{:href=>"/photos?id=useful"} Useful pics
   %li
-    %a Recent tips
+    %a{:href=>"/photos?id=anwered"} Recent tips
 
 - unless flash[:notice].nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}

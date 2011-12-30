@@ -1313,13 +1313,13 @@ table .headerSortUp.purple, table .headerSortDown.purple {
   overflow: visible;
 }
 .topbar a {
-  color: #bfbfbf;
+  color: #c00;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 .topbar h3 a:hover, .topbar .brand:hover, .topbar ul .active > a {
   background-color: #333;
   background-color: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  color: #c00;
   text-decoration: none;
 }
 .topbar h3 {
@@ -1330,7 +1330,7 @@ table .headerSortUp.purple, table .headerSortDown.purple {
   display: block;
   padding: 8px 20px 12px;
   margin-left: -20px;
-  color: #ffffff;
+  color: #c00;
   font-size: 20px;
   font-weight: 200;
   line-height: 1;
@@ -1341,7 +1341,7 @@ table .headerSortUp.purple, table .headerSortDown.purple {
 }
 .topbar p a:hover {
   background-color: transparent;
-  color: #ffffff;
+  color: #c00;
 }
 .topbar form {
   float: left;
@@ -1363,7 +1363,7 @@ table .headerSortUp.purple, table .headerSortDown.purple {
   font-weight: 13px;
   line-height: 1;
   padding: 4px 9px;
-  color: #ffffff;
+  color: #c00;
   color: rgba(255, 255, 255, 0.75);
   border: 1px solid #111;
   -webkit-border-radius: 4px;
@@ -1379,20 +1379,20 @@ table .headerSortUp.purple, table .headerSortDown.purple {
   transition: none;
 }
 .topbar input:-moz-placeholder {
-  color: #e6e6e6;
+  color: grey;
 }
 .topbar input::-webkit-input-placeholder {
-  color: #e6e6e6;
+  color: grey;
 }
 .topbar input:hover {
   background-color: #bfbfbf;
   background-color: rgba(255, 255, 255, 0.5);
-  color: #ffffff;
+  color: #c00;
 }
 .topbar input:focus, .topbar input.focused {
   outline: 0;
   background-color: #ffffff;
-  color: #404040;
+  color: #c00;
   text-shadow: 0 1px 0 #ffffff;
   border: 0;
   padding: 5px 10px;
@@ -1404,14 +1404,14 @@ table .headerSortUp.purple, table .headerSortDown.purple {
   background-color: #222;
   background-color: #222222;
   background-repeat: repeat-x;
-  background-image: -khtml-gradient(linear, left top, left bottom, from(#996633), to(#572508));
-  background-image: -moz-linear-gradient(top, #996633, #572508);
-  background-image: -ms-linear-gradient(top, #996633, #572508);
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #572508), color-stop(100%, #572508));
-  background-image: -webkit-linear-gradient(top, #996633, #572508);
-  background-image: -o-linear-gradient(top, #996633, #572508);
-  background-image: linear-gradient(top, #996633, #572508);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#996633', endColorstr='#572508', GradientType=0);
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#f1f0ee), to(#dddcd9));
+  background-image: -moz-linear-gradient(top, #f1f0ee, #dddcd9);
+  background-image: -ms-linear-gradient(top, #f1f0ee, #dddcd9);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #dddcd9), color-stop(100%, #dddcd9));
+  background-image: -webkit-linear-gradient(top, #f1f0ee, #dddcd9);
+  background-image: -o-linear-gradient(top, #f1f0ee, #dddcd9);
+  background-image: linear-gradient(top, #f1f0ee, #dddcd9);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f1f0ee', endColorstr='#dddcd9', GradientType=0);
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
@@ -1435,7 +1435,7 @@ table .headerSortUp.purple, table .headerSortDown.purple {
   text-decoration: none;
 }
 .topbar div > ul a:hover, .nav a:hover {
-  color: #ffffff;
+  color: #c00;
   text-decoration: none;
 }
 .topbar div > ul .active > a, .nav .active > a {
@@ -2693,6 +2693,7 @@ ul#venue_info {
 	}
 	ul li{
 	display:block;
+	background:#f1f1f1;
 	}
 	li:hover ul{
 	left:0;
