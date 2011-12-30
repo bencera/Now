@@ -26,7 +26,7 @@ gem 'jquery-rails'
 gem 'localtunnel'
 gem 'delayed_job'
 gem 'delayed_job_mongoid'
-gem 'geocoder'
+gem 'geocoder', :git => 'https://github.com/engineroomapps/geocoder.git'
 #gem "ruby-debug19", :require => 'ruby-debug'
 gem 'redis'
 

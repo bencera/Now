@@ -1,4 +1,10 @@
 GIT
+  remote: https://github.com/engineroomapps/geocoder.git
+  revision: 427146a98405a6882c2f5cc06fb14032f0d27137
+  specs:
+    geocoder (1.0.2)
+
+GIT
   remote: https://github.com/hone/resque.git
   revision: 19b422e7c1367cf6590ace9c44f7dd8c4fad8752
   branch: keepalive
@@ -72,7 +78,6 @@ GEM
       rack (>= 1.1.0, < 2)
     faraday_middleware (0.3.2)
       faraday (~> 0.5.4)
-    geocoder (1.0.5)
     god (0.11.0)
     haml (3.1.2)
     hashie (1.1.0)
@@ -205,7 +210,7 @@ DEPENDENCIES
   delayed_job_mongoid
   faraday (~> 0.5.3)
   faraday_middleware (~> 0.3.1)
-  geocoder
+  geocoder!
   god
   haml
   hashie (>= 0.4.0)

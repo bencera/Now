@@ -17,8 +17,8 @@ class Photo
   has_many :requests
   has_many :usefuls
   
-  include Geocoder::Model::Mongoid
-  reverse_geocoded_by :coordinates
+  #include Geocoder::Model::Mongoid
+  #reverse_geocoded_by :coordinates
   
   #scopes
   scope :last_seconds, ->(s) { where(:time_taken.gt => s.seconds.ago.to_i) }

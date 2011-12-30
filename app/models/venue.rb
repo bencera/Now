@@ -13,8 +13,8 @@ class Venue
   has_many :photos, dependent: :destroy
   has_and_belongs_to_many :users
   
-  include Geocoder::Model::Mongoid
-  reverse_geocoded_by :coordinates, :address => :address_geo
+  #include Geocoder::Model::Mongoid
+  #reverse_geocoded_by :coordinates, :address => :address_geo
   
   #category might not exist for a venue
   validates_presence_of :fs_venue_id, :name, :coordinates, :ig_venue_id #, :address 
