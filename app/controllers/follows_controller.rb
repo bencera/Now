@@ -47,6 +47,7 @@ class FollowsController < ApplicationController
   def follow_signup
     if Rails.env.development?
       @suggestfollows = ["3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3","3fd66200f964a52008e81ee3" ]
+      @currentuser = User.first(conditions: {ig_username: "bencera"})
     else
       suggestfollows = $redis.smembers("suggestfollow:#{current_user.id}")
       if suggestfollows.count < 20 #run the most popular venues every week. helps for suggest also.
@@ -55,7 +56,6 @@ class FollowsController < ApplicationController
         end
       end
       @suggestfollows = suggestfollows[0..39]
-      @currentuser = User.first(conditions: {ig_username: "bencera"})
     end
   end
 

@@ -4,6 +4,7 @@
   %title= "ubimachine"
   = javascript_include_tag  "application"
   = stylesheet_link_tag "application"
+  = javascript_include_tag "jquery.wookmark"
 
 %body
 .topbar
@@ -52,47 +53,36 @@
         %ul.nav.secondary-nav
           %li
           %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
+
+%ul#nav_test
+  %li
+    %a{:href=>"/photos"} Venues you follow
+  %li
+    %a
+      - if params[:id] == 'food'
+        Going out ideas - Restaurants
+      - elsif params[:id] == 'nightlife'
+        Going out ideas - Nightlife
+      - elsif params[:id] == 'entertainment'
+        Going out ideas - Arts & Entertainment    
+      - else
+        Going out ideas
+    %ul
+      %li
+        %a{:href=>"/photos?id=food"} Restaurants
+      %li
+        %a{:href=>"/photos?id=nightlife"} Nightlife
+      %li
+        %a{:href=>"/photos?id=entertainment"} Arts & Entertainment
+  %li
+    %a Useful pics
+  %li
+    %a Recent tips
+
 - unless flash[:notice].nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}
     %a.close
       x
     %p= flash[:notice]
-    
-.container
-  .content_below
-    #main_title
-      %ul#menu
-        - if ig_logged_in
-          %li 
-            %a{:href=>"/photos"} Venues you follow
-        %li.dropdown{ :'data-dropdown' => "dropdown"}
-          %a.dropdown-toggle
-            - if params[:id] == "food"
-              Going out ideas - Restaurants
-            - elsif params[:id] == "nightlife"
-              Going out ideas - Nightlife
-            - elsif params[:id] == "entertainment"
-              Going out ideas - Arts & Entertainment
-            - elsif params[:id] == "outdoors"
-              Going out ideas - Outdoors
-            - elsif params[:id] == "shopping"
-              Going out ideas - Shopping 
-            - else
-              Going out ideas
-          %ul.dropdown-menu
-            %li
-              %a{:href=>"/photos?id=food"} Restaurants
-            %li
-              %a{:href=>"/photos?id=nightlife"} Nightlife
-            %li
-              %a{:href=>"/photos?id=entertainment"} Arts & Entertainment
-            %li
-              %a Shopping
-            %li
-              %a{:href=>"/photos?id=outdoors"} Outdoors
-        %li
-          %a{:href=>"/photos?id=answered"} Recent tips
-        %li
-          %a Useful pics
   
 = yield

@@ -4,7 +4,7 @@
     .image
       = link_to (image_tag photo.url[1], :width => '220px'), photo
       #boutons
-        - if User.where(ig_username: "bencera").first.usefuls.where(photo_id: photo.id).empty? #to be replaced by current_user
+        - if current_user.usefuls.where(photo_id: photo.id).empty? #to be replaced by current_user
           .useful_btn{:id => "photo#{@photo.id.to_s}"}
             = render 'partials/useful', :photo => @photo
         - else

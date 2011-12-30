@@ -9,6 +9,9 @@ class Photo
   field :coordinates, :type => Array
   field :status #status are to give a attribute to a photo (guessed, no venue, etc..)
   field :tag #tag is to use photos as text or for new york, paris.. not intagram tags, my tags
+  field :category
+  field :answered, :type => Boolean
+  field :useful_count, :type => Integer, default: 0
   belongs_to :venue
   belongs_to :user
   has_many :requests

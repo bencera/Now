@@ -261,6 +261,7 @@ class Venue
           end
           p.status = status
           p.tag = tag
+          p.category = Venue.new.fs_categories[self.categories.first["name"]] unless self.categories.nil?
           p.save
           
           unless p.new?

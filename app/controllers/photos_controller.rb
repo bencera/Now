@@ -68,6 +68,13 @@ class PhotosController < ApplicationController
         else
           @photos = photos[(n-1)*21..(n*21-1)]
         end
+      elsif params[:id] == "useful"
+        photos = Photo.where()
+        if photos[(n-1)*21..(n*21-1)].nil?
+          @photos = []
+        else
+          @photos = photos[(n-1)*21..(n*21-1)]
+        end
       end
     end
     if Rails.env == "development"
