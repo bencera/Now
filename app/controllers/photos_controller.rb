@@ -70,11 +70,7 @@ class PhotosController < ApplicationController
         end
       elsif params[:id] == "useful"
         photos = Photo.where(:useful_count.gt => 0).order_by([[:time_taken, :desc]])
-        if photos[(n-1)*21..(n*21-1)].nil?
-          @photos = []
-        else
-          @photos = photos[(n-1)*21..(n*21-1)]
-        end
+        @photos = photos[(n-1)*21..(n*21-1)]
       end
     end
     if Rails.env == "development"
