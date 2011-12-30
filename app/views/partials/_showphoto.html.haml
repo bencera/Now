@@ -4,12 +4,15 @@
     .image
       = link_to (image_tag photo.url[1], :width => '220px'), photo
       #boutons
-        - if current_user.usefuls.where(photo_id: photo.id).empty? #to be replaced by current_user
-          .useful_btn{:id => "photo#{@photo.id.to_s}"}
-            = render 'partials/useful', :photo => @photo
-        - else
-          .useful_btn{:id => "photo#{@photo.id.to_s}"}
-            = render 'partials/unuseful', :photo => @photo
+        - if ig_logged_in
+          - if current_user.usefuls.where(photo_id: photo.id).empty?
+            .useful_btn{:id => "photo#{@photo.id.to_s}"}
+              = render 'partials/useful', :photo => @photo
+          - else
+            .useful_btn{:id => "photo#{@photo.id.to_s}"}
+              = render 'partials/unuseful', :photo => @photo
+        -else
+          %a.useful_btn.btn#useful{:href => '/create_account'} useful
         - if photo.requests.blank?
           = render 'partials/showquestion', :photo => @photo
     %div
