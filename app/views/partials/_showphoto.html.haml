@@ -24,9 +24,11 @@
           - unless photo.venue.neighborhood.nil?
             = photo.venue.neighborhood
         -if photo.requests.blank?
-          %p.comment= "\"#{photo.caption}\"" unless photo.caption.blank?
+          %p.comment
+            = "\"#{photo.caption}\"" unless photo.caption.blank?
         -elsif photo.requests.first.response.nil?
-          %p.comment= "\"#{photo.caption}\"" unless photo.caption.blank?
+          %p.comment
+            = "\"#{photo.caption}\"" unless photo.caption.blank?
         -else
           %p.question
             Q: 
@@ -34,3 +36,9 @@
           %p.answer
             A: 
             = "\"#{photo.requests.first.response}\""
+        %p.user
+          taken by
+          - if photo.user.ig_details[0].blank?
+            = photo.user.ig_username
+          - else
+            = photo.user.ig_details[0]

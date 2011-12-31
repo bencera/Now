@@ -2480,7 +2480,7 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 
 .media-grid li div {
 	float: left;
-	margin: 5px 0 0;
+/*	margin: 5px 0 0;*/
 }
 
 .media-grid li div p.venue {
@@ -2508,7 +2508,17 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 	font-size: 11px;
 	margin-bottom: 10px;
 	width: 220px;
+	text-align: left;
 }
+
+.media-grid li div p.user {
+	color: #444;
+	font-size: 11px;
+	margin-bottom: 10px;
+	width: 220px;
+	text-align: left;
+}
+
 
 #question_id {
 	font-size: 11px;
@@ -2534,7 +2544,11 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 	background: white;
 	padding: 10px;
 	margin: 10px;
-	width: 240px;
+	width: 220px;
+	
+	.image{
+		height: 220px;
+	}
 }
 
 
@@ -2648,9 +2662,9 @@ ul#venue_info {
 }
 
 .btn#useful{
-	width: 70px;
+	width: 40px;
 	text-align: center;
-	margin: 0px 25px 0 15px;
+	margin: 5px 10px 0 5px;
 	-webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;

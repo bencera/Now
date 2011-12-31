@@ -24,22 +24,24 @@
       %li#map_right
         = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=40.763,-73.98&zoom=11&size=155x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
               
-.container
-  .content_below
-    %ul.media-grid
-      - if @photos == []
-        Sorry no more photos...
-      - @photos.each do |photo|
-        = render 'partials/showphoto', :photo => photo
-        
-    - unless @photos.count < 20
-      .more
-        = form_tag @venue, :method => :get do
-          - if params[:page].nil?
-            = hidden_field_tag :page, 2
-          - else
-            = hidden_field_tag :page, (params[:page].to_i + 1)
-          = submit_tag "more", :class => 'btn'
+.container_photos
+  %ul.media-grid
+    - if @photos == []
+      Sorry no more photos...
+    - @photos.each do |photo|
+      = render 'partials/showphoto', :photo => photo
+      
+- unless @photos.count < 20
+  .more#main_title
+    = form_tag @venue, :method => :get do
+      - if params[:page].nil?
+        = hidden_field_tag :page, 2
+      - else
+        = hidden_field_tag :page, (params[:page].to_i + 1)
+      = submit_tag "more", :class => 'btn'
 
 %footer
   = render 'partials/footer'
+  
+<script type="text/javascript">$(document).ready(function() {$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 240});});</script>
+<script type="text/javascript">$(document).ready(function() {$(window).resize(function() {$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 240});});});</script>

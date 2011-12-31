@@ -4,21 +4,21 @@
       - if photo.to_s == photo
         - photo = Photo.first(conditions: {_id: photo.to_s})
       = render 'partials/showphoto', :photo => photo
-  - unless @photos.count < 21
-    .more
-      = form_tag photos_url, :method => :get do
-        - if params[:page].nil?
-          = hidden_field_tag :page, 2
-        - else
-          = hidden_field_tag :page, (params[:page].to_i + 1)
-        = hidden_field_tag :category, params[:category]
-        = hidden_field_tag :city, params[:city]          
-        
-        = submit_tag "more", :class => 'btn'
+- unless @photos.count < 21
+  .more#main_title
+    = form_tag photos_url, :method => :get do
+      - if params[:page].nil?
+        = hidden_field_tag :page, 2
+      - else
+        = hidden_field_tag :page, (params[:page].to_i + 1)
+      = hidden_field_tag :category, params[:category]
+      = hidden_field_tag :city, params[:city]          
+      
+      = submit_tag "more", :class => 'btn'
         
 %footer
   = render 'partials/footer'
 
   
-<script type="text/javascript">$(document).ready(function() {$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 260});});</script>
-<script type="text/javascript">$(document).ready(function() {$(window).resize(function() {$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 260});});});</script>
+<script type="text/javascript">$(document).ready(function() {$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 240});});</script>
+<script type="text/javascript">$(document).ready(function() {$(window).resize(function() {$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 240});});});</script>
