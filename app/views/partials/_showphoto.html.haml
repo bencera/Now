@@ -1,35 +1,36 @@
 - unless photo.nil?
   - @photo = photo
   %li
-    .image
-      = link_to (image_tag photo.url[1], :width => '220px'), photo
-      #boutons
-        - if ig_logged_in
-          - if current_user.usefuls.where(photo_id: photo.id).empty?
-            .useful_btn{:id => "photo#{@photo.id.to_s}"}
-              = render 'partials/useful', :photo => @photo
-          - else
-            .useful_btn{:id => "photo#{@photo.id.to_s}"}
-              = render 'partials/unuseful', :photo => @photo
+    .card
+      .image
+        = link_to (image_tag photo.url[1], :width => '220px'), photo
+        #boutons
+          - if ig_logged_in
+            - if current_user.usefuls.where(photo_id: photo.id).empty?
+              .useful_btn{:id => "photo#{@photo.id.to_s}"}
+                = render 'partials/useful', :photo => @photo
+            - else
+              .useful_btn{:id => "photo#{@photo.id.to_s}"}
+                = render 'partials/unuseful', :photo => @photo
+          -else
+            %a.useful_btn.btn#useful{:href => '/create_account'} useful
+          - if photo.requests.blank?
+            = render 'partials/showquestion', :photo => @photo
+      %div
+        %p.useful_count{:id => "photo#{@photo.id.to_s}"}= pluralize(photo.usefuls.count, 'useful') unless photo.usefuls.count == 0
+        %p.venue= link_to "#{photo.venue.name}", photo.venue
+        %p.time= timeago_small(Time.at photo.time_taken.to_i)
+        %p.neighborhood
+          - unless photo.venue.neighborhood.nil?
+            = photo.venue.neighborhood
+        -if photo.requests.blank?
+          %p.comment= "\"#{photo.caption}\"" unless photo.caption.blank?
+        -elsif photo.requests.first.response.nil?
+          %p.comment= "\"#{photo.caption}\"" unless photo.caption.blank?
         -else
-          %a.useful_btn.btn#useful{:href => '/create_account'} useful
-        - if photo.requests.blank?
-          = render 'partials/showquestion', :photo => @photo
-    %div
-      %p.useful_count{:id => "photo#{@photo.id.to_s}"}= pluralize(photo.usefuls.count, 'useful') unless photo.usefuls.count == 0
-      %p.venue= link_to "#{truncate(photo.venue.name, :length => 27)}", photo.venue
-      %p.time= timeago_small(Time.at photo.time_taken.to_i)
-      %p.neighborhood
-        - unless photo.venue.neighborhood.nil?
-          = photo.venue.neighborhood
-      -if photo.requests.blank?
-        %p.comment= "\"#{truncate(photo.caption, :length => 75)}\"" unless photo.caption.blank?
-      -elsif photo.requests.first.response.nil?
-        %p.comment= "\"#{photo.caption}\"" unless photo.caption.blank?
-      -else
-        %p.question
-          Q: 
-          = Request.new.short_question(photo.requests.first.question_id.to_i)
-        %p.answer
-          A: 
-          = "\"#{truncate(photo.requests.first.response, :length => 80)}\""
+          %p.question
+            Q: 
+            = Request.new.short_question(photo.requests.first.question_id.to_i)
+          %p.answer
+            A: 
+            = "\"#{photo.requests.first.response}\""

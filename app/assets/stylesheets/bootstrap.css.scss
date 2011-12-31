@@ -2454,8 +2454,8 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 }
 .media-grid a {
   float: left;
-  padding: 4px;
-  border: 1px solid #ddd;
+/*  padding: 4px;
+  border: 1px solid #ddd;*/
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
   border-radius: 0px;
@@ -2531,6 +2531,13 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 	margin-bottom: 10px;
 	width: 220px;
 	height: 36px;
+}
+
+.card{
+	background: white;
+	padding: 10px;
+	margin: 10px;
+	width: 240px;
 }
 
 

@@ -1,47 +1,24 @@
-.container
-  .content_below
-    %ul.media-grid
-      - @photos[0..20].each do |photo|
-        - if photo.to_s == photo
-          - photo = Photo.first(conditions: {_id: photo.to_s})
-        = render 'partials/showphoto', :photo => photo
-    - unless @photos.count < 21
-      .more
-        = form_tag photos_url, :method => :get do
-          - if params[:page].nil?
-            = hidden_field_tag :page, 2
-          - else
-            = hidden_field_tag :page, (params[:page].to_i + 1)
-          = hidden_field_tag :category, params[:category]
-          = hidden_field_tag :city, params[:city]          
-          
-          = submit_tag "more", :class => 'btn'
+.container_photos
+  %ul.media-grid
+    - @photos[0..20].each do |photo|
+      - if photo.to_s == photo
+        - photo = Photo.first(conditions: {_id: photo.to_s})
+      = render 'partials/showphoto', :photo => photo
+  - unless @photos.count < 21
+    .more
+      = form_tag photos_url, :method => :get do
+        - if params[:page].nil?
+          = hidden_field_tag :page, 2
+        - else
+          = hidden_field_tag :page, (params[:page].to_i + 1)
+        = hidden_field_tag :category, params[:category]
+        = hidden_field_tag :city, params[:city]          
         
-  / .content_below#right
-  /   .page-header
-  /     %h3= link_to "Answered questions", '/photos?id=answered'
-  /   %ul.unstyled
-  /     - @answered.each do |request|
-  /       %li
-  /         = link_to request.photo.venue.name, request.photo
-  /         %br
-  /         = time_ago_in_words(Time.at request.time_answered)
-  /         ago
-  /         %br
-  /         Q:
-  /         = Request.new.short_question(request.question_id.to_i)
-  / .content_below#right
-  /   .page-header
-  /     %h3= link_to "Trending venues", '/photos?id=trending'
-  /   %ul.unstyled
-  /     - @venues_trending.each do |venue|
-  /       %li
-  /         = link_to venue.name, venue
-  /         %br
-  /         = venue.photos.last_hours(3).distinct(:user_id).count
-  /         users
+        = submit_tag "more", :class => 'btn'
         
 %footer
   = render 'partials/footer'
 
-/<script type="text/javascript">$('#e li').wookmark({offset: 2});</script>
+  
+<script type="text/javascript">$(document).ready(function() {$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 260});});</script>
+<script type="text/javascript">$(document).ready(function() {$(window).resize(function() {$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 260});});});</script>

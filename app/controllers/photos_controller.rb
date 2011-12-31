@@ -9,7 +9,7 @@ class PhotosController < ApplicationController
     n = n.to_i
     if Rails.env == "development"
       #@photos = [Request.first.photo.id.to_s]
-      @photos = Photo.all.order_by([[:time_taken, :desc]]).distinct(:_id).take(12)
+      @photos = Photo.all.order_by([[:time_taken, :desc]]).take(12)
     else
       
       
