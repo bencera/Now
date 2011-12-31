@@ -8,10 +8,10 @@ Your question on <%= @request.photo.venue.name%> has been answered!
 You asked: 
 <%=@request.question%>
 
-<%= answer_user%> answered: 
+<%= User.first(conditions: {_id: @request.user_ids[1]}).ig_username%> answered: 
 <%=@request.response%>
 
-Say thanks to <%= answer_user%> and continue the conversation:
+Say thanks to <%= User.first(conditions: {_id: @request.user_ids[1]}).ig_username %> and continue the conversation:
 http://www.ubimachine.com/inbox
 
 See the picture:
