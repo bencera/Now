@@ -22,6 +22,8 @@
             %ul.dropdown-menu
               %li
                 %a{:href=>"/photos?city=newyork"} New York
+              %li
+                %a{:href=>"/photos?city=paris"} Paris
         %ul.nav.secondary-nav
           %li
             %a{:href=>"/follows"} Venues to follow
@@ -52,6 +54,8 @@
             %ul.dropdown-menu
               %li
                 %a{:href=>"/photos?city=newyork"} New York
+              %li
+                %a{:href=>"/photos?city=paris"} Paris
         %ul.nav.secondary-nav
           %li
           %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
@@ -94,5 +98,5 @@
     %a.close
       x
     %p= flash[:notice]
-  
+
 = yield
