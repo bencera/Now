@@ -12,7 +12,9 @@
             = hidden_field_tag :page, 2
           - else
             = hidden_field_tag :page, (params[:page].to_i + 1)
-          = hidden_field_tag :id, params[:id]
+          = hidden_field_tag :category, params[:category]
+          = hidden_field_tag :city, params[:city]          
+          
           = submit_tag "more", :class => 'btn'
         
   / .content_below#right
