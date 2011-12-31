@@ -7,6 +7,13 @@
         %span
           - unless venue["category"].nil?
             = venue["category"]["name"]
+        %span
+          - unless venue["location"]["address"].nil?
+            = venue["location"]["address"]
+        %span
+          - unless venue["location"]["crossStreet"].nil?
+            = venue["location"]["crossStreet"]
+            
       
 %footer
   = render 'partials/footer'
