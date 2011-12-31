@@ -10,7 +10,10 @@
 .topbar
   .topbar-inner
     .container
-      %a.brand{:href=>"/photos?city=newyork&category=outdoors"} ubimachine
+      -if @city.nil?
+        %a.brand{:href=>"/photos?city=newyork&category=outdoors"} ubimachine
+      - else
+        %a.brand{:href=>"/photos?city=#{@city}&category=outdoors"} ubimachine
       - if ig_logged_in
         %ul.nav
           %li
@@ -44,6 +47,8 @@
               - else
                 = current_user.ig_details[0]
             %ul.dropdown-menu
+              %li
+                %a{:href=>"/users/#{current_user.ig_username}"} My profile
               %li
                 %a{:href=>"/settings"} Settings
               %li.divider
