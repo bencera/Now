@@ -10,17 +10,18 @@
 .topbar
   .topbar-inner
     .container
-      %a.brand{:href=>"/photos"} ubimachine
+      %a.brand{:href=>"/photos?city=newyork"} ubimachine
       - if ig_logged_in
         %ul.nav
           %li
             = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
               = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search venues...'
+              = hidden_field_tag :city, @city
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle New York
             %ul.dropdown-menu
               %li
-                %a New York
+                %a{:href=>"/photos?city=newyork"} New York
         %ul.nav.secondary-nav
           %li
             %a{:href=>"/follows"} Venues to follow
@@ -45,47 +46,48 @@
           %li
             = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
               = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search venues...'
+              = hidden_field_tag :city, @city
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle New York
             %ul.dropdown-menu
               %li
-                %a New York
+                %a{:href=>"/photos?city=newyork"} New York
         %ul.nav.secondary-nav
           %li
           %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
 
 %ul#nav_test
   %li
-    %a{:href=>"/photos"} Venues you follow
+    %a{:href=>"/photos?city=#{@city}"} Venues you follow
   %li
     %a
-      - if params[:id] == 'food'
+      - if params[:category] == 'food'
         Going out ideas - Restaurants
-      - elsif params[:id] == 'nightlife'
+      - elsif params[:category] == 'nightlife'
         Going out ideas - Nightlife
-      - elsif params[:id] == 'entertainment'
+      - elsif params[:category] == 'entertainment'
         Going out ideas - Arts & Entertainment    
-      - elsif params[:id] == 'outdoors'
+      - elsif params[:category] == 'outdoors'
         Going out ideas - Outdoors
-      - elsif params[:id] == 'shopping'
+      - elsif params[:category] == 'shopping'
         Going out ideas - Shopping 
       - else
         Going out ideas
     %ul
       %li
-        %a{:href=>"/photos?id=food"} Restaurants
+        %a{:href=>"/photos?city=#{@city}&category=food"} Restaurants
       %li
-        %a{:href=>"/photos?id=nightlife"} Nightlife
+        %a{:href=>"/photos?city=#{@city}&category=nightlife"} Nightlife
       %li
-        %a{:href=>"/photos?id=entertainment"} Arts & Entertainment
+        %a{:href=>"/photos?city=#{@city}&category=entertainment"} Arts & Entertainment
       %li
-        %a{:href=>"/photos?id=outdoors"} Outdoors
+        %a{:href=>"/photos?city=#{@city}&category=outdoors"} Outdoors
       %li
-        %a{:href=>"/photos?id=shopping"} Shopping
+        %a{:href=>"/photos?city=#{@city}&category=shopping"} Shopping
   %li
-    %a{:href=>"/photos?id=useful"} Useful pics
+    %a{:href=>"/photos?city=#{@city}&category=useful"} Useful pics
   %li
-    %a{:href=>"/photos?id=answered"} Recent tips
+    %a{:href=>"/photos?city=#{@city}&category=answered"} Recent tips
 
 - unless flash[:notice].nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}

@@ -9,6 +9,7 @@ class Venue
   field :address_geo
   field :neighborhood
   field :week_stats, :type => Hash
+  field :city
   key :fs_venue_id
   has_many :photos, dependent: :destroy
   has_and_belongs_to_many :users
@@ -159,6 +160,7 @@ class Venue
         #if venue doesnt have an address, add it with geocoder?
         self.address = venue.location.json unless venue.location.nil?
         self.neighborhood = self.find_neighborhood
+        self.city = Venue.new.find_city(self.coordinates[1], self.coordinates[0])
         self.fetch_ig_photos
       end
     end
@@ -262,6 +264,7 @@ class Venue
           p.status = status
           p.tag = tag
           p.category = Venue.new.fs_categories[self.categories.first["name"]] unless self.categories.nil?
+          p.city = Venue.new.find_city(p.coordinates[1], p.coordinates[0])
           p.save
           
           unless p.new?
@@ -275,6 +278,14 @@ class Venue
     end
   end
   
+  
+  def find_city(lat,lng)
+    if Geocoder::Calculations.distance_between([lat,lng], [40.739,-73.994]) < 20
+      "newyork"
+    else
+      "unknown"
+    end
+  end
   
   def find_neighborhood
     results = Geocoder.search("#{coordinates[1]},#{coordinates[0]}")

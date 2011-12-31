@@ -12,6 +12,7 @@ class Photo
   field :category
   field :answered, :type => Boolean
   field :useful_count, :type => Integer, default: 0
+  field :city
   belongs_to :venue
   belongs_to :user
   has_many :requests

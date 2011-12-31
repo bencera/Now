@@ -13,7 +13,7 @@ class PhotosController < ApplicationController
     else
       
       
-      if params[:id].blank? #my feed
+      if params[:category].blank? #my feed
         
         
         if ig_logged_in
@@ -28,8 +28,8 @@ class PhotosController < ApplicationController
         end
         
         
-      elsif params[:id] == "food"
-        photos = Photo.where(category: "Food").order_by([[:time_taken, :desc]]).distinct(:_id).reverse
+      elsif params[:category] == "food"
+        photos = Photo.where(city: params[:city]).where(category: "Food").order_by([[:time_taken, :desc]]).distinct(:_id).reverse
         @photos = photos[(n-1)*21..(n*21-1)]
         # photos = $redis.zrevrangebyscore("feed:Food",Time.now.to_i,24.hours.ago.to_i)
         # if photos[(n-1)*21..(n*21-1)].nil?
@@ -40,8 +40,8 @@ class PhotosController < ApplicationController
         #@photos = Photo.new.get_last_photos("Food",1)
         
         
-      elsif params[:id] == "nightlife"
-        photos = Photo.where(category: "Nightlife Spot").order_by([[:time_taken, :desc]]).distinct(:_id).reverse
+      elsif params[:category] == "nightlife"
+        photos = Photo.where(city: params[:city]).where(category: "Nightlife Spot").order_by([[:time_taken, :desc]]).distinct(:_id).reverse
         @photos = photos[(n-1)*21..(n*21-1)]
         # photos = $redis.zrevrangebyscore("feed:NightlifeSpot",Time.now.to_i,24.hours.ago.to_i)
         # if photos[(n-1)*21..(n*21-1)].nil?
@@ -52,8 +52,8 @@ class PhotosController < ApplicationController
         #@photos = Photo.new.get_last_photos("Nightlife Spot",1)
         
         
-      elsif params[:id] == "entertainment"
-        photos = Photo.where(category: "Arts & Entertainment").order_by([[:time_taken, :desc]]).distinct(:_id).reverse
+      elsif params[:category] == "entertainment"
+        photos = Photo.where(city: params[:city]).where(category: "Arts & Entertainment").order_by([[:time_taken, :desc]]).distinct(:_id).reverse
         @photos = photos[(n-1)*21..(n*21-1)]
         # photos = $redis.zrevrangebyscore("feed:Arts&Entertainment",Time.now.to_i,24.hours.ago.to_i)
         # if photos[(n-1)*21..(n*21-1)].nil?
@@ -64,8 +64,8 @@ class PhotosController < ApplicationController
         #@photos = Photo.new.get_last_photos("Arts & Entertainment",1)  
         
              
-      elsif params[:id] == "outdoors"
-        photos = Photo.where(category: "Great Outdoors").order_by([[:time_taken, :desc]]).distinct(:_id).reverse
+      elsif params[:category] == "outdoors"
+        photos = Photo.where(city: params[:city]).where(category: "Great Outdoors").order_by([[:time_taken, :desc]]).distinct(:_id).reverse
         @photos = photos[(n-1)*21..(n*21-1)]
         # photos = $redis.zrevrangebyscore("feed:GreatOutdoors",Time.now.to_i,24.hours.ago.to_i)
         # if photos[(n-1)*21..(n*21-1)].nil?
@@ -76,13 +76,13 @@ class PhotosController < ApplicationController
         #@photos = Photo.new.get_last_photos("Great Outdoors",1)
         
         
-      elsif params[:id] == "shopping"
-        photos = Photo.where(category: "Shop & Service").order_by([[:time_taken, :desc]]).distinct(:_id).reverse
+      elsif params[:category] == "shopping"
+        photos = Photo.where(city: params[:city]).where(category: "Shop & Service").order_by([[:time_taken, :desc]]).distinct(:_id).reverse
         @photos = photos[(n-1)*21..(n*21-1)]
         
         
-      elsif params[:id] == "answered"
-        photos = Photo.where(answered: true).order_by([[:time_taken, :desc]]).distinct(:_id).reverse
+      elsif params[:category] == "answered"
+        photos = Photo.where(city: params[:city]).where(answered: true).order_by([[:time_taken, :desc]]).distinct(:_id).reverse
         @photos = photos[(n-1)*21..(n*21-1)]
         # photos = $redis.zrevrangebyscore("feed:answered",Time.now.to_i,1000.hours.ago.to_i)
         # if photos[(n-1)*21..(n*21-1)].nil?
@@ -92,7 +92,7 @@ class PhotosController < ApplicationController
         # end
         
         
-      elsif params[:id] == "trending"
+      elsif params[:category] == "trending"
         photos = $redis.zrevrangebyscore("feed:all",Time.now.to_i,24.hours.ago.to_i)
         if photos[(n-1)*21..(n*21-1)].nil?
           @photos = []
@@ -101,10 +101,9 @@ class PhotosController < ApplicationController
         end
         
         
-      elsif params[:id] == "useful"
-        photos = Photo.where(:useful_count.gt => 0).order_by([[:time_taken, :desc]]).distinct(:_id).reverse
+      elsif params[:category] == "useful"
+        photos = Photo.where(city: params[:city]).where(:useful_count.gt => 0).order_by([[:time_taken, :desc]]).distinct(:_id).reverse
         @photos = photos[(n-1)*21..(n*21-1)]
-        
         
       end
       
@@ -121,7 +120,7 @@ class PhotosController < ApplicationController
     #   @venues_trending = venues_trending.uniq.take(10)
     # end
     #@answered = Request.excludes(:time_answered => nil).order_by([:time_answered, :desc]).take(7)
-
+  @city = params[:city]
   end
   
   def show
