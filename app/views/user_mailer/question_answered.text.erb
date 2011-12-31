@@ -15,7 +15,7 @@ Say thanks to <%= User.first(conditions: {_id: @request.user_ids[1]}).ig_usernam
 http://www.ubimachine.com/inbox
 
 See the picture:
-<%= "http://www.ubimachine.com/photos/" + @request.photo.id %>
+<%= "http://www.ubimachine.com/photos/#{@request.photo.id}" %>
 
 Hope this was useful!
 Ubimachine bot
