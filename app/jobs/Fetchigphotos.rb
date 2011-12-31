@@ -1,7 +1,7 @@
 class Fetchigphotos
   @queue = :fetchphotos_queue
   def self.perform
-    subscriptions = ["702469"]
+    subscriptions = ["702469", "756596"]
     subscriptions.each do |subscription|
       n = 0
       max_id = nil

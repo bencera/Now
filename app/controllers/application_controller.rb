@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   has_mobile_fu
-  http_basic_authenticate_with :name => "ben_cera", :password => "London123"
+  #http_basic_authenticate_with :name => "ben_cera", :password => "London123"
   
   private
   
