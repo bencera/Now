@@ -17,7 +17,6 @@
           - if photo.requests.blank?
             = render 'partials/showquestion', :photo => @photo
       %div
-        %p.useful_count{:id => "photo#{@photo.id.to_s}"}= pluralize(photo.usefuls.count, 'useful') unless photo.usefuls.count == 0
         %p.venue= link_to "#{photo.venue.name}", photo.venue
         %p.time= timeago_small(Time.at photo.time_taken.to_i)
         %p.neighborhood
@@ -42,3 +41,6 @@
             = photo.user.ig_username
           - else
             = photo.user.ig_details[0]
+        %p.useful_count{:id => "photo#{@photo.id.to_s}"}
+          = pluralize(photo.usefuls.count, 'person') unless photo.usefuls.count == 0
+          = "found this photo useful" unless photo.usefuls.count == 0

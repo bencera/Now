@@ -15,7 +15,6 @@
               = @photo.venue.neighborhood
           %p.user
             taken by
-            = image_tag @photo.user.ig_details[1], :width => '50px'
             - if @photo.user.ig_details[0].blank?
               = @photo.user.ig_username
             - else
