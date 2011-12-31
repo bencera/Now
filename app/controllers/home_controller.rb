@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
   def index
     if ig_logged_in
-      redirect_to '/photos'
+      redirect_to '/photos?city=newyork&category=outdoors'
     end
   end
 
@@ -21,12 +21,12 @@ class HomeController < ApplicationController
         if u.venue_ids.blank?
           redirect_to '/follow_signup'
         else
-          redirect_to '/photos'
+          redirect_to '/photos?city=newyork&category=outdoors'
         end
       elsif User.first(conditions: {ig_id: current_user.ig_id}).email.blank?
         @user = current_user
       else
-        redirect_to '/photos'
+        redirect_to '/photos?city=newyork&category=outdoors' #rediriger vers la ville preferee du mec, ou celle ou il est
       end
     end
 
