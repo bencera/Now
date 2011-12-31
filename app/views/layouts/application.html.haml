@@ -18,7 +18,13 @@
               = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search venues...'
               = hidden_field_tag :city, @city
           %li.dropdown{ :'data-dropdown' => "dropdown"}
-            %a.dropdown-toggle New York
+            %a.dropdown-toggle
+              - if params[:city] == 'newyork'
+                New York
+              - elsif params[:city] == 'paris'
+                Paris
+              - else
+                Select a city
             %ul.dropdown-menu
               %li
                 %a{:href=>"/photos?city=newyork"} New York
@@ -50,7 +56,13 @@
               = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search venues...'
               = hidden_field_tag :city, @city
           %li.dropdown{ :'data-dropdown' => "dropdown"}
-            %a.dropdown-toggle New York
+            %a.dropdown-toggle
+              - if params[:city] == 'newyork'
+                New York
+              - elsif params[:city] == 'paris'
+                Paris
+              - else
+                Select a city
             %ul.dropdown-menu
               %li
                 %a{:href=>"/photos?city=newyork"} New York
