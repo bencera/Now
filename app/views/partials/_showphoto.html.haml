@@ -7,10 +7,10 @@
         #boutons
           - if ig_logged_in
             - if current_user.usefuls.where(photo_id: photo.id).empty?
-              %a.useful_btn.btn#useful{:id => "photo#{@photo.id.to_s}"}
+              .useful_btn{:id => "photo#{@photo.id.to_s}"}
                 = render 'partials/useful', :photo => @photo
             - else
-              %a.useful_btn.btn#useful{:id => "photo#{@photo.id.to_s}"}
+              .useful_btn{:id => "photo#{@photo.id.to_s}"}
                 = render 'partials/unuseful', :photo => @photo
           -else
             %a.useful_btn.btn#useful{:href => '/create_account'} useful
