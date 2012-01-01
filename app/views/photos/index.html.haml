@@ -12,14 +12,16 @@
       - else
         = hidden_field_tag :page, (params[:page].to_i + 1)
       = hidden_field_tag :category, params[:category]
-      = hidden_field_tag :city, params[:city]          
-      
+      = hidden_field_tag :city, params[:city]
       = submit_tag "more", :class => 'btn'
-        
+
+:javascript  
+  $(document).ready(function() {
+    $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
+  });
+  $(window).resize(function() {
+    $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
+  });
+
 %footer
   = render 'partials/footer'
-
-  
-:javascript  
-  $(document).ready(function() {$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 240});});
-  $(window).resize(function() {$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 240});});
