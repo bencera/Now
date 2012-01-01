@@ -1,7 +1,7 @@
 - unless photo.venue.nil?
   - if ig_logged_in
-    %a.btn#ask{:'data-controls-modal' => "modal-from-dom", :'data-backdrop' => "true", :'data-keyboard' => "true"} Ask a question
-    .modal.hide.fade#modal-from-dom
+    %a.btn#ask{:'data-controls-modal' => "modal_photo_#{photo.id.to_s}", :'data-backdrop' => "true", :'data-keyboard' => "true"} Ask a question
+    .modal.hide.fade{:id => "modal_photo_#{photo.id.to_s}"}
       .modal-header
         %a.close
           x
