@@ -26,12 +26,11 @@
               
 .container_photos
   %ul.media-grid{:last => "#{@photos.last.time_taken}"}
-    = render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
-    #infinite-scroll
+    #results
+      = render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
 
-= form_tag venues_path, :method => :get, :remote => true do
-  = hidden_field_tag :last, @photos.last.time_taken
-  = submit_tag "more", :class => 'btn', :id => 'useful'
+      = will_paginate @photos
+      = pageless @photos.total_pages, "/venues/#{@venue.id}"
 / - unless @photos.count < 20
 /   .more#main_title
 /     = form_tag @venue, :method => :get do
@@ -46,6 +45,9 @@
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
   $(window).resize(function() {
+    $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
+  });
+  $('body').ajaxComplete(function() {
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
 
