@@ -4,7 +4,7 @@
       = render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
 
       = will_paginate @photos
-      = pageless @photos.total_pages, photos_path
+      = pageless @photos.total_pages, "/photos?city=#{current_city}&category=#{params[:category]}"
 /= will_paginate(@articles)
 / - unless @photos.count < 21
 /   .more#main_title
