@@ -4,16 +4,14 @@
   %title= "ubimachine"
   = javascript_include_tag  "application"
   = stylesheet_link_tag "application"
-  = javascript_include_tag "jquery.wookmark"
+  = javascript_include_tag 'jquery.pageless.min.js'
+  = csrf_meta_tag
 
 %body
 .topbar
   .topbar-inner
     .container
-      -if @city.blank?
-        %a.brand{:href=>"/photos?city=newyork&category=outdoors"} ubimachine
-      - else
-        %a.brand{:href=>"/photos?city=#{@city}&category=outdoors"} ubimachine
+      %a.brand{:href=>"/photos?city=#{current_city}&category=outdoors"} ubimachine
       - if ig_logged_in
         %ul.nav
           %li
@@ -62,9 +60,9 @@
               = hidden_field_tag :city, @city
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle
-              - if params[:city] == 'newyork'
+              - if current_city == 'newyork'
                 New York
-              - elsif params[:city] == 'paris'
+              - elsif current_city == 'paris'
                 Paris
               - else
                 Select a city
@@ -80,7 +78,7 @@
 %ul#nav_test
   %li
     - if ig_logged_in
-      %a{:href=>"/photos?city=#{@city}"} Venues you follow
+      %a{:href=>"/photos"} Venues you follow
     - else
       %a{:href=>"/create_account"} Venues you follow
   %li
@@ -101,19 +99,19 @@
       - if @city.blank?
         - @city = "newyork"
       %li
-        %a{:href=>"/photos?city=#{@city}&category=food"} Restaurants
+        %a{:href=>"/photos?city=#{current_city}&category=food"} Restaurants
       %li
-        %a{:href=>"/photos?city=#{@city}&category=nightlife"} Nightlife
+        %a{:href=>"/photos?city=#{current_city}&category=nightlife"} Nightlife
       %li
-        %a{:href=>"/photos?city=#{@city}&category=entertainment"} Arts & Entertainment
+        %a{:href=>"/photos?city=#{current_city}&category=entertainment"} Arts & Entertainment
       %li
-        %a{:href=>"/photos?city=#{@city}&category=outdoors"} Outdoors
+        %a{:href=>"/photos?city=#{current_city}&category=outdoors"} Outdoors
       %li
-        %a{:href=>"/photos?city=#{@city}&category=shopping"} Shopping
+        %a{:href=>"/photos?city=#{current_city}&category=shopping"} Shopping
   %li
-    %a{:href=>"/photos?city=#{@city}&category=useful"} Useful pics
+    %a{:href=>"/photos?city=#{current_city}&category=useful"} Useful pics
   %li
-    %a{:href=>"/photos?city=#{@city}&category=answered"} Recent tips
+    %a{:href=>"/photos?city=#{current_city}&category=answered"} Recent tips
 
 - unless flash[:notice].nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}

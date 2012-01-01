@@ -25,20 +25,21 @@
         = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=40.763,-73.98&zoom=11&size=155x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
               
 .container_photos
-  %ul.media-grid
-    - if @photos == []
-      Sorry no more photos...
-    - @photos.each do |photo|
-      = render 'partials/showphoto', :photo => photo
-      
-- unless @photos.count < 20
-  .more#main_title
-    = form_tag @venue, :method => :get do
-      - if params[:page].nil?
-        = hidden_field_tag :page, 2
-      - else
-        = hidden_field_tag :page, (params[:page].to_i + 1)
-      = submit_tag "more", :class => 'btn'
+  %ul.media-grid{:last => "#{@photos.last.time_taken}"}
+    = render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
+    #infinite-scroll
+
+= form_tag venues_path, :method => :get, :remote => true do
+  = hidden_field_tag :last, @photos.last.time_taken
+  = submit_tag "more", :class => 'btn', :id => 'useful'
+/ - unless @photos.count < 20
+/   .more#main_title
+/     = form_tag @venue, :method => :get do
+/       - if params[:page].nil?
+/         = hidden_field_tag :page, 2
+/       - else
+/         = hidden_field_tag :page, (params[:page].to_i + 1)
+/       = submit_tag "more", :class => 'btn'
 
 :javascript  
   $(document).ready(function() {

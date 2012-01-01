@@ -13,7 +13,11 @@ class ApplicationController < ActionController::Base
     session[:user_id]
   end
   
-  helper_method :current_user, :ig_logged_in
+  def current_city
+    @current_city ||= session[:city] if session[:city]
+  end
+  
+  helper_method :current_user, :ig_logged_in, :current_city
 
   
 end

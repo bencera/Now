@@ -1,0 +1,6 @@
+<% unless @photos.blank? %>
+	$('.media-grid').append("<%=escape_javascript(render :partial => 'partials/showphoto', :collection => @photos, :as => :photo)%>");
+	$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 240});
+<% else %>
+	$('#infinite-scroll').detach();
+<% end %>

@@ -14,7 +14,7 @@ class CallbacksController < ApplicationController
     #     self.delay(:run_at => 1.minute.from_now).check_new_photos
     #     #params["_json"].each do |json|
     #       #if user updates, need to change
-    #       #retarder les callbacks
+    #       #retarder les callback
     #     #object_id = json["object_id"]
     #      #, options={:min_timestamp => f["time"]})
     #     n = 0

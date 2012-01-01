@@ -1,19 +1,26 @@
 .container_photos
-  %ul.media-grid
-    - @photos[0..20].each do |photo|
-      - if photo.to_s == photo
-        - photo = Photo.first(conditions: {_id: photo.to_s})
-      = render 'partials/showphoto', :photo => photo
-- unless @photos.count < 21
-  .more#main_title
-    = form_tag photos_url, :method => :get do
-      - if params[:page].nil?
-        = hidden_field_tag :page, 2
-      - else
-        = hidden_field_tag :page, (params[:page].to_i + 1)
-      = hidden_field_tag :category, params[:category]
-      = hidden_field_tag :city, params[:city]
-      = submit_tag "more", :class => 'btn'
+  %ul.media-grid{:last => "#{@photos.last.time_taken}"}
+    #results
+      = render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
+
+      = will_paginate @photos
+      = pageless @photos.total_pages, photos_path
+/= will_paginate(@articles)
+/ - unless @photos.count < 21
+/   .more#main_title
+/     = form_tag photos_url, :method => :get do
+/       - if params[:page].nil?
+/         = hidden_field_tag :page, 2
+/       - else
+/         = hidden_field_tag :page, (params[:page].to_i + 1)
+/       = hidden_field_tag :category, params[:category]
+/       = hidden_field_tag :city, params[:city]
+/       = submit_tag "more", :class => 'btn'
+/= pageless(@photos.total_pages, photos_path, "#results")
+
+/ = form_tag photos_path, :method => :get, :remote => true do
+/   = hidden_field_tag :last, @photos.last.time_taken
+/   = submit_tag "more", :class => 'btn', :id => 'useful'
 
 :javascript  
   $(document).ready(function() {
@@ -22,6 +29,8 @@
   $(window).resize(function() {
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
-
+  $('body').ajaxComplete(function() {
+    $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
+  });
 %footer
   = render 'partials/footer'
