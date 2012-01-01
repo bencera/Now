@@ -79,7 +79,10 @@
 
 %ul#nav_test
   %li
-    %a{:href=>"/photos?city=#{@city}"} Venues you follow
+    - if ig_logged_in
+      %a{:href=>"/photos?city=#{@city}"} Venues you follow
+    - else
+      %a{:href=>"/create_account"} Venues you follow
   %li
     %a
       - if params[:category] == 'food'

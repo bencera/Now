@@ -2720,10 +2720,13 @@ input.btn#useful{
 	ul{
 	position:absolute;
 	/*top:100%; Uncommenting this makes the dropdowns work in IE7 but looks a little worse in all other browsers. Your call. */
-	left:-9999px;
 	margin:0;
 	padding:0;
 	text-align:left;
+	z-index: 1;
+	top: 26px;
+	left: 12px;
+	display: none;
 	}
 	ul li{
 	display:block;
@@ -2731,6 +2734,7 @@ input.btn#useful{
 	}
 	li:hover ul{
 	left:0;
+	display: inline;
 	}
 	li:hover a{
 	text-decoration:underline;
