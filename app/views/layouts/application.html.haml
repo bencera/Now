@@ -10,7 +10,7 @@
 .topbar
   .topbar-inner
     .container
-      -if @city.nil?
+      -if @city.blank?
         %a.brand{:href=>"/photos?city=newyork&category=outdoors"} ubimachine
       - else
         %a.brand{:href=>"/photos?city=#{@city}&category=outdoors"} ubimachine
@@ -98,6 +98,8 @@
       - else
         Going out ideas
     %ul
+      - if @city.blank?
+        - @city = "newyork"
       %li
         %a{:href=>"/photos?city=#{@city}&category=food"} Restaurants
       %li
