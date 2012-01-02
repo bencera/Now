@@ -29,7 +29,7 @@ class PhotosController < ApplicationController
           photo_ids = $redis.zrevrangebyscore("userfeed:#{current_user.id}",Time.now.to_i, 720.hours.ago.to_i)
           photos = []
           photo_ids.each do |photo_id|
-            photos << Photo.first(conditions: {_id: photo_id}))
+            photos << Photo.first(conditions: {_id: photo_id})
           end
           @photos = photos.paginate(:per_page => 20, :page => params[:page])
         else
