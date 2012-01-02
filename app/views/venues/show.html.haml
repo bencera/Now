@@ -22,7 +22,9 @@
       %li#map_left
         = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=500x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
       %li#map_right
-        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=40.763,-73.98&zoom=11&size=155x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
+        - lls = {"paris" => "48.86,2.34", "newyork" => "40.763,-73.98"}
+        - zooms = {"paris" => "10", "newyork" => "11"}
+        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{lls[@venue.city]}&zoom=#{zooms[@venue.city]}&size=155x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
               
 .container_photos
   %ul.media-grid{:last => "#{@photos.last.time_taken}"}

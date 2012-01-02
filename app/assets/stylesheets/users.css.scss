@@ -3,31 +3,47 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 
-.profilepic{
-	float: left;
-	display: inline-block;
+.profile_pic{
+	float:left;
+	margin: 0 10px;
 }
 
-/* clearfix
-------------------------------------------------------------*/	
-.clearfix:after {
-    content: "."; 
-    display: block; 
-    height: 0; 
-    clear: both; 
-    visibility: hidden;
+p.full_name{
+	color: #444;
+	font-size: 15px;
+	margin-bottom: 10px;
+	width: 600px;
+	text-align: left;
 }
 
-.clearfix {
-	display: inline-block;
+p.bio{
+	color: #444;
+	font-size: 12px;
+	margin-bottom: 10px;
+	width: 600px;
+	text-align: left;
+	text-style: italic;
+	height: 40px;
 }
 
-/* Hides from IE-mac \*/
-* html .clearfix {
-	height: 1%;
+a.website{
+	
 }
 
-.clearfix {
-	display: block;
+a.following{
+	margin-top: 20px;
+	float: right;
+	font-size: 16px;
+	height: 40px;
 }
-/* End hide from IE-mac */
+
+a.usefuls{	
+	float: right;
+	font-size: 16px;
+	height: 40px;
+	}
+a.question_asked{	
+	float: right;
+	font-size: 16px;
+	height: 40px;
+	}

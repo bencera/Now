@@ -59,11 +59,11 @@
     , RESIZE = 'resize' + namespace
     , settings = { container: window
                  , currentPage: 1
-                 , distance: 100
+                 , distance: 500
                  , pagination: '.pagination'
                  , params: {}
                  , url: location.href
-                 , loaderImage: "/images/load.gif"
+                 , loaderImage: "load.gif"
                  }
     , container
     , $container;
