@@ -26,14 +26,14 @@ class PhotosController < ApplicationController
         
         
         if ig_logged_in
-          photos = $redis.zrevrangebyscore("userfeed:#{current_user.id}",Time.now.to_i, 720.hours.ago.to_i)
-          if photos[(n-1)*20..(n*20-1)].nil?
-            @photos = []
-          else
-            @photos = photos[(n-1)*20..(n*20-1)]
+          photo_ids = $redis.zrevrangebyscore("userfeed:#{current_user.id}",Time.now.to_i, 720.hours.ago.to_i)
+          photos = []
+          photo_ids.each do |photo_id|
+            photos << Photo.first(conditions: {_id: photo_id}))
           end
+          @photos = photos.paginate(:per_page => 20, :page => params[:page])
         else
-          redirect_to '/photos?id=food'
+          redirect_to "/photos?category=outdoors&city=#{current_city}"
         end
         
         
