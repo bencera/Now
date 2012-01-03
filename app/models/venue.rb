@@ -265,7 +265,7 @@ class Venue
             u.ig_details = [media.user.full_name, media.user.profile_picture, media.user.bio, media.user.website, 
                       "", "", ""]
             u.save
-            p.user_id = u.id
+            p.user_id = u.ig_id
           end
           p.status = status
           p.tag = tag
