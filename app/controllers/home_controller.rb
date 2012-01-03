@@ -13,7 +13,7 @@ class HomeController < ApplicationController
   
   def signup
     if params[:email] !=nil
-      @user = User.first(conditions: {ig_id: current_user.ig_id})
+      @user = User.first(conditions: {ig_id: session[:user_id]})
       @user.email = params[:email]
       @user.password = params[:password]
       @user.encrypt_password
@@ -24,9 +24,10 @@ class HomeController < ApplicationController
       else
         render 'signup'
       end
-    elsif User.first(conditions: {ig_id: current_user.ig_id}).email.blank?
+    elsif User.first(conditions: {ig_id: session[:user_id]}).email.blank?
       @user = current_user
     else
+      cookies.permanent[:auth_token] = User.first(conditions: {ig_id: session[:user_id]}).auth_token
       redirect_to '/photos?city=newyork&category=outdoors' #rediriger vers la ville preferee du mec, ou celle ou il est
     end
   end
