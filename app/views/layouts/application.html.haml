@@ -32,9 +32,7 @@
                 %a{:href=>"/photos?city=paris&category=outdoors"} Paris
         %ul.nav.secondary-nav
           %li
-            %a{:href=>"/follows"} Venues to follow
-          %li
-            %a{:href=>"/inbox"} Inbox
+            %a{:href=>"/about"} About
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle
               .profilepic
@@ -46,6 +44,10 @@
             %ul.dropdown-menu
               %li
                 %a{:href=>"/users/#{current_user.ig_username}"} My profile
+              %li
+                %a{:href=>"/follows"} Venues to follow
+              %li
+                %a{:href=>"/inbox"} Inbox
               %li
                 %a{:href=>"/settings"} Settings
               %li.divider
@@ -72,8 +74,10 @@
                 %a{:href=>"/photos?city=paris&category=outdoors"} Paris
         %ul.nav.secondary-nav
           %li
-          %a{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
-
+          %a.btn.pull-right{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Log in
+        %ul.nav.secondary-nav
+          %li
+            %a{:href=>"/about"} About
 %ul#nav_test
   %li
     - if ig_logged_in
@@ -117,5 +121,7 @@
     %a.close
       x
     %p= flash[:notice]
+:javascript
+  window.city = "#{session[:city]}"
 
 = yield

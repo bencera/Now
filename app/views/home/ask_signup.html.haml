@@ -12,20 +12,26 @@
     
 .container
   .content_below
-    %h1#main_title Ask the photographer a question!
+    %h1#main_title Ask a question! Say it's useful!
     - unless @photo.nil?
       #img
         .img= image_tag @photo.url[1], :width => '500px'
         %div#img_details
-          %p.venue= link_to @photo.venue.name, @photo.venue
+          %h1.venue= link_to @photo.venue.name, @photo.venue
           #map_left
             = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=420x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false", :id => "map"
-          %p.time
-            = time_ago_in_words(Time.at @photo.time_taken.to_i)
-            ago
           %p.neighborhood
             - unless @photo.venue.neighborhood.nil?
               = @photo.venue.neighborhood
+          %p.user
+            taken by
+            - if @photo.user.ig_details[0].blank?
+              = @photo.user.ig_username
+            - else
+              = @photo.user.ig_details[0]
+            = ", "
+            = time_ago_in_words(Time.at @photo.time_taken.to_i)
+            = "ago"
           -if @photo.requests.blank?
             %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
             = render 'partials/showquestion', :photo => @photo
@@ -38,6 +44,25 @@
             %p.answer
               A: 
               = "\"#{@photo.requests.first.response}\""
+          - if ig_logged_in
+            - if current_user.usefuls.where(photo_id: @photo.id).empty?
+              .useful_btn{:id => "photo#{@photo.id.to_s}"}
+                = render 'partials/useful', :photo => @photo
+            - else
+              .useful_btn{:id => "photo#{@photo.id.to_s}"}
+                = render 'partials/unuseful', :photo => @photo
+          -else
+            %a.useful_btn.btn#useful{:href => '/create_account'} useful
+          %br
+          %br
+          - unless @photo.useful_count == 0
+            %p.useful_count
+              = pluralize(@photo.useful_count, "person")
+              found it useful
+            .useful_people
+              - @photo.usefuls.each do |useful|
+                = link_to (image_tag User.first(conditions: {_id: useful.user_id}).ig_details[1], :width => '50px'), "/users/#{User.first(conditions: {_id: useful.user_id}).ig_username}"
+    %br
     %br
     %br
     #main_title

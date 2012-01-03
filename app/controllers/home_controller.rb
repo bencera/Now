@@ -12,27 +12,27 @@ class HomeController < ApplicationController
   end
   
   def signup
-    if Rails.env.development?
+    if params[:email] !=nil
+      @user = User.first(conditions: {ig_id: current_user.ig_id})
+      @user.email = params[:email]
+      @user.password = params[:password]
+      @user.encrypt_password
+      if @user.save
+        redirect_to '/follow_signup'
+      else
+        render 'signup'
+      end
+    elsif User.first(conditions: {ig_id: current_user.ig_id}).email.blank?
       @user = current_user
     else
-      if params[:email] !=nil
-        u = User.first(conditions: {ig_id: current_user.ig_id})
-        u.update_attributes(:email => params[:email], :username => params[:username])
-        if u.venue_ids.blank?
-          redirect_to '/follow_signup'
-        else
-          redirect_to '/photos?city=newyork&category=outdoors'
-        end
-      elsif User.first(conditions: {ig_id: current_user.ig_id}).email.blank?
-        @user = current_user
-      else
-        redirect_to '/photos?city=newyork&category=outdoors' #rediriger vers la ville preferee du mec, ou celle ou il est
-      end
+      redirect_to '/photos?city=newyork&category=outdoors' #rediriger vers la ville preferee du mec, ou celle ou il est
     end
-
   end
   
   def menu
+  end
+  
+  def about
   end
   
   def ask_signup

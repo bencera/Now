@@ -36,11 +36,11 @@
             A: 
             = "\"#{photo.requests.first.response}\""
         %p.user
-          taken by
+          = link_to (image_tag photo.user.ig_details[1], :width => "30px"), "/users/#{photo.user.ig_username}", :id => "user_pic"
           - if photo.user.ig_details[0].blank?
-            = photo.user.ig_username
+            = link_to photo.user.ig_username, "/users/#{photo.user.ig_username}", :id => "user"
           - else
-            = photo.user.ig_details[0]
+            = link_to photo.user.ig_details[0], "/users/#{photo.user.ig_username}", :id => "user"
         %p.useful_count{:id => "photo#{@photo.id.to_s}"}
           = pluralize(photo.usefuls.count, 'person') unless photo.usefuls.count == 0
           = "found this photo useful" unless photo.usefuls.count == 0

@@ -13,12 +13,16 @@
         %a.website{:href => @user.ig_details[3], :target => "_blank"}
           = @user.ig_details[3]
       .span4
+        %a.photos{:href => "/users/#{@user.ig_username}"}
+          = "Took +"
+          = @user.photos.count
+          photos
         %a.following{:href => "/users/#{@user.ig_username}/follows"}
           Following
           = @user.venue_ids.count
           venues
 
-        %a.usefuls{:href => "/users/#{@user.ig_username}"}
+        %a.usefuls{:href => "/users/#{@user.ig_username}/usefuls"}
           Found
           = pluralize(@user.usefuls.count, "photo")
           useful

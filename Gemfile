@@ -37,6 +37,7 @@ gem 'mathstats'
 gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'keepalive'
 gem 'resque-scheduler'
 gem 'god'
+gem "bcrypt-ruby", :require => "bcrypt"
 
 #for instagram -- instagram was installed has a plugin.. be careful
 gem 'faraday_middleware', '~> 0.3.1'

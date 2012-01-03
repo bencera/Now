@@ -5,17 +5,42 @@ class User
   field :ig_accesstoken #impt
   field :ig_id #impt
   field :ig_details, :type => Array
-  field :username
+  field :password_hash
+  field :password_salt
   key :ig_id
   has_many :photos
   has_and_belongs_to_many :requests
   has_and_belongs_to_many :venues
   has_many :usefuls
   
+  attr_accessible :username, :email, :password
+  attr_accessor :password
+  
   #if not a user of the website, no accesstoken. might not have email. need to tell that wont be notified.
   validates_presence_of :ig_id, :ig_username
   validates_uniqueness_of :ig_id
+  validates_format_of :email, :with => /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i, :on => :update
+  validates_presence_of :password, :on => :update
+  validates_presence_of :email, :on => :update
+  validates_uniqueness_of :email, :on => :update
   #before_validation :complete_ig_info
+  
+  
+  def self.authenticate(email, password)
+    user = User.first(conditions: {email: email})
+    if user && user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
+      user
+    else
+      nil
+    end
+  end
+  
+  def encrypt_password
+    if password.present?
+      self.password_salt = BCrypt::Engine.generate_salt
+      self.password_hash = BCrypt::Engine.hash_secret(password, password_salt)
+    end
+  end
   
   def complete_ig_info(accesstoken)
     #do it only when new user signs up
@@ -35,9 +60,5 @@ class User
   def question_answered_email
     UserMailer.question_answered(self).deliver
   end
-  
-  def redis_key(str)
-    "user:#{self.id}:#{str}"
-  end
-  
+
 end

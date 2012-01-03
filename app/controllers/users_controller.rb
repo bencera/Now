@@ -1,10 +1,19 @@
 class UsersController < ApplicationController
-  
+  require 'will_paginate/array'
   def settings
     @user = current_user
   end
   
   def show
+    @user = User.first(conditions: {ig_username: params[:ig_username]})
+    photos = @user.photos.order_by([[:time_taken,:desc]])
+    @photos = photos.paginate(:per_page => 20, :page => params[:page])
+    if request.xhr?
+      render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
+    end
+  end
+  
+  def usefuls
     @user = User.first(conditions: {ig_username: params[:ig_username]})
     useful_photo_ids = @user.usefuls.distinct(:photo_id)
     photo_ids = []
@@ -18,6 +27,7 @@ class UsersController < ApplicationController
       render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
     end
   end
+  
   
   def follows
     @user = User.first(conditions: {ig_username: params[:ig_username]})

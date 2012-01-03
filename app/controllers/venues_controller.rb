@@ -28,7 +28,7 @@ class VenuesController < ApplicationController
       # else
       #   @photos = v.photos.order_by([:time_taken, :desc])[(n-1)*20..(n*20-1)]
       # end  
-      @photos = v.photos.paginate(:per_page => 20, :page => params[:page])
+      @photos = v.photos.order_by([[:useful_count, :desc],[:time_taken, :desc]]).paginate(:per_page => 20, :page => params[:page])
       if request.xhr?
         render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
       end
@@ -38,7 +38,7 @@ class VenuesController < ApplicationController
       v = Venue.new(:fs_venue_id => params[:id])
       v.save
       if v.new? == false
-        photos = v.photos.order_by([:time_taken, :desc])
+        photos = v.photos.order_by([[:useful_count, :desc],[:time_taken, :desc]])
         # @photos = photos[0..19]
         @photos = photos.paginate(:per_page => 20, :page => params[:page])
         @venue = v

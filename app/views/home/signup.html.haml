@@ -14,19 +14,30 @@
   .content_below
     %h1#main_title Create your ubimachine account
     %br
-    #profile_pic.clearfix
-      = image_tag current_user.ig_details[1], :width => '180px'
-    #email_form
-      = form_tag '/signup' do
-        = text_field_tag :username, current_user.ig_username, :placeholder => "Username", :class => 'xlarge', :id => "xlInput"
-        %br
-        %br
-        %br
-        = text_field_tag :email,  nil, :placeholder => "Email", :class => 'xlarge', :id => "xlInput"
-        %br
-        %br
-        %br
-        = submit_tag "Create account", :class => 'btn large signup'
+    .row
+      .span4
+        #profile_pic.clearfix
+          = image_tag @user.ig_details[1], :width => '180px'
+      .span12
+        #email_form
+          - if @user.errors.any?
+            %ul.unstyled
+              - for message in @user.errors.full_messages
+                %li
+                  = message
+          = form_tag '/signup', :id => "new_user" do
+            = text_field_tag :username, @user.ig_username, :disabled => :true, :class => 'xlarge', :id => "xlInput"
+            %br
+            %br
+            %br
+            = text_field_tag :email,  nil, :placeholder => "Email", :class => 'xlarge', :id => "xlInput"
+            %br
+            %br
+            %br
+            = password_field_tag :password,  nil, :placeholder => "Password", :class => 'xlarge', :id => "xlInput"
+            %br
+            %br
+            = submit_tag "Create account", :class => 'btn large signup'
 
 %footer
   = render 'partials/footer'
