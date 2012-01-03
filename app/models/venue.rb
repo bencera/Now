@@ -260,7 +260,8 @@ class Venue
             array[3] = media.user.website
             User.first(conditions: { ig_id: username_id.to_s  }).update_attribute(:ig_details, array)
           else
-            u = User.new(:ig_id => username_id)
+            u = User.new
+            u.ig_id = username_id
             u.ig_username = media.user.username
             u.ig_details = [media.user.full_name, media.user.profile_picture, media.user.bio, media.user.website, 
                       "", "", ""]
