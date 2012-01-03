@@ -6,11 +6,11 @@ class ApplicationController < ActionController::Base
   private
   
   def current_user
-    @current_user ||= User.find(session[:user_id]) if session[:user_id]
+    @current_user ||= User.first(conditions: {auth_token: cookies[:auth_token]}) if !(cookies[:auth_token].blank?)
   end
   
   def ig_logged_in
-    session[:user_id]
+    !(cookies[:auth_token].blank?)
   end
   
   def current_city

@@ -20,15 +20,26 @@ class SessionsController < ApplicationController
         u.complete_ig_info(access_token["access_token"])
         u.save
         Resque.enqueue(Suggestfollow, u)
+        session[:user_id] = User.first(conditions: {ig_id: user_data.id}).id
+        redirect_to '/signup'
       elsif User.first(conditions: {ig_id: user_data.id}).ig_accesstoken.nil?
         u = User.first(conditions: {ig_id: user_data.id})
         u.update_attributes(:ig_accesstoken => access_token["access_token"])
         u.complete_ig_info
         u.save
         Resque.enqueue(Suggestfollow, u)
+        session[:user_id] = u.id
+        redirect_to '/signup'
+      elsif User.first(conditions: {ig_id: user_data.id}).password_salt.nil?
+        u = User.first(conditions: {ig_id: user_data.id})
+        session[:user_id] = u.id
+        redirect_to '/signup' 
+      else
+        u = User.first(conditions: {ig_id: user_data.id})
+        session[:user_id] = u.id
+        cookies.permanent[:auth_token] = user.auth_token
+        redirect_to '/photos'
       end
-      session[:user_id] = User.first(conditions: {ig_id: user_data.id}).id
-      redirect_to '/signup'
     end
   end
   
@@ -40,11 +51,15 @@ class SessionsController < ApplicationController
     
   end
   
+  def new
+  end
+  
   def create
     user = User.authenticate(params[:email], params[:password])
     if user
       session[:user_id] = user.id
-      redirect_to '/photos', :notice => "Logged in!"
+      cookies.permanent[:auth_token] = user.auth_token
+      redirect_to '/photos'
     else
       flash.now.alert = "Invalid email or password"
       render "new"
@@ -54,6 +69,7 @@ class SessionsController < ApplicationController
  
   def logout
    session[:user_id] = nil
+   cookies.delete(:auth_token)
    redirect_to root_url, :id => "/accounts/logout"
   end
 

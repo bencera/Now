@@ -7,6 +7,7 @@ class User
   field :ig_details, :type => Array
   field :password_hash
   field :password_salt
+  field :auth_token
   key :ig_id
   has_many :photos
   has_and_belongs_to_many :requests
@@ -15,6 +16,7 @@ class User
   
   attr_accessible :username, :email, :password
   attr_accessor :password
+  
   
   #if not a user of the website, no accesstoken. might not have email. need to tell that wont be notified.
   validates_presence_of :ig_id, :ig_username
@@ -25,6 +27,13 @@ class User
   validates_uniqueness_of :email, :on => :update
   #before_validation :complete_ig_info
   
+  
+  def generate_token
+    begin
+      secure = SecureRandom.urlsafe_base64
+      self[:auth_token] = secure
+    end while User.exists?(conditions: { auth_token: secure })
+  end
   
   def self.authenticate(email, password)
     user = User.first(conditions: {email: email})

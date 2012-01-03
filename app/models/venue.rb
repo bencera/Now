@@ -253,6 +253,12 @@ class Venue
           username_id = media.user.id
           if User.exists?(conditions: { ig_id: username_id.to_s  })
             p.user_id = username_id
+            array = User.first(conditions: { ig_id: username_id.to_s  }).ig_details
+            array[0] = media.user.full_name
+            array[1] = media.user.profile_picture
+            array[2] = media.user.bio
+            array[3] = media.user.website
+            User.first(conditions: { ig_id: username_id.to_s  }).update_attribute(:ig_details, array)
           else
             u = User.new(:ig_id => username_id)
             u.ig_username = media.user.username

@@ -17,7 +17,9 @@ class HomeController < ApplicationController
       @user.email = params[:email]
       @user.password = params[:password]
       @user.encrypt_password
+      @user.generate_token
       if @user.save
+        cookies.permanent[:auth_token] = @user.auth_token
         redirect_to '/follow_signup'
       else
         render 'signup'

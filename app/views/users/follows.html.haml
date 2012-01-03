@@ -14,23 +14,24 @@
           = @user.ig_details[3]
       .span4
         %a.photos{:href => "/users/#{@user.ig_username}"}
-          = "Took +"
+          = "Took"
           = @user.photos.count
-          photos
-        %a.following{:href => "/users/#{@user.ig_username}/follows"}
-          Following
-          = @user.venue_ids.count
-          venues
+          = "+ photos"
+        - unless @user.ig_accesstoken.nil?
+          %a.following{:href => "/users/#{@user.ig_username}/follows"}
+            Following
+            = @user.venue_ids.count
+            venues
 
-        %a.usefuls{:href => "/users/#{@user.ig_username}/usefuls"}
-          Found
-          = pluralize(@user.usefuls.count, "photo")
-          useful
+          %a.usefuls{:href => "/users/#{@user.ig_username}/usefuls"}
+            Found
+            = pluralize(@user.usefuls.count, "photo")
+            useful
 
-        %a.question_asked{:href => "/users/#{@user.ig_username}/questions"}
-          Asked
-          = @user.requests.count
-          questions
+          %a.question_asked{:href => "/users/#{@user.ig_username}/questions"}
+            Asked
+            = @user.requests.count
+            questions
 
 .container_photos
   %ul.media-grid
