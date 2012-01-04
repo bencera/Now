@@ -40,7 +40,7 @@ class SessionsController < ApplicationController
       else
         u = User.first(conditions: {ig_id: user_data.id})
         session[:user_id] = u.id
-        cookies.permanent[:auth_token] = user.auth_token
+        cookies.permanent[:auth_token] = u.auth_token
         redirect_to '/photos'
       end
     end
