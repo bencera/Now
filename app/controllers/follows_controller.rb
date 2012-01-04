@@ -17,8 +17,9 @@ class FollowsController < ApplicationController
   end
 
   def create
-    current_user.venue_ids << params[:id]
-    current_user.save
+    venues = current_user.venue_ids
+    venues << params[:id]
+    current_user.update_attribute(:venue_ids, venues)
     Venue.first(conditions: {_id: params[:id]}).photos.take(5).each do |photo|
       $redis.zadd("userfeed:#{current_user.id}", photo.time_taken, "#{photo.id.to_s}")
     end
@@ -31,8 +32,9 @@ class FollowsController < ApplicationController
   end
   
   def destroy
-    current_user.venue_ids.delete(params[:id])
-    current_user.save
+    venues = current_user.venue_ids
+    venues.delete(params[:id])
+    current_user.update_attribute(:venue_ids, venues)
     Venue.first(conditions: {_id: params[:id]}).photos.last_hours(24*7).each do |photo|
       $redis.zrem("userfeed:#{current_user.id}", "#{photo.id.to_s}")
     end

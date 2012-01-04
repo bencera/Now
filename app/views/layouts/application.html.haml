@@ -10,13 +10,13 @@
 .topbar
   .topbar-inner
     .container
-      %a.brand{:href=>"/photos?city=#{current_city}&category=outdoors"} ubimachine
+      %a.brand{:href=>"/photos"} ubimachine
       - if ig_logged_in
         %ul.nav
           %li
             = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
               = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search venues...'
-              = hidden_field_tag :city, @city
+              = hidden_field_tag :city, current_city
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle
               - if params[:city] == 'newyork'
@@ -58,7 +58,7 @@
           %li
             = form_tag searches_url, :method => 'get', :id => 'search_form', :class => 'search' do
               = text_field_tag :term, params[:term], :class => "auto_search_complete", :placeholder => 'Search venues...'
-              = hidden_field_tag :city, @city
+              = hidden_field_tag :city, current_city
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle
               - if current_city == 'newyork'
@@ -99,8 +99,6 @@
       - else
         Going out ideas
     %ul
-      - if @city.blank?
-        - @city = "newyork"
       %li
         %a{:href=>"/photos?city=#{current_city}&category=food"} Restaurants
       %li
