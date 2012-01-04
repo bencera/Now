@@ -27,7 +27,7 @@ class Photo
   scope :with_venues, excludes(status: "novenue")
   
   #photo doesnt always have caption, but needs to be geolocated (for now)
-  validates_presence_of :ig_media_id, :url, :time_taken, :coordinates
+  validates_presence_of :ig_media_id, :url, :time_taken, :coordinates #user_id???
   validates_uniqueness_of :ig_media_id
   
   
