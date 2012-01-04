@@ -25,7 +25,7 @@ class HomeController < ApplicationController
         render 'signup'
       end
     elsif User.first(conditions: {ig_id: session[:user_id]}).email.blank?
-      @user = current_user
+      @user = User.first(conditions: {ig_id: session[:user_id]})
     else
       cookies.permanent[:auth_token] = User.first(conditions: {ig_id: session[:user_id]}).auth_token
       redirect_to '/photos?city=newyork&category=outdoors' #rediriger vers la ville preferee du mec, ou celle ou il est
