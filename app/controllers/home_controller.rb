@@ -48,7 +48,7 @@ class HomeController < ApplicationController
           break
         end
       end
-      @photo = Photo.first(conditions: {_id: $redis.zrevrangebyscore("feed:all",Time.now.to_i,1.hours.ago.to_i).first})
+      @photo = Photo.where(:useful_count.gt => 0, :answered => :false).order_by([[:time_taken,:desc]]).first unless !(@photo.nil?)
     end
   end
   
