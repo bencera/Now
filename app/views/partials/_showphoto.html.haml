@@ -41,6 +41,9 @@
             = link_to photo.user.ig_username, "/users/#{photo.user.ig_username}", :id => "user"
           - else
             = link_to photo.user.ig_details[0], "/users/#{photo.user.ig_username}", :id => "user"
+        - unless photo.usefuls.count == 0
+          %br
+          %br
         %p.useful_count{:id => "photo#{@photo.id.to_s}"}
           = pluralize(photo.usefuls.count, 'person') unless photo.usefuls.count == 0
           = "found this photo useful" unless photo.usefuls.count == 0

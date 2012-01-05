@@ -2524,6 +2524,7 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 	margin-bottom: 10px;
 	width: 220px;
 	text-align: left;
+	clear:both;
 }
 
 
@@ -2773,4 +2774,14 @@ a:hover{
 
 #flash_alert{
 	color: red;
+}
+
+a#user{
+	margin-left: 10px;
+	
+}
+
+.span9#presentation{
+	
+	margin-left: 400px;
 }

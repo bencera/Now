@@ -74,7 +74,10 @@
                 %a{:href=>"/photos?city=paris&category=outdoors"} Paris
         %ul.nav.secondary-nav
           %li
-          %a.btn.pull-right{:href=>'/login'} Log in
+          %a.btn.pull-right{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Signup
+        %ul.nav.secondary-nav
+          %li
+          %a.btn.pull-right{:href=>'/login'} Login
         %ul.nav.secondary-nav
           %li
             %a{:href=>"/about"} About
@@ -113,6 +116,18 @@
     %a{:href=>"/photos?city=#{current_city}&category=useful"} Useful pics
   %li
     %a{:href=>"/photos?city=#{current_city}&category=answered"} Recent tips
+
+- unless ig_logged_in
+  .container
+    .content_below
+      %h1#main_title ubimachine is your city's live photo stream.
+      .row
+        .span11
+          %p Ubimachine let's you follow venues you love to never miss what is happening there. 
+          %p You can also ask for advise to people there now. 
+          %p Share your vision of the city and discover new things to do!
+        .span4
+          = link_to (image_tag 'ubimachine_btn.png'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
 
 - unless flash[:notice].nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}
