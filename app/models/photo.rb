@@ -12,11 +12,23 @@ class Photo
   field :category
   field :answered, :type => Boolean
   field :useful_count, :type => Integer, default: 0
+  index :useful_count, background: true
   field :city
   belongs_to :venue
   belongs_to :user
   has_many :requests
   has_many :usefuls
+  
+  index(
+    [
+      [ :city, Mongo::ASCENDING ],
+      [ :category, Mongo::ASCENDING ],
+      [ :time_taken, Mongo::DESCENDING ]
+    ],
+    background: true
+    )
+  
+  
   
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates
