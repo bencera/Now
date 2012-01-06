@@ -31,7 +31,7 @@
         -else
           %p.question
             Q: 
-            = Request.new.short_question(photo.requests.first.question_id.to_i)
+            = photo.requests.first.question
           %p.answer
             A: 
             = "\"#{photo.requests.first.response}\""

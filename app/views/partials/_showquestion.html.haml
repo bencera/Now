@@ -33,15 +33,12 @@
           = text_field_tag :question, nil, :id => "input_question"
       .modal-footer
         = submit_tag "Ask!", :class => 'btn large primary', :id => 'bigbouton'
-        this message will be sent from your instagram account
+        :javascript
+          $("#modal_photo_#{photo.id} #select_question").change(function () {
+              var question = "Hi @" + "#{photo.user.ig_username}" + ", " +  $("#modal_photo_#{photo.id} #select_question").val() + " " + "#{photo.venue.name}" + "? Thanks! - via @ubimachine";
+              $("#modal_photo_#{photo.id} #input_question").val(question);
+              $("#modal_photo_#{photo.id} #select_question").hide();
+              $("#modal_photo_#{photo.id} #input_question").fadeIn();
+            });
   - else
     %a.btn#ask{:href => "/create_account"} Ask a question
-
-:javascript
-  $("#select_question").change(function () {
-      var question = "Hi @" + "#{photo.user.ig_username}" + ", " +  $("#select_question").val() + " " + "#{photo.venue.name}" + "? Thanks! - via @ubimachine";
-      $("#input_question").val(question);
-      $("#select_question").hide();
-      $("#input_question").fadeIn();
-    });
-  $("#input_question").hide();

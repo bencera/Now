@@ -14,7 +14,7 @@
     -else
       %p.question
         Q: 
-        = Request.new.short_question(photo.requests.first.question_id.to_i)
+        = photo.requests.first.question
       %p.answer
         A: 
         = "\"#{truncate(photo.requests.first.response, :length => 60)}\""
