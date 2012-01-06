@@ -1,6 +1,12 @@
 .container
   .content_below
-    %h1= "Search results in #{current_city}" 
+    %h1
+      = "Search results for \"#{params[:term]}\" in"
+      - if current_city == "newyork"
+        = "New York"
+      - elsif current_city == "paris"
+        = "Paris"
+     
     - @venues.each do |venue|
       .venue
         = link_to venue["name"], venue_path(venue["id"])
@@ -14,6 +20,10 @@
         %span
           - unless venue["location"]["crossStreet"].nil?
             = venue["location"]["crossStreet"]
+        %span{:style => "font-weight: bold;"}
+          - venue = Venue.first(conditions: {_id: venue["id"]})
+          - unless venue.nil?
+            = "(#{venue.photos.count} photos)"
             
       
 %footer

@@ -10,7 +10,10 @@
 .topbar
   .topbar-inner
     .container
-      %a.brand{:href=>"/photos"} ubimachine
+      - if ig_logged_in
+        %a.brand{:href=>"/photos"} ubimachine
+      - else
+        %a.brand{:href=>"/photos?city=#{current_city}&category=popular"} ubimachine
       - if ig_logged_in
         %ul.nav
           %li
@@ -27,9 +30,9 @@
                 Select a city
             %ul.dropdown-menu
               %li
-                %a{:href=>"/photos?city=newyork&category=outdoors"} New York
+                %a{:href=>"/photos?city=newyork&category=popular"} New York
               %li
-                %a{:href=>"/photos?city=paris&category=outdoors"} Paris
+                %a{:href=>"/photos?city=paris&category=popular"} Paris
         %ul.nav.secondary-nav
           %li
             %a{:href=>"/about"} About
@@ -69,9 +72,9 @@
                 Select a city
             %ul.dropdown-menu
               %li
-                %a{:href=>"/photos?city=newyork&category=outdoors"} New York
+                %a{:href=>"/photos?city=newyork&category=popular"} New York
               %li
-                %a{:href=>"/photos?city=paris&category=outdoors"} Paris
+                %a{:href=>"/photos?city=paris&category=popular"} Paris
         %ul.nav.secondary-nav
           %li
           %a.btn.pull-right{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Signup
@@ -81,26 +84,29 @@
         %ul.nav.secondary-nav
           %li
             %a{:href=>"/about"} About
-%ul#nav_test
+%ul#nav_under
   %li
     - if ig_logged_in
-      %a{:href=>"/photos"} Venues you follow
+      - if params[:category].nil?
+        %a.active{:href=>"/photos"} Venues you follow
+      - else
+        %a{:href=>"/photos"} Venues you follow
     - else
       %a{:href=>"/create_account"} Venues you follow
+    %span ·
   %li
-    %a
-      - if params[:category] == 'food'
-        Going out ideas - Restaurants
-      - elsif params[:category] == 'nightlife'
-        Going out ideas - Nightlife
-      - elsif params[:category] == 'entertainment'
-        Going out ideas - Arts & Entertainment    
-      - elsif params[:category] == 'outdoors'
-        Going out ideas - Outdoors
-      - elsif params[:category] == 'shopping'
-        Going out ideas - Shopping 
-      - else
-        Going out ideas
+    - if params[:category] == 'food'
+      %a.active Going out ideas - Restaurants
+    - elsif params[:category] == 'nightlife'
+      %a.active Going out ideas - Nightlife
+    - elsif params[:category] == 'entertainment'
+      %a.active Going out ideas - Arts & Entertainment    
+    - elsif params[:category] == 'outdoors'
+      %a.active Going out ideas - Outdoors
+    - elsif params[:category] == 'shopping'
+      %a.active Going out ideas - Shopping 
+    - else
+      %a Going out ideas
     %ul
       %li
         %a{:href=>"/photos?city=#{current_city}&category=food"} Restaurants
@@ -112,20 +118,28 @@
         %a{:href=>"/photos?city=#{current_city}&category=outdoors"} Outdoors
       %li
         %a{:href=>"/photos?city=#{current_city}&category=shopping"} Shopping
+    %span ·
   %li
-    %a{:href=>"/photos?city=#{current_city}&category=useful"} Useful pics
+    - if params[:category] == 'popular'
+      %a.active{:href=>"/photos?city=#{current_city}&category=popular"} Popular
+    - else
+      %a{:href=>"/photos?city=#{current_city}&category=popular"} Popular
+    %span ·
   %li
-    %a{:href=>"/photos?city=#{current_city}&category=answered"} Recent tips
+    - if params[:category] == 'answers'
+      %a.active{:href=>"/photos?city=#{current_city}&category=answers"} Answers
+    - else
+      %a{:href=>"/photos?city=#{current_city}&category=answers"} Answers
 
 - unless ig_logged_in
-  .container
-    .content_below
-      %h1#main_title ubimachine is your city's live photo stream.
+  .container#promo
+    .content
+      %h1#main_title ubimachine is your city's live photo album.
       .row
-        .span11
-          %p Ubimachine let's you follow venues you love to never miss what is happening there. 
-          %p You can also ask for advise to people there now. 
-          %p Share your vision of the city and discover new things to do!
+        .span7
+          %p Follow venues you love so you never miss what happens there.
+          %p Ask for advice from people currently there.
+          %p Share your own vision of the city and discover new things to do!
         .span4
           = link_to (image_tag 'ubimachine_btn.png'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
 

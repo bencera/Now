@@ -234,7 +234,7 @@ a {
   font-weight: inherit;
 }
 a:hover {
-  color: #00438a;
+  color: black;
   text-decoration: underline;
 }
 .pull-right {
@@ -2456,21 +2456,22 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
   float: left;
 /*  padding: 4px;
   border: 1px solid #ddd;*/
-  -webkit-border-radius: 0px;
+/*  -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
   border-radius: 0px;
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
   -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075);*/
 }
 .media-grid a img {
   display: block;
 }
 .media-grid a:hover {
-  border-color: #0069d6;
+/*  border-color: #0069d6;
   -webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
   -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
-  box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
+  box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);*/
+	color: black;
 }
 
 
@@ -2703,7 +2704,7 @@ input.btn#useful{
 }
 
 
-#nav_test{
+#nav_under{
 	border:1px solid #ccc;
 	border-width:1px 0;
 	list-style:none;
@@ -2759,7 +2760,6 @@ input.btn#useful{
 a{
 	color:#c00;
 	text-decoration:none;
-	font-weight:bold;
 }
 a:hover{
 	text-decoration:underline;
@@ -2781,7 +2781,11 @@ a#user{
 	
 }
 
-.span9#presentation{
+.container#promo{
 	
-	margin-left: 400px;
+	width: 700px;
+}
+
+a.active{
+	font-weight: bold;
 }

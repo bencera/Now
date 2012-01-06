@@ -33,7 +33,7 @@ class PhotosController < ApplicationController
           end
           @photos = photos.paginate(:per_page => 20, :page => params[:page])
         else
-          redirect_to "/photos?category=outdoors&city=#{current_city}"
+          redirect_to "/photos?category=popular&city=#{current_city}"
         end
         
         
@@ -90,7 +90,7 @@ class PhotosController < ApplicationController
         @photos = photos.paginate(:per_page => 20, :page => params[:page])
         
         
-      elsif params[:category] == "answered"
+      elsif params[:category] == "answers"
         photos = Photo.where(city: current_city).where(answered: true).order_by([[:time_taken, :desc]])
         @photos = photos.paginate(:per_page => 20, :page => params[:page])
         # photos = $redis.zrevrangebyscore("feed:answered",Time.now.to_i,1000.hours.ago.to_i)
@@ -110,7 +110,7 @@ class PhotosController < ApplicationController
         end
         
         
-      elsif params[:category] == "useful"
+      elsif params[:category] == "popular"
         photos = Photo.where(city: current_city).where(:useful_count.gt => 0).order_by([[:time_taken, :desc]])
        @photos = photos.paginate(:per_page => 20, :page => params[:page])
         
