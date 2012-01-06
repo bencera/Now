@@ -1343,6 +1343,11 @@ table .headerSortUp.purple, table .headerSortDown.purple {
   background-color: transparent;
   color: #c00;
 }
+
+.topbar .brand:hover {
+  background-color: transparent;
+  color: #c00;
+}
 .topbar form {
   float: left;
   margin: 5px 0 0 0;
@@ -2788,4 +2793,9 @@ a#user{
 
 a.active{
 	font-weight: bold;
+}
+
+input#input_question{
+	
+	width: 530px;
 }
