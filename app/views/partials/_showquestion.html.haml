@@ -11,6 +11,7 @@
       .modal-body
         - if ig_logged_in
           = image_tag current_user.ig_details[1], :width => '50px'
+        %br
         - unless photo.venue.categories.blank?
           - category = Venue.new.fs_categories[photo.venue.categories.first["name"]]
         - else
@@ -40,5 +41,6 @@
               $("#modal_photo_#{photo.id} #select_question").hide();
               $("#modal_photo_#{photo.id} #input_question").fadeIn();
             });
+          $("#modal_photo_#{photo.id} #input_question").hide();
   - else
     %a.btn#ask{:href => "/create_account"} Ask a question
