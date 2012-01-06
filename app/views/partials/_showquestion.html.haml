@@ -32,8 +32,8 @@
           = hidden_field_tag :ig_media_id, photo.ig_media_id
           = hidden_field_tag :venue_name, photo.venue.name
           = text_field_tag :question, nil, :id => "input_question"
-      .modal-footer
-        = submit_tag "Ask!", :class => 'btn large primary', :id => 'bigbouton'
+          .modal-footer
+            = submit_tag "Ask!", :class => 'btn large primary', :id => 'bigbouton'
         :javascript
           $("#modal_photo_#{photo.id} #select_question").change(function () {
               var question = "Hi @" + "#{photo.user.ig_username}" + ", " +  $("#modal_photo_#{photo.id} #select_question").val() + " " + "#{photo.venue.name}" + "? Thanks! - via @ubimachine";
