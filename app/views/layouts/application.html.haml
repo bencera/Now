@@ -28,13 +28,22 @@
                 Paris
               - elsif params[:city] == 'tokyo'
                 Tokyo
+              - elsif params[:city] == 'london'
+                London
+              - elsif params[:city] == 'sanfrancisco'
+                San Francisco
               - else
                 Select a city
+              
             %ul.dropdown-menu
               %li
                 %a{:href=>"/photos?city=newyork&category=popular"} New York
               %li
+                %a{:href=>"/photos?city=sanfrancisco&category=popular"} San Francisco
+              %li
                 %a{:href=>"/photos?city=paris&category=popular"} Paris
+              %li
+                %a{:href=>"/photos?city=london&category=popular"} London
               %li
                 %a{:href=>"/photos?city=tokyo&category=popular"} Tokyo
         %ul.nav.secondary-nav
@@ -72,13 +81,24 @@
                 Paris
               - elsif current_city == 'tokyo'
                 Tokyo
+              - elsif current_city == 'london'
+                London
+              - elsif current_city == 'sanfrancisco'
+                San Francisco
               - else
                 Select a city
+                london 51.51,-0.13 sanfrancisco 37.76,-122.45
             %ul.dropdown-menu
               %li
                 %a{:href=>"/photos?city=newyork&category=popular"} New York
               %li
+                %a{:href=>"/photos?city=sanfrancisco&category=popular"} San Francisco
+              %li
                 %a{:href=>"/photos?city=paris&category=popular"} Paris
+              %li
+                %a{:href=>"/photos?city=london&category=popular"} London
+              %li
+                %a{:href=>"/photos?city=tokyo&category=popular"} Tokyo
         %ul.nav.secondary-nav
           %li
           %a.btn.pull-right{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Signup
