@@ -9,3 +9,13 @@ fetch_photos_paris:
   class: Fetchigphotos
   args: "756596"
   description: "Fetchs instagram pics every minute"
+  
+fetch_photos_tokyo:
+  every: "1m"
+  class: Fetchigphotos
+  args: "772760"
+  description: "Fetchs instagram pics every minute"
+  
+  
+  
+  

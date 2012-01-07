@@ -26,6 +26,8 @@
                 New York
               - elsif params[:city] == 'paris'
                 Paris
+              - elsif params[:city] == 'tokyo'
+                Tokyo
               - else
                 Select a city
             %ul.dropdown-menu
@@ -33,6 +35,8 @@
                 %a{:href=>"/photos?city=newyork&category=popular"} New York
               %li
                 %a{:href=>"/photos?city=paris&category=popular"} Paris
+              %li
+                %a{:href=>"/photos?city=tokyo&category=popular"} Tokyo
         %ul.nav.secondary-nav
           %li
             %a{:href=>"/about"} About
@@ -66,6 +70,8 @@
                 New York
               - elsif current_city == 'paris'
                 Paris
+              - elsif current_city == 'tokyo'
+                Tokyo
               - else
                 Select a city
             %ul.dropdown-menu

@@ -1,5 +1,5 @@
 $(function() {
-	var lls = {newyork: "40.745,-73.99", paris: "48.86,2.34"};
+	var lls = {newyork: "40.745,-73.99", paris: "48.86,2.34", tokyo: "35.69,139.73"};
 	$('.auto_search_complete').autocomplete({
     minLength: 3,
     delay: 100,
