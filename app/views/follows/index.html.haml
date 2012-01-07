@@ -1,66 +1,64 @@
 .container
   .content_below
-    - if ig_logged_in
-      %h1 Follow venues you love
-      .row.show-grid
-        .span4
-          %ul.unstyled#follow
-            - @suggestfollows[0..4].each do |venue_id|
+    %h1#main_title Follow venues you love
+    .row.show-grid
+      .span4
+        %ul.unstyled#follow
+          - @suggestfollows[0..4].each do |venue_id|
+            %li 
+              - @venue = Venue.first(conditions: {_id: venue_id})
+              %h4.name= @venue.name
+              %p.category= @venue.categories.first["name"] unless @venue.categories.nil?
+              = image_tag Venue.first(conditions: {_id: venue_id}).photos.order_by([[:time_taken,:desc]]).first.url[1], :width => '200px', :id => "follow_img"
+              .follow_form{:id => "venue#{@venue.id}"}
+                - unless User.where(ig_username: "bencera").first.venues.distinct(:_id).include?(@venue.id)
+                  = render 'partials/follow', :venue => @venue
+                - else
+                  = render 'partials/unfollow', :venue => @venue
+      .span4
+        %ul.unstyled#follow
+          - unless @suggestfollows[5..9].nil?
+            - @suggestfollows[5..9].each do |venue_id|
               %li 
                 - @venue = Venue.first(conditions: {_id: venue_id})
-                .name= @venue.name
-                .neighborhood= @venue.neighborhood unless @venue.neighborhood.nil?
-                .category= @venue.categories.first["name"] unless @venue.categories.nil?
+                %h4.name= @venue.name
+                %p.category= @venue.categories.first["name"] unless @venue.categories.nil?
+                = image_tag Venue.first(conditions: {_id: venue_id}).photos.order_by([[:time_taken,:desc]]).first.url[1], :width => '200px', :id => "follow_img"
                 .follow_form{:id => "venue#{@venue.id}"}
-                  - unless current_user.venues.distinct(:_id).include?(@venue.id)
+                  - unless User.where(ig_username: "bencera").first.venues.distinct(:_id).include?(@venue.id)
                     = render 'partials/follow', :venue => @venue
                   - else
                     = render 'partials/unfollow', :venue => @venue
-        .span4
-          %ul.unstyled#follow
-            - unless @suggestfollows[5..9].nil?
-              - @suggestfollows[5..9].each do |venue_id|
-                %li 
-                  - @venue = Venue.first(conditions: {_id: venue_id})
-                  .name= @venue.name
-                  .neighborhood= @venue.neighborhood unless @venue.neighborhood.nil?
-                  .category= @venue.categories.first["name"] unless @venue.categories.nil?
-                  .follow_form{:id => "venue#{@venue.id}"}
-                    - unless current_user.venues.distinct(:_id).include?(@venue.id)
-                      = render 'partials/follow', :venue => @venue
-                    - else
-                      = render 'partials/unfollow', :venue => @venue
-        .span4
-          %ul.unstyled#follow
-            - unless @suggestfollows[10..14].nil?
-              - @suggestfollows[10..14].each do |venue_id|
-                %li 
-                  - @venue = Venue.first(conditions: {_id: venue_id})
-                  .name= @venue.name
-                  .neighborhood= @venue.neighborhood unless @venue.neighborhood.nil?
-                  .category= @venue.categories.first["name"] unless @venue.categories.nil?
-                  .follow_form{:id => "venue#{@venue.id}"}
-                    - unless current_user.venues.distinct(:_id).include?(@venue.id)
-                      = render 'partials/follow', :venue => @venue
-                    - else
-                      = render 'partials/unfollow', :venue => @venue
-        .span4
-          %ul.unstyled#follow
-            - unless @suggestfollows[15..19].nil?
-              - @suggestfollows[15..19].each do |venue_id|
-                %li 
-                  - @venue = Venue.first(conditions: {_id: venue_id})
-                  .name= @venue.name
-                  .neighborhood= @venue.neighborhood unless @venue.neighborhood.nil?
-                  .category= @venue.categories.first["name"] unless @venue.categories.nil?
-                  .follow_form{:id => "venue#{@venue.id}"}
-                    - unless current_user.venues.distinct(:_id).include?(@venue.id)
-                      = render 'partials/follow', :venue => @venue
-                    - else
-                      = render 'partials/unfollow', :venue => @venue
-      = will_paginate @suggestfollows
-      %h1#follow
-        = link_to "Done", '/photos'
+      .span4
+        %ul.unstyled#follow
+          - unless @suggestfollows[10..14].nil?
+            - @suggestfollows[10..14].each do |venue_id|
+              %li 
+                - @venue = Venue.first(conditions: {_id: venue_id})
+                %h4.name= @venue.name
+                %p.category= @venue.categories.first["name"] unless @venue.categories.nil?
+                = image_tag Venue.first(conditions: {_id: venue_id}).photos.order_by([[:time_taken,:desc]]).first.url[1], :width => '200px', :id => "follow_img"
+                .follow_form{:id => "venue#{@venue.id}"}
+                  - unless User.where(ig_username: "bencera").first.venues.distinct(:_id).include?(@venue.id)
+                    = render 'partials/follow', :venue => @venue
+                  - else
+                    = render 'partials/unfollow', :venue => @venue
+      .span4
+        %ul.unstyled#follow
+          - unless @suggestfollows[15..19].nil?
+            - @suggestfollows[15..19].each do |venue_id|
+              %li 
+                - @venue = Venue.first(conditions: {_id: venue_id})
+                %h4.name= @venue.name
+                %p.category= @venue.categories.first["name"] unless @venue.categories.nil?
+                = image_tag Venue.first(conditions: {_id: venue_id}).photos.order_by([[:time_taken,:desc]]).first.url[1], :width => '200px', :id => "follow_img"
+                .follow_form{:id => "venue#{@venue.id}"}
+                  - unless User.where(ig_username: "bencera").first.venues.distinct(:_id).include?(@venue.id)
+                    = render 'partials/follow', :venue => @venue
+                  - else
+                    = render 'partials/unfollow', :venue => @venue
+    
+    = will_paginate @suggestfollows
 
 %footer
   = render 'partials/footer'

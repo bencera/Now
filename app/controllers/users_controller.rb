@@ -1,7 +1,17 @@
 class UsersController < ApplicationController
   require 'will_paginate/array'
   def settings
+  end
+  
+  def update
     @user = current_user
+ 
+    if @user.update_attribute(:email, params[:email])
+      redirect_to('/settings', :notice => 'Settings updated.')
+    else
+      redirect_to('/settings', :notice => 'There was an error')
+    end
+    
   end
   
   def show

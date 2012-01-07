@@ -27,7 +27,7 @@
           -else
             %p.question
               Q: 
-              = @photo.requests.first.question
+              = @photo.requests.first.question.gsub(" - via @ubimachine", "")
             %p.answer
               A: 
               = "\"#{@photo.requests.first.response}\""
@@ -42,11 +42,12 @@
             %a.useful_btn.btn#useful{:href => '/create_account'} useful
           %br
           %br
-          - unless @photo.useful_count == 0
-            %p.useful_count
+          %p.useful_count
+            - unless @photo.useful_count == 0
               = pluralize(@photo.useful_count, "person")
               found it useful
-            .useful_people
+          .useful_people
+            - unless @photo.useful_count == 0
               - @photo.usefuls.each do |useful|
                 = link_to (image_tag User.first(conditions: {_id: useful.user_id}).ig_details[1], :width => '50px'), "/users/#{User.first(conditions: {_id: useful.user_id}).ig_username}"
       

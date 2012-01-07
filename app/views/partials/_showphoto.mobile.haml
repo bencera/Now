@@ -14,7 +14,7 @@
     -else
       %p.question
         Q: 
-        = photo.requests.first.question
+        = photo.requests.first.question.gsub(" - via @ubimachine", "")
       %p.answer
         A: 
         = "\"#{truncate(photo.requests.first.response, :length => 60)}\""

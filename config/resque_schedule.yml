@@ -1,52 +1,11 @@
-fetch_photos_every_minute:
+fetch_photos_newyork:
   every: "1m"
-  #cron: "* * * * *"
-  # you can use rufus-scheduler "every" syntax in place of cron if you prefer
-  # every: 1min
   class: Fetchigphotos
-  args: 
+  args: "702469"
   description: "Fetchs instagram pics every minute"
   
-# Do_trending_feed:
-#   every: "5m"
-#   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
-#   # every: 1min
-#   class: Trending
-#   args:
-#   description: "create trending feed"
-#   
-# Do_food_feed:
-#   every: "2m"
-#   #cron: "*10/ * * * *"
-#   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
-#   # every: 1min
-#   class: Categories
-#   args: "Food"
-#   description: "create feed"
-#   
-# Do_nightlife_feed:
-#   every: "2m"
-#   #cron: "*10/ * * * *"
-#   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
-#   # every: 1min
-#   class: Categories
-#   args: "Nightlife Spot"
-#   description: "create feed"
-#   
-# Do_outdoors_feed:
-#   every: "2m"
-#   #cron: "*10/ * * * *"
-#   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
-#   # every: 1min
-#   class: Categories
-#   args: "Great Outdoors"
-#   description: "create feed"
-# 
-# Do_arts_feed:
-#   every: "2m"
-#   #cron: "*10/ * * * *"
-#   # you can use rufus-scheduler "every" syntax in place of cron if you prefer
-#   # every: 1min
-#   class: Categories
-#   args: "Arts & Entertainment"
-#   description: "create feed"
+fetch_photos_newyork:
+  every: "1m"
+  class: Fetchigphotos
+  args: "756596"
+  description: "Fetchs instagram pics every minute"

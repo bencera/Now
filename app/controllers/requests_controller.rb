@@ -41,12 +41,13 @@ class RequestsController < ApplicationController
   def show
     
   end
-  
   def index
+    require 'will_paginate/array'
     if ig_logged_in
-      @requests = Request.where(:user_ids => current_user.id).order_by([[:time_asked, :desc]])
+      requests = Request.where(user_ids: current_user.id).order_by([[:time_asked, :desc]])
+      @requests = requests.paginate(:per_page => 5, :page => params[:page])
     else
-      @requests = Request.all
+      @requests = Request.all.paginate(:per_page => 5, :page => params[:page])
     end
   end
   

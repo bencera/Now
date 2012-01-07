@@ -22,7 +22,7 @@
         -else
           %p.question
             Q: 
-            = @photo.requests.first.question
+            = @photo.requests.first.question.gsub(" - via @ubimachine", "")
           %p.answer
             A: 
             = "\"#{@photo.requests.first.response}\""
