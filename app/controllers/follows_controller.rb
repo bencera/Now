@@ -19,6 +19,7 @@ class FollowsController < ApplicationController
   end
 
   def create
+    @photo = Photo.first(conditions: {_id: params[:photo_id]}) unless params[:photo_id].blank?
     venues = current_user.venue_ids
     venues << params[:id]
     current_user.update_attribute(:venue_ids, venues)
@@ -34,6 +35,7 @@ class FollowsController < ApplicationController
   end
   
   def destroy
+    @photo = Photo.first(conditions: {_id: params[:photo_id]}) unless params[:photo_id].blank?
     venues = current_user.venue_ids
     venues.delete(params[:id])
     current_user.update_attribute(:venue_ids, venues)
