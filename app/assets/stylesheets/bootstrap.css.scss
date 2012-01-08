@@ -2750,8 +2750,12 @@ input.btn#useful{
 	position: absolute;
 	display: none;
 }
-.image:hover #boutons{
+.card:hover #boutons{
 	display: block;
+}
+
+.card:hover{
+	
 }
 
 

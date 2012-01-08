@@ -76,6 +76,11 @@
         - if @venue.nil?
           %p.venue= link_to "#{photo.venue.name}", photo.venue
         %p.time= timeago_small(Time.at photo.time_taken.to_i)
+        / .follow_form{:id => "venue#{@photo.venue.id}"}
+        /   - unless User.where(ig_username: "bencera").first.venues.distinct(:_id).include?(@venue.id)
+        /     = render 'partials/follow'
+        /   - else
+        /     = render 'partials/unfollow'
         - if @venue.nil?
           %p.neighborhood
             - unless photo.venue.neighborhood.nil?
@@ -100,12 +105,12 @@
               = link_to photo.user.ig_username, "/users/#{photo.user.ig_username}", :id => "user"
             - else
               = link_to photo.user.ig_details[0], "/users/#{photo.user.ig_username}", :id => "user"
-            - if params[:category].nil?
-              = "in"
-              = link_to photo.category, "/photos?city=#{current_city}&category=#{photo.category}"
+            - unless params[:category] == "food" or params[:category] == "shopping" or params[:category] == "entertainment" or params[:category] == "nightlife" or params[:category] == "outdoors"
+              = "in" unless photo.category.nil?
+              = link_to photo.category, "/photos?city=#{current_city}&category=#{photo.category}" unless photo.category.blank?
         - else
           %p.user
-            = link_to photo.category, "/photos?city=#{current_city}&category=#{photo.category}"
+            = link_to photo.category, "/photos?city=#{current_city}&category=#{photo.category}" unless photo.category.blank?
             
         %p.useful_count{:id => "photo#{@photo.id.to_s}"}
           = pluralize(photo.usefuls.count, 'person') unless photo.usefuls.count == 0
