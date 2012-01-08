@@ -1,2 +1,3 @@
 $("#venue" + "<%= "#{@venue.id}" %>").html("<%= escape_javascript(render('partials/unfollow')) %>")
+$("#show_venue" + "<%= "#{@venue.id}" %>").html("<%= escape_javascript(render('partials/unfollow_show')) %>")
 $(".followers").html('<%= "#{@venue.users.count} followers" %>')

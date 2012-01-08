@@ -12,6 +12,16 @@
                   .img= image_tag @photo.url[1], :width => '500px'
                   %div#img_details
                     %h1.venue= link_to @photo.venue.name, @photo.venue
+                    - if ig_logged_in
+                      .follow_form{:id => "show_venue#{@photo.venue.id}"}
+                        - unless current_user.first.venues.distinct(:_id).include?(@photo.venue.id)
+                          = render 'partials/follow_show'
+                        - else
+                          = render 'partials/unfollow_show'
+                    - else
+                      .follow_form
+                        %a.btn.large{:href => "/create_account"} Follow
+                    %br
                     #map_left
                       = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=420x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false", :id => "map"
                     %p.neighborhood
@@ -76,11 +86,6 @@
         - if @venue.nil?
           %p.venue= link_to "#{photo.venue.name}", photo.venue
         %p.time= timeago_small(Time.at photo.time_taken.to_i)
-        / .follow_form{:id => "venue#{@photo.venue.id}"}
-        /   - unless User.where(ig_username: "bencera").first.venues.distinct(:_id).include?(@venue.id)
-        /     = render 'partials/follow'
-        /   - else
-        /     = render 'partials/unfollow'
         - if @venue.nil?
           %p.neighborhood
             - unless photo.venue.neighborhood.nil?
