@@ -97,7 +97,7 @@
               = link_to photo.user.ig_username, "/users/#{photo.user.ig_username}", :id => "user"
             - else
               = link_to photo.user.ig_details[0], "/users/#{photo.user.ig_username}", :id => "user"
-            - unless params[:category].nil?
+            - if params[:category].nil?
               = "in"
               = link_to photo.category, "/photos?city=#{current_city}&category=#{photo.category}"
         - else
