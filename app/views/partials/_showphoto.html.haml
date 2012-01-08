@@ -1,7 +1,7 @@
 - unless photo.nil?
   - @photo = photo
   %li
-    .card
+    .card{:id => "photo_card_#{photo.id.to_s}"}
       .image
         %a{:'data-controls-modal' => "modal_show_#{photo.id.to_s}", :'data-backdrop' => "true", :'data-keyboard' => "true"}
           = image_tag photo.url[1], :width => '220px'
@@ -23,7 +23,7 @@
                         %a.btn.large{:href => "/create_account"} Follow
                     %br
                     #map_left
-                      = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=420x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false", :id => "map"
+                      = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=420x150&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false", :id => "map"
                     %p.neighborhood
                       - unless @photo.venue.neighborhood.nil?
                         = @photo.venue.neighborhood

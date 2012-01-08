@@ -14,7 +14,11 @@ class ApplicationController < ActionController::Base
   end
   
   def current_city
-    @current_city ||= session[:city] if session[:city]
+    if cookies[:city].blank?
+      @current_city = "newyork"
+    else
+      @current_city ||= cookies[:city]
+    end
   end
   
   helper_method :current_user, :ig_logged_in, :current_city

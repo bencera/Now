@@ -18,7 +18,7 @@
   $('body').ajaxComplete(function() {
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
-  window.city = "#{session[:city]}"
+  window.city = "#{current_city}"
 
 %footer
   = render 'partials/footer'

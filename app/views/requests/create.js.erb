@@ -1,2 +1,4 @@
 $(".modal.in").modal('hide');
+$(".card#photo_card_" + "<%= "#{@photo.id.to_s}" %>" + " p.comment").after('<p class="question"> Q: <%= @photo.requests.first.question.gsub(" - via @ubimachine", "")%></p>')
 $("p.flash-alert").html('<%= escape_javascript(flash.now[:notice]) %>');
+$('.card').wookmark({offset: 10, container: $('.container_photos'), itemWidth: 240});
