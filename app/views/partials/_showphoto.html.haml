@@ -14,7 +14,7 @@
                     %h1.venue= link_to @photo.venue.name, @photo.venue
                     - if ig_logged_in
                       .follow_form{:id => "show_venue#{@photo.venue.id}"}
-                        - unless current_user.first.venues.distinct(:_id).include?(@photo.venue.id)
+                        - unless current_user.venues.distinct(:_id).include?(@photo.venue.id)
                           = render 'partials/follow_show'
                         - else
                           = render 'partials/unfollow_show'
