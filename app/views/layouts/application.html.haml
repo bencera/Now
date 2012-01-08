@@ -61,6 +61,12 @@
               %li
                 %a{:href=>"/users/#{current_user.ig_username}"} My profile
               %li
+                %a{:href=>"/users/#{current_user.ig_username}/usefuls"} Your usefuls
+              %li
+                %a{:href=>"/users/#{current_user.ig_username}/follows"} Your venues
+              %li
+                %a{:href=>"/users/#{current_user.ig_username}/questions"} Your questions
+              %li
                 %a{:href=>"/follows"} Venues to follow
               %li
                 %a{:href=>"/inbox"} Inbox
@@ -87,7 +93,7 @@
                 San Francisco
               - else
                 Select a city
-                london 51.51,-0.13 sanfrancisco 37.76,-122.45
+              
             %ul.dropdown-menu
               %li
                 %a{:href=>"/photos?city=newyork&category=popular"} New York

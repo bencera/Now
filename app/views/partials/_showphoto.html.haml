@@ -3,7 +3,60 @@
   %li
     .card
       .image
-        = link_to (image_tag photo.url[1], :width => '220px'), photo
+        %a{:'data-controls-modal' => "modal_show_#{photo.id.to_s}", :'data-backdrop' => "true", :'data-keyboard' => "true"}
+          = image_tag photo.url[1], :width => '220px'
+          .modal.hide{:id => "modal_show_#{photo.id.to_s}"}
+            .modal-body
+              - unless @photo.nil?
+                #img
+                  .img= image_tag @photo.url[1], :width => '500px'
+                  %div#img_details
+                    %h1.venue= link_to @photo.venue.name, @photo.venue
+                    #map_left
+                      = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=420x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false", :id => "map"
+                    %p.neighborhood
+                      - unless @photo.venue.neighborhood.nil?
+                        = @photo.venue.neighborhood
+                    %p.user
+                      taken by
+                      - if @photo.user.ig_details[0].blank?
+                        = @photo.user.ig_username
+                      - else
+                        = @photo.user.ig_details[0]
+                      = ", "
+                      = time_ago_in_words(Time.at @photo.time_taken.to_i)
+                      = "ago"
+                    -if @photo.requests.blank?
+                      %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
+                      = render 'partials/showquestion', :photo => @photo
+                    -elsif @photo.requests.first.response.nil?
+                      %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
+                    -else
+                      %p.question
+                        Q: 
+                        = @photo.requests.first.question.gsub(" - via @ubimachine", "")
+                      %p.answer
+                        A: 
+                        = "\"#{@photo.requests.first.response}\""
+                    - if ig_logged_in
+                      - if current_user.usefuls.where(photo_id: @photo.id).empty?
+                        .useful_btn{:id => "photo#{@photo.id.to_s}"}
+                          = render 'partials/useful', :photo => @photo
+                      - else
+                        .useful_btn{:id => "photo#{@photo.id.to_s}"}
+                          = render 'partials/unuseful', :photo => @photo
+                    -else
+                      %a.useful_btn.btn#useful{:href => '/create_account'} useful
+                    %br
+                    %br
+                    %p.useful_count
+                      - unless @photo.useful_count == 0
+                        = pluralize(@photo.useful_count, "person")
+                        found it useful
+                    .useful_people
+                      - unless @photo.useful_count == 0
+                        - @photo.usefuls.each do |useful|
+                          = link_to (image_tag User.first(conditions: {_id: useful.user_id}).ig_details[1], :width => '50px'), "/users/#{User.first(conditions: {_id: useful.user_id}).ig_username}"
         #boutons
           - if ig_logged_in
             - if current_user.usefuls.where(photo_id: photo.id).empty?
@@ -17,11 +70,13 @@
           - if photo.requests.blank?
             = render 'partials/showquestion', :photo => @photo
       %div
-        %p.venue= link_to "#{photo.venue.name}", photo.venue
+        - if @venue.nil?
+          %p.venue= link_to "#{photo.venue.name}", photo.venue
         %p.time= timeago_small(Time.at photo.time_taken.to_i)
-        %p.neighborhood
-          - unless photo.venue.neighborhood.nil?
-            = photo.venue.neighborhood
+        - if @venue.nil?
+          %p.neighborhood
+            - unless photo.venue.neighborhood.nil?
+              = photo.venue.neighborhood
         -if photo.requests.blank?
           %p.comment
             = "\"#{photo.caption}\"" unless photo.caption.blank?
@@ -35,12 +90,20 @@
           %p.answer
             A: 
             = "\"#{photo.requests.first.response}\""
-        %p.user
-          = link_to (image_tag photo.user.ig_details[1], :width => "30px"), "/users/#{photo.user.ig_username}", :id => "user_pic"
-          - if photo.user.ig_details[0].blank?
-            = link_to photo.user.ig_username, "/users/#{photo.user.ig_username}", :id => "user"
-          - else
-            = link_to photo.user.ig_details[0], "/users/#{photo.user.ig_username}", :id => "user"
+        - if @user.nil?
+          %p.user
+            = link_to (image_tag photo.user.ig_details[1], :width => "30px"), "/users/#{photo.user.ig_username}", :id => "user_pic"
+            - if photo.user.ig_details[0].blank?
+              = link_to photo.user.ig_username, "/users/#{photo.user.ig_username}", :id => "user"
+            - else
+              = link_to photo.user.ig_details[0], "/users/#{photo.user.ig_username}", :id => "user"
+            - unless params[:category].nil?
+              = "in"
+              = link_to photo.category, "/photos?city=#{current_city}&category=#{photo.category}"
+        - else
+          %p.user
+            = link_to photo.category, "/photos?city=#{current_city}&category=#{photo.category}"
+            
         %p.useful_count{:id => "photo#{@photo.id.to_s}"}
           = pluralize(photo.usefuls.count, 'person') unless photo.usefuls.count == 0
           = "found this photo useful" unless photo.usefuls.count == 0

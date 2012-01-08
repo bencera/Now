@@ -2186,8 +2186,8 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
   top: 50%;
   left: 50%;
   z-index: 11000;
-  width: 560px;
-  margin: -250px 0 0 -280px;
+  width: 1000px;
+  margin: -250px 0 0 -480px;
   background-color: #ffffff;
   border: 1px solid #999;
   border: 1px solid rgba(0, 0, 0, 0.3);
@@ -2204,6 +2204,7 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
   -moz-background-clip: padding-box;
   background-clip: padding-box;
 }
+
 .modal .close {
   margin-top: 7px;
 }
@@ -2218,6 +2219,50 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 .modal.fade.in {
   top: 50%;
 }
+
+
+/*MODAL PHOTO*/
+
+.modal#photo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 11000;
+  width: 1000px;
+  margin: -250px 0 0 -480px;
+  background-color: #ffffff;
+  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  *border: 1px solid #999;
+  /* IE6-7 */
+
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding-box;
+  background-clip: padding-box;
+}
+
+.modal#photo .close {
+  margin-top: 7px;
+}
+.modal#photo.fade {
+  -webkit-transition: opacity .3s linear, top .3s ease-out;
+  -moz-transition: opacity .3s linear, top .3s ease-out;
+  -ms-transition: opacity .3s linear, top .3s ease-out;
+  -o-transition: opacity .3s linear, top .3s ease-out;
+  transition: opacity .3s linear, top .3s ease-out;
+  top: -25%;
+}
+.modal#photo.fade.in {
+  top: 50%;
+}
+
+/*END*/
 .modal-header {
   border-bottom: 1px solid #eee;
   padding: 5px 15px;
@@ -2784,6 +2829,7 @@ a:hover{
 
 a#user{
 	margin-left: 10px;
+	margin-right: 2px;
 	
 }
 
