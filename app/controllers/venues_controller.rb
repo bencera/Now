@@ -22,12 +22,6 @@ class VenuesController < ApplicationController
           v.save_photo(media, nil, nil)
         end
       end
-      # n_photos = v.photos.count
-      # if (n_photos - (n-1)*20) <= 0
-      #   @photos = []
-      # else
-      #   @photos = v.photos.order_by([:time_taken, :desc])[(n-1)*20..(n*20-1)]
-      # end  
       @photos = v.photos.order_by([[:useful_count, :desc],[:time_taken, :desc]]).paginate(:per_page => 20, :page => params[:page])
       if request.xhr?
         render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
@@ -46,6 +40,28 @@ class VenuesController < ApplicationController
         redirect_to '/nophotos'
       end
     end
+  end
+  
+  def usefuls
+    require 'will_paginate/array'
+    v = Venue.first(conditions: { fs_venue_id: params[:id]})
+
+    @photos = v.photos.where(:useful_count.gt => 0).order_by([[:time_taken, :desc]]).paginate(:per_page => 20, :page => params[:page])
+    if request.xhr?
+      render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
+    end
+    @venue = v
+  end
+  
+  def answers
+    require 'will_paginate/array'
+    v = Venue.first(conditions: { fs_venue_id: params[:id]})
+
+    @photos = v.photos.where(:answered => true).order_by([[:time_taken, :desc]]).paginate(:per_page => 20, :page => params[:page])
+    if request.xhr?
+      render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
+    end
+    @venue = v
   end
 
   def nophotos

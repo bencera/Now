@@ -18,7 +18,10 @@
   $('body').ajaxComplete(function() {
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
-  window.city = "#{current_city}"
+  window.city = "#{current_city}";
+  $('.modal').bind('show', function() {
+    alert($(this).get(1).attr('data-href'));
+    })
 
 %footer
   = render 'partials/footer'
