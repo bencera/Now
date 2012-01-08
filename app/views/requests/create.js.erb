@@ -1,2 +1,2 @@
-$('#modal_photo_#{@photo.id.to_s}').modal('hide')
-$("p.flash-alert").html('<%=escape_javascript(flash[:notice]) %>');
+$(".modal.in").modal('hide');
+$("p.flash-alert").html('<%= escape_javascript(flash.now[:notice]) %>');

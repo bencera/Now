@@ -25,16 +25,16 @@ class RequestsController < ApplicationController
                                                                                         :user_ids => [current_user.id, photo_user_id] )
           Resque.enqueue(Checkanswer, params[:ig_media_id], count, photo_user_id, current_user.ig_accesstoken)
           if current_user.email.nil?
-            flash[:notice] = "Your question was succesfully asked! Tell us your email in Settings to get notified when it's answered."
+            flash.now[:notice] = "Your question was succesfully asked! Tell us your email in Settings to get notified when it's answered."
           else
-            flash[:notice] = "Your question was succesfully asked! We will send you an email when it's answered."
+            flash.now[:notice] = "Your question was succesfully asked! We will send you an email when it's answered."
           end
         else
-          flash[:notice] = "Sorry, somebody already asked a question on this photo.. Try another one!"
+          flash.now[:notice] = "Sorry, somebody already asked a question on this photo.. Try another one!"
         end
       end
     else
-      flash[:notice] = "You must be logged in to ask a question!"
+      flash.now[:notice] = "You must be logged in to ask a question!"
     end
     respond_to do |format|
       format.html { redirect_to :back }
