@@ -2,6 +2,7 @@ class RequestsController < ApplicationController
   
   def create
     if ig_logged_in
+      @photo = Photo.first(conditions: {ig_media_id: params[:ig_media_id]})
       if params[:type] == 'reply'
         Instagram.create_media_comment(params[:ig_media_id], params[:message], :access_token => current_user.ig_accesstoken)
         flash[:notice] = "Your message was sent!"
@@ -35,7 +36,10 @@ class RequestsController < ApplicationController
     else
       flash[:notice] = "You must be logged in to ask a question!"
     end
-    redirect_to :back
+    respond_to do |format|
+      format.html { redirect_to :back }
+      format.js
+    end
   end
   
   def show

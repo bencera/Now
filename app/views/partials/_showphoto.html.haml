@@ -30,7 +30,11 @@
                       %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
                     -elsif @photo.requests.first.response.nil?
                       %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
+                      %p.question
+                        Q: 
+                        = @photo.requests.first.question.gsub(" - via @ubimachine", "")
                     -else
+                      %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
                       %p.question
                         Q: 
                         = @photo.requests.first.question.gsub(" - via @ubimachine", "")

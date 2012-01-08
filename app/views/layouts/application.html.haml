@@ -177,7 +177,7 @@
   .alert-message.success.fade.in{:'data-alert' => "alert"}
     %a.close
       x
-    %p= flash[:notice]
+    %p.flash-alert= flash[:notice]
 :javascript
   window.city = "#{session[:city]}"
 

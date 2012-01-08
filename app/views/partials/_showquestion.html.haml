@@ -28,7 +28,7 @@
           = select_tag :question_id, options_for_select([["Select a question", 0],["Good place?", "what do you think of"], ["What's happening?", "what is happening at"], ["Sales?", "are there any sales at"], ["Ask your own question", "...at"]]), :id => "select_question"
         - else
           = select_tag :question_id, options_for_select([["Select a question", 0],["What's happening?", "What is happening at"], ["Good place?", "what did you think of"], ["Ask your own question", "...at"]]), :id => "select_question"
-        = form_tag requests_url, :method => :post do
+        = form_tag requests_url, :method => :post, :remote => true do
           = hidden_field_tag :ig_media_id, photo.ig_media_id
           = hidden_field_tag :venue_name, photo.venue.name
           = text_field_tag :question, nil, :id => "input_question"
