@@ -1,8 +1,3 @@
 .container
   .content_below
     %h1 Settings
-    %p#search Enter your email to get notified when someone answers a question you asked:
-    .bouton
-      = form_tag '/signup' do
-        = text_field_tag :email,  @user.email, :placeholder => 'name@domain.com'
-        = submit_tag "submit", :class => 'btn'

@@ -15,8 +15,9 @@
           ago
         -if @photo.requests.blank?
           %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
-          = form_tag "/ask?id=#{@photo.id}" do
-            = submit_tag "Ask a question!", :class => 'btn large primary', :id => 'bigbouton'
+          - if ig_logged_in
+            = form_tag "/ask?id=#{@photo.id}" do
+              = submit_tag "Ask a question!", :class => 'btn large primary', :id => 'bigbouton'
         -elsif @photo.requests.first.response.nil?
           %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
         -else

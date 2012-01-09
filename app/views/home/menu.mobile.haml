@@ -5,18 +5,35 @@
       - if ig_logged_in
         %a{:href=>"/photos"}
           %li My feed
-      %a{:href=>"/photos?id=food"}
+      %a{:href=>"/photos?category=food&city=#{current_city}"}
         %li Restaurants
-      %a{:href=>"/photos?id=nightlife"} 
+      %a{:href=>"/photos?category=nightlife&city=#{current_city}"} 
         %li Nightlife
-      %a{:href=>"/photos?id=entertainment"}
+      %a{:href=>"/photos?category=entertainment&city=#{current_city}"}
         %li Arts & Entertainment
-      %a{:href=>"/photos?id=outdoors"}
+      %a{:href=>"/photos?category=outdoors&city=#{current_city}"}
         %li Outdoors
-      %a{:href=>"/photos?id=trending"}
-        %li Trending
-      %a{:href=>"/photos?id=answered"}
-        %li Answered
+      %a{:href=>"/photos?category=shopping&city=#{current_city}"}
+        %li Shopping
+      %a{:href=>"/photos?category=popular&city=#{current_city}"}
+        %li Popular
+      %a{:href=>"/photos?category=answers&city=#{current_city}"}
+        %li Answers
+.container
+  .content_below
+    %h1 Change city
+    %ul.unstyled#menu
+      %a{:href=>"/photos?category=popular&city=newyork"}
+        %li New York
+      %a{:href=>"/photos?category=popular&city=sanfrancisco"}
+        %li San Francisco
+      %a{:href=>"/photos?category=popular&city=paris"}
+        %li Paris
+      %a{:href=>"/photos?category=popular&city=london"}
+        %li London
+      %a{:href=>"/photos?category=popular&city=tokyo"}
+        %li Tokyo
+
 - if ig_logged_in
   .container
     .content_below
@@ -30,6 +47,13 @@
           %li Settings
         %a{:href=>"/logout"}
           %li Log out
+- else
+  .container
+    .content_below
+      .signin
+        = link_to (image_tag 'login_button.png'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships&display=touch'
+      
+  
         
 %footer
   = render 'partials/footer'

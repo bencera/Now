@@ -1,6 +1,6 @@
 .container
   .content_below
-    %h1 Search results in New York
+    %h1= "Search results in #{current_city}"
     - @venues.each do |venue|
       .venue
         = link_to venue["name"], venue_path(venue["id"])
