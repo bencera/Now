@@ -19,6 +19,9 @@
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
   window.city = "#{current_city}";
+  $(".modal").bind('hide', function() {
+    window.history.back();
+  });
 
 %footer
   = render 'partials/footer'

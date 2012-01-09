@@ -33,7 +33,8 @@
               = "\"#{request.response}\""
               %p.rest_conversation
                 %h6 Continue the conversation!
-                - response = Instagram.media_comments(photo.ig_media_id, :access_token => current_user.ig_accesstoken)
+                - client = Instagram.client(:access_token => current_user.ig_accesstoken)
+                - response = Instagram.media_comments(photo.ig_media_id)
                 - response.each do |comment|
                   - unless comment.created_time.to_i < request.time_answered.to_i
                     %p.question

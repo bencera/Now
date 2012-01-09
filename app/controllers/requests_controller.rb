@@ -3,21 +3,22 @@ class RequestsController < ApplicationController
   def create
     if ig_logged_in
       @photo = Photo.first(conditions: {ig_media_id: params[:ig_media_id]})
+      client = Instagram.client(:access_token => current_user.ig_accesstoken)
       if params[:type] == 'reply'
-        Instagram.create_media_comment(params[:ig_media_id], params[:message], :access_token => current_user.ig_accesstoken)
+        client.create_media_comment(params[:ig_media_id], params[:message])
         flash[:notice] = "Your message was sent!"
       elsif params[:type] == 'thanks'
         thanks_messages = ["Thanks!", "Thanks a lot!", "Very helpful, thanks!"]
-        Instagram.create_media_comment(params[:ig_media_id], thanks_messages[rand(thanks_messages.size)], :access_token => current_user.ig_accesstoken)
+        client.create_media_comment(params[:ig_media_id], thanks_messages[rand(thanks_messages.size)])
         flash[:notice] = "Your thank you message was sent!"
       else
         if Photo.first(conditions: {ig_media_id: params[:ig_media_id]}).requests.blank?
           question = params[:question] #Request.new.find_question(params[:question_id].to_i, params[:venue_name])
-          media = Instagram.media_item(params[:ig_media_id], :access_token => current_user.ig_accesstoken)
+          media = client.media_item(params[:ig_media_id])
           count = media.comments["count"].to_i
           photo_user_id = media.user.id
-          Instagram.create_media_comment(params[:ig_media_id], question, :access_token => current_user.ig_accesstoken )
-          Instagram.like_media(params[:ig_media_id], :access_token => current_user.ig_accesstoken )
+          client.create_media_comment(params[:ig_media_id], question)
+          client.like_media(params[:ig_media_id])
           Photo.first(conditions: {ig_media_id: params[:ig_media_id]}).requests.create( :question => question,
                                                                                         :time_asked => Time.now.to_i,
                                                                                         :media_comment_count => count, 

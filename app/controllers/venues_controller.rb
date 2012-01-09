@@ -17,7 +17,12 @@ class VenuesController < ApplicationController
         access_token = current_user.ig_accesstoken unless current_user.nil? #verifier.. comment faire si le mec est pas login..
         max_id = nil
         max_id = v.photos.order_by([:time_taken, :desc]).last.ig_media_id unless v.photos.blank?
-        new_photos = Instagram.location_recent_media(v.ig_venue_id, options={:max_id => max_id, :access_token => access_token})
+        if current_user.nil?
+          new_photos = Instagram.location_recent_media(v.ig_venue_id, options={:max_id => max_id})
+        else
+          client = Instagram.client(:access_token => current_user.ig_accesstoken)
+          new_photos = client.location_recent_media(v.ig_venue_id, options={:max_id => max_id})
+        end
         new_photos['data'].each do |media|
           v.save_photo(media, nil, nil)
         end

@@ -1,7 +1,8 @@
 class Checkanswer
   @queue = :checkanswers_queue
   def self.perform(ig_media_id, media_comment_count, photo_user_id, access_token)
-    comments = Instagram.media_comments(ig_media_id, :access_token => access_token)
+    client = Instagram.client(:access_token => access_token)
+    comments = client.media_comments(ig_media_id)
     success = false
     if comments.count.to_i > media_comment_count.to_i + 1
       n = 0

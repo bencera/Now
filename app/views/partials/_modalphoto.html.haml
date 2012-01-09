@@ -69,9 +69,11 @@
               - @photo.usefuls.each do |useful|
                 = link_to (image_tag User.first(conditions: {_id: useful.user_id}).ig_details[1], :width => '50px'), "/users/#{User.first(conditions: {_id: useful.user_id}).ig_username}"
           :javascript
-            $('.modal').bind('show', function() {
+            $(".modal#modal_show_#{photo.id.to_s}").bind('show', function() {
               var link = $("#modal_photo_img_#{@photo.id}").attr('data-href');
               var maplink = $("#map_photo_#{@photo.id}").attr('data-href');
               $("#modal_photo_img_#{@photo.id}").attr('src', link);
               $("#map_photo_#{@photo.id}").attr('src', maplink);
+              history.pushState({},"Title","/photos/#{@photo.id}");
               })
+            
