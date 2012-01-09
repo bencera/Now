@@ -33,7 +33,7 @@
           = hidden_field_tag :venue_name, photo.venue.name
           = text_field_tag :question, nil, :id => "input_question"
           .modal-footer
-            = submit_tag "Ask!", :class => 'btn large primary', :id => 'bigbouton'
+            = submit_tag "Ask!", :class => 'btn large primary', :id => "ask_button_#{photo.id}", :'data-loading-text' => "loading"
       :javascript
         $("#modal_photo_#{photo.id} #select_question").change(function () {
             var question = "Hi @" + "#{photo.user.ig_username}" + ", " +  $("#modal_photo_#{photo.id} #select_question").val() + " " + "#{photo.venue.name}" + "? Thanks! - via @ubimachine";
@@ -42,6 +42,11 @@
             $("#modal_photo_#{photo.id} #input_question").fadeIn();
           });
         $("#modal_photo_#{photo.id} #input_question").hide();
+        $(function() {
+          var btn = $("#ask_button_#{photo.id}").click(function () {
+          btn.button('loading')
+          })
+        });
           
   - else
     %a.btn#ask{:href => "/create_account"} Ask a question
