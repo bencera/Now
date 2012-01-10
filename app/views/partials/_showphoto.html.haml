@@ -48,7 +48,8 @@
               = link_to photo.user.ig_details[0], "/users/#{photo.user.ig_username}", :id => "user"
             - unless params[:category] == "food" or params[:category] == "shopping" or params[:category] == "entertainment" or params[:category] == "nightlife" or params[:category] == "outdoors"
               = "in" unless photo.category.nil?
-              = link_to photo.category, "/photos?city=#{current_city}&category=#{photo.category}", :id => "category" unless photo.category.blank?
+              - categories = {"Arts & Entertainment" => "entertainment", "Nightlife Spot" => "nightlife", "Great Outdoors" => "outdoors", "Shop & Service" => "shopping", "Food" => "food"}
+              = link_to photo.category, "/photos?city=#{current_city}&category=#{categories[photo.category]}", :id => "category" unless photo.category.blank?
         - else
           %p.user
             = link_to photo.category, "/photos?city=#{current_city}&category=#{photo.category}" unless photo.category.blank?
