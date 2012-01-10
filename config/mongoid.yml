@@ -8,9 +8,11 @@ test:
 
 # set these environment variables on your prod server
 production:
-    uri: 'mongodb://heroku:c02c2c3a696b0785f962754467945eed@pearl.mongohq.com:27029/ubimachine'
+    uri: 'mongodb://heroku:c02c2c3a696b0785f962754467945eed@penny.mongohq.com:10055/ubimachine2go'
+    
   # slaves:
   #   - host: slave1.local
   #     port: 27018
   #   - host: slave2.local
   #     port: 27019
+  #mongodb://heroku:c02c2c3a696b0785f962754467945eed@pearl.mongohq.com:27029/ubimachine
