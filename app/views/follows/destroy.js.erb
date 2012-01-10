@@ -1,3 +1,6 @@
-$("#venue" + "<%= "#{@venue.id}" %>").html("<%= escape_javascript(render('partials/follow')) %>")
-$("#show_venue" + "<%= "#{@venue.id}" %>").html("<%= escape_javascript(render('partials/follow_show')) %>")
+<% if @venue.blank? %>
+	$("#show_venue" + "<%= "#{@photo.venue.id}" %>").html("<%= escape_javascript(render('partials/follow_show')) %>")
+<% else %>
+	$("#venue" + "<%= "#{@venue.id}" %>").html("<%= escape_javascript(render('partials/follow')) %>")
+<% end %>
 $(".followers").html('<%= "#{@venue.users.count} followers" %>')
