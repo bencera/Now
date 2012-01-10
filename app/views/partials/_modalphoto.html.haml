@@ -17,7 +17,7 @@
               %a.btn.large{:href => "/create_account"} Follow
           %br
           #map_left
-            = image_tag "#", :id => "map_photo_#{@photo.id}", :'data-href' =>  "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=43t0x150&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false"
+            = image_tag "#", :id => "map_photo_#{@photo.id}", :'data-href' =>  "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=430x150&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false"
           %p.neighborhood
             - unless @photo.venue.neighborhood.nil?
               = @photo.venue.neighborhood
