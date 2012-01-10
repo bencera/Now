@@ -2861,8 +2861,10 @@ input#input_question{
 	overflow: auto;
 }
 
-a#link_category{
+a#category{
 	float:none;
+	color:#383838;
+	text-decoration:none;
 }
 
 p.venue a{
