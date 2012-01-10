@@ -12,10 +12,10 @@
   $(document).ready(function() {
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
-  $(window).resize(function() {
+  $('body').ajaxComplete(function() {
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
-  $('body').ajaxComplete(function() {
+  $(window).resize(function() {
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
   window.city = "#{current_city}";

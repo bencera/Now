@@ -4,11 +4,11 @@ module ApplicationHelper
     opts = {
       :totalPages => total_pages,
       :url        => url,
-      :loaderMsg  => 'Loading more results'
+      :loaderMsg  => 'Loading'
     }
     container && opts[:container] ||= container
     javascript_tag("$('#results').pageless(#{opts.to_json});")
   end
-  
+
 
 end

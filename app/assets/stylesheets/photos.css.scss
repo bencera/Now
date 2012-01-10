@@ -11,7 +11,8 @@
 #img_details{
 	margin-left: 520px;
 	height: 500px;
-/*	overflow: auto;*/
+	overflow: auto;
+	width: 440px;
 /*	position: relative;
 	display: block;*/
 }
@@ -32,4 +33,86 @@ p.answer {
 
 .container_photos{
 	position: relative;
+}
+
+#img h1.venue{
+	margin-bottom: 0px;
+	
+}
+
+#img p.category{
+	color: #afafaf;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+#img p.neighborhood{
+	color: #afafaf;
+	float: right;
+	margin-right: 20px;
+}
+
+
+#img div a#user{
+	margin-left: 15px;
+	width: 210px;
+}
+
+#img div p.comment{
+	margin-left: 15px;
+	width: 300px;
+	font-size: 15px;
+}
+
+#img div #map_left img{
+		-webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+#img div p.time_stamp{
+	width: 300px;
+	color: #afafaf;
+	font-size: 10px;
+}
+
+p.user #user{
+	font-weight: bold;
+	color: #999;
+}
+
+p.user #user:hover{
+	background: none;
+	text-decoration: underline;
+	color: #ff4a6f;
+}
+
+h1.venue a{
+	color: #ff4a6f;
+}
+h1.venue a:hover{
+	background: none;
+	color: #383838;
+}
+
+div.user a#user{
+	font-weight: bold;
+	color: #999;
+}
+
+div.user a#user:hover{
+	background: none;
+	text-decoration: underline;
+	color: #ff4a6f;
+}
+
+div.user a#category{
+	font-weight: bold;
+	color: #999;
+}
+
+div.user a#category:hover{
+	background: none;
+	text-decoration: underline;
+	color: #ff4a6f;
 }

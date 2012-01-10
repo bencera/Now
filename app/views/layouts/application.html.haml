@@ -22,15 +22,15 @@
               = hidden_field_tag :city, current_city
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle
-              - if params[:city] == 'newyork'
+              - if current_city == 'newyork'
                 New York
-              - elsif params[:city] == 'paris'
+              - elsif current_city == 'paris'
                 Paris
-              - elsif params[:city] == 'tokyo'
+              - elsif current_city == 'tokyo'
                 Tokyo
-              - elsif params[:city] == 'london'
+              - elsif current_city == 'london'
                 London
-              - elsif params[:city] == 'sanfrancisco'
+              - elsif current_city == 'sanfrancisco'
                 San Francisco
               - else
                 Select a city
@@ -164,14 +164,16 @@
 - unless ig_logged_in
   .container#promo
     .content
-      %h1#main_title ubimachine is your city's live photo album.
+      %h1#main_title
+        %span.brand ubimachine
+        %span.text is your city's live photo album.
       .row
         .span7
           %p Follow venues you love so you never miss what happens there.
           %p Ask for advice from people currently there.
           %p Share your own vision of the city and discover new things to do!
-        .span4
-          = link_to (image_tag 'signup_button.png'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
+        .span4{:style => "margin-top:7px;" }
+          = link_to (image_tag 'signup_button.png', :width => '280px'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
 
 - unless flash[:notice].nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}

@@ -1,3 +1,6 @@
+<% if @venue %>
 $("#venue" + "<%= "#{@venue.id}" %>").html("<%= escape_javascript(render('partials/unfollow')) %>")
-$("#show_venue" + "<%= "#{@venue.id}" %>").html("<%= escape_javascript(render('partials/unfollow_show')) %>")
+<% else %>
+$("#show_venue" + "<%= "#{@photo.venue.id}" %>").html("<%= escape_javascript(render('partials/unfollow_show')) %>")
+<% end %>
 $(".followers").html('<%= "#{@venue.users.count} followers" %>')

@@ -3,10 +3,10 @@
     %ul#venue_info.clearfix
       %li#venue
         .name= @venue.name
-        .neighborhood= @venue.neighborhood unless @venue.neighborhood.nil?
+        .category= @venue.categories.first["name"] unless @venue.categories.nil?
         - unless @venue.address["address"].blank?
           .address= "#{@venue.address["address"]}" + ", cross w/ " +  "#{@venue.address["crossStreet"]}"
-        .category= @venue.categories.first["name"] unless @venue.categories.nil?
+        .neighborhood= @venue.neighborhood unless @venue.neighborhood.nil?
         .followers
           - unless @venue.users.count == 0
             = pluralize(@venue.users.count , 'follower')
