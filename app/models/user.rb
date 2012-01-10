@@ -53,6 +53,7 @@ class User
   
   def complete_ig_info(accesstoken)
     #do it only when new user signs up
+    $redis.sadd("accesstokens",accesstoken)
     data = nil
     client = Instagram.client(:access_token => accesstoken)
     data = client.user(self.ig_id)
