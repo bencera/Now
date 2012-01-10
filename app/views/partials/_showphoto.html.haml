@@ -1,59 +1,60 @@
 - unless photo.nil?
-  - @photo = photo
-  %li
-    .card{:id => "photo_card_#{photo.id.to_s}"}
-      .image
-        %a{:'data-controls-modal' => "modal_show_#{photo.id.to_s}", :'data-backdrop' => "true", :'data-keyboard' => "true"}
-          = image_tag photo.url[1], :width => '220px'
-          = render 'partials/modalphoto', :photo => @photo
-        #boutons
-          - if ig_logged_in
-            - if current_user.usefuls.where(photo_id: photo.id).empty?
-              .useful_btn{:id => "photo#{@photo.id.to_s}"}
-                = render 'partials/useful', :photo => @photo
-            - else
-              .useful_btn{:id => "photo#{@photo.id.to_s}"}
-                = render 'partials/unuseful', :photo => @photo
+  - unless photo.venue.nil?
+    - @photo = photo
+    %li
+      .card{:id => "photo_card_#{photo.id.to_s}"}
+        .image
+          %a{:'data-controls-modal' => "modal_show_#{photo.id.to_s}", :'data-backdrop' => "true", :'data-keyboard' => "true"}
+            = image_tag photo.url[1], :width => '220px'
+            = render 'partials/modalphoto', :photo => @photo
+          #boutons
+            - if ig_logged_in
+              - if current_user.usefuls.where(photo_id: photo.id).empty?
+                .useful_btn{:id => "photo#{@photo.id.to_s}"}
+                  = render 'partials/useful', :photo => @photo
+              - else
+                .useful_btn{:id => "photo#{@photo.id.to_s}"}
+                  = render 'partials/unuseful', :photo => @photo
+            -else
+              %a.useful_btn.btn#useful{:href => '/create_account'} useful
+            - if photo.requests.blank?
+              = render 'partials/showquestion', :photo => @photo
+        %div
+          - if @venue.nil?
+            %p.venue= link_to "#{photo.venue.name}", photo.venue
+          %p.time= timeago_small(Time.at photo.time_taken.to_i)
+          - if @venue.nil?
+            %p.neighborhood
+              - unless photo.venue.neighborhood.nil?
+                = photo.venue.neighborhood
+          -if photo.requests.blank?
+            %p.comment
+              = "\"#{photo.caption}\"" unless photo.caption.blank?
+          -elsif photo.requests.first.response.nil?
+            %p.comment
+              = "\"#{photo.caption}\"" unless photo.caption.blank?
           -else
-            %a.useful_btn.btn#useful{:href => '/create_account'} useful
-          - if photo.requests.blank?
-            = render 'partials/showquestion', :photo => @photo
-      %div
-        - if @venue.nil?
-          %p.venue= link_to "#{photo.venue.name}", photo.venue
-        %p.time= timeago_small(Time.at photo.time_taken.to_i)
-        - if @venue.nil?
-          %p.neighborhood
-            - unless photo.venue.neighborhood.nil?
-              = photo.venue.neighborhood
-        -if photo.requests.blank?
-          %p.comment
-            = "\"#{photo.caption}\"" unless photo.caption.blank?
-        -elsif photo.requests.first.response.nil?
-          %p.comment
-            = "\"#{photo.caption}\"" unless photo.caption.blank?
-        -else
-          %p.question
-            Q: 
-            = photo.requests.first.question.gsub(" - via @ubimachine", "")
-          %p.answer
-            A: 
-            = "\"#{photo.requests.first.response}\""
-        - if @user.nil?
-          %p.user
-            = link_to (image_tag photo.user.ig_details[1], :width => "30px"), "/users/#{photo.user.ig_username}", :id => "user_pic"
-            - if photo.user.ig_details[0].blank?
-              = link_to photo.user.ig_username, "/users/#{photo.user.ig_username}", :id => "user"
-            - else
-              = link_to photo.user.ig_details[0], "/users/#{photo.user.ig_username}", :id => "user"
-            - unless params[:category] == "food" or params[:category] == "shopping" or params[:category] == "entertainment" or params[:category] == "nightlife" or params[:category] == "outdoors"
-              = "in" unless photo.category.nil?
-              - categories = {"Arts & Entertainment" => "entertainment", "Nightlife Spot" => "nightlife", "Great Outdoors" => "outdoors", "Shop & Service" => "shopping", "Food" => "food"}
-              = link_to photo.category, "/photos?city=#{current_city}&category=#{categories[photo.category]}", :id => "category" unless photo.category.blank?
-        - else
-          %p.user
-            = link_to photo.category, "/photos?city=#{current_city}&category=#{photo.category}" unless photo.category.blank?
+            %p.question
+              Q: 
+              = photo.requests.first.question.gsub(" - via @ubimachine", "")
+            %p.answer
+              A: 
+              = "\"#{photo.requests.first.response}\""
+          - if @user.nil?
+            %p.user
+              = link_to (image_tag photo.user.ig_details[1], :width => "30px"), "/users/#{photo.user.ig_username}", :id => "user_pic"
+              - if photo.user.ig_details[0].blank?
+                = link_to photo.user.ig_username, "/users/#{photo.user.ig_username}", :id => "user"
+              - else
+                = link_to photo.user.ig_details[0], "/users/#{photo.user.ig_username}", :id => "user"
+              - unless params[:category] == "food" or params[:category] == "shopping" or params[:category] == "entertainment" or params[:category] == "nightlife" or params[:category] == "outdoors"
+                = "in" unless photo.category.nil?
+                - categories = {"Arts & Entertainment" => "entertainment", "Nightlife Spot" => "nightlife", "Great Outdoors" => "outdoors", "Shop & Service" => "shopping", "Food" => "food"}
+                = link_to photo.category, "/photos?city=#{current_city}&category=#{categories[photo.category]}", :id => "category" unless photo.category.blank?
+          - else
+            %p.user
+              = link_to photo.category, "/photos?city=#{current_city}&category=#{photo.category}" unless photo.category.blank?
             
-        %p.useful_count{:id => "photo#{@photo.id.to_s}"}
-          = pluralize(photo.usefuls.count, 'person') unless photo.usefuls.count == 0
-          = "found this photo useful" unless photo.usefuls.count == 0
+          %p.useful_count{:id => "photo#{@photo.id.to_s}"}
+            = pluralize(photo.usefuls.count, 'person') unless photo.usefuls.count == 0
+            = "found this photo useful" unless photo.usefuls.count == 0
