@@ -25,7 +25,7 @@ class PhotosController < ApplicationController
           #   photos << Photo.first(conditions: {_id: photo_id})
           # end
           @photos = photo_ids.paginate(:per_page => 20, :page => params[:page])
-          @id == true
+          @id = true
         else
           redirect_to "/photos?category=popular&city=#{current_city}"
         end
