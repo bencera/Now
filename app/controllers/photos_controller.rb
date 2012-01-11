@@ -7,8 +7,7 @@ class PhotosController < ApplicationController
     require 'will_paginate/array'
 
     if Rails.env == "development"
-      photos = ["4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011" ]
-      @photos = photos.paginate(:per_page => 20, :page => params[:page])
+      @photos = Photo.all.limit(500).paginate(:per_page => 20, :page => params[:page])
       if request.xhr?
         render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
       end
@@ -32,32 +31,32 @@ class PhotosController < ApplicationController
         
         
       elsif params[:category] == "food"
-        photos = Photo.where(city: current_city).where(category: "Food").order_by([[:time_taken, :desc]])
+        photos = Photo.where(city: current_city).where(category: "Food").order_by([[:time_taken, :desc]]).limit(500)
         @photos = photos.paginate(:per_page => 20, :page => params[:page])
         
         
       elsif params[:category] == "nightlife"
-        photos = Photo.where(city: current_city).where(category: "Nightlife Spot").order_by([[:time_taken, :desc]])
+        photos = Photo.where(city: current_city).where(category: "Nightlife Spot").order_by([[:time_taken, :desc]]).limit(500)
         @photos = photos.paginate(:per_page => 20, :page => params[:page])
         
         
       elsif params[:category] == "entertainment"
-        photos = Photo.where(city: current_city).where(category: "Arts & Entertainment").order_by([[:time_taken, :desc]])
+        photos = Photo.where(city: current_city).where(category: "Arts & Entertainment").order_by([[:time_taken, :desc]]).limit(500)
         @photos = photos.paginate(:per_page => 20, :page => params[:page])
         
              
       elsif params[:category] == "outdoors"
-        photos = Photo.where(city: current_city).where(category: "Great Outdoors").order_by([[:time_taken, :desc]])
+        photos = Photo.where(city: current_city).where(category: "Great Outdoors").order_by([[:time_taken, :desc]]).limit(500)
         @photos = photos.paginate(:per_page => 20, :page => params[:page])
         
         
       elsif params[:category] == "shopping"
-        photos = Photo.where(city: current_city).where(category: "Shop & Service").order_by([[:time_taken, :desc]])
+        photos = Photo.where(city: current_city).where(category: "Shop & Service").order_by([[:time_taken, :desc]]).limit(500)
         @photos = photos.paginate(:per_page => 20, :page => params[:page])
         
         
       elsif params[:category] == "answers"
-        photos = Photo.where(city: current_city).where(answered: true).order_by([[:time_taken, :desc]])
+        photos = Photo.where(city: current_city).where(answered: true).order_by([[:time_taken, :desc]]).limit(500)
         @photos = photos.paginate(:per_page => 20, :page => params[:page])
         
         
@@ -71,7 +70,7 @@ class PhotosController < ApplicationController
       #   
         
       elsif params[:category] == "popular"
-        photos = Photo.where(city: current_city).where(:useful_count.gt => 0).order_by([[:time_taken, :desc]])
+        photos = Photo.where(city: current_city).where(:useful_count.gt => 0).order_by([[:time_taken, :desc]]).limit(500)
        @photos = photos.paginate(:per_page => 20, :page => params[:page])
         
       end

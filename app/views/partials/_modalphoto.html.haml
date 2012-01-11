@@ -60,8 +60,6 @@
                   = render 'partials/unuseful', :photo => @photo
             -else
               %a.useful_btn.btn#useful{:href => '/create_account'} useful
-            %br
-            %br
             %p.useful_count
               - unless @photo.useful_count == 0
                 = pluralize(@photo.useful_count, "person")

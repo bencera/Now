@@ -59,7 +59,7 @@
     , RESIZE = 'resize' + namespace
     , settings = { container: window
                  , currentPage: 1
-                 , distance: 1000
+                 , distance: 2000
                  , pagination: '.pagination'
                  , params: {}
                  , url: location.href
