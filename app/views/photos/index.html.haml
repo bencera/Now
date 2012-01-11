@@ -1,3 +1,12 @@
+.container_photos
+  %ul.media-grid
+    #results
+      = render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
+      
+      = will_paginate @photos
+      = pageless @photos.total_pages, "/photos?city=#{current_city}&category=#{params[:category]}"
+
+
 :javascript  
   $(document).ready(function() {
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
@@ -9,15 +18,6 @@
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
   window.city = "#{current_city}";
-
-.container_photos
-  %ul.media-grid
-    #results
-      = render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
-      
-      = will_paginate @photos
-      = pageless @photos.total_pages, "/photos?city=#{current_city}&category=#{params[:category]}"
-
 
 %footer
   = render 'partials/footer'
