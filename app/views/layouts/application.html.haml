@@ -7,6 +7,15 @@
   = csrf_meta_tag
 
 %body
+#fb-root
+:javascript
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=218623581557042";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
 .topbar
   .topbar-inner
     .container
@@ -26,8 +35,6 @@
                 New York
               - elsif current_city == 'paris'
                 Paris
-              - elsif current_city == 'tokyo'
-                Tokyo
               - elsif current_city == 'london'
                 London
               - elsif current_city == 'sanfrancisco'
@@ -44,8 +51,6 @@
                 %a{:href=>"/photos?city=paris&category=popular"} Paris
               %li
                 %a{:href=>"/photos?city=london&category=popular"} London
-              %li
-                %a{:href=>"/photos?city=tokyo&category=popular"} Tokyo
         %ul.nav.secondary-nav
           %li
             %a{:href=>"/about"} About
@@ -85,8 +90,6 @@
                 New York
               - elsif current_city == 'paris'
                 Paris
-              - elsif current_city == 'tokyo'
-                Tokyo
               - elsif current_city == 'london'
                 London
               - elsif current_city == 'sanfrancisco'
@@ -103,8 +106,6 @@
                 %a{:href=>"/photos?city=paris&category=popular"} Paris
               %li
                 %a{:href=>"/photos?city=london&category=popular"} London
-              %li
-                %a{:href=>"/photos?city=tokyo&category=popular"} Tokyo
         %ul.nav.secondary-nav
           %li
           %a.btn.pull-right{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Signup

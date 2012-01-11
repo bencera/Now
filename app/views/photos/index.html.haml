@@ -10,14 +10,13 @@
   });
   window.city = "#{current_city}";
 
-
 .container_photos
   %ul.media-grid
     #results
       = render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
-
-= will_paginate @photos
-= pageless @photos.total_pages, "/photos?city=#{current_city}&category=#{params[:category]}"
+      
+      = will_paginate @photos
+      = pageless @photos.total_pages, "/photos?city=#{current_city}&category=#{params[:category]}"
 
 
 %footer

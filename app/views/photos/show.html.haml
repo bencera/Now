@@ -59,6 +59,7 @@
                 = render 'partials/unuseful', :photo => @photo
           -else
             %a.useful_btn.btn#useful{:href => '/create_account'} useful
+          = render 'partials/showquestion', :photo => @photo
           %br
           %br
           %p.useful_count
@@ -69,6 +70,11 @@
             - unless @photo.useful_count == 0
               - @photo.usefuls.each do |useful|
                 = link_to (image_tag User.first(conditions: {_id: useful.user_id}).ig_details[1], :width => '50px'), "/users/#{User.first(conditions: {_id: useful.user_id}).ig_username}"
+          .social_sharing
+            %a{:href => "https://twitter.com/share", :class => "twitter-share-button", :'data-text' => "blabalbal", :'data-via' => "ubimachine"}Tweet
+            :javascript
+              !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+            .fb-like{ :'data-send' => "false", :'data-layout' => "button_count",  :'data-width' => "450", :'data-show-faces' => "false"}
       
 %footer
   = render 'partials/footer'

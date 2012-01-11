@@ -2735,7 +2735,6 @@ ul#venue_info {
 	-webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-	float:left;
 }
 
 input.btn#useful{
@@ -2911,3 +2910,12 @@ span.text{
 		font-size: 34px;
 }
 
+h4#footer a{
+	color: #ff4a6f;
+}
+
+.social_sharing {
+	text-align: left;
+	border-top: 1px solid #EEE;
+	padding-top: 9px;
+}

@@ -15,29 +15,48 @@
     %h1#main_title Ask a question! Say it's useful!
     - unless @photo.nil?
       #img
-        .img= image_tag @photo.url[1], :width => '500px'
+        .img= image_tag @photo.url[1] , :width => '500px', :id => "modal_photo_img_#{@photo.id}"
         %div#img_details
           %h1.venue= link_to @photo.venue.name, @photo.venue
+          %p.category= @photo.venue.categories.first["name"] unless @photo.venue.categories.nil?
+          - if ig_logged_in
+            .follow_form{:id => "show_venue#{@photo.venue.id}"}
+              - unless current_user.venues.distinct(:_id).include?(@photo.venue.id)
+                = render 'partials/follow_show'
+              - else
+                = render 'partials/unfollow_show'
+          - else
+            .follow_form
+              %a.btn.large{:href => "/create_account"} Follow
+          %br
           #map_left
-            = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=420x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false", :id => "map"
+            = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=430x150&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false"  
           %p.neighborhood
             - unless @photo.venue.neighborhood.nil?
               = @photo.venue.neighborhood
-          %p.user
-            taken by
+          .user
+            = link_to (image_tag @photo.user.ig_details[1], :width => "50px"), "/users/#{@photo.user.ig_username}", :id => "user_pic"
             - if @photo.user.ig_details[0].blank?
-              = @photo.user.ig_username
+              = link_to @photo.user.ig_username, "/users/#{@photo.user.ig_username}", :id => "user"
             - else
-              = @photo.user.ig_details[0]
-            = ", "
-            = time_ago_in_words(Time.at @photo.time_taken.to_i)
-            = "ago"
+              = link_to @photo.user.ig_details[0], "/users/#{@photo.user.ig_username}", :id => "user"
+            - unless params[:category] == "food" or params[:category] == "shopping" or params[:category] == "entertainment" or params[:category] == "nightlife" or params[:category] == "outdoors"
+              = "in" unless @photo.category.nil?
+              - categories = {"Arts & Entertainment" => "entertainment", "Nightlife Spot" => "nightlife", "Great Outdoors" => "outdoors", "Shop & Service" => "shopping", "Food" => "food"}
+              = link_to @photo.category, "/photos?city=#{current_city}&category=#{categories[@photo.category]}", :id => "category" unless @photo.category.blank?
+            %p.time_stamp
+              taken
+              = time_ago_in_words(Time.at @photo.time_taken.to_i)
+              = "ago"
           -if @photo.requests.blank?
             %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
-            = render 'partials/showquestion', :photo => @photo
           -elsif @photo.requests.first.response.nil?
             %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
+            %p.question
+              Q: 
+              = @photo.requests.first.question.gsub(" - via @ubimachine", "")
           -else
+            %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
             %p.question
               Q: 
               = @photo.requests.first.question.gsub(" - via @ubimachine", "")
@@ -53,6 +72,7 @@
                 = render 'partials/unuseful', :photo => @photo
           -else
             %a.useful_btn.btn#useful{:href => '/create_account'} useful
+          = render 'partials/showquestion', :photo => @photo
           %br
           %br
           %p.useful_count
