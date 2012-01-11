@@ -72,7 +72,7 @@
               %a{:href => "https://twitter.com/share", :'data-url' => "http://www.ubimachine.com/photos/#{@photo.id}", :class => "twitter-share-button", :'data-text' => "Useful picture", :'data-via' => "ubimachine"}Tweet
               :javascript
                 !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-              .fb-like{ :'data-send' => "false", :'data-layout' => "button_count", :'data-href' => "http://www.ubimachine.com/photos/#{@photo.id}", :'data-width' => "450", :'data-show-faces' => "false"}
+              .fb-like{ :'data-send' => "false", :'data-layout' => "button_count", :'data-href' => "http://www.ubimachine.com/photos/#{@photo.id}", :'data-width' => "300", :'data-show-faces' => "false"}
             :javascript
               $(".modal#modal_show_#{photo.id.to_s}").bind('show', function() {
                 var link = $("#modal_photo_img_#{@photo.id}").attr('data-href');
