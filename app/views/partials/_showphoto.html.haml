@@ -1,4 +1,6 @@
 - unless photo.nil?
+  - if @id == true
+    - photo = Photo.first(conditions: {_id: photo.to_s})
   - unless photo.venue.nil?
     - @photo = photo
     %li

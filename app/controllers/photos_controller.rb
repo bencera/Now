@@ -7,7 +7,8 @@ class PhotosController < ApplicationController
     require 'will_paginate/array'
 
     if Rails.env == "development"
-      @photos = Photo.all.paginate(:per_page => 20, :page => params[:page])
+      photos = ["4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011","4f0644c4b6533918e9000011" ]
+      @photos = photos.paginate(:per_page => 20, :page => params[:page])
       if request.xhr?
         render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
       end
@@ -19,11 +20,12 @@ class PhotosController < ApplicationController
         
         if ig_logged_in
           photo_ids = $redis.zrevrangebyscore("userfeed:#{current_user.id}",Time.now.to_i, 720.hours.ago.to_i)
-          photos = []
-          photo_ids.each do |photo_id|
-            photos << Photo.first(conditions: {_id: photo_id})
-          end
-          @photos = photos.paginate(:per_page => 20, :page => params[:page])
+          # photos = []
+          # photo_ids.each do |photo_id|
+          #   photos << Photo.first(conditions: {_id: photo_id})
+          # end
+          @photos = photo_ids.paginate(:per_page => 20, :page => params[:page])
+          @id == true
         else
           redirect_to "/photos?category=popular&city=#{current_city}"
         end
