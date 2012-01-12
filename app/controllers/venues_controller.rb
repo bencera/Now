@@ -12,7 +12,7 @@ class VenuesController < ApplicationController
       #if Venue already exists in the DB, fetch it.
       v = Venue.first(conditions: { fs_venue_id: params[:id]})
       n_photos = v.photos.count
-      if (n_photos.to_i - (n.to_i-1)*20) < 20 and params[:page] > 1
+      if (n_photos.to_i - (n.to_i-1)*20) < 20 and n.to_i > 1
         access_token = nil
         access_token = current_user.ig_accesstoken unless current_user.nil? #verifier.. comment faire si le mec est pas login..
         max_id = nil
