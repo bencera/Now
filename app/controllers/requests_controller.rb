@@ -3,28 +3,22 @@ class RequestsController < ApplicationController
   def create
     if ig_logged_in
       @photo = Photo.first(conditions: {ig_media_id: params[:ig_media_id]})
-      client = Instagram.client(:access_token => current_user.ig_accesstoken)
       if params[:type] == 'reply'
+        client = Instagram.client(:access_token => current_user.ig_accesstoken)
         client.create_media_comment(params[:ig_media_id], params[:message])
         flash[:notice] = "Your message was sent!"
       elsif params[:type] == 'thanks'
+        client = Instagram.client(:access_token => current_user.ig_accesstoken)
         thanks_messages = ["Thanks!", "Thanks a lot!", "Very helpful, thanks!"]
         client.create_media_comment(params[:ig_media_id], thanks_messages[rand(thanks_messages.size)])
         flash[:notice] = "Your thank you message was sent!"
       else
-        if Photo.first(conditions: {ig_media_id: params[:ig_media_id]}).requests.blank?
-          question = params[:question] #Request.new.find_question(params[:question_id].to_i, params[:venue_name])
-          media = client.media_item(params[:ig_media_id])
-          count = media.comments["count"].to_i
-          photo_user_id = media.user.id
-          client.create_media_comment(params[:ig_media_id], question)
-          client.like_media(params[:ig_media_id])
-          Photo.first(conditions: {ig_media_id: params[:ig_media_id]}).requests.create( :question => question,
-                                                                                        :time_asked => Time.now.to_i,
-                                                                                        :media_comment_count => count, 
-                                                                                        :type => "question",
-                                                                                        :user_ids => [current_user.id, photo_user_id] )
-          Resque.enqueue(Checkanswer, params[:ig_media_id], count, photo_user_id, current_user.ig_accesstoken)
+        if @photo.requests.blank?
+          @photo.requests.create( :question => params[:question],
+                                  :time_asked => Time.now.to_i,
+                                  :type => "question",
+                                  :user_ids => [current_user.id, Photo.first(conditions: {ig_media_id: params[:ig_media_id]}).user.id] )
+          Resque.enqueue(Sendquestion, params[:ig_media_id], current_user.ig_accesstoken, params[:question])
           if current_user.email.nil?
             flash.now[:notice] = "Your question was succesfully asked! Tell us your email in Settings to get notified when it's answered."
           else

@@ -280,7 +280,6 @@ class Venue
               $redis.zadd("userfeed:#{user.id}", p.time_taken, "#{p.id}")
             end
           end
-          #User.exclude(:access_token =>all.each do
         end
       end
     end

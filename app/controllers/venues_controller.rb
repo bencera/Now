@@ -12,7 +12,7 @@ class VenuesController < ApplicationController
       #if Venue already exists in the DB, fetch it.
       v = Venue.first(conditions: { fs_venue_id: params[:id]})
       n_photos = v.photos.count
-      if (n_photos.to_i - (n.to_i-1)*20) < 20
+      if (n_photos.to_i - (n.to_i-1)*20) < 20 and params[:page] > 1
         access_token = nil
         access_token = current_user.ig_accesstoken unless current_user.nil? #verifier.. comment faire si le mec est pas login..
         max_id = nil
@@ -34,14 +34,18 @@ class VenuesController < ApplicationController
       @venue = v
     else
       #if venue doesnt exist, create a new one, fetch it's last IG photos, put them in the DB and then show this venue. 
-      v = Venue.new(:fs_venue_id => params[:id])
-      v.save
-      if v.new? == false
-        photos = v.photos.order_by([[:useful_count, :desc],[:time_taken, :desc]])
-        # @photos = photos[0..19]
-        @photos = photos.paginate(:per_page => 20, :page => params[:page])
-        @venue = v
-      else
+      begin
+        v = Venue.new(:fs_venue_id => params[:id])
+        v.save
+        if v.new? == false
+          photos = v.photos.order_by([[:useful_count, :desc],[:time_taken, :desc]])
+          # @photos = photos[0..19]
+          @photos = photos.paginate(:per_page => 20, :page => params[:page])
+          @venue = v
+        else
+          redirect_to '/nophotos'
+        end
+      rescue
         redirect_to '/nophotos'
       end
     end
