@@ -21,6 +21,8 @@
       %h1#feed= "Answers"
 
     - @photos[0..9].each do |photo|
+      - if @id == true
+        - photo = Photo.first(conditions: {_id: photo.to_s})
       %a#photo_wrapper.clearfix{:href => "photos/#{photo.id.to_s}"}
         = render 'partials/showphoto', :photo => photo
     - unless @photos.count < 10
