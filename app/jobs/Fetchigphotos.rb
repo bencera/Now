@@ -20,5 +20,4 @@ class Fetchigphotos
       end
     end
   end
-  
 end
