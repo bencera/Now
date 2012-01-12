@@ -23,14 +23,14 @@
                   - if current_user.ig_details[1].blank?
                     = current_user.ig_username
                   - else
-                    = image_tag current_user.ig_details[1], :width => '50px'
+                    = link_to (image_tag current_user.ig_details[1], :width => '50px'), "/users/#{current_user.ig_username}"
                   = request.question
                 %h5
                   Answered
                   = time_ago_in_words(Time.at request.time_answered)
                   ago
                 %br
-                = image_tag photo.user.ig_details[1], :width => '50px'
+                = link_to (image_tag photo.user.ig_details[1], :width => '50px'), "/users/#{photo.user.ig_username}"
                 = "\"#{request.response}\""
                 %p.rest_conversation
                   %h6 Continue the conversation!
