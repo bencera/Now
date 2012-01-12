@@ -65,6 +65,7 @@ class User
       self.ig_details = [data.full_name, data.profile_picture, data.bio, data.website, 
                         data.counts.followed_by, data.counts.follows, data.counts.media]
     rescue
+      Resque.enqueue(Completeiginfo, self.id)
     end
   end
   

@@ -17,7 +17,7 @@
     .row
       .span4
         #profile_pic.clearfix
-          = image_tag @user.ig_details[1], :width => '180px'
+          = image_tag @user.ig_details[1], :width => '180px' unless @user.ig_details.nil?
       .span12
         #email_form
           - if @user.errors.any?
