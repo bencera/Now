@@ -3,6 +3,7 @@
 class Photo
   include Mongoid::Document
   field :ig_media_id
+  index :ig_media_id, background: true
   field :url, :type => Array
   field :caption
   field :time_taken, :type => Integer
