@@ -13,8 +13,8 @@
         #profilepic
           = image_tag current_user.ig_details[1], :width => '40px'
       = form_tag requests_url, :method => :post do
-        - unless photo.venue.categories.blank?
-          - category = Venue.new.fs_categories[photo.venue.categories.first["name"]]
+        - unless photo.category.blank?
+          - category = photo.category
         - else
           - category = "none"
         - if category == "Nightlife Spot"
