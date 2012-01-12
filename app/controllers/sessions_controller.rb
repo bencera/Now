@@ -20,8 +20,8 @@ class SessionsController < ApplicationController
         u.ig_accesstoken = access_token["access_token"]
         u.ig_username = user_data.username
         u.ig_id = user_data.id
-        u.complete_ig_info(access_token["access_token"])
         u.save
+        Resque.enqueue(Completeiginfo, u.id)
         Resque.enqueue(Suggestfollow, u)
         session[:user_id] = u.id
         redirect_to '/signup'

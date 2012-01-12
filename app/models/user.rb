@@ -54,15 +54,18 @@ class User
   def complete_ig_info(accesstoken)
     #do it only when new user signs up
     $redis.sadd("accesstokens",accesstoken)
-    data = nil
-    client = Instagram.client(:access_token => accesstoken)
-    data = client.user(self.ig_id)
-    if data.nil?
-      return true
+    begin
+      data = nil
+      client = Instagram.client(:access_token => accesstoken)
+      data = client.user(self.ig_id)
+      if data.nil?
+        return true
+      end
+      self.ig_username = data.username
+      self.ig_details = [data.full_name, data.profile_picture, data.bio, data.website, 
+                        data.counts.followed_by, data.counts.follows, data.counts.media]
+    rescue
     end
-    self.ig_username = data.username
-    self.ig_details = [data.full_name, data.profile_picture, data.bio, data.website, 
-                      data.counts.followed_by, data.counts.follows, data.counts.media]
   end
   
   protected
