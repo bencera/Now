@@ -14,4 +14,7 @@
 .feedback_like
   %h4#footer
     = link_to "Feedback", "mailto:ben@ubimachine.com?subject=Feedback on ubimachine"
-    .fb-like{ :'data-href' => "http://www.facebook.com/ubimachine",  :'data-send' => "false",  :'data-layout' => "button_count",  :'data-width' => "450",  :'data-show-faces' => "true"}
+    .fb-like{ :'data-href' => "http://www.facebook.com/ubimachine",  :'data-send' => "false",  :'data-layout' => "button_count",  :'data-width' => "80",  :'data-show-faces' => "true"}
+    %a{:href => "https://twitter.com/ubimachine", :class => "twitter-follow-button", :'data-show-count' => "false"}Follow @ubimachine
+    :javascript
+      !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
