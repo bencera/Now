@@ -27,7 +27,7 @@ class SessionsController < ApplicationController
         redirect_to '/signup'
       elsif User.first(conditions: {ig_id: user_data.id}).ig_accesstoken.nil?
         u = User.first(conditions: {ig_id: user_data.id})
-        u.update_attributes(:ig_accesstoken => access_token["access_token"])
+        u.ig_accesstoken = access_token["access_token"]
         u.complete_ig_info(access_token["access_token"])
         u.save
         Resque.enqueue(Suggestfollow, u)
