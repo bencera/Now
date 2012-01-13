@@ -36,7 +36,7 @@
             = submit_tag "Ask!", :class => 'btn large primary', :id => "ask_button_#{photo.id}", :'data-loading-text' => "loading"
       :javascript
         $("#modal_photo_#{photo.id} #select_question").change(function () {
-            var question = "Hi @" + "#{photo.user.ig_username}" + ", " +  $("#modal_photo_#{photo.id} #select_question").val() + " " + "#{photo.venue.name}" + "? Thanks! - via @ubimachine";
+            var question = "@" + "#{photo.user.ig_username}" + " " +  $("#modal_photo_#{photo.id} #select_question").val() + " " + "#{photo.venue.name}" + "? Thanks! - via @ubimachine";
             $("#modal_photo_#{photo.id} #input_question").val(question);
             $("#modal_photo_#{photo.id} #select_question").hide();
             $("#modal_photo_#{photo.id} #input_question").fadeIn();
