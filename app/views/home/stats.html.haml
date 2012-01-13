@@ -1,26 +1,24 @@
 Stats
-%p
-All Photos 
+%p All Photos 
 = Photo.all.count
-%p
-Photos with venues 
-= Photo.excludes(status: "novenue").count
-%p
-Photos without venues 
-= Photo.where(status: "novenue").count
-%p
-Photos fs_guessed  by first venue in 4sq
-= Photo.where(status: "fs_guess").count
-%p
-Photos guessed by venue - comment
-= Photo.where(status: "guessed").count
-%p
-All Venues
+%p Photos in the last 24 hours 
+= Photo.where(:time_taken.gt => 24.hours.ago.to_i).count
+%p Photos in Paris
+= Photo.where(city: "paris").count
+%p Photos in New York
+= Photo.where(city: "newyork").count
+%p Photos in San Francisco
+= Photo.where(city: "sanfrancisco").count
+%p Photos in London
+= Photo.where(city: "london").count
+%p All Venues
 = Venue.all.count
 
-%p
-Percentage of Photos with Venues today
-= Photo.where(:time_taken.gt => 24.hours.ago.to_i).excludes(status: "novenue").count.to_f / Photo.where(:time_taken.gt => 24.hours.ago.to_i).count
-%p
-Photos per hour
-= Photo.where(:time_taken.gt => 1.hours.ago.to_i).count
+%p Users
+= User.excludes(:ig_accesstoken => nil).count
+%p Usefuls (not me)
+= Useful.count - Useful.where(:user_id => "1200123").count
+%p Questions asked
+= Request.count
+%p Rqtio questions repondues
+= Request.excludes(:time_answered => nil).count.to_f / Request.count
