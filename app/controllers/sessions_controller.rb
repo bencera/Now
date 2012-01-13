@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
       url = "http://www.ubimachine.com/auth/instagram/callback" #root_url + 'auth/instagram/callback'
     end
     
-    if params[:error_description] == "The user denied your request"
+    if params[:error_reason] == "user_denied" and params[:error] == "access_denied"
       redirect_to root_url, :notice => "If you want to use all the functionalities of the site, please authorize the app"
     else
       access_token = Instagram.get_access_token(params[:code], :redirect_uri => url)
@@ -28,7 +28,7 @@ class SessionsController < ApplicationController
       elsif User.first(conditions: {ig_id: user_data.id}).ig_accesstoken.nil?
         u = User.first(conditions: {ig_id: user_data.id})
         u.update_attributes(:ig_accesstoken => access_token["access_token"])
-        u.complete_ig_info
+        u.complete_ig_info(access_token["access_token"])
         u.save
         Resque.enqueue(Suggestfollow, u)
         session[:user_id] = u.id
