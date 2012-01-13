@@ -14,16 +14,13 @@ class RequestsController < ApplicationController
         flash[:notice] = "Your thank you message was sent!"
       else
         if @photo.requests.blank?
-          @photo.requests.create( :question => params[:question],
-                                  :time_asked => Time.now.to_i,
-                                  :type => "question",
-                                  :user_ids => [current_user.id, Photo.first(conditions: {ig_media_id: params[:ig_media_id]}).user.id] )
+          @question = params[:question]
           Resque.enqueue(Sendquestion, params[:ig_media_id], current_user.ig_accesstoken, params[:question])
-          if current_user.email.nil?
-            flash.now[:notice] = "Your question was succesfully asked! Tell us your email in Settings to get notified when it's answered."
-          else
-            flash.now[:notice] = "Your question was succesfully asked! We will send you an email when it's answered."
-          end
+          # if current_user.email.nil?
+          #   flash.now[:notice] = "Your question was succesfully asked! Tell us your email in Settings to get notified when it's answered."
+          # else
+          #   flash.now[:notice] = "Your question was succesfully asked! We will send you an email when it's answered."
+          # end
         else
           flash.now[:notice] = "Sorry, somebody already asked a question on this photo.. Try another one!"
         end
