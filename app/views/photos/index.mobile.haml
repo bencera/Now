@@ -1,24 +1,25 @@
 .container
   .content_below
+    - cities = {"newyork" => "New York", "paris" => "Paris", "tokyo" => "Tokyo", "sanfrancisco" => "San Francisco", "london" => "London"}
     - if params[:category].nil?
       - if ig_logged_in
-        %h1#feed= "My feed"    
+        %h3#feed= "My feed"    
       - else
-        %h1#feed= "Popular"
+        %h3#feed= "Popular in #{cities[current_city]}"
     -elsif params[:category] == "food"
-      %h1#feed= "Restaurants"
+      %h3#feed= "Restaurants in #{cities[current_city]}"
     -elsif params[:category] == "nightlife"
-      %h1#feed= "Nightlife"
+      %h3#feed= "Nightlife in #{cities[current_city]}"
     -elsif params[:category] == "entertainment"
-      %h1#feed= "Arts & Entertainment"
+      %h3#feed= "Arts & Entertainment in #{cities[current_city]}"
     -elsif params[:category] == "outdoors"
-      %h1#feed= "Outdoors"
+      %h3#feed= "Outdoors in #{cities[current_city]}"
     -elsif params[:category] == "shopping"
-      %h1#feed= "Shopping"  
+      %h3#feed= "Shopping in #{cities[current_city]}"  
     -elsif params[:category] == "popular"
-      %h1#feed= "Popular"  
+      %h3#feed= "Popular in #{cities[current_city]}"  
     -elsif params[:category] == "answers"
-      %h1#feed= "Answers"
+      %h3#feed= "Answers in #{cities[current_city]}"
 
     - @photos[0..9].each do |photo|
       - if @id == true
