@@ -17,19 +17,18 @@ class SessionsController < ApplicationController
       #creer lutilisateur
       if User.first(conditions: {ig_id: user_data.id}).nil?
         u = User.new
-        u.ig_accesstoken = access_token["access_token"]
         u.ig_username = user_data.username
         u.ig_id = user_data.id
-        u.complete_ig_info(access_token["access_token"])
+        u.ig_accesstoken = access_token["access_token"]
         u.save
+        u.complete_ig_info(access_token["access_token"])
         Resque.enqueue(Suggestfollow, u)
         session[:user_id] = u.id
         redirect_to '/signup'
       elsif User.first(conditions: {ig_id: user_data.id}).ig_accesstoken.nil?
         u = User.first(conditions: {ig_id: user_data.id})
-        u.ig_accesstoken = access_token["access_token"]
         u.complete_ig_info(access_token["access_token"])
-        u.save
+        u.update_attribute(:ig_accesstoken, access_token["access_token"])
         Resque.enqueue(Suggestfollow, u)
         session[:user_id] = u.id
         redirect_to '/signup'

@@ -61,9 +61,8 @@ class User
       if data.nil?
         return true
       end
-      self.ig_username = data.username
-      self.ig_details = [data.full_name, data.profile_picture, data.bio, data.website, 
-                        data.counts.followed_by, data.counts.follows, data.counts.media]
+      self.update_attribute(:ig_details, [data.full_name, data.profile_picture, data.bio, data.website, 
+                        data.counts.followed_by, data.counts.follows, data.counts.media])
     rescue
       Resque.enqueue(Completeiginfo, self.ig_id)
     end
