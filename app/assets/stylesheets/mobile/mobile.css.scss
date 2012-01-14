@@ -1313,8 +1313,8 @@ table .headerSortUp.purple, table .headerSortDown.purple {
   overflow: visible;
 }
 .topbar a {
-  color: #bfbfbf;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  color: #383838;
+  text-shadow: 0 1px 0 #f3f3f3;
 }
 .topbar h3 a:hover, .topbar .brand:hover, .topbar ul .active > a {
   color: #ffffff;
@@ -1326,10 +1326,11 @@ table .headerSortUp.purple, table .headerSortDown.purple {
 .topbar h3 a, .topbar .brand {
 	text-align: center;
   padding: 10px 15px 8px 25px;
-  color: #ffffff;
+  color: #ff4a6f;
   font-size: 38px;
   font-weight: 200;
   line-height: 1;
+	font-weight: bold;
 }
 .topbar p {
   margin: 0;
@@ -1400,14 +1401,14 @@ table .headerSortUp.purple, table .headerSortDown.purple {
   background-color: #222;
   background-color: #222222;
   background-repeat: repeat-x;
-  background-image: -khtml-gradient(linear, left top, left bottom, from(#996633), to(#572508));
-  background-image: -moz-linear-gradient(top, #996633, #572508);
-  background-image: -ms-linear-gradient(top, #996633, #572508);
-  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #572508), color-stop(100%, #572508));
-  background-image: -webkit-linear-gradient(top, #996633, #572508);
-  background-image: -o-linear-gradient(top, #996633, #572508);
-  background-image: linear-gradient(top, #996633, #572508);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#996633', endColorstr='#572508', GradientType=0);
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#f1f0ee), to(#dddcd9));
+  background-image: -moz-linear-gradient(top, #f1f0ee, #dddcd9);
+  background-image: -ms-linear-gradient(top, #f1f0ee, #dddcd9);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #dddcd9), color-stop(100%, #dddcd9));
+  background-image: -webkit-linear-gradient(top, #f1f0ee, #dddcd9);
+  background-image: -o-linear-gradient(top, #f1f0ee, #dddcd9);
+  background-image: linear-gradient(top, #f1f0ee, #dddcd9);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f1f0ee', endColorstr='#dddcd9', GradientType=0);
   -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 -1px 0 rgba(0, 0, 0, 0.1);
@@ -2479,7 +2480,7 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 }
 
 .media-grid li div p.venue {
-	color: #383838;
+	color: #ff4a6f;
 	float: left;
 	font-size: 13px;
 	font-weight: bold;
@@ -2826,6 +2827,8 @@ p.crop img{
 		margin-left: 132px;
 		margin-bottom: 0;
 		line-height: 15px;
+		color: #ff4a6f ;
+		width: 225px;
 	}
 	p.time{
 	float: right;

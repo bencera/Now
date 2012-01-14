@@ -36,6 +36,8 @@
             %p.comment
               = "\"#{photo.caption}\"" unless photo.caption.blank?
           -else
+            %p.comment
+              = "\"#{photo.caption}\"" unless photo.caption.blank?
             %p.question
               Q: 
               = photo.requests.first.question.gsub(" - via @ubimachine", "")
