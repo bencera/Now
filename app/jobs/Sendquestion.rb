@@ -9,9 +9,10 @@ class Sendquestion
       client.like_media(ig_media_id)
       client.create_media_comment(ig_media_id, question)
       Photo.first(conditions: {ig_media_id: ig_media_id}).requests.create( :question => question,
+                                  :media_comment_count => count,
                                   :time_asked => Time.now.to_i,
                                   :type => "question",
-                                  :user_ids => [User.first(conditions: {ig_accesstoken: accesstoken}).id, Photo.first(conditions: {ig_media_id: ig_media_id}).user.id] )
+                                  :user_ids => [User.first(conditions: {ig_accesstoken: accesstoken}).id, photo_user_id] )
       Resque.enqueue(Checkanswer, ig_media_id, count, photo_user_id, accesstoken)
     rescue
       Resque.enqueue_in(1.minutes, Sendquestion, ig_media_id, accesstoken, question)
