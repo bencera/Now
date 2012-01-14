@@ -20,8 +20,8 @@
   .container#promo
     .content{:style => "margin-bottom: 0px; height: 130px"}
       %h2
-        %span.brand ubimachine
-        %span.text is your city's interactive live photo album.
+        %span.brand{:style => "font-size: 20px;"} ubimachine
+        %span.text{:style => "font-size: 20px;"} is your city's interactive live photo album.
       .signup{:style => "text-align: center; margin-top: 5px;"}
         = link_to (image_tag 'signup_button.png', :width => '280px'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
 
