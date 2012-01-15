@@ -253,7 +253,6 @@
     $('body').delegate('[data-controls-modal]', 'click', function (e) {
       e.preventDefault()
       var $this = $(this).data('show', true)
-      $("#input_question").hide();
       $('#' + $this.attr('data-controls-modal')).modal( $this.data() )
     })
   })

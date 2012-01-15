@@ -41,22 +41,6 @@
 
       = will_paginate @photos
       = pageless @photos.total_pages, "/users/#{@user.ig_username}"
-/= will_paginate(@articles)
-/ - unless @photos.count < 21
-/   .more#main_title
-/     = form_tag photos_url, :method => :get do
-/       - if params[:page].nil?
-/         = hidden_field_tag :page, 2
-/       - else
-/         = hidden_field_tag :page, (params[:page].to_i + 1)
-/       = hidden_field_tag :category, params[:category]
-/       = hidden_field_tag :city, params[:city]
-/       = submit_tag "more", :class => 'btn'
-/= pageless(@photos.total_pages, photos_path, "#results")
-
-/ = form_tag photos_path, :method => :get, :remote => true do
-/   = hidden_field_tag :last, @photos.last.time_taken
-/   = submit_tag "more", :class => 'btn', :id => 'useful'
 
 :javascript  
   $(document).ready(function() {
