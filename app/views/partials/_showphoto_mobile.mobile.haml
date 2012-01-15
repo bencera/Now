@@ -2,7 +2,7 @@
   - if @id == true
     - photo = Photo.first(conditions: {_id: photo.to_s})
   - unless photo.venue.nil?
-    %a#photo_wrapper.clearfix{:href => "photos/#{photo.id.to_s}"}  
+    %a#photo_wrapper.clearfix{:href => "../photos/#{photo.id.to_s}"}  
       %p.crop
         = image_tag photo.url[1], :width => '200px'
       %div#photo_feed
