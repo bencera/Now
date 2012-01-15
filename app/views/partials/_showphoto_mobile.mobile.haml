@@ -1,21 +1,24 @@
-%a#photo_wrapper.clearfix{:href => "photos/#{photo.id.to_s}"}
-  - unless photo.nil?
-    %p.crop
-      = image_tag photo.url[1], :width => '200px'
-    %div#photo_feed
-      %p.time= time_ago_in_words(Time.at photo.time_taken.to_i).to_s.gsub('seconds', 's').gsub('second', 's').gsub('minutes', 'm').gsub('minute', 'm').gsub('hours', 'h').gsub('hour', 'h').gsub('days', 'd').gsub('day', 'd').gsub('weeks', 'w').gsub('week', 'w').gsub('months', 'mo').gsub('month', 'mo').gsub('years', 'y').gsub('year', 'y').gsub('about', '').gsub(' ', '')
-      %p.venue= photo.venue.name
-      %p.neighborhood
-        - unless photo.venue.neighborhood.nil?
-          = photo.venue.neighborhood
-      -if photo.requests.blank?
-        %p.comment= "\"#{truncate(photo.caption, :length => 80)}\"" unless photo.caption.blank?
-      -elsif photo.requests.first.response.nil?
-        %p.comment= "\"#{truncate(photo.caption, :length => 80)}\"" unless photo.caption.blank?
-      -else
-        %p.question
-          Q: 
-          = photo.requests.first.question.gsub(" - via @ubimachine", "")
-        %p.answer
-          A: 
-          = "\"#{truncate(photo.requests.first.response, :length => 60)}\""
+- unless photo.nil?
+  - if @id == true
+    - photo = Photo.first(conditions: {_id: photo.to_s})
+  - unless photo.venue.nil?
+    %a#photo_wrapper.clearfix{:href => "photos/#{photo.id.to_s}"}  
+      %p.crop
+        = image_tag photo.url[1], :width => '200px'
+      %div#photo_feed
+        %p.time= time_ago_in_words(Time.at photo.time_taken.to_i).to_s.gsub('seconds', 's').gsub('second', 's').gsub('minutes', 'm').gsub('minute', 'm').gsub('hours', 'h').gsub('hour', 'h').gsub('days', 'd').gsub('day', 'd').gsub('weeks', 'w').gsub('week', 'w').gsub('months', 'mo').gsub('month', 'mo').gsub('years', 'y').gsub('year', 'y').gsub('about', '').gsub(' ', '')
+        %p.venue= photo.venue.name
+        %p.neighborhood
+          - unless photo.venue.neighborhood.nil?
+            = photo.venue.neighborhood
+        -if photo.requests.blank?
+          %p.comment= "\"#{truncate(photo.caption, :length => 80)}\"" unless photo.caption.blank?
+        -elsif photo.requests.first.response.nil?
+          %p.comment= "\"#{truncate(photo.caption, :length => 80)}\"" unless photo.caption.blank?
+        -else
+          %p.question
+            Q: 
+            = photo.requests.first.question.gsub(" - via @ubimachine", "")
+          %p.answer
+            A: 
+            = "\"#{truncate(photo.requests.first.response, :length => 60)}\""
