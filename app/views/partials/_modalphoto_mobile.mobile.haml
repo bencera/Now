@@ -1,0 +1,11 @@
+.modal.hide{:id => "modal_show_#{photo.id.to_s}"}
+  - unless photo.nil?
+    - unless photo.venue.nil?
+      .img= image_tag "#" , :width => '450px', :'data-href' => photo.url[1], :id => "modal_photo_img_#{photo.id}", :class => "img_popup_iphone"
+      %div#img_details
+        .venue= link_to ""
+      :javascript
+        $(".modal#modal_show_#{photo.id.to_s}").bind('show', function() {
+          var link = $("#modal_photo_img_#{photo.id}").attr('data-href');
+          $("#modal_photo_img_#{photo.id}").attr('src', link);
+          })

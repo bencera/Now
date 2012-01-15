@@ -2822,14 +2822,17 @@ p.crop img{
 	}
 	
 #photo_feed{
-	p.venue{
+	a.venue{
 		font-weight: bold;
 		text-align: left;
-		margin-left: 132px;
+		margin-left: 5px;
 		margin-bottom: 0;
 		line-height: 15px;
-		color: #ff4a6f ;
+		color: #ff4a6f;
 		width: 120px;
+	}
+	p.venue{
+		margin-bottom: 0;
 	}
 	p.time{
 	float: right;
@@ -2958,4 +2961,10 @@ ul.requests li {
 	padding: 10px 0 10px 0;
 	margin-top: 20px;
 	
+}
+
+.img_popup_iphone{
+	position: absolute;
+	top: 25px;
+	left: 50px;
 }

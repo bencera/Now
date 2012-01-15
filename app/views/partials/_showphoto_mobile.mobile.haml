@@ -2,15 +2,19 @@
   - if @id == true
     - photo = Photo.first(conditions: {_id: photo.to_s})
   - unless photo.venue.nil?
-    %a#photo_wrapper.clearfix{:href => "../photos/#{photo.id.to_s}"}  
-      %p.crop
-        = image_tag photo.url[1], :width => '200px'
-      %div#photo_feed
+    #photo_wrapper.clearfix
+      %a.photo_modal{:'data-controls-modal' => "modal_show_#{photo.id.to_s}", :'data-backdrop' => "true"}
+        %p.crop
+          = image_tag photo.url[1], :width => '200px'
+          = render 'partials/modalphoto_mobile', :photo => photo
+      %div#photo_feed{:href => "/venues/#{photo.venue.id}"}
         %p.time= time_ago_in_words(Time.at photo.time_taken.to_i).to_s.gsub('seconds', 's').gsub('second', 's').gsub('minutes', 'm').gsub('minute', 'm').gsub('hours', 'h').gsub('hour', 'h').gsub('days', 'd').gsub('day', 'd').gsub('weeks', 'w').gsub('week', 'w').gsub('months', 'mo').gsub('month', 'mo').gsub('years', 'y').gsub('year', 'y').gsub('about', '').gsub(' ', '')
-        %p.venue= photo.venue.name
-        %p.neighborhood
-          - unless photo.venue.neighborhood.nil?
-            = photo.venue.neighborhood
+        - if @venue.nil?
+          %p.venue
+            = link_to photo.venue.name, "venues/#{photo.venue.id}", :class => "venue"
+          %p.neighborhood
+            - unless photo.venue.neighborhood.nil?
+              = photo.venue.neighborhood
         -if photo.requests.blank?
           %p.comment= "\"#{truncate(photo.caption, :length => 80)}\"" unless photo.caption.blank?
         -elsif photo.requests.first.response.nil?

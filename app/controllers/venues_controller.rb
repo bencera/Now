@@ -28,10 +28,14 @@ class VenuesController < ApplicationController
         end
       end
       @photos = v.photos.order_by([[:useful_count, :desc],[:time_taken, :desc]]).paginate(:per_page => 20, :page => params[:page])
-      if request.xhr?
-        render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
-      end
       @venue = v
+      if request.xhr?
+        if is_mobile_device?
+          render :partial => 'partials/showphoto_mobile', :collection => @photos, :as => :photo
+        else
+          render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
+        end
+      end
     else
       #if venue doesnt exist, create a new one, fetch it's last IG photos, put them in the DB and then show this venue. 
       begin
