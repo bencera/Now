@@ -27,18 +27,9 @@
   .content_below
     - if @photos == []
       Sorry no more photos...
-    - @photos.each do |photo|
-      %a#photo_wrapper.clearfix{:href => "/photos/#{photo.id.to_s}"}
-        = render 'partials/showphoto', :photo => photo
-        
-    - unless @photos.count < 20
-      .more
-        = form_tag @venue, :method => :get do
-          - if params[:page].nil?
-            = hidden_field_tag :page, 2
-          - else
-            = hidden_field_tag :page, (params[:page].to_i + 1)
-          = submit_tag "more", :class => 'btn'
+    #results
+      = render :partial => 'partials/showphoto_mobile', :collection => @photos, :as => :photo
+      = pageless @photos.total_pages, "/photos?city=#{current_city}&category=#{params[:category]}"
 
 %footer
   = render 'partials/footer'
