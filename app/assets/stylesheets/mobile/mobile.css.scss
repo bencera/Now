@@ -2675,7 +2675,7 @@ ul#venue_info {
 		
     .container > .content_below {
       background-color: #fff;
-      padding: 5px 20px 20px 20px;
+      padding: 5px 10px 10px 10px;
 /*      margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
       -webkit-border-radius: 6px 6px 6px 6px;
          -moz-border-radius: 6px 6px 6px 6px;
@@ -2795,6 +2795,7 @@ a#photo_wrapper{
 	border-bottom: 1px solid #e9e9e9;
 	text-decoration: none;
 	color: black;
+	width: 280px;
 	
 }
 
@@ -2828,7 +2829,7 @@ p.crop img{
 		margin-bottom: 0;
 		line-height: 15px;
 		color: #ff4a6f ;
-		width: 225px;
+		width: 120px;
 	}
 	p.time{
 	float: right;
@@ -2841,25 +2842,25 @@ p.crop img{
 		font-size: 10px;
 		color: grey;
 		text-align: left;
-		margin-left: 132px;
+		margin-left: 130px;
 		margin-bottom: 0;
 		line-height: 12px;
 	}
 	p.comment{
 		text-align: left;
-		margin-left: 132px;
+		margin-left: 130px;
 		margin-bottom: 0;
 		line-height: 15px;	
 	}
 	p.question{
 		text-align: left;
-		margin-left: 132px;
+		margin-left: 130px;
 		margin-bottom: 0;
 		line-height: 15px;
 		}
 	p.answer{
 		text-align: left;
-		margin-left: 132px;
+		margin-left: 130px;
 		margin-bottom: 0;
 		line-height: 15px;
 	}
