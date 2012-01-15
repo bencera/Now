@@ -1,23 +1,26 @@
 .container
   .content_below
-    %h1 Welcome to ubimachine!
-    %h4 Ubiquity finally available to you.
-
-.container
-  .content_below
-    %h6 Explore your city through Instagram pictures
-    %h6 Follow your favorite venues
-    %h6 Ask what's happening there
-    
-    
-.container
-  .content_below
-    %h3 Enter your email to get notified when someone answers a question you asked:
-    .bouton
-      = form_tag '/signup' do
-        = text_field_tag :email,  nil, :placeholder => "Your email..."
-        = submit_tag "submit", :class => 'btn'
-      = link_to "skip", '/follows'
+    %h1#main_title Create your ubimachine account
+    #profile_pic.clearfix{:style => "float:left;"}
+      = image_tag @user.ig_details[1], :width => '60px' unless @user.ig_details.nil?
+    = text_field_tag :username, @user.ig_username, :disabled => :true, :class => 'large', :id => "lInput", :style => "margin-top: 30px;"
+    %br
+    %br
+    #email_form
+      - if @user.errors.any?
+        %ul.unstyled
+          - for message in @user.errors.full_messages
+            %li
+              = message
+      = form_tag '/signup', :id => "new_user" do
+        = text_field_tag :email,  nil, :placeholder => "Email", :class => 'xlarge', :id => "xlInput"
+        %br
+        %br
+        %br
+        = password_field_tag :password,  nil, :placeholder => "Password", :class => 'xlarge', :id => "xlInput"
+        %br
+        %br
+        = submit_tag "Create account", :class => 'btn large signup', :style => "width: 280px;"
 
 %footer
   = render 'partials/footer'

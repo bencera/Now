@@ -59,7 +59,7 @@
                 = render 'partials/unuseful', :photo => @photo
           -else
             %a.useful_btn.btn#useful{:href => '/create_account'} useful
-          - if photo.requests.blank?
+          - if @photo.requests.blank?
             = render 'partials/showquestion', :photo => @photo
           %br
           %br
