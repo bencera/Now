@@ -77,5 +77,72 @@
               !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
             .fb-like{ :'data-send' => "false", :'data-layout' => "button_count",  :'data-width' => "300", :'data-show-faces' => "false"}
       
+.container
+  .content_below
+    %ul#venue_info.clearfix
+      %li#venue
+        .name= @venue.name
+        .category= @venue.categories.first["name"] unless @venue.categories.nil?
+        - unless @venue.address["address"].blank?
+          .address= "#{@venue.address["address"]}" + ", cross w/ " +  "#{@venue.address["crossStreet"]}"
+        .neighborhood= @venue.neighborhood unless @venue.neighborhood.nil?
+        .followers
+          - unless @venue.users.count == 0
+            = pluralize(@venue.users.count , 'follower')
+        %p#photos_total
+          = link_to "#{@venue.photos.count} photos", "/venues/#{@venue.id}"   
+        - usefuls = @venue.photos.where(:useful_count.gt => 0).count
+        - unless usefuls == 0
+          %p#venue_usefuls
+            = link_to "#{usefuls} useful photos", "/venues/#{@venue.id}/usefuls"
+        - answers = @venue.photos.where(:answers => true).count
+        - unless answers == 0
+          %p#venue_answers
+            = link_to "#{answers} answers", "/venues/#{@venue.id}/answers"
+        - if ig_logged_in
+          .follow_form{:id => "venue#{@venue.id}"}
+            - unless current_user.venues.distinct(:_id).include?(@venue.id)
+              = render 'partials/follow'
+            - else
+              = render 'partials/unfollow'
+        - else
+          %a.btn.large{:href => "/create_account"} Follow
+            
+
+      %li#map_left
+        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=500x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
+      %li#map_right
+        - lls = {"paris" => "48.86,2.34", "newyork" => "40.763,-73.98", "tokyo" => "35.69,139.73", "london" => "51.51,-0.13", "sanfrancisco" => "37.76,-122.45"}
+        - zooms = {"paris" => "10", "newyork" => "11", "tokyo" => "11", "london" => "11", "sanfrancisco" => "11"}
+        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{lls[@venue.city]}&zoom=#{zooms[@venue.city]}&size=155x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
+              
+.container_photos
+  %ul.media-grid{:last => "#{@photos.last.time_taken}"}
+    #results
+      = render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
+
+      = will_paginate @photos
+      = pageless @photos.total_pages, "/venues/#{@venue.id}"
+/ - unless @photos.count < 20
+/   .more#main_title
+/     = form_tag @venue, :method => :get do
+/       - if params[:page].nil?
+/         = hidden_field_tag :page, 2
+/       - else
+/         = hidden_field_tag :page, (params[:page].to_i + 1)
+/       = submit_tag "more", :class => 'btn'
+
+:javascript  
+  $(document).ready(function() {
+    $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
+  });
+  $(window).resize(function() {
+    $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
+  });
+  $('body').ajaxComplete(function() {
+    $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
+  });
+
+
 %footer
   = render 'partials/footer'

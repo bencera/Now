@@ -5,6 +5,7 @@ class Checkanswer
       client = Instagram.client(:access_token => access_token)
       comments = client.media_comments(ig_media_id)
       success = false
+      responses = []
       if comments.count.to_i > media_comment_count.to_i + 1
         n = 0
         comments.each do |comment|
