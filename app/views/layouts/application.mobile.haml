@@ -12,7 +12,7 @@
 .topbar
   .topbar-inner
     .container
-      %a.menu_icon{:href=>"/photos"}
+      %a.menu_icon{:href=>"/menu"}
         = image_tag 'menu.png', :width => '20px'
       %a.brand{:href=>"/photos"} ubimachine
       %a.search_icon{:href=>"/search"}
@@ -20,11 +20,12 @@
 
 - unless ig_logged_in
   .container#promo
-    .content{:style => "margin-bottom: 0px; height: 90px"}
+    .content{:style => " height: 100px"}
       %h2
-        %span.brand{:style => "font-size: 20px;"} ubimachine
-        %span.text{:style => "font-size: 20px;"} is your city's interactive live photo album
-      %p{:style => "text-align: center;"} this mobile version is in construction. Visit the website for a better experience!
+        %span.brand{:style => "font-size: 16px;"} ubimachine
+        %span.text{:style => "font-size: 16px;"} is your city's interactive live visual to-do list.
+      %p{:style => "text-align: center; font-size: 11px"} this mobile version is in construction. Visit the website for a better experience!
+
       / .signup{:style => "text-align: center; margin-top: 5px;"}
       /   = link_to (image_tag 'signup_button.png', :width => '280px'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
 

@@ -1,31 +1,38 @@
 class User
   include Mongoid::Document
-  field :email #impt
-  field :ig_username #impt
-  field :ig_accesstoken #impt
-  field :ig_id #impt
+  field :email
+  field :ig_username
+  field :ig_accesstoken
+  field :ig_id
   field :ig_details, :type => Array
   field :password_hash
   field :password_salt
   field :auth_token
+  field :fb_id
+  field :fb_username
+  field :fb_accesstoken
+  field :username
+  field :fb_fullname
+  field :fb_about
+  field :fb_bio
+  field :fb_website
+  field :profile_picture
+  field :gender
   key :ig_id
   has_many :photos
   has_and_belongs_to_many :requests
   has_and_belongs_to_many :venues
   has_many :usefuls
   
-  attr_accessible :username, :email, :password
+  attr_accessible :email, :password
   attr_accessor :password
   
-  
-  #if not a user of the website, no accesstoken. might not have email. need to tell that wont be notified.
-  validates_presence_of :ig_id, :ig_username
+  validates_presence_of :ig_id #, :ig_username
   validates_uniqueness_of :ig_id
   validates_format_of :email, :with => /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i, :on => :update
   validates_presence_of :password, :on => :update
   validates_presence_of :email, :on => :update
   validates_uniqueness_of :email, :on => :update
-  #before_validation :complete_ig_info
   
   
   def generate_token

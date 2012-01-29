@@ -57,24 +57,24 @@
           %li.dropdown{ :'data-dropdown' => "dropdown"}
             %a.dropdown-toggle
               .profilepic
-                = image_tag current_user.ig_details[1], :width => '25px'
-              - if current_user.ig_details[0].blank?
-                - current_user.ig_username
+                - if current_user.fb_id.nil?
+                  = image_tag current_user.ig_details[1], :width => '25px'
+                - else
+                  = image_tag "https://graph.facebook.com/#{current_user.fb_username}/picture", :width => '25px'
+              - if current_user.fb_id.nil?
+                - if current_user.ig_details[0].blank?
+                  - current_user.ig_username
+                - else
+                  = current_user.ig_details[0]
               - else
-                = current_user.ig_details[0]
+                = current_user.fb_fullname
             %ul.dropdown-menu
               %li
-                %a{:href=>"/users/#{current_user.ig_username}"} My profile
-              %li
-                %a{:href=>"/users/#{current_user.ig_username}/usefuls"} My usefuls
-              %li
-                %a{:href=>"/users/#{current_user.ig_username}/follows"} My venues
-              %li
-                %a{:href=>"/users/#{current_user.ig_username}/questions"} My questions
+                %a{:href=>"/users/#{current_user.ig_username}/usefuls"} My todo board
               %li
                 %a{:href=>"/follows"} Venues to follow
               %li
-                %a{:href=>"/inbox"} Inbox
+                %a{:href=>"/inbox"} My questions
               %li.divider
               %li
                 %a{:href=>'/logout'} Log out
@@ -119,25 +119,25 @@
   %li
     - if ig_logged_in
       - if params[:category].nil?
-        %a.active{:href=>"/photos"} Venues you follow
+        %a.active{:href=>"/photos"} Your favorite venues
       - else
-        %a{:href=>"/photos"} Venues you follow
+        %a{:href=>"/photos"} Your favorite venues
     - else
-      %a{:href=>"/create_account"} Venues you follow
+      %a{:href=>"/create_account"} Your favorite venues
     %span ·
   %li
     - if params[:category] == 'food'
-      %a.active Going out ideas - Restaurants
+      %a.active Things to do - Restaurants
     - elsif params[:category] == 'nightlife'
-      %a.active Going out ideas - Nightlife
+      %a.active Things to do - Nightlife
     - elsif params[:category] == 'entertainment'
-      %a.active Going out ideas - Arts & Entertainment    
+      %a.active Things to do - Arts & Entertainment    
     - elsif params[:category] == 'outdoors'
-      %a.active Going out ideas - Outdoors
+      %a.active Things to do - Outdoors
     - elsif params[:category] == 'shopping'
-      %a.active Going out ideas - Shopping 
+      %a.active Things to do - Shopping
     - else
-      %a Going out ideas
+      %a Things to do
     %ul
       %li
         %a{:href=>"/photos?city=#{current_city}&category=food"} Restaurants
@@ -155,26 +155,35 @@
       %a.active{:href=>"/photos?city=#{current_city}&category=popular"} Popular
     - else
       %a{:href=>"/photos?city=#{current_city}&category=popular"} Popular
-    %span ·
-  %li
-    - if params[:category] == 'answers'
-      %a.active{:href=>"/photos?city=#{current_city}&category=answers"} Answers
-    - else
-      %a{:href=>"/photos?city=#{current_city}&category=answers"} Answers
 
 - unless ig_logged_in
   .container#promo
-    .content
-      %h1#main_title
+    .content{:style => "padding: 2px;"}
+      %h1#main_title{:style => "margin-bottom: 5px;"}
         %span.brand ubimachine
-        %span.text is your city's interactive live photo album.
-      .row
-        .span7
-          %p Follow venues you love so you never miss what happens there.
-          %p Ask for advice from people currently there.
-          %p Share your own vision of the city and discover new things to do!
-        .span4{:style => "margin-top:7px;" }
-          = link_to (image_tag 'signup_button.png', :width => '280px'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
+        %span.text is your city's interactive live photo stream.
+      .row{:style => "margin-left: 0px;"}
+        .span8
+          %h4
+            = image_tag "todo.png", :width => '20px'
+            Create a 
+            %span{:style => 'color:#ff4a6f;'}visual board
+            of things you've done or want to do
+          %h4
+            = image_tag "chat.png", :width => '20px'
+            Ask for 
+            %span{:style => 'color:#ff4a6f;'}Fresh info 
+            on what is happening
+          %h4
+            = image_tag "star.png", :width => '22px'
+            %span{:style => 'color:#ff4a6f;'} Follow 
+            venues you love
+        .span4{:style => "margin-top:37px;" }
+          .boutons{:style => "float: right;"}
+            %a{:href => "/create_account"}
+              %btn.btn.large{:style => "height: 20px; font-size: 25px; text-align: center; font-weight: bold;position: relative; z-index: 2; display:inline; color: #ff4a6f;"} Sign up
+            %a{:href => "/login"}
+              %btn.btn.large{:style => "width: 100px; height: 20px; font-size: 25px; text-align: center; font-weight: bold; position: relative; z-index: 2;display:inline; "} Login
 
 - unless flash[:notice].nil?
   .alert-message.success.fade.in{:'data-alert' => "alert"}

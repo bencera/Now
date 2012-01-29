@@ -24,7 +24,7 @@ class HomeController < ApplicationController
       else
         render 'signup'
       end
-    elsif User.first(conditions: {ig_id: session[:user_id]}).email.blank?
+    elsif User.first(conditions: {ig_id: session[:user_id]}).password.blank?
       @user = User.first(conditions: {ig_id: session[:user_id]})
     else
       cookies.permanent[:auth_token] = User.first(conditions: {ig_id: session[:user_id]}).auth_token
@@ -55,4 +55,6 @@ class HomeController < ApplicationController
   def create_account
   end
 
+  def signup_landing
+  end
 end

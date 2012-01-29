@@ -16,68 +16,97 @@
                     = render 'partials/unfollow_show'
               - else
                 .follow_form
-                  %a.btn.large{:href => "/create_account"} Follow
+                  %a.btn.large{:href => "/create_account"} Favorite venue
               %br
               #map_left
                 = image_tag "#", :id => "map_photo_#{@photo.id}", :'data-href' =>  "http://maps.googleapis.com/maps/api/staticmap?center=#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&zoom=15&size=430x150&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@photo.venue.coordinates[1]},#{@photo.venue.coordinates[0]}&sensor=false"
               %p.neighborhood
                 - unless @photo.venue.neighborhood.nil?
                   = @photo.venue.neighborhood
-              .user
-                = link_to (image_tag @photo.user.ig_details[1], :width => "50px"), "/users/#{@photo.user.ig_username}", :id => "user_pic"
-                - if @photo.user.ig_details[0].blank?
-                  = link_to @photo.user.ig_username, "/users/#{@photo.user.ig_username}", :id => "user"
-                - else
-                  = link_to @photo.user.ig_details[0], "/users/#{@photo.user.ig_username}", :id => "user"
-                - unless params[:category] == "food" or params[:category] == "shopping" or params[:category] == "entertainment" or params[:category] == "nightlife" or params[:category] == "outdoors"
-                  - categories = {"Arts & Entertainment" => "entertainment", "Nightlife Spot" => "nightlife", "Great Outdoors" => "outdoors", "Shop & Service" => "shopping", "Food" => "food"}
-                  = "in" unless @photo.category.nil?
-                  = link_to @photo.category, "/photos?city=#{current_city}&category=#{categories[@photo.category]}", :id => "category" unless @photo.category.blank?
                 %p.time_stamp
                   taken
                   = time_ago_in_words(Time.at @photo.time_taken.to_i)
                   = "ago"
-              -if @photo.requests.blank?
-                %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
-              -elsif @photo.requests.first.response.nil?
-                %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
-                %p.question
-                  Q: 
-                  = @photo.requests.first.question.gsub(" - via @ubimachine", "")
-              -else
-                %p.comment= "\"#{@photo.caption}\"" unless @photo.caption.blank?
-                %p.question
-                  Q: 
-                  = @photo.requests.first.question.gsub(" - via @ubimachine", "")
-                %p.answer
-                  A: 
-                  = "\"#{@photo.requests.first.response}\""
-              - if ig_logged_in
-                - if current_user.usefuls.where(photo_id: @photo.id).empty?
-                  .useful_btn{:id => "photo#{@photo.id.to_s}"}
-                    = render 'partials/useful', :photo => @photo
-                - else
-                  .useful_btn{:id => "photo#{@photo.id.to_s}"}
-                    = render 'partials/unuseful', :photo => @photo
-              -else
-                %a.useful_btn.btn#useful{:href => '/create_account'} useful
-              %p.useful_count
-                - unless @photo.useful_count == 0
-                  = pluralize(@photo.useful_count, "person")
-                  found it useful
-              .useful_people
-                - unless @photo.useful_count == 0
-                  - @photo.usefuls.each do |useful|
-                    = link_to (image_tag User.first(conditions: {_id: useful.user_id}).ig_details[1], :width => '50px'), "/users/#{User.first(conditions: {_id: useful.user_id}).ig_username}"
+                %p.comment
+                  - if photo.usefuls.empty?
+                    = "\"#{photo.caption}\"" unless photo.caption.blank?
+                  - elsif @user  
+                    - if photo.usefuls.where(:user_id => @user.id).empty?
+                      = "\"#{photo.caption}\"" unless photo.caption.blank?
+                    - elsif photo.usefuls.where(:user_id => @user.id).first.done == nil
+                      = image_tag "todo.png", :width => "12px", :style => "float: left; margin-right: 2px"
+                      to-do:
+                      = "\"#{photo.usefuls.where(:user_id => @user.id).first.caption}\""
+                    - else
+                      = image_tag "done.png", :width => "12px", :style => "float: left; margin-right: 2px"
+                      done:
+                      = "\"#{photo.usefuls.where(:user_id => @user.id).first.caption}\""
+                  - else
+                    - if photo.usefuls.empty?
+                      = "\"#{photo.caption}\"" unless photo.caption.blank?
+                    - elsif photo.usefuls.first.done == nil
+                      = image_tag "todo.png", :width => "12px", :style => "float: left; margin-right: 2px"
+                      to-do:
+                      = "\"#{photo.usefuls.first.caption}\""
+                    - else
+                      = image_tag "done.png", :width => "12px", :style => "float: left; margin-right: 2px"
+                      done:
+                      = "\"#{photo.usefuls.first.caption}\""
+                    
+                -if photo.requests.blank?
+                -elsif photo.requests.first.response.nil?
+                -else
+                  %p.question
+                    Q: 
+                    = photo.requests.first.question.gsub(" - via @ubimachine", "")
+                  %p.answer
+                    A: 
+                    = "\"#{photo.requests.first.response}\""
+                %p.user
+                  - if !(photo.usefuls.empty?)
+                    = link_to (image_tag User.first(conditions: {_id: photo.usefuls.first.user_id}).profile_picture, :width => "30px", :id => "profile_picture"), "/users/#{User.first(conditions: {_id: photo.usefuls.first.user_id}).username}", :id => "user_pic"
+                    = link_to User.first(conditions: {_id: photo.usefuls.first.user_id}).username, "/users/#{User.first(conditions: {_id: photo.usefuls.first.user_id}).username}", :id => "user"
+                    via
+                  - else
+                    = link_to (image_tag photo.user.ig_details[1], :width => "30px", :id => "profile_picture"), "/users/ig/#{photo.user.ig_username}", :id => "user_pic"
+                  - if photo.user.ig_details[0].blank?
+                    = link_to photo.user.ig_username, "/users/ig/#{photo.user.ig_username}", :id => "user"
+                  - else
+                    = link_to photo.user.ig_details[0], "/users/ig/#{photo.user.ig_username}", :id => "user"
+                  - unless params[:category] == "food" or params[:category] == "shopping" or params[:category] == "entertainment" or params[:category] == "nightlife" or params[:category] == "outdoors"
+                    = "in" unless photo.category.nil?
+                    - categories = {"Arts & Entertainment" => "entertainment", "Nightlife Spot" => "nightlife", "Great Outdoors" => "outdoors", "Shop & Service" => "shopping", "Food" => "food"}
+                    = link_to photo.category, "/photos?city=#{current_city}&category=#{categories[photo.category]}", :id => "category" unless photo.category.blank?
+                
+            
+                %p.useful_count{:id => "photo#{@photo.id.to_s}"}
+                  - photo.usefuls.each do |useful|
+                    %p.comment_content.clearfix
+                      = link_to (image_tag User.first(conditions:{ig_id: useful.user_id}).profile_picture, :width => "30px", :id => "profile_picture"), "/users/#{User.first(conditions:{ig_id: useful.user_id}).username}", :id => "user_pic"
+                      = link_to User.first(conditions:{ig_id: useful.user_id}).username, "/users/#{User.first(conditions:{ig_id: useful.user_id}).username}", :id => "user"
+                      - if useful.done == true
+                        has done this
+                      - else
+                        wants to do this
+                .comments
+                  - if @photo.comments.size > 0  
+                    - for comment in @photo.comments
+                      %p.comment_content.clearfix
+                        = link_to (image_tag User.first(conditions:{ig_id: comment.user}).profile_picture, :width => "30px", :id => "profile_picture"), "/users/#{User.first(conditions:{ig_id: comment.user}).username}", :id => "user_pic"
+                        - if User.first(conditions:{ig_id: comment.user}).fb_fullname.blank?
+                          = link_to User.first(conditions:{ig_id: comment.user}).username, "/users/#{User.first(conditions:{ig_id: comment.user}).username}", :id => "user"
+                        - else
+                          = link_to User.first(conditions:{ig_id: comment.user}).fb_fullname, "/users/#{User.first(conditions:{ig_id: comment.user}).username}", :id => "user"
+                        = "\"#{comment.content}\"" 
               .social_sharing
-                %a{:href => "https://twitter.com/share", :'data-url' => "http://www.ubimachine.com/photos/#{@photo.id}", :class => "twitter-share-button", :'data-text' => "Useful picture", :'data-via' => "ubimachine"}Tweet
-                :javascript
-                  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-                .fb-like{:'data-send' => "false", :'data-layout' => "button_count", :'data-href' => "http://www.ubimachine.com/photos/#{@photo.id}", :'data-width' => "300", :'data-show-faces' => "false"}
               :javascript
                 $(".modal#modal_show_#{photo.id.to_s}").bind('show', function() {
                   var link = $("#modal_photo_img_#{@photo.id}").attr('data-href');
                   var maplink = $("#map_photo_#{@photo.id}").attr('data-href');
                   $("#modal_photo_img_#{@photo.id}").attr('src', link);
                   $("#map_photo_#{@photo.id}").attr('src', maplink);
+                  $(".modal#modal_show_#{photo.id.to_s} .social_sharing").html("<a href='https://twitter.com/share' data-url='http://www.ubimachine.com/photos/#{@photo.id}' class='twitter-share-button' data-text='Useful picture' data-via='ubimachine'>Tweet</a>");
+                  $(".modal#modal_show_#{photo.id.to_s} .social_sharing").append("<div class='fb-like' data-send='false' data-layout='button_count' data-href='http://www.ubimachine.com/photos/#{@photo.id}' data-width='300' data-show-faces='false'></div>");
+                  twttr.widgets.load();
+                  FB.XFBML.parse();
                   })

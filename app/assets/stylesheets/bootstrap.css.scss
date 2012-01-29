@@ -2518,6 +2518,7 @@ button.btn::-moz-focus-inner, input[type=submit].btn::-moz-focus-inner {
 }
 .media-grid a img {
   display: block;
+	margin-right: 5px;
 }
 .media-grid a:hover {
 /*  border-color: #0069d6;
@@ -2719,33 +2720,57 @@ ul#venue_info {
 	
 }
 .btn#ask{
-	width: 100px;
+	width: 49px;
 	text-align: center;
-	margin: 5px 0 0 0px;
+	margin: 5px 0 0 1px;
 	-webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-	font-size: 12.5px;
+	font-size: 11px;
+	padding: 4px;
 	
 }
 
 .btn#useful{
-	width: 40px;
+	width: 65px;
 	text-align: center;
-	margin: 5px 10px 10px 5px;
+	margin: 5px 3px 10px 3px;
 	-webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
+	font-size: 11px;
+	padding: 5px;
+}
+
+textarea{ resize:none }
+
+.btn#done{
+	width: 60px;
+	text-align: center;
+	margin: 5px 2px 10px 0px;
+	-webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+	font-size: 11px;
+	padding: 5px;
 }
 
 input.btn#useful{
 	width: 70px;
 	text-align: center;
-	margin: 5px 10px 0 5px;
+	margin: 5px 3px 10px 3px;
 	-webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-	text-weight: bold;
+}
+
+input.btn#done{
+	width: 70px;
+	text-align: center;
+	margin: 5px 2px 10px 0px;
+	-webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
 }
 
 #profilepic{
@@ -2840,9 +2865,9 @@ a:hover{
 }
 
 a#user{
-	margin-left: 10px;
+	margin-left: 2px;
 	margin-right: 2px;
-	
+	float: none;
 }
 
 .container#promo{	
@@ -2928,4 +2953,34 @@ h4#footer a{
 
 .connect_widget .button_count{
 	width: 340px;
+}
+
+#box_comment{
+	width: 170px;
+	margin-left: 5px;
+}
+
+#submit_comment{
+	margin-left: 5px;
+}
+
+.new_comment{
+	/*border-top: 1px solid #eee;*/
+}
+
+p.comment_content{
+	color: #444;
+	font-size: 11px;
+	width: 220px;
+	text-align: left;
+	#user{
+	font-weight: bold;
+	color: #999;
+	}
+
+	#user:hover{
+	background: none;
+	text-decoration: underline;
+	color: #ff4a6f;
+	}
 }

@@ -12,13 +12,16 @@ class Photo
   field :tag #tag is to use photos as text or for new york, paris.. not intagram tags, my tags
   field :category
   field :answered, :type => Boolean
-  field :useful_count, :type => Integer, default: 0
-  index :useful_count, background: true
+  field :todo_count, :type => Integer, default: 0
+  field :done_count, :type => Integer, default: 0
+  index :done_count, background: true
+  index :todo_count, background: true
   field :city
   belongs_to :venue
   belongs_to :user
   has_many :requests
   has_many :usefuls
+  embeds_many :comments
   
   index(
     [

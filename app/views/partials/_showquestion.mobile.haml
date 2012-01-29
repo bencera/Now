@@ -1,33 +1,50 @@
-#bouton_ask  
-  %a.btn#ask{:'data-controls-modal' => "modal-from-dom", :'data-backdrop' => "true", :'data-keyboard' => "true"} Ask a question
-  .modal.hide.fade#modal-from-dom
-    .modal-header
-      %a.close
-        x
-      %h5
-        Ask the photographer a question on
-        = photo.venue.name
-        !
-    .modal-footer
-      - if ig_logged_in
-        #profilepic
-          = image_tag current_user.ig_details[1], :width => '40px'
-      = form_tag requests_url, :method => :post do
-        - unless photo.category.blank?
-          - category = photo.category
-        - else
-          - category = "none"
-        - if category == "Nightlife Spot"
-          = select_tag :question_id, options_for_select([["How's the crowd?", 10], ["Is it hard to get in?", 11], ["Are the drinks expensive?",12], ["How is the girl/boy ratio?",13], ["Do you have a tip to get in?",14]]), :id => "select_question"
-        - elsif category == "Food"
-          = select_tag :question_id, options_for_select([["What is the name of the plate?", 1], ["Is it easy to get a table now?", 2], ["What do you think of this place?",3], ["What is going on here now?",4], ["What's the best item on the menu?",5]]), :id => "select_question"
-        - elsif category == "Arts & Entertainment"
-          = select_tag :question_id, options_for_select([["What is going on here now?", 20], ["What is the exhibition today?", 21], ["Is it free to enter?",22]]), :id => "select_question"
-        - elsif category == "Great Outdoors"
-          = select_tag :question_id, options_for_select([["How's the weather here?", 30], ["Is it still raining here?", 31], ["What's going on here now?", 32]]), :id => "select_question"
-        - else
-          = select_tag :question_id, options_for_select([["What's going on here now?", 32], ["What do you think of this place?", 3]]), :id => "select_question"
-        = hidden_field_tag :ig_media_id, photo.ig_media_id
-        = hidden_field_tag :venue_name, photo.venue.name
-        = submit_tag "Ask!", :class => 'btn large primary', :id => 'bigbouton'
-      = link_to "Suggest us a question!", "mailto:ben@ubimachine.com?subject=Suggested question for #{photo.venue.name}"
+- unless photo.venue.nil?
+  - unless photo.user.nil?
+    - if ig_logged_in
+      %a.btn#ask{:'data-controls-modal' => "modal_photo_#{photo.id.to_s}", :'data-backdrop' => "true", :style => "width: 50px; height: 15px; padding: 0; font-size: 10px;"} Ask a question
+      .modal.hide.fade{:id => "modal_photo_#{photo.id.to_s}"}
+        .modal-header
+          %a.close
+            x
+          %h5
+            = image_tag photo.user.ig_details[1], :width => '50px'
+            = "Ask @#{photo.user.ig_username} a question on #{photo.venue.name}!"
+        .modal-body
+          - if ig_logged_in
+            = image_tag current_user.ig_details[1], :width => '50px'
+          %br
+          - unless photo.category.blank?
+            - category = photo.category
+          - else
+            - category = "none"
+          - if category == "Nightlife Spot"
+            = select_tag :question_id, options_for_select([["Question ideas", ""],["What's happening?", "what is happening at"],["Crowd?", "how's the crowd at"], ["Hard to get in?", "is it hard to get in"], ["Music?","how is the music at"], ["Girl/boy ratio?","how is the girl/boy ratio at"], ["Tip to get in?","do you have a tip to get in"]]), :id => "select_question"
+          - elsif category == "Food"
+            = select_tag :question_id, options_for_select([["Question ideas", ""],["Good place?", "what do you think of"],["Easy to get a table?", "is it easy to get a table at"], ["Food recommendation?", "would you have a plate to recommend at"], ["Name of the plate?", "what is the name of this plate at"], ["Service?", "how is the service at"], ["Expensive?", "is it expensive at"]]), :id => "select_question"
+          - elsif category == "Arts & Entertainment"
+            = select_tag :question_id, options_for_select([["Question ideas", ""],["What's happening?", "What is happening at"], ["Exhibition?", "what is the exhibition at"], ["Good place?","what did you think of"]]), :id => "select_question"
+          - elsif category == "Great Outdoors"
+            = select_tag :question_id, options_for_select([["Question ideas", ""],["Weather?", "How is the weather around"], ["What's happening?", "what is happening at"]]), :id => "select_question"
+          - elsif category == "Shop & Service"
+            = select_tag :question_id, options_for_select([["Question ideas", ""],["Good place?", "what do you think of"], ["What's happening?", "what is happening at"], ["Sales?", "are there any sales at"]]), :id => "select_question"
+          - else
+            = select_tag :question_id, options_for_select([["Question ideas", ""],["What's happening?", "What is happening at"], ["Good place?", "what did you think of"]]), :id => "select_question"
+          = form_tag requests_url, :method => :post, :remote => true do
+            = hidden_field_tag :ig_media_id, photo.ig_media_id
+            = hidden_field_tag :venue_name, photo.venue.name
+            = text_field_tag :question, "@#{photo.user.ig_username} ...... at #{photo.venue.name}? - via @ubimachine", :id => "input_question"
+            .modal-footer
+              = submit_tag "Ask!", :class => 'btn large primary', :id => "ask_button_#{photo.id}", :'data-loading-text' => "loading"
+        :javascript
+          $("#modal_photo_#{photo.id} #select_question").change(function () {
+              var question = "@" + "#{photo.user.ig_username}" + " " +  $("#modal_photo_#{photo.id} #select_question").val() + " " + "#{photo.venue.name}" + "? Thanks! - via @ubimachine";
+              $("#modal_photo_#{photo.id} #input_question").val(question);
+            });
+          $(function() {
+            var btn = $("#ask_button_#{photo.id}").click(function () {
+            btn.button('loading')
+            })
+          });
+          
+    - else
+      %a.btn#ask{:href => "/create_account", :style => "width: 100px; height: 13px; padding: 0; font-size: 10px; position: relative; top: 44px; left: 60px;"} ask a question

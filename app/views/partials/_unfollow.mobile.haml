@@ -1,0 +1,3 @@
+= form_tag root_url + "follows/#{@venue.id}", :method => :delete, :remote => true do
+  = hidden_field_tag :ig_venue_id, @venue.id
+  = submit_tag "following", :class => 'btn large success'

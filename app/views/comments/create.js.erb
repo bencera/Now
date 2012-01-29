@@ -1,0 +1,1 @@
+$(".card#photo_card_" + "<%= "#{@photo.id.to_s}" %>" + " .comments").append("<p class='user'> <a href='/users/<%= @user.ig_username %>' id='user_pic'><img id='profile_picture' src='<%= @user.ig_details[1] %>' width='30px'></a><a href='/users/<%= @user.ig_username %>' id='user'><%= @user.ig_username %></a> <%=@comment.content%></p>");

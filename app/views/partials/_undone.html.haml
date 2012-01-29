@@ -1,0 +1,3 @@
+= form_tag root_url + "dones/#{@photo.id}", :method => :delete, :remote => true do
+  = hidden_field_tag :id, @photo.id
+  = submit_tag "done", :class => 'btn success', :id => 'done'

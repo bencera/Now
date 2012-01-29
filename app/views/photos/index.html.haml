@@ -12,7 +12,7 @@
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
   $('body').ajaxComplete(function() {
-    $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
+    setTimeout($('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240}), 100);
   });
   $(window).resize(function() {
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});

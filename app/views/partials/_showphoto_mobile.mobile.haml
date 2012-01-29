@@ -1,6 +1,7 @@
 - unless photo.nil?
   - if @id == true
     - photo = Photo.first(conditions: {_id: photo.to_s})
+  - @photo = photo
   - unless photo.venue.nil?
     #photo_wrapper.clearfix
       %a.photo_modal{:'data-controls-modal' => "modal_show_#{photo.id.to_s}", :'data-backdrop' => "true"}
@@ -12,17 +13,17 @@
         - if @venue.nil?
           %p.venue
             = link_to photo.venue.name, "venues/#{photo.venue.id}", :class => "venue"
-          %p.neighborhood
-            - unless photo.venue.neighborhood.nil?
-              = photo.venue.neighborhood
+            %span.neighborhood
+              - unless photo.venue.neighborhood.nil?
+                = photo.venue.neighborhood
         -if photo.requests.blank?
-          %p.comment= "\"#{truncate(photo.caption, :length => 80)}\"" unless photo.caption.blank?
+          %p.comment= "\"#{photo.caption}\"" unless photo.caption.blank?
         -elsif photo.requests.first.response.nil?
-          %p.comment= "\"#{truncate(photo.caption, :length => 80)}\"" unless photo.caption.blank?
+          %p.comment= "\"#{photo.caption}\"" unless photo.caption.blank?
         -else
           %p.question
             Q: 
             = photo.requests.first.question.gsub(" - via @ubimachine", "")
           %p.answer
             A: 
-            = "\"#{truncate(photo.requests.first.response, :length => 60)}\""
+            = "\"#{photo.requests.first.response}\""

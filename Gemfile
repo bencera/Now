@@ -30,6 +30,8 @@ gem 'geocoder', :git => 'https://github.com/engineroomapps/geocoder.git'
 #gem "ruby-debug19", :require => 'ruby-debug'
 gem 'redis'
 
+gem 'fb_graph'
+
 #gem 'infinitescrolling-rails'
 gem 'mathstats'
 #gem 'resque', :require => "resque/server"

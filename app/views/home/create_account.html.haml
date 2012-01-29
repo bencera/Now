@@ -1,9 +1,14 @@
 .container
-  .content_below
-    #main_title
-      %h1 Sign up with your instagram account!
-    .signin
-      = link_to (image_tag 'signup_button.png'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
+  .content_below#main_title
+    %h1 Join ubimachine.
+    %br
+    
+    = link_to (image_tag 'signup_button.png', :width => "285x", :height => "50px"),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
+    %br (recommended!)
+
+    %h1 or
+    = link_to (image_tag 'facebook-signup-button.png', :width => "285x", :height => "50px"),  'https://www.facebook.com/dialog/oauth?client_id=218623581557042&redirect_uri=http://www.ubimachine.com/auth/facebook/callback&scope=user_about_me,email,publish_stream,offline_access'
+    
 
 .container
   .content_below  
@@ -12,4 +17,7 @@
       %span is fast, beautiful photo sharing for iphone. Free on the appstore.
       
 %footer
-  = render 'partials/footer'  
+  = render 'partials/footer'
+  
+:javascript
+  $(".container#promo").hide();

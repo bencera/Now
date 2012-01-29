@@ -10,8 +10,13 @@ Ubimachine::Application.routes.draw do
   get "home/index"
   
   match "/auth/instagram/callback" => "sessions#callback"
+  match "/auth/facebook/callback" => "sessions#facebook_callback"
   
-  resources :photos, :venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls
+  resources :venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls, :dones
+  
+  resources :photos do  
+    resources :comments  
+  end
   
   match "/stats" => "home#stats"
   match "/cities" => "home#cities"
@@ -23,7 +28,8 @@ Ubimachine::Application.routes.draw do
   match "/search" => "searches#search"
   match "/menu" => "home#menu"
   match "/ask" => "requests#ask"
-  match "users/:ig_username" => "users#show"
+  match "users/:username" => "users#show"
+  match "users/ig/:ig_username" => "users#show"
   match "follow_signup" => "follows#follow_signup"
   match "ask_signup" => "home#ask_signup"
   match "create_account" => "home#create_account"
@@ -32,6 +38,7 @@ Ubimachine::Application.routes.draw do
   match "users/:ig_username/usefuls" => "users#usefuls" 
   match "about" => "home#about"  
   match "login" => "sessions#new"
+  match "signup_landing" => "home#signup_landing"
   match "venues/:id/answers" => "venues#answers"  
   match "venues/:id/usefuls" => "venues#usefuls" 
   

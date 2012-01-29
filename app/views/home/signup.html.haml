@@ -17,7 +17,10 @@
     .row
       .span4
         #profile_pic.clearfix
-          = image_tag @user.ig_details[1], :width => '180px' unless @user.ig_details.nil?
+          - if @user.fb_id.nil? 
+            = image_tag @user.ig_details[1], :width => '180px' unless @user.ig_details.nil?
+          - else
+            = image_tag "https://graph.facebook.com/#{@user.fb_username}/picture?type=large", :width => '180px'
       .span12
         #email_form
           - if @user.errors.any?
@@ -26,11 +29,17 @@
                 %li
                   = message
           = form_tag '/signup', :id => "new_user" do
-            = text_field_tag :username, @user.ig_username, :disabled => :true, :class => 'xlarge', :id => "xlInput"
+            - if @user.fb_id.nil? 
+              = text_field_tag :username, @user.ig_username, :disabled => :true, :class => 'xlarge', :id => "xlInput"
+            - else
+              = text_field_tag :username, @user.username, :class => 'xlarge', :id => "xlInput"
             %br
             %br
             %br
-            = text_field_tag :email,  nil, :placeholder => "Email", :class => 'xlarge', :id => "xlInput"
+            - if @user.fb_id.nil? 
+              = text_field_tag :email,  nil, :placeholder => "Email", :class => 'xlarge', :id => "xlInput"
+            - else
+              = text_field_tag :email,  @user.email, :placeholder => @user.email, :class => 'xlarge', :id => "xlInput"
             %br
             %br
             %br

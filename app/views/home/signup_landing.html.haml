@@ -1,0 +1,10 @@
+.container
+  .content_below#main_title
+    = link_to (image_tag 'signup_button.png', :width => "285x", :height => "50px"),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'
+    %br (recommended!)
+
+    %h1 or
+    = link_to (image_tag 'facebook-signup-button.png', :width => "285x", :height => "50px"),  'https://www.facebook.com/dialog/oauth?client_id=218623581557042&redirect_uri=http://47mk.localtunnel.com/auth/facebook/callback&scope=email'
+    
+:javascript
+  $(".container#promo").hide();

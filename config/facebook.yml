@@ -1,0 +1,11 @@
+development: &defaults
+  client_id: 218623581557042
+  client_secret: 9e1516120764e713ff36fbff52bd5f3a
+  scope: user_about_me,user_location,user_relationships,email,publish_stream,offline_access
+  canvas_url: http://apps.facebook.com/ubimachine
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

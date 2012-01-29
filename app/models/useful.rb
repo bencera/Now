@@ -1,6 +1,10 @@
 class Useful
   include Mongoid::Document
-
+  
+  field :caption
+  field :time_created
+  field :done, :type => Boolean
+  
   belongs_to :user
   belongs_to :photo
   

@@ -43,15 +43,8 @@
       %ul.unstyled#menu
         %a{:href=>"/inbox"}
           %li Inbox
-        %a{:href=>"/settings"}  
-          %li Settings
         %a{:href=>"/logout"}
           %li Log out
-- else
-  .container
-    .content_below
-      .signin
-        = link_to (image_tag 'login_button.png'),  'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships&display=touch'
       
   
         
