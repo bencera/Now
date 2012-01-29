@@ -3,35 +3,43 @@
     .row
       .span12
         .profile_pic
-          = image_tag @user.ig_details[1], :width => '150px'
-        %h1.username
-          = @user.ig_username
-        %p.full_name
-          = @user.ig_details[0]
-        %p.bio
-          = @user.ig_details[2]
-        %a.website{:href => @user.ig_details[3], :target => "_blank"}
-          = @user.ig_details[3]
-      .span4
-        %a.photos{:href => "/users/#{@user.ig_username}"}
+          = image_tag @user.profile_picture + "?type=large", :width => '150px'
+        - if @user.fb_username.nil?
+          %h1.username
+            = @user.username
+          %p.full_name
+            = @user.ig_details[0]
+          %p.bio
+            = @user.ig_details[2]
+          %a.website{:href => @user.ig_details[3], :target => "_blank"}
+            = @user.ig_details[3]
+        - else
+          %h1.username
+            = @user.username
+          %p.full_name
+            = @user.fb_fullname
+          %p.bio
+            = @user.fb_bio
+          %a.website{:href => @user.fb_website, :target => "_blank"}
+            = @user.fb_website 
+      .span4{:style => "width: 180px"}
+        %a.photos{:href => "/users/#{@user.username}"}
           = "Took"
           = @user.photos.count
           = "+ photos"
-        - unless @user.ig_accesstoken.nil?
-          %a.following{:href => "/users/#{@user.ig_username}/follows"}
+        - unless @user.username.nil?
+          %a.following{:href => "/users/#{@user.username}/follows"}
             Following
             = @user.venue_ids.count
             venues
-
-          %a.usefuls{:href => "/users/#{@user.ig_username}/usefuls"}
-            Found
-            = pluralize(@user.usefuls.count, "photo")
-            useful
-
-          %a.question_asked{:href => "/users/#{@user.ig_username}/questions"}
-            Asked
-            = @user.requests.count
-            questions
+        
+          %a.usefuls
+            = pluralize(@user.usefuls.where(:done => nil).count, "thing")
+            to do
+          
+          %a.question_asked
+            = pluralize(@user.usefuls.where(:done => true).count, "thing")
+            done
 
 .container_photos
   %ul.media-grid
