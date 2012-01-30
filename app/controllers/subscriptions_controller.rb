@@ -16,7 +16,7 @@ class SubscriptionsController < ApplicationController
   def create
     if Rails.env.development?
       #tunnel
-      url = "http://56ht.localtunnel.com/callbacks"
+      url = "http://3et2.localtunnel.com/callbacks"
     else
       # production
       url = "http://pure-sky-4808.herokuapp.com/auth/instagram/callback"
