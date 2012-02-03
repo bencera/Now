@@ -12,6 +12,7 @@ class User
   field :fb_username
   field :fb_accesstoken
   field :username
+  index :username, background: true
   field :fb_fullname
   field :fb_about
   field :fb_bio
