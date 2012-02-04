@@ -83,8 +83,9 @@
                 = submit_tag "done this", :class => "btn small success"
             %p.user
               - if !(photo.usefuls.empty?)
-                = link_to (image_tag User.first(conditions: {_id: photo.usefuls.first.user_id}).profile_picture, :width => "30px", :id => "profile_picture"), "/users/#{User.first(conditions: {_id: photo.usefuls.first.user_id}).username}", :id => "user_pic"
-                = link_to User.first(conditions: {_id: photo.usefuls.first.user_id}).username, "/users/#{User.first(conditions: {_id: photo.usefuls.first.user_id}).username}", :id => "user"
+                - user_useful = User.first(conditions: {_id: photo.usefuls.first.user_id})
+                = link_to (image_tag user_useful.profile_picture, :width => "30px", :id => "profile_picture"), "/users/#{user_useful.username}", :id => "user_pic"
+                = link_to user_useful.username, "/users/#{user_useful.username}", :id => "user"
                 via
               - else
                 = link_to (image_tag photo.user.ig_details[1], :width => "30px", :id => "profile_picture"), "/users/ig/#{photo.user.ig_username}", :id => "user_pic"
@@ -100,9 +101,10 @@
             
             %p.useful_count{:id => "photo#{@photo.id.to_s}"}
               - photo.usefuls.each do |useful|
+                - user_useful = User.first(conditions:{ig_id: useful.user_id})
                 %p.comment_content.clearfix
-                  = link_to (image_tag User.first(conditions:{ig_id: useful.user_id}).profile_picture, :width => "30px", :id => "profile_picture"), "/users/#{User.first(conditions:{ig_id: useful.user_id}).username}", :id => "user_pic"
-                  = link_to User.first(conditions:{ig_id: useful.user_id}).username, "/users/#{User.first(conditions:{ig_id: useful.user_id}).username}", :id => "user"
+                  = link_to (image_tag user_useful.profile_picture, :width => "30px", :id => "profile_picture"), "/users/#{user_useful.username}", :id => "user_pic"
+                  = link_to user_useful.username, "/users/#{user_useful.username}", :id => "user"
                   - if useful.done == true
                     has done this
                   - else
@@ -110,12 +112,13 @@
             .comments
               - if @photo.comments.size > 0  
                 - for comment in @photo.comments
+                  - user_comment = User.first(conditions:{ig_id: comment.user})
                   %p.comment_content.clearfix
-                    = link_to (image_tag User.first(conditions:{ig_id: comment.user}).profile_picture, :width => "30px", :id => "profile_picture"), "/users/#{User.first(conditions:{ig_id: comment.user}).username}", :id => "user_pic"
-                    - if User.first(conditions:{ig_id: comment.user}).fb_fullname.blank?
-                      = link_to User.first(conditions:{ig_id: comment.user}).username, "/users/#{User.first(conditions:{ig_id: comment.user}).username}", :id => "user"
+                    = link_to (image_tag user_comment.profile_picture, :width => "30px", :id => "profile_picture"), "/users/#{user_comment.username}", :id => "user_pic"
+                    - if user_comment.fb_fullname.blank?
+                      = link_to user_comment.username, "/users/#{user_comment.username}", :id => "user"
                     - else
-                      = link_to User.first(conditions:{ig_id: comment.user}).fb_fullname, "/users/#{User.first(conditions:{ig_id: comment.user}).username}", :id => "user"
+                      = link_to user_comment.fb_fullname, "/users/#{user_comment.username}", :id => "user"
                     = "\"#{comment.content}\"" 
             - if ig_logged_in
               .new_comment{:style => "display: none;"}

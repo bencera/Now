@@ -2,6 +2,7 @@ class User
   include Mongoid::Document
   field :email
   field :ig_username
+  index :ig_username, background: true
   field :ig_accesstoken
   field :ig_id
   field :ig_details, :type => Array
