@@ -96,7 +96,7 @@ class PhotosController < ApplicationController
       #   
         
       elsif params[:category] == "popular"
-        photos = Photo.where(city: current_city).where(:todo_count.gt => 0).order_by([[:time_taken, :desc]]).limit(500)
+        photos = Photo.where(city: current_city).where(:done_count.gt => 0).order_by([[:time_taken, :desc]]).limit(500)
         if is_mobile_device?
           @photos = photos.paginate(:per_page => 5, :page => params[:page])
         else
