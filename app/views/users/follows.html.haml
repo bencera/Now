@@ -47,7 +47,7 @@
       = render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
 
       = will_paginate @photos
-      = pageless @photos.total_pages, "/users/#{@user.ig_username}/follows"
+      = pageless @photos.total_pages, "/users/#{@user.username}/follows"
 /= will_paginate(@articles)
 / - unless @photos.count < 21
 /   .more#main_title
