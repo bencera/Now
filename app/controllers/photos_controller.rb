@@ -1,7 +1,7 @@
 class PhotosController < ApplicationController
   
   def index
-    if params[:category] == "popular"
+    if params[:category] == "outdoors"
       cookies.permanent[:city] = params[:city]
     end
     require 'will_paginate/array'
