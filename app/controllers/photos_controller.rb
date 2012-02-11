@@ -33,7 +33,7 @@ class PhotosController < ApplicationController
           end
           @id = true
         else
-          redirect_to "/photos?category=popular&city=#{current_city}"
+          redirect_to "/photos?category=outdoors&city=#{current_city}"
         end
         
         
