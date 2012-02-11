@@ -1,0 +1,88 @@
+- unless photo.nil?
+  - if @id == true
+    - photo = Photo.first(conditions: {_id: photo.to_s})
+  - @photo = photo
+  %li
+    .card{:id => "photo_card_#{photo.id.to_s}"}
+      .image
+        %a{:'data-controls-modal' => "modal_show_#{photo.id.to_s}", :'data-backdrop' => "true", :'data-keyboard' => "true"}
+          = image_tag photo.url[1], :width => '220px'
+          /= render 'partials/modalphoto', :photo => @photo
+        #boutons
+          - if ig_logged_in
+            %a.useful_btn.btn#useful
+              = image_tag "29-heart.png", :width => "8px", :style => "float: left;"
+              todo/done
+            %a.done_btn.btn#done
+              = image_tag "chat.png", :width => "8px", :style => "float: left;"
+              comment
+          /= render 'partials/showquestion', :photo => @photo
+      %div
+        = image_tag "location.png", :width => "10px", :style => "float: left; margin-right: 2px"
+        %p.venue= link_to "venuename", photo.venue
+      %p.time
+        = image_tag "clock.png", :width => "10px", :style => "float: left; margin-right: 2px; margin-top: 3px"
+        = timeago_small(Time.at photo.time_taken.to_i)
+        %p.neighborhood
+          Neighborhood
+        %p.comment
+          = image_tag "todo.png", :width => "12px", :style => "float: left; margin-right: 2px"
+          to-do:
+          = "ceci est un test"
+                
+        %p.question
+          Q: 
+          "ceci est une question"
+        %p.answer
+          A: 
+          "ceci est une reponse"
+        .new_caption{:style => "display:none;"}
+          = form_tag usefuls_path, :method => :post, :remote => true do
+            - l = 0
+            - l = photo.caption.length unless photo.caption.nil?
+            your description
+            = text_area_tag :new_caption, "#{photo.caption}", :id => "box", :rows => "#{l/35 +1}"
+            = hidden_field_tag :id, @photo.id
+            = submit_tag "+ to-do list", :class => "btn small"
+            = submit_tag "done this", :class => "btn small success"
+        .comments
+          - if @photo.comments.size > 0  
+            - for comment in @photo.comments
+              - user_comment = User.first(conditions:{ig_id: comment.user})
+              %p.comment_content.clearfix
+                = link_to (image_tag user_comment.profile_picture, :width => "30px", :id => "profile_picture"), "/users/#{user_comment.username}", :id => "user_pic"
+                - if user_comment.fb_fullname.blank?
+                  = link_to user_comment.username, "/users/#{user_comment.username}", :id => "user"
+                - else
+                  = link_to user_comment.fb_fullname, "/users/#{user_comment.username}", :id => "user"
+                = "\"#{comment.content}\"" 
+        - if ig_logged_in
+          .new_comment{:style => "display: none;"}
+            = form_for [@photo, Comment.new], :remote => true do |f|
+              %p.user
+                = link_to (image_tag current_user.profile_picture, :width => "30px", :id => "profile_picture"), "/users/#{current_user.username}", :id => "user_pic"
+                = f.text_area :content, :rows => 1, :id => "box_comment", :placeholder => "Comment..."
+                = f.hidden_field :user, :value => current_user.ig_id
+                = f.submit "comment", :class => "btn small", :id => "submit_comment"
+          
+          :javascript
+            $(".card#photo_card_" + "#{@photo.id.to_s}" + " .useful_btn").click(function() {
+              event.preventDefault();
+              $(".card#photo_card_" + "#{@photo.id.to_s}" + " .comment").hide();
+              $(".card#photo_card_" + "#{@photo.id.to_s}" + " .new_caption").fadeIn();
+              $(".card#photo_card_" + "#{@photo.id.to_s}" + " .new_caption #box").focus();
+              $(".card#photo_card_" + "#{@photo.id.to_s}" + " .new_caption #box").select();
+              $(".card#photo_card_" + "#{@photo.id.to_s}" + " p.user #profile_picture").attr("src", "#{current_user.profile_picture}");
+              $(".card#photo_card_" + "#{@photo.id.to_s}" + " p.user a#user_pic").attr("href", "users/#{current_user.username}");
+              $(".card#photo_card_" + "#{@photo.id.to_s}" + " p.user a#user").before("<a href='users/#{current_user.username}' id='user'> #{current_user.username}</a> via ");
+            
+
+              $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
+            });
+            $(".card#photo_card_" + "#{@photo.id.to_s}" + " .done_btn").click(function() {
+              event.preventDefault();
+              $(".card#photo_card_" + "#{@photo.id.to_s}" + " div.new_comment").toggle();
+              $(".card#photo_card_" + "#{@photo.id.to_s}" + " .new_comment #box").focus();
+              $(".card#photo_card_" + "#{@photo.id.to_s}" + " .new_comment #box").select();
+              $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
+            });
