@@ -33,11 +33,11 @@
             = @user.venue_ids.count
             venues
         
-          %a.usefuls
+          %a.usefuls{:href => "/users/#{@user.username}/todo"}
             = pluralize(@user.usefuls.where(:done => nil).count, "thing")
             to do
           
-          %a.question_asked
+          %a.question_asked{:href => "/users/#{@user.username}/done"}
             = pluralize(@user.usefuls.where(:done => true).count, "thing")
             done
 

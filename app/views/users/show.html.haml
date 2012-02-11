@@ -23,21 +23,27 @@
           %a.website{:href => @user.fb_website, :target => "_blank"}
             = @user.fb_website 
       .span4{:style => "width: 180px"}
-        %a.photos{:href => "/users/#{@user.username}"}
-          = "Took"
-          = @user.photos.count
-          = "+ photos"
+        - if @user.username.nil?
+          %a.photos{:href => "/users/ig/#{@user.ig_username}/photos"}
+            = "Took"
+            = @user.photos.count
+            = "+ photos"
+        - else
+          %a.photos{:href => "/users/#{@user.username}/photos"}
+            = "Took"
+            = @user.photos.count
+            = "+ photos"
         - unless @user.username.nil?
           %a.following{:href => "/users/#{@user.username}/follows"}
             Following
             = @user.venue_ids.count
             venues
         
-          %a.usefuls
+          %a.usefuls{:href => "/users/#{@user.username}/todo"}
             = pluralize(@user.usefuls.where(:done => nil).count, "thing")
             to do
           
-          %a.question_asked
+          %a.question_asked{:href => "/users/#{@user.username}/done"}
             = pluralize(@user.usefuls.where(:done => true).count, "thing")
             done
 
