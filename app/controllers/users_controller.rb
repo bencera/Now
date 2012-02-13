@@ -27,9 +27,10 @@ class UsersController < ApplicationController
   def show
     if params[:username]
       @user = User.first(conditions: {username: params[:username]})
-      useful_photo_ids = @user.usefuls.distinct(:photo_id)
+      useful_photo_ids = []
+      useful_photo_ids = @user.usefuls.distinct(:photo_id) unless @user.usefuls.nil?
       photo_ids = []
-      photo_ids = photo_ids +  useful_photo_ids
+      photo_ids = photo_ids + useful_photo_ids
       photos = []
       photo_ids.each do |photo_id|
         photos << Photo.first(conditions: {_id: photo_id.to_s})
