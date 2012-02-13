@@ -49,10 +49,8 @@
                   var maplink = $("#map_photo_#{@photo.id}").attr('data-href');
                   $("#modal_photo_img_#{@photo.id}").attr('src', link);
                   $("#map_photo_#{@photo.id}").attr('src', maplink);
-                  $(".modal#modal_show_#{photo.id.to_s} .social_sharing").html("<a href='https://twitter.com/share' data-url='http://www.ubimachine.com/photos/#{@photo.id}' class='twitter-share-button' data-text='Useful picture' data-via='ubimachine'>Tweet</a>");
                   $(".modal#modal_show_#{photo.id.to_s} .social_sharing").append("<div class='fb-like' data-send='false' data-layout='button_count' data-href='http://www.ubimachine.com/photos/#{@photo.id}' data-width='300' data-show-faces='false'></div>");
                   });
                 $(".modal#modal_show_#{photo.id.to_s}").bind('show', function() {
-                  twttr.widgets.load();
                   FB.XFBML.parse();
                   });
