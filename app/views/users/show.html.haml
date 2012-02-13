@@ -3,7 +3,10 @@
     .row
       .span12
         .profile_pic
-          = image_tag @user.profile_picture + "?type=large", :width => '150px'
+          - if @user.profile_picture.nil?
+            = image_tag @user.ig_details[1], :width => '150px'
+          - else
+            = image_tag @user.profile_picture + "?type=large", :width => '150px'
         - if @user.fb_username.nil?
           %h1.username
             = @user.username
