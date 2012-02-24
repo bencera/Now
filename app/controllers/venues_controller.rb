@@ -27,7 +27,7 @@ class VenuesController < ApplicationController
           v.save_photo(media, nil, nil)
         end
       end
-      @photos = v.photos.order_by([[:useful_count, :desc],[:time_taken, :desc]]).paginate(:per_page => 20, :page => params[:page])
+      @photos = v.photos.order_by([[:time_taken, :desc]]).paginate(:per_page => 20, :page => params[:page]) #[:useful_count, :desc],
       @venue = v
       if request.xhr?
         if is_mobile_device?
@@ -42,7 +42,7 @@ class VenuesController < ApplicationController
         v = Venue.new(:fs_venue_id => params[:id])
         v.save
         if v.new? == false
-          photos = v.photos.order_by([[:useful_count, :desc],[:time_taken, :desc]])
+          photos = v.photos.order_by([[:time_taken, :desc]]) #[:useful_count, :desc],
           # @photos = photos[0..19]
           @photos = photos.paginate(:per_page => 20, :page => params[:page])
           @venue = v
