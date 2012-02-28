@@ -17,6 +17,7 @@ class Venue
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates, :address => :address_geo
   
+  
   #category might not exist for a venue
   validates_presence_of :fs_venue_id, :name, :coordinates, :ig_venue_id #, :address 
   validates_uniqueness_of :fs_venue_id
@@ -273,6 +274,7 @@ class Venue
           p.tag = tag
           p.category = Venue.new.fs_categories[self.categories.first["name"]] unless self.categories.nil?
           p.city = Venue.new.find_city(p.coordinates[1], p.coordinates[0])
+          p.neighborhood = self.neighborhood unless self.neighborhood.nil?
           p.save
           
           unless p.new?

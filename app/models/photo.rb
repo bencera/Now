@@ -17,6 +17,7 @@ class Photo
   index :done_count, background: true
   index :todo_count, background: true
   field :city
+  field :neighborhood
   belongs_to :venue
   belongs_to :user
   has_many :requests
@@ -31,7 +32,6 @@ class Photo
     ],
     background: true
     )
-  
   
   
   include Geocoder::Model::Mongoid
