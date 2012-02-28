@@ -1,6 +1,3 @@
-= @request[0]
-= @request[1]
-
 .container_photos
   %ul.media-grid
     #results
@@ -21,6 +18,10 @@
     $('.card').wookmark({offset:10,container:$('.container_photos'),itemWidth:240});
   });
   window.city = "#{current_city}";
+  navigator.geolocation.getCurrentPosition(function(position) {
+  window.latitude = position.coords.latitude;
+  window.longitude = position.coords.longitude;
+  });
 
 %footer
   = render 'partials/footer'
