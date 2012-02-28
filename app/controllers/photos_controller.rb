@@ -1,6 +1,8 @@
 class PhotosController < ApplicationController
   
   def index
+    
+    @request = [request.location.latitude, request.location.longitude]
     if params[:category] == "outdoors"
       cookies.permanent[:city] = params[:city]
     end
