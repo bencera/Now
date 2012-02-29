@@ -26,7 +26,7 @@
 
     #results
       = render :partial => 'partials/showphoto_mobile', :collection => @photos, :as => :photo
-      = pageless @photos.total_pages, "/photos?city=#{current_city}&category=#{params[:category]}"
+      = pageless @photos.total_pages, "/photos?city=#{current_city}&category=#{params[:category]}&neighborhood=#{params[:neighborhood]}"
 
 
 :javascript
