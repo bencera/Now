@@ -275,6 +275,7 @@ class Venue
           p.category = Venue.new.fs_categories[self.categories.first["name"]] unless self.categories.nil?
           p.city = Venue.new.find_city(p.coordinates[1], p.coordinates[0])
           p.neighborhood = self.neighborhood unless self.neighborhood.nil?
+          p.venue_photos = self.photos.count unless self.photos.nil?
           p.save
           
           unless p.new?
