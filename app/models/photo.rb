@@ -18,7 +18,7 @@ class Photo
   index :todo_count, background: true
   field :city
   field :neighborhood
-  field :venue_photos
+  field :venue_photos, :type => Integer
   belongs_to :venue
   belongs_to :user
   has_many :requests
