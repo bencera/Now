@@ -103,7 +103,6 @@ class PhotosController < ApplicationController
         else
           @photos = photos.paginate(:per_page => 20, :page => params[:page])
         end        
-      end
       
       elsif params[:category] == "geoloc"
         photos = Photo.where(city: current_city).last_hours(24).where(:neighborhood => "Lower East Side").order_by([[:time_taken, :desc]]).limit(500)
