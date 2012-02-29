@@ -1,6 +1,7 @@
+- if params[:category] == "geoloc"
+  .plan
+    = image_tag "#", :id => "map"
 
-
-.coordinates
 .container
   .content_below
     - cities = {"newyork" => "New York", "paris" => "Paris", "tokyo" => "Tokyo", "sanfrancisco" => "San Francisco", "london" => "London"}
@@ -33,6 +34,16 @@
   navigator.geolocation.getCurrentPosition(function(position) {
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
+    var mapUrl = "http://maps.google.com/maps/api/staticmap?center=" +
+    latitude + "," + longitude +
+    "&zoom=14&size=320x150&sensor=false&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C"+latitude+","+longitude;
+    $('#map').attr('src', mapUrl).show();
   });
+
+- if params[:category] == "geoloc"
+  :javascript
+    $(".container#promo").hide();
+
+
 %footer
   = render 'partials/footer'

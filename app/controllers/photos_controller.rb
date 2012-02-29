@@ -110,7 +110,7 @@ class PhotosController < ApplicationController
           @photos = photos.paginate(:per_page => 5, :page => params[:page])
         else
           @photos = photos.paginate(:per_page => 20, :page => params[:page])
-        end        
+        end
       end
       
       if request.xhr?
