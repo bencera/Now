@@ -105,6 +105,15 @@ class PhotosController < ApplicationController
         end        
       end
       
+      elsif params[:category] == "geoloc"
+        photos = Photo.where(city: current_city).last_hours(24).where(:neighborhood => "Lower East Side").order_by([[:time_taken, :desc]]).limit(500)
+        if is_mobile_device?
+          @photos = photos.paginate(:per_page => 5, :page => params[:page])
+        else
+          @photos = photos.paginate(:per_page => 20, :page => params[:page])
+        end        
+      end
+      
       if request.xhr?
         if is_mobile_device?
           render :partial => 'partials/showphoto_mobile', :collection => @photos, :as => :photo

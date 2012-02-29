@@ -1,3 +1,6 @@
+
+
+.coordinates
 .container
   .content_below
     - cities = {"newyork" => "New York", "paris" => "Paris", "tokyo" => "Tokyo", "sanfrancisco" => "San Francisco", "london" => "London"}
@@ -28,8 +31,8 @@
 
 :javascript
   navigator.geolocation.getCurrentPosition(function(position) {
-    window.latitude = position.coords.latitude;
-    window.longitude = position.coords.longitude;
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
   });
 %footer
   = render 'partials/footer'
