@@ -118,7 +118,7 @@ class PhotosController < ApplicationController
         photos_h = {}
         photos = []
         Photo.where(city: "newyork").last_hours(3).each do |photo|
-          photos_h[photo.id] = photo.distance_from([params[:lat].to_i,params[:lng].to_i])
+          photos_h[photo.id] = photo.distance_from([40.7215,-73.9887])
         end
         photos_h.sort_by { |k,v| v}.each do |photo|
           photos << photo[0].to_s
