@@ -1,6 +1,6 @@
 - if params[:category] == "special"
   .plan
-    = image_tag "http://maps.google.com/maps/api/staticmap?center=" + params[:lat] + "," + params[:lng] + "&zoom=14&size=320x150&sensor=false&maptype=roadmap&mtarkers=color:blue%7Clabel:Sa%7C" +params[:lat]+","+params[:lng];
+    = image_tag "http://maps.google.com/maps/api/staticmap?center=" + params[:lat] + "," + params[:lng] + "&zoom=14&size=320x150&sensor=false&maptype=roadmap&mtarkers=color:blue%7Clabel:Sa%7C" +params[:lat]+","+params[:lng]
 
 .container
   .content_below
@@ -27,7 +27,7 @@
 
     #results
       = render :partial => 'partials/showphoto_mobile', :collection => @photos, :as => :photo
-      = pageless @photos.total_pages, "/photos?city=#{current_city}&category=#{params[:category]}&neighborhood=#{params[:neighborhood]}"
+      = pageless @photos.total_pages, "/photos?city=#{current_city}&category=#{params[:category]}&neighborhood=#{params[:neighborhood]}&lat=#{params[:lat]}&lng=#{params[:lng]}"
 
 
 - if params[:category] == "special"
