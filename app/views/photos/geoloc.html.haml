@@ -1,0 +1,5 @@
+:javascript
+  window.city = "#{current_city}";
+  navigator.geolocation.getCurrentPosition(function(position) {
+  window.location = 'http://0.0.0.0:3000/photos?category=special&lat=' + position.coords.latitude + '&lng=' + position.coords.longitude;
+  });
