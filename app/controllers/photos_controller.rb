@@ -114,6 +114,7 @@ class PhotosController < ApplicationController
         
         
       elsif params[:category] == "special"
+        @id = true
         photos_h = {}
         photos = []
         Photo.where(city: "newyork").last_hours(8).each do |photo|
