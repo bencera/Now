@@ -51,6 +51,8 @@ Ubimachine::Application.routes.draw do
   match "venues/:id/answers" => "venues#answers"  
   match "venues/:id/usefuls" => "venues#usefuls" 
   
+  match "geoloc" => "photos#geoloc"
+  
   require 'resque_scheduler'
   mount Resque::Server, :at => "/resque"
   
