@@ -144,7 +144,7 @@ class PhotosController < ApplicationController
   end
   
   
-  def geoloc
+  def geo
     
   end
   
