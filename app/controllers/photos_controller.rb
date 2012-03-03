@@ -120,7 +120,7 @@ class PhotosController < ApplicationController
           photos_h[photo.id] = photo.distance_from([40.7215,-73.9887])
         end
         photos_h.sort_by { |k,v| v}.each do |photo|
-          photos << photo[0]
+          photos << photo[0].to_s
         end
         if is_mobile_device?
           @photos = photos.paginate(:per_page => 5, :page => params[:page])
