@@ -48,7 +48,7 @@ class PhotosController < ApplicationController
         
         
       elsif params[:category] == "nightlife"
-        photos = Photo.where(city: current_city).where(category: "Nightlife Spot").order_by([[:time_taken, :desc]]).limit(500)
+        photos = Photo.where(city: current_city).where(category: "Nightlife Spot") .order_by([[:time_taken, :desc]]).limit(500)
         if is_mobile_device?
           @photos = photos.paginate(:per_page => 5, :page => params[:page])
         else
@@ -106,6 +106,19 @@ class PhotosController < ApplicationController
       
       elsif params[:category] == "geoloc"
         photos = Photo.where(city: current_city).last_hours(24).where(:neighborhood => params[:neighborhood]).order_by([[:time_taken, :desc]]).limit(500)
+        if is_mobile_device?
+          @photos = photos.paginate(:per_page => 5, :page => params[:page])
+        else
+          @photos = photos.paginate(:per_page => 20, :page => params[:page])
+        end
+        
+        
+      elsif params[:category] == "special"
+        photos = {}
+        Photo.where(city: "newyork").last_hours(8) do |photo|
+          photos[photo.id] = photo.distance_from([40.7215,-73.9887])
+        end
+        photos.sort_by { |k,v| v}
         if is_mobile_device?
           @photos = photos.paginate(:per_page => 5, :page => params[:page])
         else
