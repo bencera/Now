@@ -114,11 +114,14 @@ class PhotosController < ApplicationController
         
         
       elsif params[:category] == "special"
-        photos = {}
-        Photo.where(city: "newyork").last_hours(8) do |photo|
-          photos[photo.id] = photo.distance_from([40.7215,-73.9887])
+        photos_h = {}
+        photos = []
+        Photo.where(city: "newyork").last_hours(8).each do |photo|
+          photos_h[photo.id] = photo.distance_from([40.7215,-73.9887])
         end
-        photos.sort_by { |k,v| v}
+        photos_h.sort_by { |k,v| v}.each do |photo|
+          photos << photo[0]
+        end
         if is_mobile_device?
           @photos = photos.paginate(:per_page => 5, :page => params[:page])
         else
