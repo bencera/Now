@@ -136,7 +136,7 @@ class PhotosController < ApplicationController
           venues_id << venue[0]
         end
         photos_lasthours.each do |photo|
-          photos_hash[photo.id.to_s] = {"distance" => photo.distance_from([40.7214996,-73.9888294]), 
+          photos_hash[photo.id.to_s] = {"distance" => photo.distance_from([params[:lat].to_f,params[:lng].to_f]), 
                                    "venue_photos" => photo.venue_photos,
                                    "time_ago" => time_now - photo.time_taken.to_i,
                                    "has_caption" => !(photo.caption.blank?),
@@ -144,7 +144,7 @@ class PhotosController < ApplicationController
                                     }
         end
         
-        distance_max = 0.75
+        distance_max = 0.5
         photos_hash.each do |photo|
           if photo[1]["distance"] > distance_max
             photos_hash.delete(photo[0])
