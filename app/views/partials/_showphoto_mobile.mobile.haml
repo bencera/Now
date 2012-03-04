@@ -17,9 +17,9 @@
               - unless photo.venue.neighborhood.nil?
                 = photo.venue.neighborhood
         -if photo.requests.blank?
-          %p.comment= "\"#{photo.caption}\"" unless photo.caption.blank?
+          %p.comment= "\"#{Photo.new.caption_without_hashtags(photo.caption)}\"" unless photo.caption.blank?
         -elsif photo.requests.first.response.nil?
-          %p.comment= "\"#{photo.caption}\"" unless photo.caption.blank?
+          %p.comment= "\"#{Photo.new.caption_without_hashtags(photo.caption)}\"" unless photo.caption.blank?
         -else
           %p.question
             Q: 

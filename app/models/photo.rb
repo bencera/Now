@@ -48,6 +48,26 @@ class Photo
   validates_uniqueness_of :ig_media_id
   
   
+  def caption_without_hashtags(caption)
+    if caption.count("#") > 3
+      newcaption = ""
+      n = 0
+      caption.split(pattern = " ").each do |string|
+        if  string.count("#") == 0
+          newcaption << string
+          newcaption << " "
+        elsif string.count("#") == 1 and n <= 3
+          newcaption << string
+          newcaption << " "
+          n += 1
+        end
+      end
+      newcaption
+    else
+      caption
+    end
+  end
+  
   def find_location_and_save(media, tag)
     if media.location.nil? #pas de geotag, for now, nothing
       #Venue.first(conditions: {_id: "novenue"}).save_photo(media, tag, "novenue")

@@ -115,14 +115,66 @@ class PhotosController < ApplicationController
         
       elsif params[:category] == "special"
         @id = true
-        photos_h = {}
+        # photos_h = {}
+        # photos = []
+        # Photo.where(city: "newyork").last_hours(3).each do |photo|
+        #   photos_h[photo.id] = photo.distance_from([params[:lat].to_f,params[:lng].to_f])
+        # end
+        # photos_h.sort_by { |k,v| v}.each do |photo|
+        #   photos << photo[0].to_s
+        # end
+        
+        photos_hash = {}
+        time_now = Time.now.to_i
+        venues = []
+        photos_lasthours = Photo.where(city: "newyork").last_hours(3)
+        photos_lasthours.each do |photo|
+          venues << [photo.venue_id, photo.user_id] unless venues.include?([photo.venue_id, photo.user_id])
+        end
+        venues_id = []
+        venues.each do |venue|
+          venues_id << venue[0]
+        end
+        photos_lasthours.each do |photo|
+          photos_hash[photo.id.to_s] = {"distance" => photo.distance_from([params[:lat].to_f,params[:lng].to_f]), 
+                                   "venue_photos" => photo.venue_photos,
+                                   "time_ago" => time_now - photo.time_taken.to_i,
+                                   "has_caption" => !(photo.caption.blank?),
+                                   "nb_lasthours_photos" => venues_id.count(photo.venue_id)
+                                    }
+        end
+        
+        distance_max = 0.75
+        photos_hash.each do |photo|
+          if photo[1]["distance"] > distance_max
+            photos_hash.delete(photo[0])
+          end
+        end
+        #photos trending first
         photos = []
-        Photo.where(city: "newyork").last_hours(3).each do |photo|
-          photos_h[photo.id] = photo.distance_from([params[:lat].to_f,params[:lng].to_f])
+        photos_hash.sort_by { |k,v| v["time_ago"]}.each do |photo|
+          unless photo[1]["nb_lasthours_photos"] == 1
+            photos << photo[0]
+            photos_hash.delete(photo[0])
+          end
         end
-        photos_h.sort_by { |k,v| v}.each do |photo|
-          photos << photo[0].to_s
+        
+        #photos dendroits populaires
+        photos_hash.sort_by { |k,v| v["venue_photos"]}.each do |photo|
+          photos << photo[0]
         end
+        
+        
+        
+        
+        
+          
+        end
+        #if photo has caption
+        #photos from same venue at same time of the day, or same day of the week at time of the day
+        #number of photos in venue in total in db
+        #number of photos in the last 3 hours
+        #photo has a face
         if is_mobile_device?
           @photos = photos.paginate(:per_page => 5, :page => params[:page])
         else
