@@ -169,7 +169,6 @@ class PhotosController < ApplicationController
         
         
           
-        end
         #if photo has caption
         #photos from same venue at same time of the day, or same day of the week at time of the day
         #number of photos in venue in total in db
