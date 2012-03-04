@@ -152,7 +152,7 @@ class PhotosController < ApplicationController
         end
         #photos trending first
         photos = []
-        photos_hash.sort_by { |k,v| v["time_ago"]}.each do |photo|
+        photos_hash.sort_by { |k,v| [v["time_ago"], v["distance"]]}.each do |photo|
           unless photo[1]["nb_lasthours_photos"] == 1
             photos << photo[0]
             photos_hash.delete(photo[0])
