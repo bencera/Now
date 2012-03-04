@@ -12,4 +12,6 @@
     window.location = 'http://www.ubimachine.com/photos?category=special&lat='+position.coords.latitude+'&lng='+position.coords.longitude;
   });
   
-= link_to "Geotagged photos", "#", :id => "link_geo"
+.loading{:style => "text-align: center;"}
+  = image_tag "load.gif", :width => '20px'
+  Loading photos...
