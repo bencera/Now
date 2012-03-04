@@ -1,1 +1,15 @@
-<script>navigator.geolocation.getCurrentPosition(function(position){window.location="http://www.ubimachine.com/photos?category=special&lat="+position.coords.latitude+"&lng="+position.coords.longitude;})</script>
+:javascript  
+  navigator.geolocation.getCurrentPosition(function(position) {
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    var geo_url = "http://www.ubimachine.com/photos?category=special&lat=" +
+    latitude + "&lng=" + longitude;
+    $("a#link_geo").attr("href", geo_url);
+  });
+
+:javascript
+  navigator.geolocation.getCurrentPosition(function(position) {
+    window.location = 'http://www.ubimachine.com/photos?category=special&lat='+position.coords.latitude+'&lng='+position.coords.longitude;
+  });
+  
+= link_to "Geotagged photos", "#", :id => "link_geo"

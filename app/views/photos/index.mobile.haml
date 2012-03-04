@@ -7,7 +7,7 @@
     - cities = {"newyork" => "New York", "paris" => "Paris", "tokyo" => "Tokyo", "sanfrancisco" => "San Francisco", "london" => "London"}
     - if params[:category].nil?
       - if ig_logged_in
-        %h3#feed= "My feed"    
+        %h3#feed= "My feed"
       - else
         %h3#feed= "Popular in #{cities[current_city]}"
     -elsif params[:category] == "food"
