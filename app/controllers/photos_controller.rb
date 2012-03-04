@@ -136,7 +136,7 @@ class PhotosController < ApplicationController
           venues_id << venue[0]
         end
         photos_lasthours.each do |photo|
-          photos_hash[photo.id.to_s] = {"distance" => photo.distance_from([params[:lat].to_f,params[:lng].to_f]), 
+          photos_hash[photo.id.to_s] = {"distance" => photo.distance_from([40.7214996,-73.9888294]), 
                                    "venue_photos" => photo.venue_photos,
                                    "time_ago" => time_now - photo.time_taken.to_i,
                                    "has_caption" => !(photo.caption.blank?),
@@ -152,7 +152,7 @@ class PhotosController < ApplicationController
         end
         #photos trending first
         photos = []
-        photos_hash.sort_by { |k,v| [v["time_ago"], v["distance"]]}.each do |photo|
+        photos_hash.sort_by { |k,v| v["time_ago"]}.sort_by { |k,v| v["distance"]}.each do |photo|
           unless photo[1]["nb_lasthours_photos"] == 1
             photos << photo[0]
             photos_hash.delete(photo[0])
