@@ -1,7 +1,7 @@
-/ - if params[:category] == "special"
-/   .plan
-/     = image_tag "http://maps.google.com/maps/api/staticmap?center=" + params[:lat] + "," + params[:lng] + "&zoom=14&size=320x150&sensor=false&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C" +params[:lat]+","+params[:lng]
-#map_canvas{:style => "width: 100%; height: 150px"}
+- if params[:category] == "special"
+  .plan
+    = image_tag "http://maps.google.com/maps/api/staticmap?center=" + params[:lat] + "," + params[:lng] + "&zoom=14&size=320x150&sensor=false&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C" +params[:lat]+","+params[:lng]
+/ #map_canvas{:style => "width: 100%; height: 150px"}
 
 .container
   .content_below
