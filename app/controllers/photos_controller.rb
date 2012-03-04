@@ -160,7 +160,7 @@ class PhotosController < ApplicationController
         end
         
         #photos dendroits populaires
-        photos_hash.sort_by { |k,v| v["venue_photos"]}.each do |photo|
+        photos_hash.sort_by { |k,v| v["venue_photos"]}.reverse.each do |photo|
           photos << photo[0]
         end
         
