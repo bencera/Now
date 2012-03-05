@@ -223,25 +223,35 @@ class PhotosController < ApplicationController
         venues_id << venue[0]
       end
       photos_lasthours.each do |photo|
-        photos_hash[photo.id.to_s] = {"distance" => photo.distance_from([params[:lat].to_f,params[:lng].to_f]), 
+        photos_hash[photo.id.to_s] = {"distance" => photo.distance_from([40.7214996,-73.9888294]), 
                                  "venue_photos" => photo.venue_photos,
                                  "time_ago" => time_now - photo.time_taken.to_i,
                                  "has_caption" => !(photo.caption.blank?),
-                                 "nb_lasthours_photos" => venues_id.count(photo.venue_id)
+                                 "nb_lasthours_photos" => venues_id.count(photo.venue_id),
+                                 "category" => photo.category
                                   }
       end
       
+      #take out photos too far
       distance_max = 0.5
       photos_hash.each do |photo|
         if photo[1]["distance"] > distance_max
           photos_hash.delete(photo[0])
         end
       end
+      
       #photos trending first
       photos = []
       photos_hash.sort_by { |k,v| v["time_ago"]}.sort_by { |k,v| v["distance"]}.each do |photo|
         unless photo[1]["nb_lasthours_photos"] == 1
           photos << photo[0]
+          photos_hash.delete(photo[0])
+        end
+      end
+      
+      #take out photos from weird categories
+      photos_hash.each do |photo|
+        if photo[1]["category"] == "College & University" or photo[1]["category"] == "Travel & Transport" or photo[1]["category"] == "Professional & Other Places" or photo[1]["category"].blank?
           photos_hash.delete(photo[0])
         end
       end
