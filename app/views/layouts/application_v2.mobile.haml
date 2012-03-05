@@ -16,5 +16,5 @@
   %body
     #wrapper
       #content
-        #map= image_tag "http://maps.google.com/maps/api/staticmap?center=40.7223901,-73.9854093&zoom=14&size=320x94&sensor=false&maptype=roadmap&scale=2&markers=color:blue%7Clabel:Sa%7C40.7223901,-73.9854093"
+        #map= image_tag "http://maps.google.com/maps/api/staticmap?center=#{params[:lat]},#{params[:lng]}&zoom=14&size=320x94&sensor=false&maptype=roadmap&scale=2&markers=color:blue%7Clabel:Sa%7C#{params[:lat]},#{params[:lng]}"
         = yield
