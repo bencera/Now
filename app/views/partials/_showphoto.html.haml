@@ -23,7 +23,8 @@
                 %a.useful_btn.btn#useful{:href => '/create_account', :'data-original-title' => "Some title text", :rel => 'twipsy'}
                   = image_tag "29-heart.png", :width => "8px", :style => "float: left;"
                   todo/done
-                %a.done_btn.btn#done{:href => '/create_account'}
+                %a.done_btn.btn
+                #done{:href => '/create_account'}
                   = image_tag "chat.png", :width => "8px", :style => "float: left;"
                   comment
               - if photo.requests.blank?
