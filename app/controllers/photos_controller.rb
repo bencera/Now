@@ -251,7 +251,7 @@ class PhotosController < ApplicationController
       
       #take out photos from weird categories
       photos_hash.each do |photo|
-        if photo[1]["category"] == "College & University" or photo[1]["category"] == "Travel & Transport" or photo[1]["category"] == "Professional & Other Places" or photo[1]["category"].blank?
+        if photo[1]["category"] == "College & University" or photo[1]["category"] == "Travel & Transport" or photo[1]["category"] == "Professional & Other Places" or photo[1]["category"] == "Great Outdoors" or photo[1]["category"].blank?
           photos_hash.delete(photo[0])
         end
       end
