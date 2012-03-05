@@ -1,0 +1,20 @@
+!!! 5
+%html
+  %head
+    %meta{:charset => "UTF-8"}
+    %title ubimachine
+    %meta{:name => "description", :content => "ubimachine, instagram, foursquare, mobile, to-do, things to do, discover, discovery, explore, exploration, cities, geolocation, location, hashtag"}
+    %meta{:name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;"}
+    %meta{:name => "apple-mobile-web-app-capable", :content =>"yes"}
+    %meta{:name => "apple-mobile-web-app-status-bar-style", :content=>"black"}
+    %link{:rel => "apple-touch-icon-precomposed", :href => "imgs/apple-touch-icon-precomposed.png"}
+    %link{:rel => "apple-touch-startup-image",:href => "imgs/startup.png"}
+    = stylesheet_link_tag "mobile/reset.css"
+    = stylesheet_link_tag "mobile/structure.css"
+    = stylesheet_link_tag "mobile/styles.css"
+    = javascript_include_tag "application"
+  %body
+    #wrapper
+      #content
+        #map= image_tag "http://maps.google.com/maps/api/staticmap?center=40.7223901,-73.9854093&zoom=14&size=320x94&sensor=false&maptype=roadmap&scale=2&markers=color:blue%7Clabel:Sa%7C40.7223901,-73.9854093"
+        = yield

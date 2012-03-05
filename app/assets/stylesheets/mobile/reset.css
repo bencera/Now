@@ -1,0 +1,276 @@
+@charset "UTF-8";
+
+/*###################################################
+# RESET                                             #
+###################################################*/
+
+/* 
+  html5doctor.com Reset Stylesheet (Eric Meyer's Reset Reloaded + HTML5 baseline)
+  v1.4 2009-07-27 | Authors: Eric Meyer & Richard Clark
+  html5doctor.com/html-5-reset-stylesheet/
+*/
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+  margin:0;
+  padding:0;
+  border:0;
+  outline:0;
+  font-size:100%;
+  vertical-align:baseline;
+  background:transparent;
+}                  
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {display:block;}
+
+nav ul {list-style:none;}
+
+blockquote, q {quotes:none;}
+
+blockquote:before, blockquote:after,
+q:before, q:after { content:''; content:none; }
+
+a { margin:0; padding:0; font-size:100%; vertical-align:baseline; background:transparent; }
+
+ins { background-color:#ff9; color:#000; text-decoration:none; }
+
+mark { background-color:#ff9; color:#000; font-style:italic; font-weight:bold; }
+
+del { text-decoration: line-through; }
+
+abbr[title], dfn[title] { border-bottom:1px dotted; cursor:help; }
+
+/* tables still need cellspacing="0" in the markup */
+table { border-collapse:collapse; border-spacing:0; }
+
+hr { display:block; height:1px; border:0; border-top:1px solid #ccc; margin:1em 0; padding:0; }
+
+input, select {vertical-align:middle;}
+
+/* END RESET CSS */
+
+/*--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------*/
+
+
+/*###################################################
+# GENERAL RULES  -  REBOOT                          #
+###################################################*/
+
+/* force a scrollbar in non-IE browsers */ 
+html { overflow-y: scroll; }
+
+body {
+	color: #000;
+	background-color: #fff;
+	font: 14px "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: bold;
+	line-height: 1.5em;
+	margin-bottom: 0.5em;
+}
+
+h1 {
+	font-size: 210%;
+}
+
+h2 {
+	font-size: 190%;
+}
+
+h3 {
+	font-size: 170%;
+}
+
+h4 {
+	font-size: 150%;
+}
+
+h5 {
+	font-size: 130%;
+}
+
+h6 {
+	font-size: 110%;
+}
+
+p {
+	margin-bottom: 15px;
+	line-height: 1.4em;
+}
+
+p.last {
+	margin-bottom: 0px;
+}
+
+ul, ol {
+	padding-left: 20px;
+	margin: 0px 0px 15px 0px;
+}
+
+ol {
+	list-style-type: decimal;
+}
+
+/* Remove margins for navigation lists */
+nav ul, nav li {
+	margin: 0;
+	padding: 0;
+} 
+
+dl {
+	margin: 0px 0px 15px 0px;
+}
+
+dt {
+	font-weight: bold;
+}
+
+dd {
+	margin-bottom: 10px;
+	padding: 0px 0px 0px 20px;
+}
+
+strong {
+	font-weight: bold;
+}
+
+small {
+	font-size: 85%; 
+}
+
+em {
+	font-style: italic;
+}
+
+sub { vertical-align: sub; font-size: smaller; }
+
+sup { vertical-align: super; font-size: smaller; }
+
+a {
+}
+
+a:link {
+	text-decoration: none;
+	outline: none;
+}
+
+a:visited {
+	text-decoration: none;
+	outline: none;
+}
+
+a:hover {
+	text-decoration: underline;
+	outline: none;
+}
+
+label, 
+input[type=button],
+input[type=submit], 
+button {
+	cursor: pointer;
+}
+
+blockquote {
+	padding: 0px 50px;
+	font-style: italic;
+}
+
+/* Selection declarations.*/
+::-moz-selection { 
+	background: rgba(0,82,137,0.35); 
+	color:#fff;
+	text-shadow: 1px 1px 0 rgba(0,0,0,0.4); 
+}
+
+::selection {
+	background: rgba(0,82,137,0.35); 
+	color:#fff;
+	text-shadow: 1px 1px 0 rgba(0,0,0,0.4); 
+} 
+
+/*  j.mp/webkit-tap-highlight-color */
+/*a:link { -webkit-tap-highlight-color: #b61800; }*/
+
+/* make buttons play nice in IE:    
+   www.viget.com/inspire/styling-the-button-element-in-internet-explorer/ */
+button {  width: auto; overflow: visible; }
+
+/* 
+ * Non-semantic helper classes 
+ */
+
+/* Hide for both screenreaders and browsers
+   css-discuss.incutio.com/wiki/Screenreader_Visibility */
+.hidden { display: none; visibility: hidden; } 
+
+/* Hide only visually, but have it available for screenreaders 
+   www.webaim.org/techniques/css/invisiblecontent/  &  j.mp/visuallyhidden  */
+.visuallyhidden { 
+	position: absolute !important;    
+	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+	clip: rect(1px, 1px, 1px, 1px);
+}
+
+/* Hide visually and from screenreaders, but maintain layout */
+.invisible { visibility: hidden; }
+
+.clear {
+	clear: both;
+	display: block;
+}
+
+.nowrap {
+	white-space: nowrap;
+}
+
+.text_align_left {
+	text-align: left;
+}
+
+.text_align_right {
+	text-align: right;
+}
+
+.text_align_center {
+	text-align: center;
+}
+
+
+/*------ Clearfix ------*/
+.clearfix:before, 
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+.clearfix:after {
+	clear: both;
+}
+
+.clearfix {
+	display: block;
+}
+
+/* Fix clearfix: blueprintcss.lighthouseapp.com/projects/15318/tickets/5-extra-margin-padding-bottom-of-page */
+.clearfix { zoom: 1; }
+
+/*--------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------*/

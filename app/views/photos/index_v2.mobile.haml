@@ -1,0 +1,3 @@
+#results
+  = render :partial => 'partials/card', :collection => @photos, :as => :photo
+  = pageless @photos.total_pages, "/disrupt?lat=40.7223901&lng=-73.9854093"

@@ -53,6 +53,9 @@ Ubimachine::Application.routes.draw do
   
   match "geo" => "photos#geo"
   
+  
+  match "disrupt" => "photos#index_v2"
+  
   require 'resque_scheduler'
   mount Resque::Server, :at => "/resque"
   

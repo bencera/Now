@@ -194,6 +194,87 @@ class PhotosController < ApplicationController
     
   end
   
+  layout :choose_layout
+  
+  def index_v2
+    
+    require 'will_paginate/array'
+
+    if Rails.env == "development"
+      @photos = Photo.all.limit(500).paginate(:per_page => 20, :page => params[:page])
+      if request.xhr?
+        if is_mobile_device?
+          render :partial => 'partials/card', :collection => @photos, :as => :photo
+        else
+          render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
+        end
+      end
+    else
+      @id = true
+      photos_hash = {}
+      time_now = Time.now.to_i
+      venues = []
+      photos_lasthours = Photo.where(city: "newyork").last_hours(3)
+      photos_lasthours.each do |photo|
+        venues << [photo.venue_id, photo.user_id] unless venues.include?([photo.venue_id, photo.user_id])
+      end
+      venues_id = []
+      venues.each do |venue|
+        venues_id << venue[0]
+      end
+      photos_lasthours.each do |photo|
+        photos_hash[photo.id.to_s] = {"distance" => photo.distance_from([params[:lat].to_f,params[:lng].to_f]), 
+                                 "venue_photos" => photo.venue_photos,
+                                 "time_ago" => time_now - photo.time_taken.to_i,
+                                 "has_caption" => !(photo.caption.blank?),
+                                 "nb_lasthours_photos" => venues_id.count(photo.venue_id)
+                                  }
+      end
+      
+      distance_max = 0.5
+      photos_hash.each do |photo|
+        if photo[1]["distance"] > distance_max
+          photos_hash.delete(photo[0])
+        end
+      end
+      #photos trending first
+      photos = []
+      photos_hash.sort_by { |k,v| v["time_ago"]}.sort_by { |k,v| v["distance"]}.each do |photo|
+        unless photo[1]["nb_lasthours_photos"] == 1
+          photos << photo[0]
+          photos_hash.delete(photo[0])
+        end
+      end
+      
+      #photos dendroits populaires
+      photos_hash.sort_by { |k,v| v["venue_photos"]}.reverse.each do |photo|
+        photos << photo[0]
+      end
+      
+      #if photo has caption
+      #photos from same venue at same time of the day, or same day of the week at time of the day
+      #number of photos in venue in total in db
+      #number of photos in the last 3 hours
+      #photo has a face
+      if is_mobile_device?
+        @photos = photos.paginate(:per_page => 5, :page => params[:page])
+      else
+        @photos = photos.paginate(:per_page => 20, :page => params[:page])
+      end
+      
+      if request.xhr?
+        if is_mobile_device?
+          render :partial => 'partials/card', :collection => @photos, :as => :photo
+        else
+          render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
+        end
+      end
+      
+    end
+    
+    
+    
+  end
   
   def geo
     
@@ -254,5 +335,15 @@ class PhotosController < ApplicationController
       end
     end
   end
+  
+  private
+    def choose_layout    
+      if action_name == "index_v2"
+        'application_v2'
+      else
+        'application'
+      end
+    end
+  
   
 end

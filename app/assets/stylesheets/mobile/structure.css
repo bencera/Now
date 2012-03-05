@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+/*###################################################
+# STRUCTURE AND LAYOUT                              #
+###################################################*/
+
+
+/*--- Main Base ---*/
+
+div#wrapper {
+	
+}
+
+div#content {
+	width: 100%;	
+}
+
+/*--- Main Helper Classes ---*/
+
+.left {
+	float: left;
+	display: inline;
+}
+
+.right {
+	float: right;
+	display: inline;
+}
+
+.mid{
+	float: left;
+	display: inline;
+	margin-right: 20px;
+}
+
+/*-- Rows --*/
+
+.row {
+	margin-bottom: 30px;
+	clear: both;
+}
+
+.row.last {
+	margin-bottom: 0px;
+}

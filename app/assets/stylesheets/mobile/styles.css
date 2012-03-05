@@ -1,0 +1,119 @@
+@charset "UTF-8";
+
+/*###################################################
+# MASTER STYLESHEET                                 #
+###################################################*/
+
+
+/*-------------------------------------------------------------------- 
+  
+- Project:     ubimachine
+- Version:     0.1
+
+- Author:      Jeremy Le Van
+- Contact:     hello@jeremylevan.com
+
+- Last CSS Update: March 4th, 2012
+
+(c) Copyright 2011 Jeremy Le Van. All Rights Reserved.
+
+-------------------------------------------------------------------*/
+
+/*###################################################
+# GENERAL RULES                                     #
+###################################################*/
+
+body {
+	color: #4d4d4d;
+	background-color: #f6f5ee;
+	font: 7px "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
+}
+
+div#content {
+	margin: 0 auto;
+	width: 320px;
+}
+
+div#map {
+	height: 96px;
+}
+
+div#map img {
+	height: 94px;
+	position: fixed;
+	top: 0;
+	width: 320px;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+	box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+/*div#content .card.first {
+	margin-top: 110px;
+}*/
+
+div#content .card {
+	background-color: #ffffff;
+	border-radius: 2px;
+	margin: 12px auto;
+	margin-bottom: 30px;
+	width: 300px;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+	box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+
+}
+
+div#content .card .venue_photo {
+	overflow:hidden;
+	margin-bottom: 0;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+}
+
+/* input values to crop the image: top, right, bottom, left */
+div#content .card .venue_photo img {
+	margin: -53px 0 -53px -4px;
+}
+
+div#content .card .infos {
+	margin: 0 6px;
+}
+
+div#content .card .infos .geo_icon {
+	margin-top: 4px;
+}
+
+div#content .card .infos .venue_name {
+	color: #ff4a6f;
+	float: left;
+	font-size: 13px;
+	margin: 0 0 0 2px;
+}
+
+div#content .card .infos .venue_type {
+	clear: left;
+	color: #9c9c9c;
+	float: left;
+	font-size: 11px;
+	margin: -3px 0 0;
+}
+
+div#content .card .infos .timestamp {
+	color:  #9c9c9c;
+	float: right;
+	font-size: 11px;
+	margin: 3px 0 0;
+}
+
+div#content .card .infos .caption {
+	clear: left;
+	float: left;
+	font-size: 14px;
+	margin: 4px 0 8px 0;
+}
+
+
+
+
+
