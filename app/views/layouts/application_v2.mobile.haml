@@ -13,8 +13,11 @@
     = stylesheet_link_tag "mobile/structure.css"
     = stylesheet_link_tag "mobile/styles.css"
     = javascript_include_tag "application"
+    = csrf_meta_tag
+    %script{:type => "text/javascript", :src => "http://maps.googleapis.com/maps/api/js?key=AIzaSyDaB7Lbgnwfni3jrzOephB8HW7_6tJf-Es&sensor=true"}
   %body
     #wrapper
       #content
-        #map= image_tag "http://maps.google.com/maps/api/staticmap?center=#{params[:lat]},#{params[:lng]}&zoom=14&size=320x94&sensor=false&maptype=roadmap&scale=2&markers=color:blue%7Clabel:Sa%7C#{params[:lat]},#{params[:lng]}"
+        #map
+          = image_tag "http://maps.google.com/maps/api/staticmap?center=#{params[:lat]},#{params[:lng]}&zoom=14&size=320x94&sensor=false&maptype=roadmap&scale=2&markers=color:blue%7Clabel:Sa%7C#{params[:lat]},#{params[:lng]}"
         = yield

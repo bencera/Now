@@ -348,7 +348,7 @@ class PhotosController < ApplicationController
   
   private
     def choose_layout    
-      if action_name == "index_v2"
+      if action_name == "index_v2" or action_name == "geo"
         'application_v2'
       else
         'application'
