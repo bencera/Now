@@ -39,6 +39,8 @@
                 London
               - elsif current_city == 'sanfrancisco'
                 San Francisco
+              - elsif current_city == 'austin'
+                Austin
               - else
                 Select a city
               
@@ -51,6 +53,8 @@
                 %a{:href=>"/photos?city=paris&category=outdoors"} Paris
               %li
                 %a{:href=>"/photos?city=london&category=outdoors"} London
+              %li
+                %a{:href=>"/photos?city=austin&category=outdoors"} Austin
         %ul.nav.secondary-nav
           %li
             %a{:href=>"/about"} About
@@ -94,6 +98,8 @@
                 London
               - elsif current_city == 'sanfrancisco'
                 San Francisco
+              - elsif current_city == 'austin'
+                Austin
               - else
                 Select a city
               
@@ -106,6 +112,8 @@
                 %a{:href=>"/photos?city=paris&category=outdoors"} Paris
               %li
                 %a{:href=>"/photos?city=london&category=outdoors"} London
+              %li
+                %a{:href=>"/photos?city=austin&category=outdoors"} Austin
         %ul.nav.secondary-nav
           %li
           %a.btn.pull-right{:href=>'https://api.instagram.com/oauth/authorize/?client_id=6c3d78eecf06493499641eb99056d175&redirect_uri=http://www.ubimachine.com/auth/instagram/callback&response_type=code&scope=likes+comments+relationships'} Signup

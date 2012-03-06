@@ -1,5 +1,5 @@
 $(function() {
-	var lls = {newyork: "40.745,-73.99", paris: "48.86,2.34", tokyo: "35.69,139.73", london: "51.51,-0.13", sanfrancisco: "37.76,-122.45"};
+	var lls = {newyork: "40.745,-73.99", paris: "48.86,2.34", tokyo: "35.69,139.73", london: "51.51,-0.13", sanfrancisco: "37.76,-122.45", austin: "30.2622,-97.7396"};
 	$('.auto_search_complete').autocomplete({
     minLength: 3,
     delay: 100,
