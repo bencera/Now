@@ -211,55 +211,113 @@ class PhotosController < ApplicationController
       end
     else
       @id = true
-      photos_hash = {}
-      time_now = Time.now.to_i
-      venues = []
-      photos_lasthours = Photo.where(city: "newyork").last_hours(3)
+      ########### venue algo #################
+      photos_lasthours = Photo.where(city: "newyork").last_hours(3).order_by([[:time_taken, :desc]])
+      venues = {}
       photos_lasthours.each do |photo|
-        venues << [photo.venue_id, photo.user_id] unless venues.include?([photo.venue_id, photo.user_id])
-      end
-      venues_id = []
-      venues.each do |venue|
-        venues_id << venue[0]
-      end
-      photos_lasthours.each do |photo|
-        photos_hash[photo.id.to_s] = {"distance" => photo.distance_from([params[:lat].to_f,params[:lng].to_f]), 
-                                 "venue_photos" => photo.venue_photos,
-                                 "time_ago" => time_now - photo.time_taken.to_i,
-                                 "has_caption" => !(photo.caption.blank?),
-                                 "nb_lasthours_photos" => venues_id.count(photo.venue_id),
-                                 "category" => photo.category
-                                  }
+        if venues.include?(photo.venue_id)
+          venues[photo.venue_id]["photos"] << photo.id.to_s
+          unless venues[photo.venue_id]["users"].include?(photo.user_id)
+            venues[photo.venue_id]["n_photos"] += 1
+            venues[photo.venue_id]["users"] << photo.user_id
+          end
+        else
+          venues[photo.venue_id] = {"n_photos" => 1, 
+                                    "users" => [photo.user_id],
+                                    "photos" => [photo.id.to_s],
+                                    "distance" => photo.distance_from([params[:lat].to_f,params[:lng].to_f]),
+                                    "venue_photos" => photo.venue_photos,
+                                    "category" => photo.category
+                                     }
+        end
       end
       
       #take out photos too far
       distance_max = 0.5
-      photos_hash.each do |photo|
-        if photo[1]["distance"] > distance_max
-          photos_hash.delete(photo[0])
+      venues.each do |venue|
+        if venue[1]["distance"] > distance_max
+          venues.delete(venue[0])
         end
       end
       
-      #photos trending first
       photos = []
-      photos_hash.sort_by { |k,v| v["time_ago"]}.sort_by { |k,v| v["distance"]}.each do |photo|
-        unless photo[1]["nb_lasthours_photos"] == 1
-          photos << photo[0]
-          photos_hash.delete(photo[0])
+      
+      #trending
+      days = (Time.now.to_i - 1325822183)/3600/24
+      venues.sort_by { |k,v| v["n_photos"]}.reverse.each do |venue|
+        if venue[1]["n_photos"] > 2* venue[1]["venue_photos"]/8/days + 1 and venue[1]["n_photos"] > 3
+          venue[1]["photos"].each do |photo|
+            photos << photo.to_s
+          end
+          venues.delete(venue[0])
         end
       end
-      
+
       #take out photos from weird categories
-      photos_hash.each do |photo|
-        if photo[1]["category"] == "College & University" or photo[1]["category"] == "Travel & Transport" or photo[1]["category"] == "Professional & Other Places" or photo[1]["category"] == "Great Outdoors" or photo[1]["category"].blank?
-          photos_hash.delete(photo[0])
+      venues.each do |venue|
+        if venue[1]["category"] == "College & University" or venue[1]["category"] == "Travel & Transport" or venue[1]["category"] == "Professional & Other Places" or venue[1]["category"] == "Great Outdoors" or venue[1]["category"].blank?
+          venues.delete(venue[0])
         end
       end
       
-      #photos dendroits populaires
-      photos_hash.sort_by { |k,v| v["venue_photos"]}.reverse.each do |photo|
-        photos << photo[0]
+      #photos dendroits populaires      
+      venues.sort_by { |k,v| v["venue_photos"]}.reverse.each do |photo|
+        venue[1]["photos"].each do |photo|
+          photos << photo.to_s
+        end
       end
+
+      
+      ########### photo algo #################
+      # photos_hash = {}
+      # time_now = Time.now.to_i
+      # venues = []
+      # photos_lasthours = Photo.where(city: "newyork").last_hours(3)
+      # photos_lasthours.each do |photo|
+      #   venues << [photo.venue_id, photo.user_id] unless venues.include?([photo.venue_id, photo.user_id])
+      # end
+      # venues_id = []
+      # venues.each do |venue|
+      #   venues_id << venue[0]
+      # end
+      # photos_lasthours.each do |photo|
+      #   photos_hash[photo.id.to_s] = {"distance" => photo.distance_from([params[:lat].to_f,params[:lng].to_f]), 
+      #                            "venue_photos" => photo.venue_photos,
+      #                            "time_ago" => time_now - photo.time_taken.to_i,
+      #                            "has_caption" => !(photo.caption.blank?),
+      #                            "nb_lasthours_photos" => venues_id.count(photo.venue_id),
+      #                            "category" => photo.category
+      #                             }
+      # end
+      # 
+      # #take out photos too far
+      # distance_max = 0.5
+      # photos_hash.each do |photo|
+      #   if photo[1]["distance"] > distance_max
+      #     photos_hash.delete(photo[0])
+      #   end
+      # end
+      # 
+      # #photos trending first
+      # photos = []
+      # photos_hash.sort_by { |k,v| v["time_ago"]}.sort_by { |k,v| v["distance"]}.each do |photo|
+      #   unless photo[1]["nb_lasthours_photos"] == 1
+      #     photos << photo[0]
+      #     photos_hash.delete(photo[0])
+      #   end
+      # end
+      # 
+      # #take out photos from weird categories
+      # photos_hash.each do |photo|
+      #   if photo[1]["category"] == "College & University" or photo[1]["category"] == "Travel & Transport" or photo[1]["category"] == "Professional & Other Places" or photo[1]["category"] == "Great Outdoors" or photo[1]["category"].blank?
+      #     photos_hash.delete(photo[0])
+      #   end
+      # end
+      # 
+      # #photos dendroits populaires
+      # photos_hash.sort_by { |k,v| v["venue_photos"]}.reverse.each do |photo|
+      #   photos << photo[0]
+      # end
       
       #if photo has caption
       #photos from same venue at same time of the day, or same day of the week at time of the day
