@@ -28,4 +28,8 @@ fetch_photos_sanfrancisco:
   args: "823415"
   description: "Fetchs instagram pics every minute"
   
-  
+fetch_photos_austin:
+  every: "2m"
+  class: Fetchigphotos
+  args: "914326"
+  description: "Fetchs instagram pics every minute"
