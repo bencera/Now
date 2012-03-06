@@ -261,7 +261,7 @@ class PhotosController < ApplicationController
       end
       
       #photos dendroits populaires      
-      venues.sort_by { |k,v| v["venue_photos"]}.reverse.each do |photo|
+      venues.sort_by { |k,v| v["venue_photos"]}.reverse.each do |venue|
         venue[1]["photos"].each do |photo|
           photos << photo.to_s
         end
