@@ -233,16 +233,16 @@ class PhotosController < ApplicationController
       end
       
       #take out photos too far
-      if params[:range] = "walking"
+      if params[:range] == "walking"
         distance_min = 0
         distance_max = 0.5
-      elsif params[:range] = "cab"
+      elsif params[:range] == "cab"
         distance_min = 0.5
         distance_max = 1
-      elsif params[:range] = "subway"
+      elsif params[:range] == "subway"
         distance_min = 1
         distance_max = 2
-      elsif params[:range] = "city"
+      elsif params[:range] == "city"
         distance_min = 2
         distance_max = 10
       end
