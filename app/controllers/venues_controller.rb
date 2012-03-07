@@ -80,4 +80,37 @@ class VenuesController < ApplicationController
   def nophotos
   end
   
+  layout :choose_layout
+  
+  def venue_v2
+    require 'will_paginate/array'
+    @venue = Venue.find(params[:id])
+    
+    photos = @venue.photos.order_by([[:time_taken, :desc]])
+    
+    if is_mobile_device?
+      @photos = photos.paginate(:per_page => 5, :page => params[:page])
+    else
+      @photos = photos.paginate(:per_page => 20, :page => params[:page])
+    end
+    
+    if request.xhr?
+      if is_mobile_device?
+        render :partial => 'partials/card', :collection => @photos, :as => :photo
+      else
+        render :partial => 'partials/showphoto', :collection => @photos, :as => :photo
+      end
+    end
+    
+  end
+  
+  private
+    def choose_layout    
+      if action_name == "venue_v2"
+        'application_v2'
+      else
+        'application'
+      end
+    end
+  
 end

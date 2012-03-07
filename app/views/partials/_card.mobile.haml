@@ -4,7 +4,7 @@
   .card
     .venue_photo
       = image_tag photo.url[1], :width => "306"
-    .infos.clearfix
+    %a.infos.clearfix{:href => "venue_v2/#{photo.venue.id}"}
       = image_tag "geo_icon.gif", :class => "geo_icon left", :height => "10", :width => "8"
       %h1.venue_name= truncate(photo.venue.name, :length => 30)
       %p.timestamp

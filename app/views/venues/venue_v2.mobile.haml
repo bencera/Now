@@ -1,0 +1,9 @@
+.card
+  .infos.clearfix
+    = image_tag "geo_icon.gif", :class => "geo_icon left", :height => "10", :width => "8"
+    %h1.venue_name= truncate(@venue.name, :length => 30)
+    %h2.venue_type= @venue.categories.first["name"] unless @venue.categories.nil?
+
+#results
+  = render :partial => 'partials/card', :collection => @photos, :as => :photo
+  = pageless @photos.total_pages, "/venue_v2/#{params[:id]}"
