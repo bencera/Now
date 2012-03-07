@@ -4,8 +4,8 @@
   
 #more{:style => "font-size: 14px; text-align: center; margin-bottom: 10px;"}
   - if params[:range] == "walking"
-    = link_to "a cheap cab ride away", "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=cab"
+    %a{:onclick => "parent.location", :href => "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=cab"} a cheap cab ride away
   - elsif params[:range] == "cab"
-    = link_to "a subway ride away", "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=subway"
+    %a{:onclick => "parent.location", :href => "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=subway"} a subway ride away
   - elsif params[:range] == "subway"
-    = link_to "the whole city is your playground", "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=city"
+    %a{:onclick => "parent.location", :href => "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=city"} the whole city is your playground
