@@ -85,6 +85,8 @@ class VenuesController < ApplicationController
   def venue_v2
     require 'will_paginate/array'
     @venue = Venue.find(params[:id])
+    params[:lat] = @venue.coordinates[1]
+    params[:lng] = @venue.coordinates[0]
     
     photos = @venue.photos.order_by([[:time_taken, :desc]])
     
