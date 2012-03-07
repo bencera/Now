@@ -1,3 +1,11 @@
 #results
   = render :partial => 'partials/card', :collection => @photos, :as => :photo
-  = pageless @photos.total_pages, "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}"
+  = pageless @photos.total_pages, "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=#{params[:range]}"
+  
+#more{:style => "font-size: 14px; text-align: center; margin-bottom: 10px;"}
+  - if params[:range] == "walking"
+    = link_to "a cheap cab ride away", "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=cab"
+  - elsif params[:range] == "cab"
+    = link_to "a subway ride away", "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=subway"
+  - elsif params[:range] == "subway"
+    = link_to "the whole city is your playground", "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=city"

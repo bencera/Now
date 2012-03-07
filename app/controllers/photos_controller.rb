@@ -201,7 +201,7 @@ class PhotosController < ApplicationController
     require 'will_paginate/array'
 
     if Rails.env == "development"
-      @photos = Photo.all.limit(500).paginate(:per_page => 20, :page => params[:page])
+      @photos = Photo.all.limit(40).paginate(:per_page => 20, :page => params[:page])
       if request.xhr?
         if is_mobile_device?
           render :partial => 'partials/card', :collection => @photos, :as => :photo
@@ -233,9 +233,22 @@ class PhotosController < ApplicationController
       end
       
       #take out photos too far
-      distance_max = 0.5
+      if params[:range] = "walking"
+        distance_min = 0
+        distance_max = 0.5
+      elsif params[:range] = "cab"
+        distance_min = 0.5
+        distance_max = 1
+      elsif params[:range] = "subway"
+        distance_min = 1
+        distance_max = 2
+      elsif params[:range] = "city"
+        distance_min = 2
+        distance_max = 10
+      end
+      
       venues.each do |venue|
-        if venue[1]["distance"] > distance_max
+        unless distance_min < venue[1]["distance"] and venue[1]["distance"] < distance_max
           venues.delete(venue[0])
         end
       end
@@ -267,62 +280,8 @@ class PhotosController < ApplicationController
         end
       end
 
-      
-      ########### photo algo #################
-      # photos_hash = {}
-      # time_now = Time.now.to_i
-      # venues = []
-      # photos_lasthours = Photo.where(city: "newyork").last_hours(3)
-      # photos_lasthours.each do |photo|
-      #   venues << [photo.venue_id, photo.user_id] unless venues.include?([photo.venue_id, photo.user_id])
-      # end
-      # venues_id = []
-      # venues.each do |venue|
-      #   venues_id << venue[0]
-      # end
-      # photos_lasthours.each do |photo|
-      #   photos_hash[photo.id.to_s] = {"distance" => photo.distance_from([params[:lat].to_f,params[:lng].to_f]), 
-      #                            "venue_photos" => photo.venue_photos,
-      #                            "time_ago" => time_now - photo.time_taken.to_i,
-      #                            "has_caption" => !(photo.caption.blank?),
-      #                            "nb_lasthours_photos" => venues_id.count(photo.venue_id),
-      #                            "category" => photo.category
-      #                             }
-      # end
-      # 
-      # #take out photos too far
-      # distance_max = 0.5
-      # photos_hash.each do |photo|
-      #   if photo[1]["distance"] > distance_max
-      #     photos_hash.delete(photo[0])
-      #   end
-      # end
-      # 
-      # #photos trending first
-      # photos = []
-      # photos_hash.sort_by { |k,v| v["time_ago"]}.sort_by { |k,v| v["distance"]}.each do |photo|
-      #   unless photo[1]["nb_lasthours_photos"] == 1
-      #     photos << photo[0]
-      #     photos_hash.delete(photo[0])
-      #   end
-      # end
-      # 
-      # #take out photos from weird categories
-      # photos_hash.each do |photo|
-      #   if photo[1]["category"] == "College & University" or photo[1]["category"] == "Travel & Transport" or photo[1]["category"] == "Professional & Other Places" or photo[1]["category"] == "Great Outdoors" or photo[1]["category"].blank?
-      #     photos_hash.delete(photo[0])
-      #   end
-      # end
-      # 
-      # #photos dendroits populaires
-      # photos_hash.sort_by { |k,v| v["venue_photos"]}.reverse.each do |photo|
-      #   photos << photo[0]
-      # end
-      
       #if photo has caption
       #photos from same venue at same time of the day, or same day of the week at time of the day
-      #number of photos in venue in total in db
-      #number of photos in the last 3 hours
       #photo has a face
       if is_mobile_device?
         @photos = photos.paginate(:per_page => 5, :page => params[:page])
