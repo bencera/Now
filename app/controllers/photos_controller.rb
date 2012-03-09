@@ -201,6 +201,7 @@ class PhotosController < ApplicationController
     require 'will_paginate/array'
 
     if Rails.env == "development"
+      params[:next] = "cab"
       @photos = Photo.all.limit(40).paginate(:per_page => 20, :page => params[:page])
       if request.xhr?
         if is_mobile_device?
@@ -212,7 +213,7 @@ class PhotosController < ApplicationController
     else
       @id = true
       ########### venue algo #################
-      photos_lasthours = Photo.where(city: "newyork").last_hours(3).order_by([[:time_taken, :desc]])
+      photos_lasthours = Photo.where(city: "austin").last_hours(3).order_by([[:time_taken, :desc]])
       venues = {}
       photos_lasthours.each do |photo|
         if venues.include?(photo.venue_id)
@@ -236,12 +237,15 @@ class PhotosController < ApplicationController
       if params[:range] == "walking"
         distance_min = 0
         distance_max = 0.5
+        params[:next] = "cab"
       elsif params[:range] == "cab"
         distance_min = 0.5
         distance_max = 1
+        params[:next] = "subway"
       elsif params[:range] == "subway"
         distance_min = 1
         distance_max = 2
+        params[:next] = "city"
       elsif params[:range] == "city"
         distance_min = 2
         distance_max = 10
