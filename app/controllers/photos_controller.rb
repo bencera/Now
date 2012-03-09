@@ -236,7 +236,7 @@ class PhotosController < ApplicationController
       #take out photos too far
       if params[:range] == "walking"
         distance_min = 0
-        distance_max = 0.5
+        distance_max = 10
         params[:next] = "cab"
       elsif params[:range] == "cab"
         distance_min = 0.5
@@ -272,7 +272,7 @@ class PhotosController < ApplicationController
 
       #take out photos from weird categories
       venues.each do |venue|
-        if venue[1]["category"] == "College & University" or venue[1]["category"] == "Travel & Transport" or venue[1]["category"] == "Professional & Other Places" or venue[1]["category"] == "Great Outdoors" or venue[1]["category"].blank?
+        if venue[1]["category"] == "College & University" or venue[1]["category"] == "Travel & Transport" or venue[1]["category"] == "Professional & Other Places" or venue[1]["category"] == "Residence" or venue[1]["category"] == "Great Outdoors" or venue[1]["category"].blank?
           venues.delete(venue[0])
         end
       end
