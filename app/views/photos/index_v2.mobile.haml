@@ -2,7 +2,7 @@
   #trending{:style => "font-size: 14px;"}
     .infos.clearfix{:style => "float: none;"}
       - @trending_venues.each do |venue|
-        %h1.venue_name= Venue.find(venue[0]).name
+        %h1.venue_name= truncate(Venue.find(venue[0]).name, :length => 28)
         %p{:style => "margin-bottom: 0px;"}= "(#{venue[1]}+ people)" 
         %br
         
