@@ -236,18 +236,18 @@ class PhotosController < ApplicationController
       #take out photos too far
       if params[:range] == "walking"
         distance_min = 0
-        distance_max = 10
+        distance_max = 1
         params[:next] = "cab"
       elsif params[:range] == "cab"
-        distance_min = 0.5
-        distance_max = 1
-        params[:next] = "subway"
-      elsif params[:range] == "subway"
         distance_min = 1
         distance_max = 2
+        params[:next] = "subway"
+      elsif params[:range] == "subway"
+        distance_min = 2
+        distance_max = 3
         params[:next] = "city"
       elsif params[:range] == "city"
-        distance_min = 2
+        distance_min = 3
         distance_max = 10
       end
       
@@ -260,15 +260,19 @@ class PhotosController < ApplicationController
       photos = []
       
       #trending
+      trending_venues = {}
       days = (Time.now.to_i - 1325822183)/3600/24
       venues.sort_by { |k,v| v["n_photos"]}.reverse.each do |venue|
         if venue[1]["n_photos"] > 2* venue[1]["venue_photos"]/8/days + 1 and venue[1]["n_photos"] > 3
-          venue[1]["photos"].each do |photo|
+          venue[1]["photos"].limit(5).each do |photo|
             photos << photo.to_s
           end
+          trending_venues[venue[0]] = venue[1]["n_photos"]
           venues.delete(venue[0])
         end
       end
+      
+      @trending_venues = trending_venues
 
       #take out photos from weird categories
       venues.each do |venue|
