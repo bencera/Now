@@ -1,10 +1,10 @@
 .card
   #trending{:style => "font-size: 14px;"}
     .infos.clearfix{:style => "float: none; padding: 10px 0 10px 0;"}
-      %h1.trending_title{:style => "color: #777; font-size: 16px;"} Trending around you now
+      %h1.trending_title{:style => "color: #666; font-size: 16px;"} Trending around you now
       - @trending_venues.each do |venue|
         .venue_trending.clearfix{:style => "margin-bottom: 8px;"}
-          %h2.venue_name{:style => "float: left"}= truncate(Venue.find(venue[0]).name, :length => 34)
+          %h2.venue_name{:style => "float: left"}= truncate(Venue.find(venue[0]).name, :length => 38)
           %p{:style => "color: #bbb; font-weight: bold; float: right; margin: 0"}= "(#{venue[1]})"
 
         
