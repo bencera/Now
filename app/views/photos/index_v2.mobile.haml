@@ -4,7 +4,7 @@
       %h1.trending_title{:style => "color: #666; font-size: 16px;"} Trending around you now
       - @trending_venues.each do |venue|
         .venue_trending.clearfix{:style => "margin-bottom: 8px;"}
-          %a{:onclick => "parent.location='venue_v2/#{venue[0]}'"}
+          %a{:onclick => "parent.location='venue_v2/#{venue[0]}'", :style => "text-decoration: none;"}
             %h2.venue_name{:style => "float: left"}= truncate(Venue.find(venue[0]).name, :length => 38)
           %p{:style => "color: #bbb; font-weight: bold; float: right; margin: 0"}= "(#{venue[1]})"
 
