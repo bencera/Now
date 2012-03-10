@@ -261,7 +261,7 @@ class PhotosController < ApplicationController
       
       #trending
       trending_venues = {}
-      days = (Time.now.to_i - 1331312167)/3600/24
+      days = (Time.now.to_f - 1331218148)/3600/24
       venues.sort_by { |k,v| v["n_photos"]}.reverse.each do |venue|
         if venue[1]["n_photos"] > 2* venue[1]["venue_photos"]/8/days + 1 and venue[1]["n_photos"] > 4
           venue[1]["photos"].take(5).each do |photo|
@@ -283,7 +283,7 @@ class PhotosController < ApplicationController
       
       #photos dendroits populaires      
       venues.sort_by { |k,v| v["venue_photos"]}.reverse.each do |venue|
-        venue[1]["photos"].each do |photo|
+        venue[1]["photos"].take(5).each do |photo|
           photos << photo.to_s
         end
       end
