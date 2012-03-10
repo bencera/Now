@@ -1,4 +1,10 @@
-
+.card
+  #trending{:style => "font-size: 14px;"}
+    .infos.clearfix{:style => "float: none"}
+      - @trending_venues.each do |venue|
+        %h1.venue_name= Venue.find(venue[0]).name}
+        %p= "(#{venue[1]}+ people)" 
+        %br
 #results
   = render :partial => 'partials/card', :collection => @photos, :as => :photo
   = pageless @photos.total_pages, "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=#{params[:range]}"
