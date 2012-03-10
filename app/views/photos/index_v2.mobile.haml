@@ -8,8 +8,8 @@
   
 #more{:style => "font-size: 14px; text-align: center; margin-bottom: 10px;"}
   - if params[:range] == "walking"
-    %a{:onclick => "parent.location", :href => "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=cab"} a cheap cab ride away
+    %a{:onclick => "parent.location='/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=cab'"} a cheap cab ride away
   - elsif params[:range] == "cab"
-    %a{:onclick => "parent.location", :href => "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=subway"} a subway ride away
+    %a{:onclick => "parent.location='/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=subway'"} a subway ride away
   - elsif params[:range] == "subway"
-    %a{:onclick => "parent.location", :href => "/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=city"} the whole city is your playground
+    %a{:onclick => "parent.location='/disrupt?lat=#{params[:lat]}&lng=#{params[:lng]}&range=city'"} the whole city is your playground
