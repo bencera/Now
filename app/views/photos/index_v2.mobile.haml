@@ -1,6 +1,7 @@
-#trending
+#trending{:style => "font-size: 14px;"}
   - @trending_venues.each do |venue|
     = "#{Venue.find(venue[0]).name} (#{venue[1]}+ people)" 
+    %br
   end 
 #results
   = render :partial => 'partials/card', :collection => @photos, :as => :photo
