@@ -11,17 +11,6 @@
             - venue[1]["keywords"].each do |keyword|
               = keyword
 
-.card
-  #trending{:style => "font-size: 14px;"}
-    .infos.clearfix{:style => "float: none; padding: 10px 0 10px 0;"}
-      %h1.trending_title{:style => "color: #666; font-size: 16px;"} Trending around you now
-      - [1,2,3].each do |venue|
-        .venue_trending.clearfix{:style => "margin-bottom: 8px;"}
-          %a{:onclick => "parent.location='venue_v2/#{venue[0]}'", :style => "text-decoration: none;"}
-            %h2.venue_name{:style => "float: left"} Venue name
-          %p{:style => "color: #bbb; font-weight: bold; float: right; margin: 0"} (99)
-          %p keyword1, keyword2
-
 
 #results
   = render :partial => 'partials/card', :collection => @photos, :as => :photo
