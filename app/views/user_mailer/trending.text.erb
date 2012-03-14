@@ -1,0 +1,3 @@
+<% @trending_venues.each do |venue|%>
+  <%=Venue.find(venue[0]).name%>
+  <%=venue[1]%>
