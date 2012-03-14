@@ -1,2 +1,0 @@
-stop_words = ["the", "a",  "on", "the","at","of", "in", "my", "his", "for", "it", "and", "to", "are", "you","has", "my", "is", "a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p",
-              "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
