@@ -319,7 +319,7 @@ class PhotosController < ApplicationController
           #get keywords
           comments = ""
           venue[1]["photos"].each do |photo|
-            comments << Photo.find(photo).caption
+            comments << Photo.find(photo).caption unless Photo.find(photo).caption.nil?
             comments << " "
           end
           
