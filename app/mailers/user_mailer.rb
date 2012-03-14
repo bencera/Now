@@ -13,4 +13,12 @@ class UserMailer < ActionMailer::Base
 
     mail to: @user.email, subject: "Your question on #{@request.photo.venue.name} has been answered"
   end
+  
+  def trending(trending_venues)
+    
+    @trending_venues = trending_venues
+    mail to: "ben.broca@gmail.com", subject: "Venue trending"
+    
+  end
+  
 end
