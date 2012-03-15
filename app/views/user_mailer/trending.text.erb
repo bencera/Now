@@ -1,6 +1,6 @@
 <% @trending_venues.each do |venue|%>
   <% if venue[1]["n_photos"] > (venue[1]["stats"][4] + venue[1]["stats"][4]) and venue[1]["n_photos"] > venue[0]["stats"][0] %>
-    <% *** %>
+    ****
   <% end %>
   <%=Venue.find(venue[0]).name%> (<%=venue[1]["n_photos"]%>) <%venue[1]["keywords"].each do |keyword|%> <%=keyword%> <%end%> (<%=venue[1]["stats"][0].to_i%>, <%=venue[1]["stats"][1].to_i%>), (<%=venue[1]["stats"][2].to_i%>, <%=venue[1]["stats"][3].to_i%>), (<%=venue[1]["stats"][4].to_i%>, <%=venue[1]["stats"][5].to_i%>), (<%=venue[1]["stats"][6].to_i%>, <%=venue[1]["stats"][7].to_i%>)
 <%end%>
