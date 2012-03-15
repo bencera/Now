@@ -72,7 +72,7 @@ class Trending
 
     trending_venues = {}
     venues.sort_by { |k,v| v["n_photos"]}.reverse.each do |venue|
-      if venue[1]["n_photos"] > 4
+      if venue[1]["n_photos"] > 2
         trending_venues[venue[0]] = {"n_photos" => venue[1]["n_photos"], "keywords" => [], "stats" => []}
         #get keywords
         comments = ""
@@ -150,9 +150,9 @@ class Trending
         hour = Time.now.hour
         photos_count = {}
         Venue.find(venue[0]).photos.where(:time_taken.gt => 1.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
-          if photos_count.include?(Time.at(photo.time_taken).yday) and Time.at(photo.time_taken).hour <= hour and Time.at(photo.time_taken).hour > (hour - 3).modulo(24)
+          if photos_count.include?(Time.at(photo.time_taken).yday) and [hour, (hour-1).modulo(24),(hour-2).modulo(24)].include?(Time.at(photo.time_taken).hour)
             photos_count[Time.at(photo.time_taken).yday] += 1
-          elsif Time.at(photo.time_taken).hour <= hour and Time.at(photo.time_taken).hour > hour - 3
+          elsif [hour, (hour-1).modulo(24),(hour-2).modulo(24)].include?(Time.at(photo.time_taken).hour)
             photos_count[Time.at(photo.time_taken).yday] = 1
           end  
         end
@@ -173,9 +173,9 @@ class Trending
         today_wday = Time.now.wday
         photos_count = {}
         Venue.find(venue[0]).photos.where(:time_taken.gt => 2.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
-          if photos_count.include?(Time.at(photo.time_taken).yday) and Time.at(photo.time_taken).hour <= hour and Time.at(photo.time_taken).hour > (hour - 3).modulo(24)  and Time.at(photo.time_taken).wday == today_wday
+          if photos_count.include?(Time.at(photo.time_taken).yday) and [hour, (hour-1).modulo(24),(hour-2).modulo(24)].include?(Time.at(photo.time_taken).hour)  and Time.at(photo.time_taken).wday == today_wday
             photos_count[Time.at(photo.time_taken).yday] += 1
-          elsif Time.at(photo.time_taken).hour <= hour and Time.at(photo.time_taken).hour > hour - 3  and Time.at(photo.time_taken).wday == today_wday
+          elsif [hour, (hour-1).modulo(24),(hour-2).modulo(24)].include?(Time.at(photo.time_taken).hour)  and Time.at(photo.time_taken).wday == today_wday
             photos_count[Time.at(photo.time_taken).yday] = 1
           end  
         end
