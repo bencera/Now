@@ -1,7 +1,10 @@
 <% @trending_venues.each do |venue|%>
   <%=Venue.find(venue[0]).name%>
   number of photos: <%=venue[1]["n_photos"]%>
-  keywords: <%=venue[1]["keywords"]%>
+  keywords: 
+  <%venue[1]["keywords"].each do |keyword|%>
+    <%=keyword%>
+  <%end%>
   month: <%=venue[1]["stats"][0].to_i%>, <%=venue[1]["stats"][1].to_i%>
   weekday: <%=venue[1]["stats"][2].to_i%>, <%=venue[1]["stats"][3].to_i%>
   month_h: <%=venue[1]["stats"][4].to_i%>, <%=venue[1]["stats"][5].to_i%>
