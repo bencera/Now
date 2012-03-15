@@ -72,7 +72,7 @@ class Trending
 
     trending_venues = {}
     venues.sort_by { |k,v| v["n_photos"]}.reverse.each do |venue|
-      if venue[1]["n_photos"] > 2
+      if venue[1]["n_photos"] > 4
         trending_venues[venue[0]] = {"n_photos" => venue[1]["n_photos"], "keywords" => [], "stats" => []}
         #get keywords
         comments = ""
@@ -96,12 +96,12 @@ class Trending
         end
     
         sorted_words.sort_by{|u,v| v}.reverse.each do |word|
-          unless word[1] < 2
+          unless word[1] < 3
             trending_venues[venue[0]]["keywords"] << word[0]
           end
         end
     
-        #30-day stats 
+        #30-day stats
 
         photos_count = {}
         Venue.find(venue[0]).photos.where(:time_taken.gt => 1.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
@@ -192,11 +192,11 @@ class Trending
         venues.delete(venue[0])
       end
     end
-    
+
     unless trending_venues.empty?
       UserMailer.trending(trending_venues).deliver
     end
-    
+
   end
   
 end
