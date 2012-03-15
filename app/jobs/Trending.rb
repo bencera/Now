@@ -72,36 +72,11 @@ class Trending
 
     trending_venues = {}
     venues.sort_by { |k,v| v["n_photos"]}.reverse.each do |venue|
-      if venue[1]["n_photos"] > 4
-        trending_venues[venue[0]] = {"n_photos" => venue[1]["n_photos"], "keywords" => [], "stats" => []}
-        #get keywords
-        comments = ""
-        venue[1]["photos"].each do |photo|
-          comments << Photo.find(photo).caption unless Photo.find(photo).caption.nil?
-          comments << " "
-        end
-        stop_characters.each do |c|
-          comments = comments.gsub(c, '')
-        end
-        words = comments.split(/ /)
-        relevant_words = words - stop_words
-
-        sorted_words = {}
-        relevant_words.each do |word|
-          if sorted_words.include?(word)
-            sorted_words[word] += 1
-            else
-            sorted_words[word] = 1
-          end
-        end
-    
-        sorted_words.sort_by{|u,v| v}.reverse.each do |word|
-          unless word[1] < 3
-            trending_venues[venue[0]]["keywords"] << word[0]
-          end
-        end
-    
-        #30-day stats
+      if venue[1]["n_photos"] >= 5
+        
+        #### mean and std deviation
+        
+                #30-day stats
 
         photos_count = {}
         Venue.find(venue[0]).photos.where(:time_taken.gt => 1.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
@@ -119,9 +94,6 @@ class Trending
 
         mean_month = Mathstats.average(day_series)
         std_month = Mathstats.standard_deviation(day_series)
-    
-        trending_venues[venue[0]]["stats"] << mean_month
-        trending_venues[venue[0]]["stats"] << std_month
 
         #8 weekday stats
 
@@ -142,54 +114,46 @@ class Trending
 
         mean_week = Mathstats.average(wday_series)
         std_week = Mathstats.standard_deviation(wday_series)
-        trending_venues[venue[0]]["stats"] << mean_week
-        trending_venues[venue[0]]["stats"] << std_week
+        
+        #########
+        
+        if venue[1]["n_photos"] > mean_month or Venue.find(venue[0]).photos.last_hours(1).distinct(:user_id).count >= [5, mean_month/2].max_by {|x| x }
+          
+        
+          trending_venues[venue[0]] = {"n_photos" => venue[1]["n_photos"], "keywords" => [], "stats" => []}
+          trending_venues[venue[0]]["stats"] << mean_month
+          trending_venues[venue[0]]["stats"] << std_month
+          trending_venues[venue[0]]["stats"] << mean_week
+          trending_venues[venue[0]]["stats"] << std_week
+          #get keywords
+          comments = ""
+          venue[1]["photos"].each do |photo|
+            comments << Photo.find(photo).caption unless Photo.find(photo).caption.nil?
+            comments << " "
+          end
+          stop_characters.each do |c|
+            comments = comments.gsub(c, '')
+          end
+          words = comments.split(/ /)
+          relevant_words = words - stop_words
 
-        #30 day hours stats
-
-        hour = Time.now.hour
-        photos_count = {}
-        Venue.find(venue[0]).photos.where(:time_taken.gt => 1.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
-          if photos_count.include?(Time.at(photo.time_taken).yday) and [hour, (hour-1).modulo(24),(hour-2).modulo(24)].include?(Time.at(photo.time_taken).hour)
-            photos_count[Time.at(photo.time_taken).yday] += 1
-          elsif [hour, (hour-1).modulo(24),(hour-2).modulo(24)].include?(Time.at(photo.time_taken).hour)
-            photos_count[Time.at(photo.time_taken).yday] = 1
-          end  
+          sorted_words = {}
+          relevant_words.each do |word|
+            if sorted_words.include?(word)
+              sorted_words[word] += 1
+              else
+              sorted_words[word] = 1
+            end
+          end
+    
+          sorted_words.sort_by{|u,v| v}.reverse.each do |word|
+            unless word[1] < 3
+              trending_venues[venue[0]]["keywords"] << word[0]
+            end
+          end
+        
+          venues.delete(venue[0])
         end
-
-        hour_series = photos_count.values
-        (30 - photos_count.count).times do
-          hour_series << 0
-        end
-
-        mean_month_hour = Mathstats.average(hour_series)
-        std_month_hour = Mathstats.standard_deviation(hour_series)
-        trending_venues[venue[0]]["stats"] << mean_month_hour
-        trending_venues[venue[0]]["stats"] << std_month_hour
-
-        #8 week hours stats
-
-        hour = Time.now.hour
-        today_wday = Time.now.wday
-        photos_count = {}
-        Venue.find(venue[0]).photos.where(:time_taken.gt => 2.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
-          if photos_count.include?(Time.at(photo.time_taken).yday) and [hour, (hour-1).modulo(24),(hour-2).modulo(24)].include?(Time.at(photo.time_taken).hour)  and Time.at(photo.time_taken).wday == today_wday
-            photos_count[Time.at(photo.time_taken).yday] += 1
-          elsif [hour, (hour-1).modulo(24),(hour-2).modulo(24)].include?(Time.at(photo.time_taken).hour)  and Time.at(photo.time_taken).wday == today_wday
-            photos_count[Time.at(photo.time_taken).yday] = 1
-          end  
-        end
-
-        whour_series = photos_count.values
-        (30 - photos_count.count).times do
-          whour_series << 0
-        end
-
-        mean_week_hour = Mathstats.average(whour_series)
-        std_week_hour = Mathstats.standard_deviation(whour_series)
-        trending_venues[venue[0]]["stats"] << mean_week_hour
-        trending_venues[venue[0]]["stats"] << std_week_hour
-        venues.delete(venue[0])
       end
     end
 
