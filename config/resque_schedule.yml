@@ -1,5 +1,5 @@
 fetch_photos_newyork:
-  every: "2m"
+  every: "30s"
   class: Fetchigphotos
   args: "823413"
   description: "Fetchs instagram pics every minute"
@@ -29,7 +29,7 @@ fetch_photos_sanfrancisco:
   description: "Fetchs instagram pics every minute"
   
 trending:
-  every: "10m"
+  every: "30m"
   class: Trending
   args: 
   description: "Trending emails"
