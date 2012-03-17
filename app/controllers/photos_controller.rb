@@ -236,7 +236,7 @@ class PhotosController < ApplicationController
       #take out photos too far
       if params[:range] == "walking"
         distance_min = 0
-        distance_max = 10
+        distance_max = 1
         params[:next] = "cab"
       elsif params[:range] == "cab"
         distance_min = 1
@@ -326,6 +326,7 @@ class PhotosController < ApplicationController
           stop_characters.each do |c|
             comments = comments.gsub(c, '')
           end
+          comments = comments.downcase
           words = comments.split(/ /)
           relevant_words = words - stop_words
 
