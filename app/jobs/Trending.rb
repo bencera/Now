@@ -50,7 +50,7 @@ class Trending
      "wonder", "would", "would", "wouldn't", "yes", "yet", "you", "you'd", "you'll", "you're", "you've",
       "your", "yours", "yourself", "yourselves", "zero"] 
 
-    photos_lasthours = Photo.where(city: "newyork").last_hours(3).order_by([[:time_taken, :desc]])
+    photos_lasthours = Photo.where(city: "newyork").last_hours(2).order_by([[:time_taken, :desc]])
     venues = {}
     photos_lasthours.each do |photo|
       if venues.include?(photo.venue_id)
