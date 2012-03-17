@@ -79,14 +79,14 @@ class Trending
                 #30-day stats
 
         photos_count = {}
-        Venue.find(venue[0]).photos.where(:time_taken.gt => 1.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
+        Venue.find(venue[0]).photos.where(:time_taken.lt => 1.day.ago.to_i).where(:time_taken.gt => 1.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
           if photos_count.include?(Time.at(photo.time_taken).yday)
             photos_count[Time.at(photo.time_taken).yday] += 1
           else
             photos_count[Time.at(photo.time_taken).yday] = 1
-          end  
+          end
         end
-
+        
         day_series = photos_count.values
         (30 - photos_count.count).times do
           day_series << 0
@@ -99,7 +99,7 @@ class Trending
 
         today_wday = Time.now.wday
         photos_count = {}
-        Venue.find(venue[0]).photos.where(:time_taken.gt => 2.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
+        Venue.find(venue[0]).photos.where(:time_taken.lt => 1.day.ago.to_i).where(:time_taken.gt => 2.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
           if photos_count.include?(Time.at(photo.time_taken).yday) and Time.at(photo.time_taken).wday == today_wday
             photos_count[Time.at(photo.time_taken).yday] += 1
           elsif Time.at(photo.time_taken).wday == today_wday
@@ -134,8 +134,11 @@ class Trending
           stop_characters.each do |c|
             comments = comments.gsub(c, '')
           end
+          comments = comments.downcase
           words = comments.split(/ /)
           relevant_words = words - stop_words
+          venue_words = Venue.find(venue[0]).name.split(/ /)
+          relevant_words = relevant_words - venue_words
 
           sorted_words = {}
           relevant_words.each do |word|
@@ -151,7 +154,7 @@ class Trending
               trending_venues[venue[0]]["keywords"] << word[0]
             end
           end
-        
+
           venues.delete(venue[0])
         end
       end
