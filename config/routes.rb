@@ -12,12 +12,14 @@ Ubimachine::Application.routes.draw do
   match "/auth/instagram/callback" => "sessions#callback"
   match "/auth/facebook/callback" => "sessions#facebook_callback"
   
-  resources :venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls, :dones
+  resources :venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls, :dones, :events
   
   resources :photos do  
     resources :comments  
   end
   
+  
+  match "/thanks" => "home#thanks"
   match "/stats" => "home#stats"
   match "/cities" => "home#cities"
   match "/nophotos" => "venues#nophotos"

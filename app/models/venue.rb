@@ -13,6 +13,7 @@ class Venue
   key :fs_venue_id
   has_many :photos, dependent: :destroy
   has_and_belongs_to_many :users
+  has_many :events
   
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates, :address => :address_geo

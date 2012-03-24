@@ -1,4 +1,0 @@
-<% @trending_venues.each do |venue|%>
-  <%=Venue.find(venue[0]).name%> (<%=venue[1]["n_photos"]%>) <%venue[1]["keywords"].each do |keyword|%> <%=keyword%> <%end%> (<%=venue[1]["stats"][0].to_i%>, <%=venue[1]["stats"][1].to_i%>), (<%=venue[1]["stats"][2].to_i%>, <%=venue[1]["stats"][3].to_i%>)
-  <%="http://www.ubimachine.com/venue_v2/#{venue[0]}"%>
-<%end%>

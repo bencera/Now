@@ -203,6 +203,7 @@ class PhotosController < ApplicationController
     if Rails.env == "development"
       params[:next] = "cab"
       @photos = Photo.all.limit(40).paginate(:per_page => 20, :page => params[:page])
+      @new_event = Event.first
       if request.xhr?
         if is_mobile_device?
           render :partial => 'partials/card', :collection => @photos, :as => :photo

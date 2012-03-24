@@ -38,6 +38,9 @@ class HomeController < ApplicationController
   def about
   end
   
+  def thanks
+  end
+  
   def ask_signup
     if Rails.env.development?
       @photo = Photo.first

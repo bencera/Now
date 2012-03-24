@@ -31,6 +31,7 @@ gem 'geocoder', :git => 'https://github.com/engineroomapps/geocoder.git'
 gem 'redis'
 
 gem 'fb_graph'
+gem 'rabl'
 
 #gem 'infinitescrolling-rails'
 gem 'mathstats'

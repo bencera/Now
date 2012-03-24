@@ -24,6 +24,7 @@ class Photo
   has_many :requests
   has_many :usefuls
   embeds_many :comments
+  belongs_to :event
   
   index(
     [

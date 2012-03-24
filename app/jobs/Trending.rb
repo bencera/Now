@@ -1,7 +1,8 @@
 class Trending
   @queue = :trending_queue
 
-  def self.perform
+  def self.perform(hours)
+    hours = hours.to_i
     stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "#", "/", "@", ":", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
     stop_words = ["a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
       "a's", "able", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", 
@@ -50,7 +51,7 @@ class Trending
      "wonder", "would", "would", "wouldn't", "yes", "yet", "you", "you'd", "you'll", "you're", "you've",
       "your", "yours", "yourself", "yourselves", "zero"] 
 
-    photos_lasthours = Photo.where(city: "newyork").last_hours(2).order_by([[:time_taken, :desc]])
+    photos_lasthours = Photo.where(city: "newyork").last_hours(hours).order_by([[:time_taken, :desc]])
     venues = {}
     photos_lasthours.each do |photo|
       if venues.include?(photo.venue_id)
@@ -160,10 +161,47 @@ class Trending
       end
     end
 
-    unless trending_venues.empty?
-      UserMailer.trending(trending_venues).deliver
+    trending_venues.each do |event|
+      #if mon event est dans la base de donnee et status trending
+      event_i = Event.where(:venue_id => event[0]).where(:status.in => ["waiting", "trending"]).first
+      if event_i.nil? or Event.where(:venue) #else si mon event nest pas dans la base de donnee
+        venue = Venue.find(event[0])
+        photos = venue.photos.last_hours(hours).order_by([[:time_taken, :desc]])
+        new_event = venue.events.create(:venue_id => event[0], 
+                                 :start_time => photos.last.time_taken,
+                                 :coordinates => venue.coordinates,
+                                 :n_photos => venue.photos.last_hours(hours).count,
+                                 :status => "waiting")
+        photos.each do |photo|
+          new_event.photos << photo
+        end
+        UserMailer.trending(new_event).deliver #avec un lien image different selon si levent a deja ete anote par quelqu un dautre (different photo)
+      elsif 
+       #rajouter les nouvelles photos, updater nb photos, nb_people, revoir intensite?
+        Venue.find(event[0]).photos.last_hours(hours).each do |photo|
+          unless photo.event == event_i
+            event_i.photos << photo
+            event_i.inc(:n_photos, 1)
+          end
+        end
+      end
     end
-
+    
+    if hours == 2 #a reflechir.. comment determiner qd l'event arrete de trender..
+      Event.where(:status => "trending").each do |event|
+        if Venue.find(event.venue_id).photos.last_hours(2).count < 3
+          event.update_attribute(:status, "trended")
+        end
+      end
+      Event.where(:status => "waiting").each do |event|
+        if (Time.now.to_i - event.start_time) >  12*3600
+          event.update_attribute(:status, "not_trending")
+        end
+        if Venue.find(event.venue_id).photos.last_hours(2).count == 0
+          event.update_attribute(:status, "not_trending")
+        end
+      end
+    end  
   end
   
 end

@@ -1,0 +1,31 @@
+!!! 5
+%html
+  %head
+    %meta{:charset => "UTF-8"}
+    %title ubimachine
+    %meta{:name => "description", :content => "ubimachine, instagram, foursquare, mobile, to-do, things to do, discover, discovery, explore, exploration, cities, geolocation, location, hashtag"}
+    %meta{:name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;"}
+    %meta{:name => "apple-mobile-web-app-capable", :content =>"yes"}
+    %meta{:name => "apple-mobile-web-app-status-bar-style", :content=>"black"}
+    = stylesheet_link_tag "mobile/reset.css"
+    = stylesheet_link_tag "mobile/structure.css"
+    = stylesheet_link_tag "mobile/styles.css"
+    = csrf_meta_tag
+  %body
+    #wrapper
+      #content
+        %h1.title
+          = "Hi Ben! #{@new_event.venue.name} might be trending!"
+          Can you please confirm?
+          = form_tag "/events", :method => "post" do
+            = text_field_tag :description,  nil, :placeholder => "Describe the event"
+            = hidden_field_tag :confirm, "yes"
+            = hidden_field_tag :event_id, @new_event.venue.id
+            = submit_tag "Yes!"
+            
+          = form_tag "/events", :method => "post" do
+            = hidden_field_tag :confirm, "no"
+            = hidden_field_tag :event_id, @new_event.venue.id
+            = submit_tag "There isn't anything special here."
+            
+          = render :partial => 'partials/card', :collection => @new_event.photos, :as => :photo
