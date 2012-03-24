@@ -1,8 +1,16 @@
-= form_tag "/events", :method => "post" do
-  = text_field_tag :description,  nil, :placeholder => "Describe the event"
-  = hidden_field_tag :confirm, "yes"
-  = hidden_field_tag :event_id, @new_event.venue.id
-  = submit_tag "Yes!"
+.card
+  #trending{:style => "font-size: 14px;"}
+    .infos.clearfix{:style => "float: none; padding: 10px 0 10px 0;"}
+      %h1.trending_title{:style => "color: #666; font-size: 16px;"} Trending around you now
+      - @trending_venues.each do |venue|
+        .venue_trending.clearfix{:style => "margin-bottom: 8px;"}
+          %a{:onclick => "parent.location='venue_v2/#{venue[0]}'", :style => "text-decoration: none;"}
+            %h2.venue_name{:style => "float: left"}= truncate(Venue.find(venue[0]).name, :length => 38)
+          %p{:style => "color: #bbb; font-weight: bold; float: right; margin: 0"}= "(#{venue[1]})"
+          %p
+            - venue[1]["keywords"].each do |keyword|
+              = keyword
+
 
 #results
   = render :partial => 'partials/card', :collection => @photos, :as => :photo
