@@ -1,7 +1,8 @@
 class EventsController < ApplicationController
   
   def search
-    
+    @events = Event.where(:status.in => ["trended", "trending"])
+    render :json @events
   end
   
   
