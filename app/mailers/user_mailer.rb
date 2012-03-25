@@ -1,3 +1,6 @@
+require 'haml'
+require 'haml/template/plugin'
+
 class UserMailer < ActionMailer::Base
   default from: "ubimachine <ben@ubimachine.com>" #a verifier
 

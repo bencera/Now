@@ -7,4 +7,3 @@ ActionMailer::Base.smtp_settings = {
   :domain         => 'heroku.com'
 }
 ActionMailer::Base.delivery_method = :smtp
-ActionMailer::Base.register_template_extension('haml')
