@@ -53,6 +53,8 @@ Ubimachine::Application.routes.draw do
   match "venues/:id/answers" => "venues#answers"  
   match "venues/:id/usefuls" => "venues#usefuls" 
   
+  match "eventsearch" => "events#search"
+  
   match "venue_v2/:id" => "venues#venue_v2"
   
   match "panda" => "photos#geo"
