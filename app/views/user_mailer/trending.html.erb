@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>now</title>
+		<meta name="description" content="ubimachine, instagram, foursquare, mobile, to-do, things to do, discover, discovery, explore, exploration, cities, geolocation, location, hashtag" />
+		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;" /> 
+		<meta name="apple-mobile-web-app-capable" content="yes" > 
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">	
+		
+		<link rel="apple-touch-icon-precomposed" href="imgs/apple-touch-icon-precomposed.png" />
+		<link rel="apple-touch-startup-image" href="imgs/startup.png" />
+		
+		<!-- JavaScript -->
+
+		<!-- Stylesheets -->
+		<link href="mobile/reset.css" type="text/css" rel="stylesheet" media="screen" />
+		<link href="mobile/structure.css" type="text/css" rel="stylesheet" media="screen" />
+		<link href="mobile/styles.css" type="text/css" rel="stylesheet" media="screen" />
+	</head>
+	<body>		
+		<!-- wrapper starts -->
+		<div id="wrapper">
+			
+			<!-- content starts -->
+			<div id="content">
+			  
+			  <h1> <%= "Hi Ben! #{@new_event.venue.name} might be trending!" %> Can you please confirm? </h1>
+		    <%= form_tag "/events", :method => "post" do %>
+          <%= text_field_tag :description,  nil, :placeholder => "Describe the event" %>
+          <%= hidden_field_tag :confirm, "yes" %>
+          <%= hidden_field_tag :event_id, @new_event.venue.id %>
+          <%= submit_tag "Yes!" %>
+          
+        <%= form_tag "/events", :method => "post" do %>
+          <%= hidden_field_tag :confirm, "no" %>
+          <%= hidden_field_tag :event_id, @new_event.venue.id %>
+          <%= submit_tag "There isn't anything special here." %>
+          
+        <%= render :partial => 'partials/card_html', :collection => @new_event.photos, :as => :photo %>
+				
+
+				
+			</div>
+			<!-- content ends -->
+			
+		</div>
+		<!-- wrapper ends -->
+	</body>
+</html>
