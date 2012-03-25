@@ -1,5 +1,6 @@
 class PhotosController < ApplicationController
   
+  
   def index
     
     if params[:category] == "outdoors"
@@ -392,6 +393,8 @@ class PhotosController < ApplicationController
   def geo
     
   end
+  
+  
   
   def show
     @photo = Photo.first(conditions: {_id: params[:id]})

@@ -18,6 +18,7 @@ Ubimachine::Application.routes.draw do
     resources :comments  
   end
   
+  match "/photos/json/:id" => "photos#show_json"
   
   match "/thanks" => "home#thanks"
   match "/stats" => "home#stats"

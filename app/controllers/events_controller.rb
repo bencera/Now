@@ -1,8 +1,13 @@
 class EventsController < ApplicationController
    layout :choose_layout
-  def search
+  respond_to :json, :xml
+  
+  def show
+    @event = Event.find(params[:id])
+  end
+  
+  def index
     @events = Event.where(:status.in => ["trended", "trending"])
-    render json: @events
   end
   
   
