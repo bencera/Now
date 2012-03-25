@@ -60,6 +60,8 @@ Ubimachine::Application.routes.draw do
   
   match "disrupt" => "photos#index_v2"
   
+  match "events/trending/:id" => "events#trending"
+  
   require 'resque_scheduler'
   mount Resque::Server, :at => "/resque"
   

@@ -1,10 +1,14 @@
 class EventsController < ApplicationController
-  
+   layout :choose_layout
   def search
     @events = Event.where(:status.in => ["trended", "trending"])
     render json: @events
   end
   
+  
+  def trending
+    @new_event = Event.find(params[:id])
+  end
   
   def create
     if params[:confirm] = "yes"
@@ -17,4 +21,14 @@ class EventsController < ApplicationController
     redirect_to "http://checkthis.com/okzf"
   end
 
+
+
+  private
+    def choose_layout    
+      if action_name == "trending"
+        'application_v2'
+      else
+        'application'
+      end
+    end
 end

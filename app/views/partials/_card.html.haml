@@ -1,0 +1,14 @@
+- unless photo.nil?
+  - if @id == true
+    - photo = Photo.first(conditions: {_id: photo.to_s})
+  .card
+    .venue_photo
+      = image_tag photo.url[1], :width => "306"
+    %a.infos.clearfix{:onclick => "parent.location='venue_v2/#{photo.venue.id}'", :style => "text-decoration: none; color: #4D4D4D"}
+      = image_tag "geo_icon.gif", :class => "geo_icon left", :height => "10", :width => "8"
+      %h1.venue_name= truncate(photo.venue.name, :length => 30)
+      %p.timestamp
+        = time_ago_in_words(Time.at photo.time_taken.to_i).to_s.gsub('about', '').gsub('over', '')
+        ago
+      %h2.venue_type= photo.venue.categories.first["name"] unless photo.venue.categories.nil?
+      %p.caption= Photo.new.caption_without_hashtags(photo.caption) unless photo.caption.nil?
