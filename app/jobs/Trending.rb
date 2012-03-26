@@ -164,7 +164,7 @@ class Trending
     trending_venues.each do |event|
       #if mon event est dans la base de donnee et status trending
       event_i = Event.where(:venue_id => event[0]).where(:status.in => ["waiting", "trending"]).first
-      if event_i.nil? and Event.where(:venue_id => event[0]).where(:status => "not_trending").where(:start_time.gt => 6.hours.ago).nil? #else si mon event nest pas dans la base de donnee
+      if event_i.nil? and Event.where(:venue_id => event[0]).where(:status => "not_trending").where(:start_time.gt => 6.hours.ago.to_i).first.nil? #else si mon event nest pas dans la base de donnee
         venue = Venue.find(event[0])
         photos = venue.photos.last_hours(hours).order_by([[:time_taken, :desc]])
         new_event = venue.events.create(:venue_id => event[0], 
