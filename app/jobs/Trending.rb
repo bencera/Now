@@ -179,7 +179,7 @@ class Trending
       elsif 
        #rajouter les nouvelles photos, updater nb photos, nb_people, revoir intensite?
         Venue.find(event[0]).photos.last_hours(hours).each do |photo|
-          unless photo.event == event_i
+          unless photo.events.first == event_i
             event_i.photos << photo
             event_i.inc(:n_photos, 1)
           end
