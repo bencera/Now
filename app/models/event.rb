@@ -11,7 +11,7 @@ class Event
   #field :n_people
   
   belongs_to :venue
-  has_many :photos
+  has_and_belongs_to_many :photos
   
   validates_presence_of :coordinates, :venue_id, :n_photos, :start_time
 end
