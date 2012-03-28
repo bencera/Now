@@ -1,7 +1,7 @@
 object @event
 attributes :coordinates, :start_time, :description, :n_photos
 child :photos do
-attributes :url, :caption, :time_taken, :category
+attributes :url, :caption, :time_taken
 end
 child :venue do
 attributes :name, :neighborhood, :address
