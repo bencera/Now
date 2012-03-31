@@ -7,7 +7,7 @@ class EventsController < ApplicationController
   end
   
   def index
-    @events = Event.where(:status.in => ["trended", "trending"])
+    @events = Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"])
   end
   
   
