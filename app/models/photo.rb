@@ -19,7 +19,7 @@ class Photo
   field :city
   field :neighborhood
   field :venue_photos, :type => Integer
-  field :user, :type => Hash
+  field :user_details, :type => Hash
   belongs_to :venue
   belongs_to :user
   has_many :requests

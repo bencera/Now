@@ -277,7 +277,7 @@ class Venue
           p.city = Venue.new.find_city(p.coordinates[1], p.coordinates[0])
           p.neighborhood = self.neighborhood unless self.neighborhood.nil?
           p.venue_photos = self.photos.count unless self.photos.nil?
-          p.user = [media.user.username, media.user.profile_picture, media.user.full_name]
+          p.user_details = [media.user.username, media.user.profile_picture, media.user.full_name]
           p.save
           
           unless p.new?
