@@ -7,7 +7,7 @@ class EventsController < ApplicationController
   end
   
   def index
-    @events = Event.where(:status.in => ["trended", "trending"]).order_by([[:start_time, :desc]]).take(20)
+    @events = Event.where(:status.in => ["trended", "trending"]).order_by([[:start_time, :desc]]).take(10)
     #@events = Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:start_time, :desc]])
   end
   
