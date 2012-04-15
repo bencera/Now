@@ -169,6 +169,7 @@ class Trending
         photos = venue.photos.last_hours(hours).order_by([[:time_taken, :desc]])
         new_event = venue.events.create(:venue_id => event[0], 
                                  :start_time => photos.last.time_taken,
+                                 :end_time => photos.first.time_taken,
                                  :coordinates => venue.coordinates,
                                  :n_photos => venue.photos.last_hours(hours).count,
                                  :status => "waiting")
@@ -176,7 +177,7 @@ class Trending
           new_event.photos << photo
         end
         UserMailer.trending(new_event).deliver #avec un lien image different selon si levent a deja ete anote par quelqu un dautre (different photo)
-      elsif 
+      else
        #rajouter les nouvelles photos, updater nb photos, nb_people, revoir intensite?
         Venue.find(event[0]).photos.last_hours(hours).each do |photo|
           unless photo.events.first == event_i
@@ -184,12 +185,13 @@ class Trending
             event_i.inc(:n_photos, 1)
           end
         end
+        event_i.update_attribute(:end_time, Venue.find(event[0]).photos.last_hours(2).first.time_taken)
       end
     end
     
     if hours == 2 #a reflechir.. comment determiner qd l'event arrete de trender..
       Event.where(:status => "trending").each do |event|
-        if Venue.find(event.venue_id).photos.last_hours(2).count < 3
+        if Venue.find(event.venue_id).photos.last_hours(2).count == 0
           event.update_attribute(:status, "trended")
         end
       end
@@ -197,9 +199,9 @@ class Trending
         if (Time.now.to_i - event.start_time) >  12*3600
           event.update_attribute(:status, "not_trending")
         end
-        if Venue.find(event.venue_id).photos.last_hours(2).count == 0
-          event.update_attribute(:status, "not_trending")
-        end
+        # if Venue.find(event.venue_id).photos.last_hours(2).count == 0
+        #   event.update_attribute(:status, "not_trending")
+        # end
       end
     end  
   end

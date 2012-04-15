@@ -2,7 +2,7 @@ class Event
   include Mongoid::Document
   field :coordinates, :type => Array
   field :start_time
-  # field :last_time
+  field :end_time
   field :description
   field :super_user
   field :intensity
