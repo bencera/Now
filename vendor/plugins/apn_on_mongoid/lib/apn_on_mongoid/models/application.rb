@@ -5,10 +5,10 @@ module APN
     include Mongoid::Timestamps
 
     field :name
-    field :identifier
+    field :identifier1
     field :certificate
 
-    index :identifier, :unique => true, :background => true
+    index :identifier1, :unique => true, :background => true
     
     # references_many :subscriptions, :class_name => "APN::Subscription", :inverse_of => :application
     

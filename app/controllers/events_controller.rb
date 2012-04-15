@@ -24,6 +24,13 @@ class EventsController < ApplicationController
     elsif params[:confirm] == "no"
       Event.find(params[:event_id]).update_attribute(:status, "not_trending")
     end 
+    
+    n = APN::Notification.new
+    n.subscription = APN::Device.first.subscription
+    n.alert = "#{event.venue.name} (#{event.n_photos}) - #{event.description}"
+    n.sound = "default"
+    n.deliver
+    
     redirect_to "http://checkthis.com/okzf"
   end
 
