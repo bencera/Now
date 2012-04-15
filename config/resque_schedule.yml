@@ -29,7 +29,7 @@ fetch_photos_sanfrancisco:
   description: "Fetchs instagram pics every minute"
   
 trending:
-  every: "30m"
+  every: "10m"
   class: Trending
   args: "2"
   description: "Trending emails"
