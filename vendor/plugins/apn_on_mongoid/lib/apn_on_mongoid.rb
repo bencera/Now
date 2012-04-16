@@ -6,15 +6,16 @@ module APN # :nodoc:
   
   # Host to send APNS requests to. Assumed the sandbox.
   mattr_accessor :host
-  @@host = (::Rails.env == "production" ? 'gateway.push.apple.com' : 'gateway.sandbox.push.apple.com')
-  
+  #@@host = (::Rails.env == "production" ? 'gateway.push.apple.com' : 'gateway.sandbox.push.apple.com')
+  @@host = 'gateway.sandbox.push.apple.com'
   # Port number for the APNS
   mattr_accessor :port
   @@port = 2195
   
   # Feedback host. Assumed sandbox
   mattr_accessor :feedback
-  @@feedback = (::Rails.env == "production" ? 'feedback.push.apple.com' : 'feedback.sandbox.push.apple.com')
+  #@@feedback = (::Rails.env == "production" ? 'feedback.push.apple.com' : 'feedback.sandbox.push.apple.com')
+  @@feedback = 'feedback.sandbox.push.apple.com'
   
   # Port number for the APNS feedback
   mattr_accessor :feedback_port
@@ -22,8 +23,8 @@ module APN # :nodoc:
   
   # Port number for the APNS feedback
   mattr_accessor :cert
-  @@cert = File.join('.', 'config', (::Rails.env == "production" ? 'apns_certificate_production.pem' : 'apns_certificate_development.pem')) # THIS DONT WORK! Rails.root isnt set at this point :(
-  
+  #@@cert = File.join('.', 'config', (::Rails.env == "production" ? 'apns_certificate_production.pem' : 'apns_certificate_development.pem')) # THIS DONT WORK! Rails.root isnt set at this point :(
+  @@cert = File.join('.', 'config', 'apns_certificate_development.pem')
   # Passphrase for certificate
   mattr_accessor :passphrase
   @@passphrase = ''
