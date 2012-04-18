@@ -25,13 +25,24 @@ class EventsController < ApplicationController
       Event.find(params[:event_id]).update_attribute(:status, "not_trending")
     end 
     
-    n = APN::Notification.new
-    n.subscription = APN::Device.first.subscriptions.first
-    n.alert = "#{event.venue.name} (#{event.n_photos}) - #{event.description}"
-    n.sound = "default"
-    n.deliver
+    APN::Device.each do |device|
+      n = APN::Notification.new
+      n.subscription = device.subscriptions.first
+      n.alert = "#{event.venue.name} (#{event.n_photos}) - #{event.description}"
+      n.sound = "default"
+      n.event = event.id
+      n.deliver
+    end
     
     redirect_to "http://checkthis.com/okzf"
+  end
+  
+  def user
+    if params[:cmd] = "userToken"
+      d = APN::Device.create(:udid => params[:token])
+      s = d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+      #definir location of user
+    end
   end
 
 
