@@ -7,7 +7,7 @@ class EventsController < ApplicationController
   end
   
   def index
-    @events = Event.where(:status.in => ["trended", "trending"]).order_by([[:start_time, :desc]]).take(10)
+    @events = Event.where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(20)
     #@events = Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:start_time, :desc]])
   end
   
@@ -25,7 +25,7 @@ class EventsController < ApplicationController
       Event.find(params[:event_id]).update_attribute(:status, "not_trending")
     end 
     
-    APN::Device.each do |device|
+    APN::Device.all.each do |device|
       n = APN::Notification.new
       n.subscription = device.subscriptions.first
       n.alert = "#{event.venue.name} (#{event.n_photos}) - #{event.description}"
