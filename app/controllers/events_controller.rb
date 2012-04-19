@@ -43,6 +43,7 @@ class EventsController < ApplicationController
       s = d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
       #definir location of user
     end
+    render :text => 'OK'
   end
 
 
