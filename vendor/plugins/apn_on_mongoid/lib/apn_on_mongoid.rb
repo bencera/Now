@@ -27,7 +27,7 @@ module APN # :nodoc:
   @@cert = File.join('.', 'config', 'apns_certificate_production.pem')
   # Passphrase for certificate
   mattr_accessor :passphrase
-  @@passphrase = 'iWWLinaPH12'
+  @@passphrase = 'iWWWint123'
   
   # Default way to setup APN on Mongoid.
   def self.setup
