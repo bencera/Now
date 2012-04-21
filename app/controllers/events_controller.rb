@@ -39,9 +39,14 @@ class EventsController < ApplicationController
   
   def user
     if params[:cmd] = "userToken"
-      d = APN::Device.create(:udid => params[:token])
-      s = d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
-      #definir location of user
+      if APN::Device.where(:udid => params[:token]).first
+        d = APN::Device.where(:udid => params[:token]).first
+        d.subscriptions.first
+      else
+        d = APN::Device.create(:udid => params[:token])
+        s = d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        #definir location of user
+      end
     end
     render :text => 'OK'
   end
