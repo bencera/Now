@@ -76,14 +76,14 @@ class Trending
 
     trending_venues = {}
     venues.sort_by { |k,v| v["n_photos"]}.reverse.each do |venue|
-      if venue[1]["n_photos"] >= 5
+      if venue[1]["n_photos"] >= 3
         
         #### mean and std deviation
         
                 #30-day stats
 
         photos_count = {}
-        Venue.find(venue[0]).photos.where(:time_taken.lt => 1.day.ago.to_i).where(:time_taken.gt => 1.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
+        Venue.find(venue[0]).photos.where(:time_taken.lt => 1.day.ago.to_i).where(:time_taken.gt => 2.weeks.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
           if photos_count.include?(Time.at(photo.time_taken).yday)
             photos_count[Time.at(photo.time_taken).yday] += 1
           else
@@ -92,7 +92,7 @@ class Trending
         end
         
         day_series = photos_count.values
-        (30 - photos_count.count).times do
+        (14 - photos_count.count).times do
           day_series << 0
         end
 
@@ -121,7 +121,7 @@ class Trending
         
         #########
         
-        if venue[1]["n_photos"] > mean_month or Venue.find(venue[0]).photos.last_hours(1).distinct(:user_id).count >= [5, mean_month/2].max_by {|x| x }
+        if venue[1]["n_photos"] > mean_month or Venue.find(venue[0]).photos.last_hours(2).distinct(:user_id).count >= [3, mean_month/2].max_by {|x| x }
           
         
           trending_venues[venue[0]] = {"n_photos" => venue[1]["n_photos"], "keywords" => [], "stats" => []}
