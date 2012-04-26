@@ -175,7 +175,7 @@ class Trending
                                  :end_time => photos.first.time_taken,
                                  :coordinates => venue.coordinates,
                                  :n_photos => venue.photos.last_hours(hours).count,
-                                 :status => "waiting"
+                                 :status => "waiting",
                                  :city => city)
         photos.each do |photo|
           new_event.photos << photo
