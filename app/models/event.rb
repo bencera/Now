@@ -8,6 +8,7 @@ class Event
   field :intensity
   field :status
   field :n_photos
+  field :city
   #field :n_people
   
   belongs_to :venue

@@ -1,7 +1,7 @@
 class Trending
   @queue = :trending_queue
 
-  def self.perform(hours)
+  def self.perform(hours, city)
     hours = hours.to_i
     stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "#", "/", "@", ":", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
     stop_words = ["a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
@@ -51,7 +51,10 @@ class Trending
      "wonder", "would", "would", "wouldn't", "yes", "yet", "you", "you'd", "you'll", "you're", "you've",
       "your", "yours", "yourself", "yourselves", "zero"] 
 
-    photos_lasthours = Photo.where(city: "newyork").last_hours(hours).order_by([[:time_taken, :desc]])
+   cities = ["newyork", "paris", "sanfrancisco", "london"]
+   cities.each do |city|
+    
+    photos_lasthours = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
     venues = {}
     photos_lasthours.each do |photo|
       if venues.include?(photo.venue_id)
@@ -172,7 +175,8 @@ class Trending
                                  :end_time => photos.first.time_taken,
                                  :coordinates => venue.coordinates,
                                  :n_photos => venue.photos.last_hours(hours).count,
-                                 :status => "waiting")
+                                 :status => "waiting"
+                                 :city => city)
         photos.each do |photo|
           new_event.photos << photo
         end
@@ -191,7 +195,7 @@ class Trending
     
     if hours == 2 #a reflechir.. comment determiner qd l'event arrete de trender..
       Event.where(:status => "trending").each do |event|
-        if Venue.find(event.venue_id).photos.last_hours(2).count == 0
+        if Venue.find(event.venue_id).photos.last_hours(5).count == 0
           event.update_attribute(:status, "trended")
         end
       end
@@ -206,5 +210,7 @@ class Trending
     end  
   end
   
+  
+end
 end
   

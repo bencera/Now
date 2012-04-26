@@ -5,7 +5,7 @@ fetch_photos_newyork:
   description: "Fetchs instagram pics every minute"
   
 fetch_photos_paris:
-  every: "2m"
+  every: "30s"
   class: Fetchigphotos
   args: "976141"
   description: "Fetchs instagram pics every minute"
@@ -17,13 +17,13 @@ fetch_photos_paris:
 #   description: "Fetchs instagram pics every minute"
   
 fetch_photos_london:
-  every: "2m"
+  every: "30s"
   class: Fetchigphotos
   args: "976145"
   description: "Fetchs instagram pics every minute"
   
 fetch_photos_sanfrancisco:
-  every: "2m"
+  every: "30s"
   class: Fetchigphotos
   args: "976142"
   description: "Fetchs instagram pics every minute"
