@@ -28,16 +28,16 @@ class EventsController < ApplicationController
     end 
     
   if 4.hours.ago.hour > 7 and 4.hours.ago.hour < 24
-    
-    APN::Device.all.each do |device|
-      n = APN::Notification.new
-      n.subscription = device.subscriptions.first
-      n.alert = "#{event.venue.name} (#{event.n_photos}) - #{event.description}"
-      n.sound = "default"
-      n.event = event.id
-      n.deliver
-    end
-    
+    if Time.now.to_i - event.end_time.to_i < 3600
+      APN::Device.all.each do |device|
+        n = APN::Notification.new
+        n.subscription = device.subscriptions.first
+        n.alert = "#{event.venue.name} (#{event.n_photos}) - #{event.description}"
+        n.sound = "default"
+        n.event = event.id
+        n.deliver
+      end
+    end  
   end
     redirect_to "http://checkthis.com/okzf"
   end
