@@ -94,6 +94,33 @@ class SessionsController < ApplicationController
   end
   
   
+  def now_signup
+      token = params[:ig_accesstoken]
+      ig_id = ""
+      token.each_char do |char|
+        if char != "."
+          ig_id += char
+        else
+          break
+        end
+      end
+      client = Instagram.client(:access_token => token)
+      data = client.user(ig_id)
+      if User.first(conditions: {ig_id: ig_id}).nil?
+        u = User.new
+        u.ig_username = data.username
+        u.ig_id = ig_id
+        u.ig_accesstoken = token
+        u.save
+        u.complete_ig_info(access_token["access_token"])
+      elsif User.first(conditions: {ig_id: ig_id}).ig_accesstoken.nil?
+        u = User.first(conditions: {ig_id: ig_id})
+        u.complete_ig_info(access_token["access_token"])
+        u.update_attribute(:ig_accesstoken, access_token["access_token"])
+      end
+      render "ok"
+  end
+  
   
   def signup
     

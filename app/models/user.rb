@@ -31,10 +31,10 @@ class User
   
   validates_presence_of :ig_id #, :ig_username
   validates_uniqueness_of :ig_id
-  validates_format_of :email, :with => /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i, :on => :update
-  validates_presence_of :password, :on => :update
-  validates_presence_of :email, :on => :update
-  validates_uniqueness_of :email, :on => :update
+  #validates_format_of :email, :with => /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i, :on => :update
+  #validates_presence_of :password, :on => :update
+  #validates_presence_of :email, :on => :update
+  #validates_uniqueness_of :email, :on => :update
   
   
   def generate_token

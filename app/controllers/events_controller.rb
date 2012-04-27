@@ -27,6 +27,8 @@ class EventsController < ApplicationController
       Event.find(params[:event_id]).update_attribute(:status, "not_trending")
     end 
     
+  if 4.hours.ago.hour > 7 and 4.hours.ago.hour < 24
+    
     APN::Device.all.each do |device|
       n = APN::Notification.new
       n.subscription = device.subscriptions.first
@@ -36,6 +38,7 @@ class EventsController < ApplicationController
       n.deliver
     end
     
+  end
     redirect_to "http://checkthis.com/okzf"
   end
   
@@ -46,6 +49,10 @@ class EventsController < ApplicationController
         d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
         #definir location of user
       end
+    end
+    if params[:cmd] = "accessToken"
+      user = APN::Device.where(:udid => params[:token]).first
+      user.update_attributes
     end
     render :text => 'OK'
   end

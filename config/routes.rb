@@ -19,6 +19,7 @@ Ubimachine::Application.routes.draw do
   end
   
   match "/now/user" => "events#user"
+  match "/now/user/signup" => "sessions#now_signup"
   
   match "/photos/json/:id" => "photos#show_json"
   
