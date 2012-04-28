@@ -7,8 +7,9 @@ class EventsController < ApplicationController
   end
   
   def index
-    @events = Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
-    #Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
+    @events = Event.where(:city => params[:city]).where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
+    #Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
+    #
     @cities = ["New York", "Paris", "San Francisco", "London"]
     #@events = Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:start_time, :desc]])
   end
