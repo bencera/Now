@@ -31,5 +31,5 @@ fetch_photos_sanfrancisco:
 trending:
   every: "10m"
   class: Trending
-  args: "2"
+  args: "1"
   description: "Trending emails"
