@@ -7,7 +7,12 @@ class EventsController < ApplicationController
   end
   
   def index
-    @events = Event.where(:city => params[:city]).where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
+    events = Event.where(:city => params[:city]).where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
+    if events.count >= 10
+      @events = events
+    else
+      @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
+    end
     #Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
     #
     @cities = ["New York", "Paris", "San Francisco", "London"]
