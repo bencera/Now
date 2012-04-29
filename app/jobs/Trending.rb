@@ -121,7 +121,7 @@ class Trending
         
         #########
         
-        if venue[1]["n_photos"] > mean_month or Venue.find(venue[0]).photos.last_hours(1).distinct(:user_id).count >= [4, mean_month/2].max_by {|x| x }
+        if venue[1]["n_photos"] > mean_month or Venue.find(venue[0]).photos.last_hours(2).distinct(:user_id).count >= [4, mean_month/2].max_by {|x| x }
           
         
           trending_venues[venue[0]] = {"n_photos" => venue[1]["n_photos"], "keywords" => [], "stats" => []}
