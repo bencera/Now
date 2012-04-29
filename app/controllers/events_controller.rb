@@ -39,7 +39,7 @@ class EventsController < ApplicationController
         n = APN::Notification.new
         n.subscription = device.subscriptions.first
         n.alert = "#{event.venue.name} (#{event.n_photos}) - #{event.description}"
-        n.sound = "default"
+        n.sound = "none"
         n.event = event.id
         n.deliver
       end
