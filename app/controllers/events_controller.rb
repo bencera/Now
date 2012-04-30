@@ -54,7 +54,7 @@ class EventsController < ApplicationController
       APN::Device.all.each do |device|
         n = APN::Notification.new
         n.subscription = device.subscriptions.first
-        n.alert = "#{emoji} #{event.description.gsub(event_type, '')}(#{event.n_photos}) @#{event.venue.name}(#{event.venue.neighborhood})"
+        n.alert = "#{emoji}#{event.description.gsub(event_type, '')} (#{event.n_photos}) @#{event.venue.name} (#{event.venue.neighborhood})"
         #n.sound = "none"
         n.event = event.id
         n.deliver
