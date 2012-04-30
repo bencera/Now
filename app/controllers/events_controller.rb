@@ -35,7 +35,7 @@ class EventsController < ApplicationController
     event_type = event.description.split(' ').first
     case event_type
     when "concert"
-      emoji = ["E449".to_i(16)].pack("U")
+      emoji = ["E03E".to_i(16)].pack("U")
     when "party"
       emoji = ["E047".to_i(16)].pack("U")
     when "sport"
