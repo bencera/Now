@@ -32,19 +32,34 @@ class EventsController < ApplicationController
     elsif params[:confirm] == "no"
       Event.find(params[:event_id]).update_attribute(:status, "not_trending")
     end 
+    event_type = event.description.split(' ').first
+    case event_type
+    when "concert"
+      emoji = ["E449".to_i(16)].pack("U")
+    when "party"
+      emoji = ["E047".to_i(16)].pack("U")
+    when "sport"
+      emoji = ["E42A".to_i(16)].pack("U")
+    when "art"
+      emoji = ["E502".to_i(16)].pack("U")
+    when "outdoors"
+      emoji = ["E04A".to_i(16)].pack("U")
+    when "exceptional"
+      emoji = ["E252".to_i(16)].pack("U")
+    when "celebrity"
+      emoji = ["E51C".to_i(16)].pack("U")
+    end
     
-  if 4.hours.ago.hour > 7 and 4.hours.ago.hour < 24
     if Time.now.to_i - event.end_time.to_i < 3600
       APN::Device.all.each do |device|
         n = APN::Notification.new
         n.subscription = device.subscriptions.first
-        n.alert = "#{event.venue.name} (#{event.n_photos}) - #{event.description}"
+        n.alert = "#{emoji} #{event.description.gsub(event_type, '')}(#{event.n_photos}) @#{event.venue.name}(#{event.venue.neighborhood})"
         #n.sound = "none"
         n.event = event.id
         n.deliver
       end
     end  
-  end
     redirect_to "http://checkthis.com/okzf"
   end
   
