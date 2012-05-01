@@ -73,7 +73,7 @@ class EventsController < ApplicationController
     end
     if params[:cmd] = "accessToken"
       user = APN::Device.where(:udid => params[:token]).first
-      user.update_attributes
+      #user.update_attributes
     end
     render :text => 'OK'
   end

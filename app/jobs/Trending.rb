@@ -193,23 +193,22 @@ class Trending
       end
     end
     
-    if hours == 2 #a reflechir.. comment determiner qd l'event arrete de trender..
-      Event.where(:status => "trending").each do |event|
-        if Venue.find(event.venue_id).photos.last_hours(5).count == 0
-          event.update_attribute(:status, "trended")
-        end
-      end
-      Event.where(:status => "waiting").each do |event|
-        if (Time.now.to_i - event.start_time) >  12*3600
-          event.update_attribute(:status, "not_trending")
-        end
         # if Venue.find(event.venue_id).photos.last_hours(2).count == 0
         #   event.update_attribute(:status, "not_trending")
         # end
       end
     end  
-  end
-  
+    
+     Event.where(:status => "trending").each do |event|
+        if Venue.find(event.venue_id).photos.last_hours(4).count == 0
+          event.update_attribute(:status, "trended")
+        end
+      end
+
+      Event.where(:status => "waiting").each do |event|
+        if (Time.now.to_i - event.start_time) >  12*3600
+          event.update_attribute(:status, "not_trending")
+      end
   
 end
 end
