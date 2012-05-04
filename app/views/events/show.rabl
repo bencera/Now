@@ -6,6 +6,6 @@ end
 child :venue do
 attributes :name, :neighborhood, :address
 node :category do |u|
-u.categories.first["name"]
+u.categories.first["name"] unless u.categories.nil?
 end
 end
