@@ -54,6 +54,14 @@ class EventsController < ApplicationController
       emoji = ["E252".to_i(16)].pack("U")
     when "celebrity"
       emoji = ["E51C".to_i(16)].pack("U")
+    when "food"
+      emoji = ["E120".to_i(16)].pack("U")
+    when "movie"
+      emoji = ["E324".to_i(16)].pack("U")
+    when "conference"
+      emoji = ["E141".to_i(16)].pack("U")
+    when "performance"
+      emoji = ["E503".to_i(16)].pack("U")
     end
     
     if Time.now.to_i - event.end_time.to_i < 3600
