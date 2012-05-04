@@ -30,14 +30,15 @@ class EventsController < ApplicationController
   end
   
   def create
+    raise "test"
     if params[:confirm] == "yes"
       event = Event.find(params[:event_id])
       event.update_attribute(:status, "trending")
       event.update_attribute(:description, params[:description])
-    elsif params[:confirm] == "no"
-      Event.find(params[:event_id]).update_attribute(:status, "not_trending")
+      event.update_attribute(:category, params[:category])
+      event.update_attribute(:link, params[:link]) unless params[:link].nil?
     end 
-    event_type = event.description.split(' ').first
+    event_type = event.category
     case event_type
     when "concert"
       emoji = ["E03E".to_i(16)].pack("U")
@@ -59,7 +60,7 @@ class EventsController < ApplicationController
       APN::Device.all.each do |device|
         n = APN::Notification.new
         n.subscription = device.subscriptions.first
-        n.alert = "#{emoji}#{event.description.gsub(event_type, '')} (#{event.n_photos}) @#{event.venue.name} (#{event.venue.neighborhood})"
+        n.alert = "#{emoji}#{event.description} @ #{event.venue.name} (#{event.venue.neighborhood})"
         #n.sound = "none"
         n.event = event.id
         n.deliver

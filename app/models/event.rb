@@ -4,6 +4,8 @@ class Event
   field :start_time
   field :end_time
   field :description
+  field :category
+  field :link
   field :super_user
   field :intensity
   field :status

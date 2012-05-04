@@ -3,13 +3,31 @@
   Can you please confirm?
   = form_tag "/events", :method => "post" do
     = text_field_tag :description,  nil, :placeholder => "Describe the event"
+    = text_field_tag :link, nil, :placeholder => "Put a link on the event"
     = hidden_field_tag :confirm, "yes"
     = hidden_field_tag :event_id, @new_event.id
     = submit_tag "Yes!"
-    
-  = form_tag "/events", :method => "post" do
-    = hidden_field_tag :confirm, "no"
-    = hidden_field_tag :event_id, @new_event.id
-    = submit_tag "There isn't anything special here."
+    = radio_button_tag(:category, "concert")
+    = label_tag(:category_name, "concert")
+    = radio_button_tag(:category, "party")
+    = label_tag(:category_name, "party")
+    = radio_button_tag(:category, "sport")
+    = label_tag(:category_name, "sport")
+    = radio_button_tag(:category, "art")
+    = label_tag(:category_name, "art")
+    = radio_button_tag(:category, "movie")
+    = label_tag(:category_name, "movie")
+    = radio_button_tag(:category, "food")
+    = label_tag(:category_name, "food")
+    = radio_button_tag(:category, "outdoors")
+    = label_tag(:category_name, "outdoors")
+    = radio_button_tag(:category, "exceptional")
+    = label_tag(:category_name, "exceptional")
+    = radio_button_tag(:category, "celebrity")
+    = label_tag(:category_name, "celebrity")
+    = radio_button_tag(:category, "conference")
+    = label_tag(:category_name, "conference")
+    = radio_button_tag(:category, "performance")
+    = label_tag(:category_name, "performance")
     
   = render :partial => 'partials/card', :collection => @new_event.photos, :as => :photo
