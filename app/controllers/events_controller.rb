@@ -15,12 +15,12 @@ class EventsController < ApplicationController
     end
     #Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
     #
-    @cities = ["New York", "Paris", "San Francisco", "London"]
+    @cities = ["New York",  "San Francisco","Paris", "London"]
     #@events = Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:start_time, :desc]])
   end
   
   def cities
-    @cities = ["New York", "Paris", "San Francisco", "London"]
+    @cities = ["New York", "San Francisco","Paris",  "London"]
     render :json => @cities
   end
   
