@@ -21,6 +21,8 @@ Ubimachine::Application.routes.draw do
   match "/now/user" => "events#user"
   match "/now/user/signup" => "sessions#now_signup"
   
+  match "/now/cities" => "events#cities"
+  
   match "/photos/json/:id" => "photos#show_json"
   
   match "/thanks" => "home#thanks"

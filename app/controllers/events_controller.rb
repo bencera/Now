@@ -19,6 +19,11 @@ class EventsController < ApplicationController
     #@events = Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:start_time, :desc]])
   end
   
+  def cities
+    @cities = ["New York", "Paris", "San Francisco", "London"]
+    render :json => @cities
+  end
+  
   
   def trending
     @new_event = Event.find(params[:id])
