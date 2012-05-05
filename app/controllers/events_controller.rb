@@ -30,7 +30,6 @@ class EventsController < ApplicationController
   end
   
   def create
-    raise "test"
     if params[:confirm] == "yes"
       event = Event.find(params[:event_id])
       event.update_attribute(:status, "trending")
@@ -38,7 +37,7 @@ class EventsController < ApplicationController
       event.update_attribute(:category, params[:category])
       event.update_attribute(:link, params[:link]) unless params[:link].nil?
     end 
-    event_type = event.category
+    event_type = params[:category]
     case event_type
     when "concert"
       emoji = ["E03E".to_i(16)].pack("U")
