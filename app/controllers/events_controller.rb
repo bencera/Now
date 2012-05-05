@@ -69,7 +69,8 @@ class EventsController < ApplicationController
         unless device.nil?
           n = APN::Notification.new
           n.subscription = device.subscriptions.first
-          alert = "#{emoji} " unless emoji.nil?
+          alert = ""
+          alert = alert +  "#{emoji} " unless emoji.nil?
           alert = alert + "#{event.description} @ #{event.venue.name}"
           alert = alert + " (#{event.venue.neighborhood})" unless event.venue.neighborhood.nil?
           n.alert = alert
