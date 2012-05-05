@@ -66,15 +66,17 @@ class EventsController < ApplicationController
     if params[:push] == "1"
     if Time.now.to_i - event.end_time.to_i < 3600
       APN::Device.all.each do |device|
-        n = APN::Notification.new
-        n.subscription = device.subscriptions.first
-        alert = "#{emoji} " unless emoji.nil?
-        alert = alert + "#{event.description} @ #{event.venue.name}"
-        alert = alert + " (#{event.venue.neighborhood})" unless event.venue.neighborhood.nil?
-        n.alert = alert
-        #n.sound = "none"
-        n.event = event.id
-        n.deliver
+        unless device.nil?
+          n = APN::Notification.new
+          n.subscription = device.subscriptions.first
+          alert = "#{emoji} " unless emoji.nil?
+          alert = alert + "#{event.description} @ #{event.venue.name}"
+          alert = alert + " (#{event.venue.neighborhood})" unless event.venue.neighborhood.nil?
+          n.alert = alert
+          #n.sound = "none"
+          n.event = event.id
+          n.deliver
+        end
       end
     end 
     end 
