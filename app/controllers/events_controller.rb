@@ -30,7 +30,6 @@ class EventsController < ApplicationController
   end
   
   def create
-    raise "test"
     if params[:confirm] == "yes"
       event = Event.find(params[:event_id])
       event.update_attribute(:status, "trending")
