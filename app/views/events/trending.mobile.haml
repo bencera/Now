@@ -29,5 +29,7 @@
     = label_tag(:category_name, "exceptional")
     = radio_button_tag(:category, "celebrity")
     = label_tag(:category_name, "celebrity")
+    = check_box_tag(:push)
+    = label_tag(:push_desc, "Push Notification")
     
   = render :partial => 'partials/card', :collection => @new_event.photos, :as => :photo

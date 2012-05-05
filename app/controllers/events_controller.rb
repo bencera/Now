@@ -30,6 +30,7 @@ class EventsController < ApplicationController
   end
   
   def create
+    raise "test"
     if params[:confirm] == "yes"
       event = Event.find(params[:event_id])
       event.update_attribute(:status, "trending")
@@ -63,6 +64,7 @@ class EventsController < ApplicationController
       emoji = ["E503".to_i(16)].pack("U")
     end
     
+    if params[:push] == "1"
     if Time.now.to_i - event.end_time.to_i < 3600
       APN::Device.all.each do |device|
         n = APN::Notification.new
@@ -72,7 +74,8 @@ class EventsController < ApplicationController
         n.event = event.id
         n.deliver
       end
-    end  
+    end 
+    end 
     redirect_to "http://checkthis.com/okzf"
   end
   
