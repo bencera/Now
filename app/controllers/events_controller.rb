@@ -6,6 +6,11 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
   end
   
+  def showless
+    @event = Event.find(params[:id])
+    @photos = @event.photos.take(6)
+  end
+  
   def index
     events = Event.where(:city => params[:city]).where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
     if events.count >= 10
@@ -13,10 +18,6 @@ class EventsController < ApplicationController
     else
       @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
     end
-    #Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
-    #
-    @cities = ["New York",  "San Francisco","Paris", "London"]
-    #@events = Event.where(:start_time.gt => 1.day.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:start_time, :desc]])
   end
   
   def cities
@@ -65,14 +66,14 @@ class EventsController < ApplicationController
     
     if params[:push] == "1"
     if Time.now.to_i - event.end_time.to_i < 3600
+      alert = ""
+      alert = alert +  "#{emoji} " unless emoji.nil?
+      alert = alert + "#{event.description} @ #{event.venue.name}"
+      alert = alert + " (#{event.venue.neighborhood})" unless event.venue.neighborhood.nil?
       APN::Device.all.each do |device|
         unless device.nil?
           n = APN::Notification.new
           n.subscription = device.subscriptions.first
-          alert = ""
-          alert = alert +  "#{emoji} " unless emoji.nil?
-          alert = alert + "#{event.description} @ #{event.venue.name}"
-          alert = alert + " (#{event.venue.neighborhood})" unless event.venue.neighborhood.nil?
           n.alert = alert
           #n.sound = "none"
           n.event = event.id
