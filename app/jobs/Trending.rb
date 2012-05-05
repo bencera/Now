@@ -76,7 +76,7 @@ class Trending
 
     trending_venues = {}
     venues.sort_by { |k,v| v["n_photos"]}.reverse.each do |venue|
-      if venue[1]["n_photos"] >= 4
+      if venue[1]["n_photos"] >= 6
         
         #### mean and std deviation
         
@@ -121,7 +121,7 @@ class Trending
         
         #########
         
-        if venue[1]["n_photos"] > mean_month or Venue.find(venue[0]).photos.last_hours(2).distinct(:user_id).count >= [4, mean_month/2].max_by {|x| x }
+        if venue[1]["n_photos"] > mean_month or Venue.find(venue[0]).photos.last_hours(2).distinct(:user_id).count >= [6, mean_month/2].max_by {|x| x }
           
         
           trending_venues[venue[0]] = {"n_photos" => venue[1]["n_photos"], "keywords" => [], "stats" => []}
