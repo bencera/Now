@@ -39,27 +39,27 @@ class EventsController < ApplicationController
     end 
     event_type = params[:category]
     case event_type
-    when "concert"
+    when "Concert"
       emoji = ["E03E".to_i(16)].pack("U")
-    when "party"
+    when "Party"
       emoji = ["E047".to_i(16)].pack("U")
-    when "sport"
+    when "Sport"
       emoji = ["E42A".to_i(16)].pack("U")
-    when "art"
+    when "Art"
       emoji = ["E502".to_i(16)].pack("U")
-    when "outdoors"
+    when "Outdoors"
       emoji = ["E04A".to_i(16)].pack("U")
-    when "exceptional"
+    when "Exceptional"
       emoji = ["E252".to_i(16)].pack("U")
-    when "celebrity"
+    when "Celebrity"
       emoji = ["E51C".to_i(16)].pack("U")
-    when "food"
+    when "Food"
       emoji = ["E120".to_i(16)].pack("U")
-    when "movie"
+    when "Movie"
       emoji = ["E324".to_i(16)].pack("U")
-    when "conference"
+    when "Conference"
       emoji = ["E141".to_i(16)].pack("U")
-    when "performance"
+    when "Performance"
       emoji = ["E503".to_i(16)].pack("U")
     end
     
@@ -68,7 +68,10 @@ class EventsController < ApplicationController
       APN::Device.all.each do |device|
         n = APN::Notification.new
         n.subscription = device.subscriptions.first
-        n.alert = "#{emoji}#{event.description} @ #{event.venue.name} (#{event.venue.neighborhood})"
+        alert = "#{emoji} " unless emoji.nil?
+        alert = alert + "#{event.description} @ #{event.venue.name}"
+        alert = alert + " (#{event.venue.neighborhood})" unless event.venue.neighborhood.nil?
+        n.alert = alert
         #n.sound = "none"
         n.event = event.id
         n.deliver
