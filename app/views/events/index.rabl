@@ -1,2 +1,2 @@
 collection @events
-extends "events/show"
+extends "events/showless"
