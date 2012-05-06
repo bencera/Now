@@ -6,6 +6,8 @@ module APN
 
     field :udid
     field :device_info
+    field :latitude
+    field :longitude
 
     index :udid, :unique => true, :background => true
     
