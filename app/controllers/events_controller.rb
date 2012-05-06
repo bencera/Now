@@ -86,7 +86,7 @@ class EventsController < ApplicationController
   end
   
   def user
-    if params[:cmd] = "userToken"
+    if params[:cmd] == "userToken"
       if APN::Device.where(:udid => params[:deviceid]).first
         d = APN::Device.where(:udid => params[:deviceid]).first
         d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
@@ -96,10 +96,12 @@ class EventsController < ApplicationController
         #definir location of user
       end
 
-    elsif params[:cmd] = "userCoords"
+    elsif params[:cmd] == "userCoords"
       d = APN::Device.where(:udid => params[:deviceid]).first
       d.update_attribute(:latitude, params[:latitude])
       d.update_attribute(:longitude, params[:longitude])
+      puts params[:latitude]
+      puts params[:longitude]
     end
     render :text => 'OK'
   end
