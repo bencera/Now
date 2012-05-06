@@ -200,14 +200,26 @@ class Trending
     end  
     
      Event.where(:status => "trending").each do |event|
-        if Venue.find(event.venue_id).photos.last_hours(4).count == 0
+        if (Venue.find(event.venue_id).photos.last_hours(4).count == 0)
           event.update_attribute(:status, "trended")
+        elsif (Time.now.to_i - event.start_time > 15.hours.to_i)
+          event.update_attribute(:status, "trended")
+        else
+          #rajouter les nouvelles photos, updater nb photos, nb_people, revoir intensite?
+          event.venue.photos.last_hours(hours).each do |photo|
+            unless photo.events.first == event
+              event.photos << photo
+              event.inc(:n_photos, 1)
+            end
+          end
+          event.update_attribute(:end_time, event.venue.photos.last_hours(2).first.time_taken) unless event.venue.photos.last_hours(2).first.nil?
         end
       end
 
       Event.where(:status => "waiting").each do |event|
         if (Time.now.to_i - event.start_time) >  12*3600
           event.update_attribute(:status, "not_trending")
+        end
       end
   
 end
