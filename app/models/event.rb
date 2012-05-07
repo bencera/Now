@@ -6,6 +6,7 @@ class Event
   field :description
   field :category
   field :shortid
+  field :link
   field :super_user
   field :intensity
   field :status
