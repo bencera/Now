@@ -53,6 +53,10 @@ class Trending
 
    cities = ["newyork", "paris", "sanfrancisco", "london"]
    cities.each do |city|
+     # case
+     # when city == "newyork"
+     #   
+      
     
     photos_lasthours = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
     venues = {}
