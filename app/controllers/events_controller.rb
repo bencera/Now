@@ -103,6 +103,14 @@ class EventsController < ApplicationController
       d.update_attribute(:longitude, params[:longitude])
       puts params[:latitude]
       puts params[:longitude]
+      
+    elsif params[:cmd] == "notifications"
+      d = APN::Device.where(:udid => params[:deviceid]).first
+      if params[:notificationswitch]  == "yes"
+        d.update_attribute(:notifications, true)
+      elsif params[:notificationswitch] == "no"
+        d.update_attribute(:notifications, false)
+      end
     end
     render :text => 'OK'
   end
