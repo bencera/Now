@@ -36,6 +36,7 @@ class EventsController < ApplicationController
       event.update_attribute(:status, "trending")
       event.update_attribute(:description, params[:description])
       event.update_attribute(:category, params[:category])
+      event.update_attribute(:shortid, params[:event_id])
       event.update_attribute(:link, params[:link]) unless params[:link].nil?
     end 
     event_type = params[:category]

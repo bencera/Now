@@ -5,7 +5,7 @@ class Event
   field :end_time
   field :description
   field :category
-  field :link
+  field :shortid
   field :super_user
   field :intensity
   field :status
