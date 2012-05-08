@@ -24,13 +24,7 @@ class EventsController < ApplicationController
     @cities = [{"name" => "New York", "url" => "url1"}, 
                {"name" => "San Francisco", "url" => "url1"},
               {"name" => "Paris", "url" => "url1"},
-              {"name" => "London", "url" => "url1"},
-              {"name" => "Tokyo", "url" => "http://www.tokyoluv.com/wp-content/uploads/2011/03/tokyo_tower_HDR.jpg"},
-              {"name" => "Tokyo", "url" => "http://wikitravel.org/upload/en/thumb/4/49/St._Basil2.jpg/350px-St._Basil2.jpg"},
-              {"name" => "Tokyo", "url" => "http://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Los_Angeles,_CA_from_the_air.jpg/300px-Los_Angeles,_CA_from_the_air.jpg"},
-              {"name" => "Tokyo", "url" => "http://goeurope.about.com/library/graphics/gal/barcelona_gaudi_1.jpg"}
-              
-              
+              {"name" => "London", "url" => "url1"}
               ]
     render :json => @cities
   end
