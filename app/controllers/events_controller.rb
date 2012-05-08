@@ -102,19 +102,31 @@ class EventsController < ApplicationController
       end
 
     elsif params[:cmd] == "userCoords"
-      d = APN::Device.where(:udid => params[:deviceid]).first
+      if APN::Device.where(:udid => params[:deviceid]).first
+        d = APN::Device.where(:udid => params[:deviceid]).first
+      else
+        d = APN::Device.create(:udid => params[:deviceid])
+        if params[:token]
+          d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        end
+      end
       d.update_attribute(:latitude, params[:latitude])
       d.update_attribute(:longitude, params[:longitude])
-      puts params[:latitude]
-      puts params[:longitude]
       
     elsif params[:cmd] == "notifications"
-      d = APN::Device.where(:udid => params[:deviceid]).first
+      if APN::Device.where(:udid => params[:deviceid]).first
+        d = APN::Device.where(:udid => params[:deviceid]).first
+      else
+        d = APN::Device.create(:udid => params[:deviceid])
+        if params[:token]
+          d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        end
+      end
       if params[:notificationswitch]  == "yes"
         d.update_attribute(:notifications, true)
       elsif params[:notificationswitch] == "no"
         d.update_attribute(:notifications, false)
-      end
+      end  
     end
     render :text => 'OK'
   end
