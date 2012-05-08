@@ -25,7 +25,13 @@ class EventsController < ApplicationController
                {"name" => "San Francisco", "url" => "url1"},
               {"name" => "Paris", "url" => "url1"},
               {"name" => "London", "url" => "url1"},
-              {"name" => "Tokyo", "url" => "http://www.tokyoluv.com/wp-content/uploads/2011/03/tokyo_tower_HDR.jpg"}]
+              {"name" => "Tokyo", "url" => "http://www.tokyoluv.com/wp-content/uploads/2011/03/tokyo_tower_HDR.jpg"},
+              {"name" => "Tokyo", "url" => "http://www.tokyoluv.com/wp-content/uploads/2011/03/tokyo_tower_HDR.jpg"},
+              {"name" => "Tokyo", "url" => "http://www.tokyoluv.com/wp-content/uploads/2011/03/tokyo_tower_HDR.jpg"},
+              {"name" => "Tokyo", "url" => "http://www.tokyoluv.com/wp-content/uploads/2011/03/tokyo_tower_HDR.jpg"}
+              
+              
+              ]
     render :json => @cities
   end
   
