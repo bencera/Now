@@ -21,7 +21,7 @@ class EventsController < ApplicationController
   end
   
   def cities
-    @cities = ["New York", "San Francisco","Paris",  "London"]
+    @cities = {"New York" => "url1", "San Francisco" => "url2", "Paris" => "url3",  "London" => "url4", "Tokyo" => "http://www.tokyoluv.com/wp-content/uploads/2011/03/tokyo_tower_HDR.jpg"}
     render :json => @cities
   end
   
@@ -72,7 +72,7 @@ class EventsController < ApplicationController
       alert = alert + "#{event.description} @ #{event.venue.name}"
       alert = alert + " (#{event.venue.neighborhood})" unless event.venue.neighborhood.nil?
       APN::Device.all.each do |device|
-        unless device.nil?
+        unless device.subscriptions.first.nil?
           n = APN::Notification.new
           n.subscription = device.subscriptions.first
           n.alert = alert
