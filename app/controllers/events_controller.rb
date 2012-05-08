@@ -21,7 +21,11 @@ class EventsController < ApplicationController
   end
   
   def cities
-    @cities = {"New York" => "url1", "San Francisco" => "url2", "Paris" => "url3",  "London" => "url4", "Tokyo" => "http://www.tokyoluv.com/wp-content/uploads/2011/03/tokyo_tower_HDR.jpg"}
+    @cities = [{"name" => "New York", "url" => "url1"}, 
+               {"name" => "San Francisco", "url" => "url1"},
+              {"name" => "Paris", "url" => "url1"},
+              {"name" => "London", "url" => "url1"},
+              {"name" => "Tokyo", "url" => "http://www.tokyoluv.com/wp-content/uploads/2011/03/tokyo_tower_HDR.jpg"}]
     render :json => @cities
   end
   
