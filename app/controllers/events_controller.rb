@@ -12,7 +12,7 @@ class EventsController < ApplicationController
   end
   
   def index
-    events = Event.where(:city => params[:city]).where(:start_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
+    events = Event.where(:city => params[:city]).where(:start_time.gt => 3.days.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
     if events.count >= 10
       @events = events
     else
