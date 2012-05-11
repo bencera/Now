@@ -20,7 +20,7 @@ class Event
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates
   
-  validates_presence_of :coordinates, :venue_id, :n_photos, :end_time, :shortid
-  validates_presence_of :description, :category, :on => :update
+  validates_presence_of :coordinates, :venue_id, :n_photos, :end_time
+  validates_presence_of :description, :category, :shortid, :on => :update
 
 end
