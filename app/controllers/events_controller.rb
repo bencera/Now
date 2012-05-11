@@ -51,7 +51,7 @@ class EventsController < ApplicationController
     Resque.enqueue(Sendnotifications, event.id, push)
     redirect_to "http://checkthis.com/okzf"
   end
-  
+
   def user
     if params[:cmd] == "userToken"
       if APN::Device.where(:udid => params[:deviceid]).first

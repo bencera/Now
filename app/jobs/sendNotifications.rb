@@ -52,5 +52,6 @@ class Sendnotifications
       end 
     end                              
   end
+end
   
 end
