@@ -44,11 +44,8 @@ class EventsController < ApplicationController
       event.update_attribute(:link, params[:link]) unless params[:link].nil?
     end 
     if params[:push] == 1
-      push = "yes"
-    else
-      push = "no"
+      Resque.enqueue(Sendnotifications, params[:event_id])
     end
-    Resque.enqueue(Sendnotifications, params[:event_id], push)
     redirect_to "http://checkthis.com/okzf"
   end
 

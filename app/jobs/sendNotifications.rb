@@ -28,8 +28,7 @@ class Sendnotifications
     when "Performance"
       emoji = ["E503".to_i(16)].pack("U")
     end
-    
-  if push == "yes"
+
     if Time.now.to_i - event.end_time.to_i < 3600
       alert = ""
       alert = alert +  "#{emoji} " unless emoji.nil?
@@ -52,6 +51,5 @@ class Sendnotifications
       end 
     end                              
   end
-end
   
 end
