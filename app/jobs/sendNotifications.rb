@@ -1,6 +1,6 @@
 class Sendnotifications
   @queue = :sendnotifications_queue
-  def self.perform(event_id, push)
+  def self.perform(event_id)
     
     event = Event.find(event_id)
     
