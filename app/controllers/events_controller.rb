@@ -48,7 +48,7 @@ class EventsController < ApplicationController
     else
       push = "no"
     end
-    Resque.enqueue(Sendnotifications, event.id, push)
+    Resque.enqueue(Sendnotifications, params[:event_id], push)
     redirect_to "http://checkthis.com/okzf"
   end
 
