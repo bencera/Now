@@ -8,7 +8,7 @@ module APN
     field :device_info
     field :latitude
     field :longitude
-    field :notifications, :type => Boolean, , default: -> { true }
+    field :notifications, :type => Boolean, default: -> { true }
 
     index :udid, :unique => true, :background => true
     
