@@ -181,9 +181,11 @@ class Trending
                                  :n_photos => venue.photos.last_hours(hours).count,
                                  :status => "waiting",
                                  :city => city)
+        
         photos.each do |photo|
           new_event.photos << photo
         end
+        puts new_event.venue.name
         UserMailer.trending(new_event).deliver #avec un lien image different selon si levent a deja ete anote par quelqu un dautre (different photo)
       else
        #rajouter les nouvelles photos, updater nb photos, nb_people, revoir intensite?
