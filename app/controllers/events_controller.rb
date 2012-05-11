@@ -64,7 +64,7 @@ class EventsController < ApplicationController
     when "Movie"
       emoji = ["E324".to_i(16)].pack("U")
     when "Conference"
-      emoji = ["E141".to_i(16)].pack("U")
+      emoji = ["E301".to_i(16)].pack("U")
     when "Performance"
       emoji = ["E503".to_i(16)].pack("U")
     end

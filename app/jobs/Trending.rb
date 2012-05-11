@@ -3,7 +3,7 @@ class Trending
 
   def self.perform(hours)
     hours = hours.to_i
-    stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "#", "/", "@", ":", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+    stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "#", "/", "@", ":", "<", ">", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
     stop_words = ["a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
       "a's", "able", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", 
       "again", "against", "ain't", "all", "allow", "allows", "almost", "alone", "along", "already", "also", "although", "always", 
@@ -158,7 +158,7 @@ class Trending
           end
     
           sorted_words.sort_by{|u,v| v}.reverse.each do |word|
-            unless word[1] < 3
+            unless word[1] < 3 or word[0] == ""
               trending_venues[venue[0]]["keywords"] << word[0]
             end
           end
@@ -203,9 +203,9 @@ class Trending
     end  
     
      Event.where(:status => "trending").each do |event|
-        if (Venue.find(event.venue_id).photos.last_hours(4).count == 0)
+        if (Venue.find(event.venue_id).photos.last_hours(2).count == 0)
           event.update_attribute(:status, "trended")
-        elsif (Time.now.to_i - event.start_time > 15.hours.to_i)
+        elsif (Time.now.to_i - event.start_time > 12.hours.to_i)
           event.update_attribute(:status, "trended")
         else
           #rajouter les nouvelles photos, updater nb photos, nb_people, revoir intensite?

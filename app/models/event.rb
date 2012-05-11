@@ -17,5 +17,8 @@ class Event
   belongs_to :venue
   has_and_belongs_to_many :photos
   
-  validates_presence_of :coordinates, :venue_id, :n_photos, :start_time
+  include Geocoder::Model::Mongoid
+  reverse_geocoded_by :coordinates
+  
+  validates_presence_of :coordinates, :venue_id, :n_photos, :end_time, :category, :description, :shortid
 end
