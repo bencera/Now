@@ -27,7 +27,7 @@ Ubimachine::Application.routes.draw do
   
   match "/events/showless" => "events#showless"
 
-  match "/e/:id" => "events#showweb"
+  match "/:id" => "events#showweb"
   
   match "/thanks" => "home#thanks"
   match "/stats" => "home#stats"
