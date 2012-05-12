@@ -5,11 +5,19 @@
             %span Now.
             = image_tag "http://www.urcreations.com/images/app-store-badge.png", :width => '120px', :style => "margin-left: 395px"
 
-            %h2{:style => "margin-top: 10px"}= @event.description
+            .title= @event.description.capitalize
 #content
     %p{:style => 'text-align: left; margin-bottom: 5px'}
         = image_tag "card_pins.png", :height => "15", :width => "12"
-        = "Happening in #{@venue.name}"
+        - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
+            Happened
+            %span.timeago= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
+            at 
+            %span.timeago= @venue.name
+            in 
+            %span.timeago= @city
+        - else
+            = "Happening now at #{@venue.name} in #{@city}"
     = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=600x200&maptype=roadmap&markers=color:red%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
 
     - @photos.each do |p|

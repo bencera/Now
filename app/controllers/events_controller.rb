@@ -24,6 +24,16 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     @venue = @event.venue
     @photos = @event.photos
+    case @photos.first.city
+    when "newyork"
+      @city = "New York"
+    when "paris"
+      @city = "Paris"
+    when "london"
+      @city = "London"
+    when "sanfrancisco"
+      @city = "San Francisco"
+    end
   end
   
   def cities

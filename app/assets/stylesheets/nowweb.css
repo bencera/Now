@@ -91,10 +91,13 @@
         width: 680px;
     }
 
-    #map{
-      -webkit-border-radius: 10px;
-      -moz-border-radius: 10px;
+    .title{
+      font-size: 25px;
+      margin: 20px 0 20px;
 
+    }
+
+    #map{
       margin-bottom: 20px;
     }
 
@@ -103,7 +106,10 @@
       font-size: .8461em;
 
     }
+  #content .timeago{
+    font-weight: bold;
 
+    }
 
     #content { 
     	width: 600px; 
