@@ -1,0 +1,27 @@
+#content{:style => "width: 600px;"}
+    = image_tag "http://a1650.phobos.apple.com/us/r30/Purple/v4/4f/5a/6a/4f5a6a97-6518-a2bc-e2b7-5f6e357756d3/j9PfLRB8t5aePMS9isnt00-temp-upload.hflfdkti.170x170-75.png", :width => '50px'
+    %span Now.
+    %span{:style => "font-size: 10px;"} Trending events in your city.
+    %hr
+
+    %h2= @event.description
+    %h3= "@ #{@venue.name}"
+    = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=500x200&maptype=roadmap&markers=color:blue%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
+    %hr
+
+    - @photos.each do |p|
+        = image_tag p.url[1], :width => '400px'
+        %br
+
+
+
+    .footer
+        %hr
+        &copy; 2012 Ubimachine Inc.
+
+%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
+%script{:src=>"http://srobbin.github.com/chosen/chosen.jquery.min.js"}
+%script{:src=>"http://srobbin.github.com/intelligist/jquery.intelligist.min.js"}
+%script{:src=>"http://srobbin.github.com/backstretch/jquery.backstretch.min.js"}
+:javascript
+    $.backstretch("#{@photos.first.url[1]}");

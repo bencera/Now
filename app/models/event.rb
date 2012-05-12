@@ -12,6 +12,7 @@ class Event
   field :status
   field :n_photos
   field :city
+  field :keywords
   #field :n_people
   
   belongs_to :venue

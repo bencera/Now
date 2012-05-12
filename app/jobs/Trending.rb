@@ -180,7 +180,8 @@ class Trending
                                  :coordinates => venue.coordinates,
                                  :n_photos => venue.photos.last_hours(hours).count,
                                  :status => "waiting",
-                                 :city => city)
+                                 :city => city,
+                                 :keywords => event[1]["keywords"])
         
         photos.each do |photo|
           new_event.photos << photo

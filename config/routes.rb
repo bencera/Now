@@ -26,6 +26,8 @@ Ubimachine::Application.routes.draw do
   match "/photos/json/:id" => "photos#show_json"
   
   match "/events/showless" => "events#showless"
+
+  match "/e/:id" => "events#showweb"
   
   match "/thanks" => "home#thanks"
   match "/stats" => "home#stats"

@@ -1,0 +1,9 @@
+- unless photo.nil?
+  .card
+    .venue_photo
+      = image_tag photo.url[1], :width => "306"
+    %a.infos.clearfix
+      %p.timestamp
+        = time_ago_in_words(Time.at photo.time_taken.to_i).to_s.gsub('about', '').gsub('over', '')
+        ago
+      %p.caption= Photo.new.caption_without_hashtags(photo.caption) unless photo.caption.nil?

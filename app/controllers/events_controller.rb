@@ -19,6 +19,12 @@ class EventsController < ApplicationController
       @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
     end
   end
+
+  def showweb
+    @event = Event.find(params[:id])
+    @venue = @event.venue
+    @photos = @event.photos
+  end
   
   def cities
     @cities = [{"name" => "New York", "url" => "url1"}, 
@@ -40,9 +46,13 @@ class EventsController < ApplicationController
       event.update_attribute(:status, "trending")
       event.update_attribute(:description, params[:description])
       event.update_attribute(:category, params[:category])
-      event.update_attribute(:shortid, params[:event_id])
+      shortid = rand(36**6).to_s(36)
+      while Event.where(:shortid => shortid).first
+        shortid = rand(36**6).to_s(36)
+      end
+      event.update_attribute(:shortid, shortid)
       event.update_attribute(:link, params[:link]) unless params[:link].nil?
-    end 
+    end
     if params[:push] == "1"
       Resque.enqueue(Sendnotifications, params[:event_id])
     end
@@ -96,6 +106,8 @@ class EventsController < ApplicationController
     def choose_layout    
       if action_name == "trending"
         'application_v2'
+      elsif action_name == "showweb"
+        'application_now'
       else
         'application'
       end
