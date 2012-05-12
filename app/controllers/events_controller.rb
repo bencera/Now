@@ -21,7 +21,7 @@ class EventsController < ApplicationController
   end
 
   def showweb
-    @event = Event.find(params[:id])
+    @event = Event.where(:shortid => params[:shortid]).first
     @venue = @event.venue
     @photos = @event.photos
     case @photos.first.city
@@ -56,6 +56,7 @@ class EventsController < ApplicationController
       event.update_attribute(:status, "trending")
       event.update_attribute(:description, params[:description])
       event.update_attribute(:category, params[:category])
+
       shortid = rand(36**6).to_s(36)
       while Event.where(:shortid => shortid).first
         shortid = rand(36**6).to_s(36)

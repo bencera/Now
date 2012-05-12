@@ -22,7 +22,7 @@
     = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=600x200&maptype=roadmap&markers=color:red%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
 
     - @photos.each do |p|
-        .photo{:style => 'text-align: left;'}
+        .photo{:style => 'text-align: left; margin-bottom: 30px'}
             = image_tag p.url[1], :width => '600px'
             .comment
                 = image_tag p.user.ig_details[1], :width => '40px', :style => "margin-top: 10px"
@@ -30,12 +30,12 @@
                 %span.timeago
                     = time_ago_in_words(Time.at p.time_taken.to_i).to_s.gsub('about', '').gsub('over', '')
                     ago
-        %hr
 
 
 
 
     .footer
+        %hr
         &copy; 2012 Ubimachine Inc.
 
 %script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
