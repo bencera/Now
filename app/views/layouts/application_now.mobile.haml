@@ -1,0 +1,10 @@
+!!! Strict
+%html
+%head
+  %title= "ubimachine"
+  = csrf_meta_tag
+  %meta{:name=>"viewport",:content=>"width=1024"}
+  = stylesheet_link_tag "nowweb"
+  %script{:type=>"text/javascript",:src=>"http://maps.googleapis.com/maps/api/js?key=AIzaSyDaB7Lbgnwfni3jrzOephB8HW7_6tJf-Es&sensor=false"}
+%body{:onload=>"initialize()"}
+  = yield
