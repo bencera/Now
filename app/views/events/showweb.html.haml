@@ -1,25 +1,26 @@
 #header-container
     #header
+
         %p
             = image_tag "http://a1650.phobos.apple.com/us/r30/Purple/v4/4f/5a/6a/4f5a6a97-6518-a2bc-e2b7-5f6e357756d3/j9PfLRB8t5aePMS9isnt00-temp-upload.hflfdkti.170x170-75.png", :width => '40px', :style => "margin-top: 5px"
             %span Now.
             = image_tag "http://www.urcreations.com/images/app-store-badge.png", :width => '120px', :style => "margin-left: 395px"
-
             .title= @event.description.capitalize
+            .time_place{:style => "margin-bottom: 10px;"}
+                = image_tag "card_pins.png", :height => "15", :width => "12"
+                - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
+                    Happened
+                    %span.timeago= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
+                - else
+                    Happening
+                    %span.timeago now
+                at 
+                %span.timeago= @venue.name
+                in 
+                %span.timeago= @city
 #content
-    %p{:style => 'text-align: left; margin-bottom: 5px'}
-        = image_tag "card_pins.png", :height => "15", :width => "12"
-        - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
-            Happened
-            %span.timeago= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
-        - else
-            Happening
-            %span.timeago now
-        at 
-        %span.timeago= @venue.name
-        in 
-        %span.timeago= @city
-    = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=600x200&maptype=roadmap&markers=color:red%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
+
+    #map_canvas{:style => "width: 600px; height: 200px; margin-bottom: 20px"}
 
     - @photos.each do |p|
         .photo{:style => 'text-align: left; margin-bottom: 30px'}
@@ -44,3 +45,26 @@
 %script{:src=>"http://srobbin.github.com/backstretch/jquery.backstretch.min.js"}
 :javascript
     $.backstretch("#{@photos.all[1].url[1]}");
+:javascript
+    function initialize() {
+      var myLatlng = new google.maps.LatLng(#{@venue.coordinates[1]},#{@venue.coordinates[0]});
+      var myOptions = {
+        center: myLatlng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(document.getElementById("map_canvas"),
+          myOptions);
+      var image = '/assets/map_pin.png';
+      var marker = new google.maps.Marker({
+            position: myLatlng,
+            title:"#{@venue.name}",
+            icon: image,
+            map: map
+            });
+            marker.setMap(map);
+
+        }
+      
+
+

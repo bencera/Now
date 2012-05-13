@@ -23,5 +23,19 @@ class Event
   
   validates_presence_of :coordinates, :venue_id, :n_photos, :end_time
   validates_presence_of :description, :category, :shortid, :on => :update
+  #description should be 50char long max...
+
+   CHARS = ('0'..'9').to_a + ('a'..'z').to_a + ('A'..'Z').to_a
+
+  def self.random_url(i)
+    return '0' if i == 0
+    s = ''
+    while i > 0
+      s << CHARS[i.modulo(62)]
+      i /= 62
+    end
+    s.reverse!
+    s
+  end
 
 end

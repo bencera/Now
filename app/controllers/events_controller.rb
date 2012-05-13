@@ -50,6 +50,8 @@ class EventsController < ApplicationController
     @new_event = Event.find(params[:id])
   end
   
+
+
   def create
     if params[:confirm] == "yes"
       event = Event.find(params[:event_id])
@@ -57,9 +59,9 @@ class EventsController < ApplicationController
       event.update_attribute(:description, params[:description])
       event.update_attribute(:category, params[:category])
 
-      shortid = rand(36**6).to_s(36)
+      shortid = Event.random_url(rand(62**6))
       while Event.where(:shortid => shortid).first
-        shortid = rand(36**6).to_s(36)
+        shortid = Event.random_url(rand(62**6))
       end
       event.update_attribute(:shortid, shortid)
       event.update_attribute(:link, params[:link]) unless params[:link].nil?

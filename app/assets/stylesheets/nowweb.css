@@ -93,7 +93,7 @@
 
     .title{
       font-size: 25px;
-      margin: 20px 0 20px;
+      margin: 5px 0 5px;
 
     }
 
@@ -106,7 +106,7 @@
       font-size: .8461em;
 
     }
-  #content .timeago{
+  #header .timeago{
     font-weight: bold;
 
     }
