@@ -38,6 +38,7 @@ body {
     font-size: 100%;
     color: black;
     -webkit-text-size-adjust:none;
+    padding-left: 1.5%;
 }
 
 h3 {
@@ -61,7 +62,6 @@ h3 img.icon {
     background: #FFF;
     background: rgba(255, 255, 255, 0.95);
   margin-top: 66px;
-  padding-left: 1.5%;
 }
 
 /* @end */
@@ -209,7 +209,7 @@ h3 img.icon {
 }
 #map {
     border: none;
-    width: 97%;
+    width: 98%;
     padding: 10px 0 2px 0;
 }
 /*.location .map.mobile {
