@@ -7,7 +7,6 @@
             = image_tag "http://www.urcreations.com/images/app-store-badge.png", :width => '120px', :style => "margin-left: 395px"
             .title= @event.description.capitalize
             .time_place{:style => "margin-bottom: 10px;"}
-                = image_tag "card_pins.png", :height => "15", :width => "12"
                 - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
                     Happened
                     %span.timeago= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"

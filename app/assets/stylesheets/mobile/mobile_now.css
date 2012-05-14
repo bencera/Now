@@ -207,9 +207,10 @@ h3 img.icon {
 .location {
     padding: 10px 10px 0 10px;
 }
-.location .map {
+#map {
     border: none;
-    width: 100%;
+    width: 97%;
+    padding: 10px 0 2px 0;
 }
 /*.location .map.mobile {
     width: 290px;
