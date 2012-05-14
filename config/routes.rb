@@ -1,7 +1,8 @@
 Ubimachine::Application.routes.draw do
 
-    require 'resque_scheduler'
+  require 'resque_scheduler'
   mount Resque::Server, :at => "/resque"
+  
   get "follows/index"
 
   get "tags/index"
