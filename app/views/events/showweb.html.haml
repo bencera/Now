@@ -23,14 +23,7 @@
     #map_canvas{:style => "width: 600px; height: 200px; margin-bottom: 20px"}
 
     - @photos.each do |p|
-        .photo{:style => 'text-align: left; margin-bottom: 30px'}
-            = image_tag p.url[1], :width => '600px'
-            .comment
-                = image_tag p.user.ig_details[1], :width => '40px', :style => "margin-top: 10px"
-                = p.caption
-                %span.timeago
-                    = time_ago_in_words(Time.at p.time_taken.to_i).to_s.gsub('about', '').gsub('over', '')
-                    ago
+        = image_tag p.url[1], :width => '197px'
 
 
 
