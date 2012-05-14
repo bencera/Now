@@ -6,8 +6,7 @@
             = image_tag "http://www.urcreations.com/images/app-store-badge.png", :width => '100px', :style => "margin-left: 37.5%"
         %div{:style => "margin-top: 5px"}
             %p.username{:style => "font-size: 14px"}=@event.description.capitalize
-            %p.information{:style => "font-size: 12px"}
-                = image_tag "card_pins.png", :height => "15", :width => "12"
+            %p.information{:style => "font-size: 10px"}
                 - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
                     Happened
                     %span.timeago= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
@@ -15,7 +14,7 @@
                     Happening
                     %span.timeago now
                 at 
-                %span.timeago= truncate(@venue.name, :length => 50)
+                %span.timeago= truncate(@venue.name, :length => 30)
                 in 
                 %span.timeago= @city
 
