@@ -36,7 +36,7 @@
 %script{:src=>"http://srobbin.github.com/intelligist/jquery.intelligist.min.js"}
 %script{:src=>"http://srobbin.github.com/backstretch/jquery.backstretch.min.js"}
 :javascript
-    $.backstretch("#{@photos.all[1].url[1]}");
+    $.backstretch("#{@photos.all[rand(@photos.count)].url[1]}");
 :javascript
     function initialize() {
       var myLatlng = new google.maps.LatLng(#{@venue.coordinates[1]},#{@venue.coordinates[0]});
