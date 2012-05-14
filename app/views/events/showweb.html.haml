@@ -23,7 +23,7 @@
     #map_canvas{:style => "width: 600px; height: 200px; margin-bottom: 20px"}
 
     - @photos.each do |p|
-        = image_tag p.url[1], :width => '197px'
+        = image_tag p.url[0], :width => '197px'
 
 
 
@@ -44,6 +44,7 @@
       var myOptions = {
         center: myLatlng,
         zoom: 15,
+        scrollwheel: false,
         mapTypeId: google.maps.MapTypeId.ROADMAP
       };
       var map = new google.maps.Map(document.getElementById("map_canvas"),
