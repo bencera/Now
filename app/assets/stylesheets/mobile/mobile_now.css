@@ -56,6 +56,14 @@ h3 img.icon {
     width: 11px;
 }
 
+#content { 
+    width: 100%; 
+    background: #FFF;
+    background: rgba(255, 255, 255, 0.95);
+  margin-top: 66px;
+  padding-left: 1.5%;
+}
+
 /* @end */
 
 /* @group Photo */
