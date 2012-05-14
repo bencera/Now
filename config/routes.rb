@@ -1,4 +1,7 @@
 Ubimachine::Application.routes.draw do
+
+    require 'resque_scheduler'
+  mount Resque::Server, :at => "/resque"
   get "follows/index"
 
   get "tags/index"
@@ -27,7 +30,6 @@ Ubimachine::Application.routes.draw do
   
   match "/events/showless" => "events#showless"
 
-  match "/:shortid" => "events#showweb"
   
   match "/thanks" => "home#thanks"
   match "/stats" => "home#stats"
@@ -73,9 +75,9 @@ Ubimachine::Application.routes.draw do
   match "disrupt" => "photos#index_v2"
   
   match "events/trending/:id" => "events#trending"
+
+  match "/:shortid" => "events#showweb"
   
-  require 'resque_scheduler'
-  mount Resque::Server, :at => "/resque"
   
   # match "/restaurants" => "photos#restaurants" 
   # match "/nightlife" => "photos#nightlife"  
