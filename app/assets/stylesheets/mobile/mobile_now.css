@@ -1,0 +1,289 @@
+/* @group Reset */
+
+html, body, div, span,
+applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+dd, dl, dt, li, ol, ul,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+    border: 0;
+    font-family: inherit;
+    font-size: 100%;
+    font-style: inherit;
+    font-weight: inherit;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    vertical-align: baseline;
+}
+a img, :link img, :visited img {
+    border: 0;
+}
+ol, ul {
+    list-style: none;
+}
+
+/* @end */
+
+
+/* @group Main */
+
+body {
+    background-color: #fff;
+    font-family: "Helvetica Neue", Helvetica;
+    font-size: 100%;
+    color: black;
+    -webkit-text-size-adjust:none;
+}
+
+h3 {
+    font-size: .666em;
+    letter-spacing: 1px;
+    line-height: 18px;
+    margin-top: 10px;
+    padding: 0 10px;
+    text-transform: uppercase;
+}
+
+h3 img.icon {
+    margin-right: .25em;
+    margin-bottom: -1px;
+    height: 11px;
+    width: 11px;
+}
+
+/* @end */
+
+/* @group Photo */
+
+.stage-inner {
+    background-color: #fff;
+    border-bottom: 1px solid #555;
+    margin: 5px;
+    padding: 5px;
+    position: relative;
+
+}
+.stage-inner .photo {
+    width: 100%;
+}
+
+/* @end */
+
+/* @group Pane */
+
+.pane {
+    background: #FFF;
+    text-align: left;
+    margin: 5px;
+    padding-bottom: 10px;
+
+}
+.pane .contents {
+    overflow:hidden;
+}
+
+.pane .caption {
+    background-color: #fff;
+    font-size: .75em;
+    margin: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+/* @end */
+
+
+/* @group Profile */
+
+.profile {
+    background-color: #fff;
+    margin-top: 80px;
+}
+.profile .username {
+    color: black;
+    font-weight: 200;
+}
+.profile .information {
+    font-size: .6875em; /* 10/16 */
+    font-weight: bold;
+    line-height: 14px;
+    text-transform: uppercase;
+}
+
+/* @end */
+
+/* @group Likes */
+
+.likes {
+    margin: 10px 0 0 10px;
+}
+.likes li {
+    display: inline-block;
+    margin-top: 5px;
+    overflow:hidden;
+    position: relative;
+    text-align:center;
+    width: 70px;
+    font-size: .675em;
+    line-height: 16px;
+}
+.likes li:last-child {
+    margin-right: 0;
+}
+.likes .username {
+    line-height: 16px;
+}
+.likes li .profile-picture {
+    width: 60px;
+    height: 60px;
+    padding: 0 5px;
+}
+
+/* @end */
+
+/* @group Profile Pictures */
+
+.profile-picture {
+    height: 30px;
+    width: 30px;
+    -webkit-border-radius: 4px;
+}
+.profile-picture.large {
+    border: none;
+    float: left;
+    height: 30px;
+    margin-right: 6px;
+    padding: 0;
+    width:  30px;
+}
+
+/* @end */
+
+/* @group Comments */
+
+.comments {
+    padding: 0 10px;
+}
+.comments li {
+    margin-top: 10px;
+}
+.comments .profile-picture {
+    float: left;
+    margin-right: .5625em;
+}
+.comments .username {
+    color: black;
+    font-size: .8125em;
+    font-weight: bold;
+    line-height: 16px;
+}
+.comments .comment {
+    float: left;
+    font-size: .8125em;
+    line-height: 16px;
+    width: 245px;
+}
+.comments .timestamp {
+    color: black;
+    font-size: 11px;
+}
+
+/* @end */
+
+/* @group Locations */
+
+.location {
+    padding: 10px 10px 0 10px;
+}
+.location .map {
+    -webkit-border-radius: .5em
+    border: none;
+    width: 100%;
+}
+/*.location .map.mobile {
+    width: 290px;
+    height: 210px;
+}*/
+
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) {
+    .location {
+        max-width: 640px;
+        height: 210px;
+        margin: 0 auto;
+        overflow:hidden;
+    }
+}
+
+/* @end */
+
+/* @group Header */
+
+    #header-container{
+      top: 0;
+      position: fixed;
+      z-index: 10;
+      width: 100%;
+      height: 75px;
+    }
+
+
+    #header p{
+        text-align: center;
+    }
+
+#header {
+    background: rgba(255, 255, 255, 0.95);
+    margin: 0 0 0 0;
+      position: absolute;
+      width: 100%;
+}
+#header .logo {
+    left: 10px;
+    position: absolute;
+    top: 6px;
+    height: 25px;
+    width: 25px;
+}
+#header .download {
+    text-align: right;
+}
+
+#header a {
+    background-color: #fff;
+    color: black;
+    font-size: .675em;
+    padding: 4px 6px;
+    text-decoration: none;
+    text-transform: uppercase;
+    -webkit-border-radius: 3px;
+    -webkit-transition: background-color .5s;
+}
+
+/* @end */
+
+/* @group Misc */
+
+.group:after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+/* @end */
+
+/* @group Social Sharing */
+
+.social-sharing {
+    text-align: left;
+    padding-top: 9px;
+    padding-left: 9px;
+}
+
+/* @end */

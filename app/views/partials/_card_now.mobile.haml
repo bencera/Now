@@ -1,7 +1,7 @@
 - unless photo.nil?
   .card
     .venue_photo
-      = image_tag photo.url[1], :width => "306"
+      = image_tag photo.url[1]
     %a.infos.clearfix
       %p.timestamp
         = time_ago_in_words(Time.at photo.time_taken.to_i).to_s.gsub('about', '').gsub('over', '')
