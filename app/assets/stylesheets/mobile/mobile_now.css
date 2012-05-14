@@ -151,7 +151,6 @@ h3 img.icon {
 .profile-picture {
     height: 30px;
     width: 30px;
-    -webkit-border-radius: 4px;
 }
 .profile-picture.large {
     border: none;
@@ -201,7 +200,6 @@ h3 img.icon {
     padding: 10px 10px 0 10px;
 }
 .location .map {
-    -webkit-border-radius: .5em
     border: none;
     width: 100%;
 }

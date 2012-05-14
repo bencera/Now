@@ -3,9 +3,9 @@
         %img{:src=>"http://a1650.phobos.apple.com/us/r30/Purple/v4/4f/5a/6a/4f5a6a97-6518-a2bc-e2b7-5f6e357756d3/j9PfLRB8t5aePMS9isnt00-temp-upload.hflfdkti.170x170-75.png", :class=>"logo"}
         .download.group
             Get the app
-        %div
-            %p.username=@event.description.capitalize
-            %p.information
+        %div{:style => "margin-top: 20px"}
+            %p.username{:style => "font-size: 14px"}=@event.description.capitalize
+            %p.information{:style => "font-size: 12px"}
                 = image_tag "card_pins.png", :height => "15", :width => "12"
                 - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
                     Happened
@@ -23,10 +23,4 @@
     .stage
         .stage-inner
             - @photos.each do |p|
-                = image_tag p.url[1], :class => "photo"
-                .comment
-                    = image_tag p.user.ig_details[1], :width => '30px'
-                    = p.caption
-                    %span.timeago
-                        = time_ago_in_words(Time.at p.time_taken.to_i).to_s.gsub('about', '').gsub('over', '')
-                        ago
+                = image_tag p.url[1], :width => "32%", :style => "margin-bottom: 2px"
