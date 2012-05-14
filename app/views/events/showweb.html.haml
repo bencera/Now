@@ -15,7 +15,7 @@
                     Happening
                     %span.timeago now
                 at 
-                %span.timeago= @venue.name
+                %span.timeago= truncate(@venue.name, :length => 50)
                 in 
                 %span.timeago= @city
 #content
@@ -30,7 +30,6 @@
 
     .footer
         %hr
-        &copy; 2012 Ubimachine Inc.
 
 %script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
 %script{:src=>"http://srobbin.github.com/chosen/chosen.jquery.min.js"}
