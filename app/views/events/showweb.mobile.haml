@@ -1,10 +1,10 @@
 #header-container
     #header
         %p
-            = image_tag "http://a1650.phobos.apple.com/us/r30/Purple/v4/4f/5a/6a/4f5a6a97-6518-a2bc-e2b7-5f6e357756d3/j9PfLRB8t5aePMS9isnt00-temp-upload.hflfdkti.170x170-75.png", :width => '40px', :style => "margin-top: 5px"
+            = image_tag "http://a1650.phobos.apple.com/us/r30/Purple/v4/4f/5a/6a/4f5a6a97-6518-a2bc-e2b7-5f6e357756d3/j9PfLRB8t5aePMS9isnt00-temp-upload.hflfdkti.170x170-75.png", :width => '30px', :style => "margin-top: 5px"
             %span Now.
-            = image_tag "http://www.urcreations.com/images/app-store-badge.png", :width => '120px', :style => "margin-left: 395px"
-        %div{:style => "margin-top: 20px"}
+            = image_tag "http://www.urcreations.com/images/app-store-badge.png", :width => '100px', :style => "margin-left: 37.5%"
+        %div{:style => "margin-top: 5px"}
             %p.username{:style => "font-size: 14px"}=@event.description.capitalize
             %p.information{:style => "font-size: 12px"}
                 = image_tag "card_pins.png", :height => "15", :width => "12"
@@ -15,7 +15,7 @@
                     Happening
                     %span.timeago now
                 at 
-                %span.timeago= @venue.name
+                %span.timeago= truncate(@venue.name, :length => 50)
                 in 
                 %span.timeago= @city
 
@@ -24,4 +24,4 @@
     .stage
         .stage-inner
             - @photos.each do |p|
-                = image_tag p.url[1], :width => "32.7%", :style => "margin-bottom: 2px"
+                = image_tag p.url[1], :width => "32.5%", :style => "margin-bottom: 2px"
