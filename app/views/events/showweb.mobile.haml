@@ -24,3 +24,31 @@
         .stage-inner
             - @photos.each do |p|
                 = image_tag p.url[1], :width => "32.5%", :style => "margin-bottom: 2px"
+
+%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
+%script{:src=>"http://srobbin.github.com/chosen/chosen.jquery.min.js"}
+%script{:src=>"http://srobbin.github.com/intelligist/jquery.intelligist.min.js"}
+%script{:src=>"http://srobbin.github.com/backstretch/jquery.backstretch.min.js"}
+:javascript
+    $.backstretch("#{@photos.all[1].url[1]}");
+:javascript
+    function initialize() {
+      var myLatlng = new google.maps.LatLng(#{@venue.coordinates[1]},#{@venue.coordinates[0]});
+      var myOptions = {
+        center: myLatlng,
+        zoom: 15,
+        scrollwheel: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(document.getElementById("map_canvas"),
+          myOptions);
+      var image = '/assets/map_pin.png';
+      var marker = new google.maps.Marker({
+            position: myLatlng,
+            title:"#{@venue.name}",
+            icon: image,
+            map: map
+            });
+            marker.setMap(map);
+
+        }
