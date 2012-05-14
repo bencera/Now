@@ -21,7 +21,7 @@
 
     #map_canvas{:style => "width: 600px; height: 200px; margin-bottom: 20px"}
 
-    - @photos.each do |p|
+    - @photos[0..(@photos.count-(@photos.count%3) - 1)].each do |p|
         = image_tag p.url[0], :width => '197px'
 
 
