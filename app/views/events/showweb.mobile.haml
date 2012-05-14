@@ -5,20 +5,21 @@
             %span Now.
             = image_tag "http://www.urcreations.com/images/app-store-badge.png", :width => '100px', :style => "margin-left: 37.5%"
         %div{:style => "margin-top: 5px"}
-            %p.username{:style => "font-size: 14px"}=@event.description.capitalize
-            %p.information{:style => "font-size: 10px"}
+            %p.username{:style => "font-size: 0.8em"}=@event.description.capitalize
+            %p.information{:style => "font-size: 0.55em; margin-bottom: 5px"}
                 - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
                     Happened
-                    %span.timeago= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
+                    %span.timeago{:style => "font-weight: bold"}= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
                 - else
                     Happening
-                    %span.timeago now
+                    %span.timeago{:style => "font-weight: bold"} now
                 at 
-                %span.timeago= truncate(@venue.name, :length => 30)
+                %span.timeago{:style => "font-weight: bold"}= truncate(@venue.name, :length => 30)
                 in 
-                %span.timeago= @city
+                %span.timeago{:style => "font-weight: bold"}= @city
 
     
 #content
+    = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=1000x200&maptype=roadmap&markers=color:red%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :style => "width: 100%; padding-right: 1%"
     - @photos.each do |p|
         = image_tag p.url[1], :width => "31.8%", :style => "margin-bottom: 2px"
