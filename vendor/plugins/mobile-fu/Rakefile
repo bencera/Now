@@ -1,22 +1,16 @@
 require 'rake'
-require 'rake/testtask'
-require 'rake/rdoctask'
+require 'bundler'
+Bundler::GemHelper.install_tasks
 
-desc 'Default: run unit tests.'
-task :default => :test
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new('spec')
+task :default => :spec
 
-desc 'Test the sms_fu plugin.'
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'lib'
-  t.pattern = 'test/**/*_test.rb'
-  t.verbose = true
-end
-
-desc 'Generate documentation for the sms_fu plugin.'
-Rake::RDocTask.new(:rdoc) do |rdoc|
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title    = 'SmsFu'
-  rdoc.options << '--line-numbers' << '--inline-source'
-  rdoc.rdoc_files.include('README')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
+# desc 'Generate documentation for the mobile_fu plugin.'
+# Rake::RDocTask.new(:rdoc) do |rdoc|
+#   rdoc.rdoc_dir = 'rdoc'
+#   rdoc.title    = 'MobileFu'
+#   rdoc.options << '--line-numbers' << '--inline-source'
+#   rdoc.rdoc_files.include('README')
+#   rdoc.rdoc_files.include('lib/**/*.rb')
+# end

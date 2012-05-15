@@ -1,11 +1,10 @@
 #header-container
     #header
-        %p
-            = image_tag "http://a1650.phobos.apple.com/us/r30/Purple/v4/4f/5a/6a/4f5a6a97-6518-a2bc-e2b7-5f6e357756d3/j9PfLRB8t5aePMS9isnt00-temp-upload.hflfdkti.170x170-75.png", :width => '30px', :style => "margin-top: 5px"
-            %span Now.
-            = image_tag "http://www.urcreations.com/images/app-store-badge.png", :width => '100px', :style => "margin-left: 40%"
-        %div{:style => "margin-top: 5px"}
-            %p.username{:style => "font-size: 0.8em"}=@event.description.capitalize
+        #logo-container{:style => "margin-bottom: 50px"}
+            = image_tag "logo_eventpage2.png", :width => '80px', :style => "float:left; margin-top: 5px"
+            %p.download_btn{:style => "float:right"} Get the app
+        .event-description{:style => "margin-top: 5px"}
+            %p.username{:style => "font-size: 14px"}=@event.description.capitalize
             %p.information{:style => "font-size: 0.55em; margin-bottom: 5px"}
                 - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
                     Happened
@@ -21,5 +20,5 @@
     
 #content
     = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=1000x200&maptype=roadmap&markers=color:red%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false", :id => "map"
-    - @photos[0..[(@photos.count-(@photos.count%3) - 1),4].max].each do |p|
+    - @photos.each do |p|
         = image_tag p.url[1], :width => "31.8%", :style => "margin-bottom: 2px"
