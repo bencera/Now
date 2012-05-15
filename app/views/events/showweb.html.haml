@@ -1,22 +1,25 @@
+
+#fixed-header{:style => "position: fixed; left:0; top: 0; width: 100%; z-index: 1;"}
+    #nowlogo{:style => "position: absolute; left: 10px; top: 10px;" }
+        =image_tag "logo_eventpage2.png"
+    #downloadlogo{:style => "position: absolute; right: 15px; top: 0px;"}
+        //=image_tag "available_on_itunes.png", :width => "150px"
+        %p.download_btn Get the free app
 #header-container
     #header
-
         %p
-            = image_tag "http://a1650.phobos.apple.com/us/r30/Purple/v4/4f/5a/6a/4f5a6a97-6518-a2bc-e2b7-5f6e357756d3/j9PfLRB8t5aePMS9isnt00-temp-upload.hflfdkti.170x170-75.png", :width => '40px', :style => "margin-top: 5px"
-            %span Now.
-            = image_tag "http://www.urcreations.com/images/app-store-badge.png", :width => '120px', :style => "margin-left: 395px"
-            .title= @event.description.capitalize
-            .time_place{:style => "margin-bottom: 10px;"}
-                - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
-                    Happened
-                    %span.timeago= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
-                - else
-                    Happening
-                    %span.timeago now
-                at 
-                %span.timeago= truncate(@venue.name, :length => 50)
-                in 
-                %span.timeago= @city
+        .title= @event.description.capitalize
+        .time_place
+            - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
+                Happened
+                %span.timeago= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
+            - else
+                Happening
+                %span.timeago now
+            at 
+            %span.timeago= truncate(@venue.name, :length => 40)
+            in 
+            %span.timeago= @city
 #content
 
     #map_canvas{:style => "width: 600px; height: 200px; margin-bottom: 20px"}
@@ -52,6 +55,3 @@
             marker.setMap(map);
 
         }
-      
-
-

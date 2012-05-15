@@ -2,7 +2,9 @@ Ubimachine::Application.routes.draw do
 
   require 'resque_scheduler'
   mount Resque::Server, :at => "/resque"
-  
+
+  match "/nowlanding" => "home#index_now"
+
   get "follows/index"
 
   get "tags/index"

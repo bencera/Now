@@ -1,0 +1,10 @@
+!!! Strict
+%html
+%head
+  %title= "Now"
+  = csrf_meta_tag
+  %meta{:name=>"viewport",:content=>"width=1024"}
+  = stylesheet_link_tag "cssjerem.css"
+
+%body
+  = yield

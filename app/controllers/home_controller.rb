@@ -1,8 +1,13 @@
 class HomeController < ApplicationController
+     layout :choose_layout
+
   def index
     if ig_logged_in
       redirect_to '/photos?city=newyork&category=outdoors'
     end
+  end
+
+  def index_now
   end
 
   def stats
@@ -60,4 +65,13 @@ class HomeController < ApplicationController
 
   def signup_landing
   end
+
+   private
+    def choose_layout    
+      if action_name == "index_now"
+        'application_now_landing'
+      else
+        'application'
+      end
+    end
 end
