@@ -17,7 +17,7 @@ table, caption, tbody, tfoot, thead, tr, th, td {
     line-height: 1;
     margin: 0;
     padding: 0;
-    text-align: left;
+    text-align: center;
     vertical-align: baseline;
 }
 a img, :link img, :visited img {
@@ -39,6 +39,7 @@ body {
     color: black;
     -webkit-text-size-adjust:none;
     padding-left: 1.5%;
+    text-align: center;
 }
 
 h3 {
@@ -51,14 +52,14 @@ h3 {
 }
 
 #logo-container p.download_btn {
-  margin: 7px 15px 0 14px;
+  margin: 7px 12px 0 14px;
   text-align: center;
-  padding: 10px 5px;
+  padding: 10px 4px;
   color: #666;
-  font-size: 10px;
+  font-size: 12px;
   text-shadow: 0px 1px #f0f0f0;
   font-weight: bold;
-  height: 5px;
+  height: 11px;
   width: 70px;
   border: 2px solid #e31254;
   border-radius: 8px;
@@ -84,7 +85,6 @@ h3 img.icon {
     width: 100%; 
     background: #FFF;
     background: rgba(255, 255, 255, 0.95);
-  margin-top: 66px;
 }
 
 /* @end */
@@ -270,7 +270,6 @@ h3 img.icon {
 #header {
     background: rgba(255, 255, 255, 0.95);
     margin: 0 0 0 0;
-      position: absolute;
       width: 100%;
 }
 #header .logo {
