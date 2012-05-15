@@ -1,1 +1,1 @@
-require 'mobile-fu'
+require File.dirname(__FILE__) + "/../lib/mobilized_styles"
