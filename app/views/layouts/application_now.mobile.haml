@@ -9,6 +9,7 @@
 	= stylesheet_link_tag "mobile/mobile_now.css"
 	%meta{:property=>"og:title", :content=>@event.description}
 	%meta{:property=>"og:description", :content=>"at #{@venue.name} in #{@city}"}
+	%meta{:property=>"og:determiner", :content=>"a"}
 	%meta{:property=>"fb:app_id", :content=>"174358702691912"}
 	%meta{:property=>"og:type", :content=>"activity"}
 	%meta{:property=>"og:url", :content=>"http://www.getnowapp.com/#{@event.shortid}"}
