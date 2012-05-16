@@ -1,25 +1,31 @@
+#container{:style => "margin: 10px"}
+    #header
+        #logo-container
+            = image_tag "logo_eventpage2.png", :width => '80px', :style => "float:left;;margin-left:-4px;"
+            %p.download_btn{:style => "float:right"} Get the app
+        .event-description{:style => "padding-top: 42px"}
+            %p.username{:style => "font-size: 20px; color:#ff4a6f"}=@event.description.capitalize
+            %p.information{:style => "font-size: 12px; margin-bottom: 5px"}
+                - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
+                    Happened
+                    %span.timeago{:style => "font-weight: bold"}= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
+                - else
+                    Happening
+                    %span.timeago{:style => "font-weight: bold"} now
+                at 
+                %span.timeago{:style => "font-weight: bold"}= truncate(@venue.name, :length => 25)
+                in 
+                %span.timeago{:style => "font-weight: bold"}= @city
 
-#header{:style => "margin-top: 5px"}
-    #logo-container
-        = image_tag "logo_eventpage2.png", :width => '80px', :style => "float:left; margin-top: 5px"
-        %p.download_btn{:style => "float:right"} Get the app
-    .event-description{:style => "padding-top: 52px"}
-        %p.username{:style => "font-size: 20px; color:#ff4a6f"}=@event.description.capitalize
-        %p.information{:style => "font-size: 12px; margin-bottom: 5px"}
-            - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
-                Happened
-                %span.timeago{:style => "font-weight: bold"}= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
-            - else
-                Happening
-                %span.timeago{:style => "font-weight: bold"} now
-            at 
-            %span.timeago{:style => "font-weight: bold"}= truncate(@venue.name, :length => 30)
-            in 
-            %span.timeago{:style => "font-weight: bold"}= @city
-
-    
-#content
-    = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=1000x200&maptype=roadmap&markers=color:red%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false&scale=2", :id => "map"
-    .photos{:style => ""}
-        - @photos.each do |p|
-            = image_tag p.url[1], :width => "31.8%", :style => "margin-bottom: 2px"
+        
+    #content
+        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=15&size=1000x200&maptype=roadmap&markers=icon:http://www.ubimachine.com/assets/map_pin.png%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false&scale=2", :id => "map"
+        .photos{:style => ""}
+            - @photos.each do |p|
+                = image_tag p.url[1], :width => "32.5%", :style => "margin-bottom: 2px"
+        %hr
+        .social{:style => "font-size:1px; display: inline-block;"}
+            %div{:class=>"fb-like", 'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"100", :'data-show-faces'=>"false"}
+            %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button", :'data-lang'=>"en"} Tweet
+:javascript
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");

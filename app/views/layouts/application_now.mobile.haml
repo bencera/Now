@@ -1,7 +1,7 @@
 !!! Strict
 %html
 %head
-	%title= "Now"
+	%title= "Now - #{@event.description}"
 	= csrf_meta_tag
 	%meta{:name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;"}
 	%meta{:name => "apple-mobile-web-app-capable", :content =>"yes"}
@@ -9,4 +9,13 @@
 	= stylesheet_link_tag "mobile/mobile_now.css"
 
 %body
+	#fb-root
+	:javascript
+		(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=218623581557042";
+		fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
 	= yield
