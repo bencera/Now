@@ -232,8 +232,22 @@ td h3 {
 	text-shadow: 0px 1px #d23d5b;
 }
 
+#content p.question {
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-size: 20px;
+	margin: 24px 0 0 14px;
+	text-shadow: 0px 1px #d23d5b;
+}
+
+#content p.description {
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-size: 16px;
+	margin: 24px 0 0 14px;
+	text-shadow: 0px 1px #d23d5b;
+}
+
 #content p.download_btn {
-	margin: 44px 0 0 14px;
+	margin: 44px 0 0 10px;
 	text-align: center;
 	padding: 16px 10px;
 	color: #666;
