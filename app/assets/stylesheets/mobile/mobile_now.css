@@ -51,7 +51,7 @@ div .fb_reset {
 } 
 
 #logo-container p.download_btn {
-  margin: 0 0 0 14px;
+  margin: 2px 0 0 14px;
   text-align: center;
   padding: 10px 4px;
   color: #666;
@@ -114,6 +114,7 @@ h3 img.icon {
 #map {
     border: none;
     width: 100%;
+    margin: 5px 0 3px;
 }
 
 
