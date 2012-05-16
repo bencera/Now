@@ -3,7 +3,8 @@
         #logo-container
             %a{:href => "/"}
                 = image_tag "logo_eventpage2.png", :width => '82px', :style => "float:left;;margin-left:-4px;"
-            %p.download_btn{:style => "float:right"} Get the app
+            %a{:href => "http://itunes.apple.com/app/now./id525956360"}
+                %p.download_btn{:style => "float:right"} Get the app
         .event-description{:style => "padding-top: 60px"}
             %p.username{:style => "font-size: 20px; color:#ff4a6f"}=@event.description.capitalize
             %p.information{:style => "font-size: 12px; margin-bottom: 5px"}

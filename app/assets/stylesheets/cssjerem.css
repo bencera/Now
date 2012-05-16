@@ -84,7 +84,7 @@ a{
 
 a:hover {
 	color: #37404a;
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 h1, h5 {

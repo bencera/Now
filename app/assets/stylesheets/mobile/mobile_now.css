@@ -50,6 +50,10 @@ div .fb_reset {
     display: inline;
 } 
 
+a {
+  text-decoration: none;
+}
+
 #logo-container p.download_btn {
   margin: 2px 0 0 14px;
   text-align: center;

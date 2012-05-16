@@ -11,9 +11,12 @@ Ubimachine::Application.routes.draw do
 
   # get "tags/create"
 
-  # get "subscriptions/index"
 
-  # get "home/index"
+  get "subscriptions/index"
+
+  get "home/index"
+
+  match "/help" => "home#help"
   
   match "/auth/instagram/callback" => "sessions#callback"
   match "/auth/facebook/callback" => "sessions#facebook_callback"

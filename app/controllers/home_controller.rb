@@ -10,6 +10,10 @@ class HomeController < ApplicationController
   def index_now
   end
 
+  def help
+    redirect_to "http://checkthis.com/1k4o"
+  end
+
   def stats
   end
   
