@@ -2,7 +2,8 @@
     #header
         #logo-container{:style => "margin-bottom: 80px;"}
             #nowlogo{:style => "float:left;  margin-left: 36px"}
-                =image_tag "logo_eventpage2.png"
+                %a{:href => "/"}
+                    =image_tag "logo_eventpage2.png"
             #downloadlogo{:style => "float:right; margin-right: 40px"}
                 %p.download_btn Get the app
         %p
@@ -18,15 +19,14 @@
             %span.timeago= truncate(@venue.name, :length => 40)
             in 
             %span.timeago= @city
+        %div{:class=>"fb-like", 'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
+        %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button", :'data-lang'=>"en"} Tweet
 #content
 
     #map_canvas{:style => "width: 600px; height: 200px; margin-bottom: 20px"}
 
     - @photos.each do |p|
         = image_tag p.url[0], :width => '197px'
-    %hr
-    %div{:class=>"fb-like", 'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
-    %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button", :'data-lang'=>"en"} Tweet
 
 
 

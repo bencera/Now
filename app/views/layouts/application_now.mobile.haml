@@ -7,6 +7,12 @@
 	%meta{:name => "apple-mobile-web-app-capable", :content =>"yes"}
 	%meta{:name => "apple-mobile-web-app-status-bar-style", :content=>"black"}
 	= stylesheet_link_tag "mobile/mobile_now.css"
+	%meta{:property=>"og:title", :content=>@event.description}
+	%meta{:property=>"og:type", :content=>"activity"}
+	%meta{:property=>"og:url", :content=>"http://www.getnowapp.com/#{@event.shortid}"}
+	%meta{:property=>"og:image", :content=>@photos.all[rand(@photos.count)].url[0]}
+	%meta{:property=>"og:site_name", :content=>"Now"}
+	%meta{:property=>"fb:admins", :content=>"571905313"}
 
 %body
 	#fb-root
