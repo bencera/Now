@@ -4,7 +4,7 @@ fetch_photos_newyork1:
   args: "1120383"
   description: "Fetchs instagram pics every minute"
   
-  fetch_photos_newyork2:
+fetch_photos_newyork2:
   every: "30s"
   class: Fetchigphotos
   args: "1120385"
