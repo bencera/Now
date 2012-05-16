@@ -292,7 +292,10 @@ class Venue
   
   
   def find_city(lat,lng)
-    if Geocoder::Calculations.distance_between([lat,lng], [40.739,-73.994]) < 20
+    if Geocoder::Calculations.distance_between([lat,lng], [40.698390,-73.98843]) < 20
+      "newyork"
+    elsif
+      Geocoder::Calculations.distance_between([lat,lng], [40.76813,-73.96439]) < 20
       "newyork"
     elsif
       Geocoder::Calculations.distance_between([lat,lng], [48.86,2.34]) < 20

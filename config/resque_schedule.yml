@@ -1,7 +1,13 @@
 fetch_photos_newyork:
   every: "30s"
   class: Fetchigphotos
-  args: "976138"
+  args: "1120383"
+  description: "Fetchs instagram pics every minute"
+  
+  fetch_photos_newyork:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1120385"
   description: "Fetchs instagram pics every minute"
   
 fetch_photos_paris:
