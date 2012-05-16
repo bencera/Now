@@ -67,7 +67,7 @@
     hr { margin: 20px 0; height: 1px; border: 0; background-color: #ccc; }
     p { width: 800px; margin: 0 auto 20px auto; }
     a { color: #099; text-decoration: none;  }
-    a:hover {  }
+    a:hover {}
     
     #header-container{
       top: 0;
@@ -146,7 +146,7 @@
     	margin: 0 auto; padding: 20px 40px 20px 40px;
     	background: #FFF;
     	background: rgba(255, 255, 255, 0.95);
-      margin-top: 190px;
+      margin-top: 210px;
     }
     
     	#content h2#demo-header { height: 24px; }
