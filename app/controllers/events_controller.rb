@@ -47,7 +47,19 @@ class EventsController < ApplicationController
   
   
   def trending
-    @new_event = Event.find(params[:id])
+      @event = Event.find(params[:id])
+    @venue = @event.venue
+    @photos = @event.photos
+    case @photos.first.city
+    when "newyork"
+      @city = "New York"
+    when "paris"
+      @city = "Paris"
+    when "london"
+      @city = "London"
+    when "sanfrancisco"
+      @city = "San Francisco"
+    end
   end
   
 
@@ -118,7 +130,7 @@ class EventsController < ApplicationController
   private
     def choose_layout    
       if action_name == "trending"
-        'application_v2'
+        'application_now'
       elsif action_name == "showweb"
         'application_now'
       else
