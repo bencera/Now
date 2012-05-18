@@ -53,9 +53,16 @@ class Trending
 
    cities = ["newyork", "paris", "sanfrancisco", "london"]
    cities.each do |city|
-     # case
-     # when city == "newyork"
-     #   
+    case city
+      when "newyork"
+        limit_photos = 5
+      when "sanfrancisco"
+        limit_photos = 5
+      when "paris"
+        limit_photos = 4
+      when "london"
+        limit_photos = 4
+      end  
       
     
     photos_lasthours = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
@@ -80,7 +87,7 @@ class Trending
 
     trending_venues = {}
     venues.sort_by { |k,v| v["n_photos"]}.reverse.each do |venue|
-      if venue[1]["n_photos"] >= 5
+      if venue[1]["n_photos"] >= limit_photos
         
         #### mean and std deviation
         
@@ -125,7 +132,7 @@ class Trending
         
         #########
         
-        if venue[1]["n_photos"] > mean_month or Venue.find(venue[0]).photos.last_hours(2).distinct(:user_id).count >= [5, mean_month/2].max_by {|x| x }
+        if venue[1]["n_photos"] > mean_month or Venue.find(venue[0]).photos.last_hours(2).distinct(:user_id).count >= [limit_photos, mean_month/2].max_by {|x| x }
           
         
           trending_venues[venue[0]] = {"n_photos" => venue[1]["n_photos"], "keywords" => [], "stats" => []}
