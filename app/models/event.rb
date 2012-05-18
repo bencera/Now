@@ -27,6 +27,10 @@ class Event
 
    CHARS = ('0'..'9').to_a + ('a'..'z').to_a + ('A'..'Z').to_a
 
+   def preview_photos
+     photos.limit(6)
+   end
+
   def self.random_url(i)
     return '0' if i == 0
     s = ''

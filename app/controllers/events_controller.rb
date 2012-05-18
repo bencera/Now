@@ -7,8 +7,9 @@ class EventsController < ApplicationController
   end
   
   def showless
-    # @photos = @event.photos.take(6)
     @event = Event.find(params[:id])
+    @photos = Event.find(params[:id]).photos.take(1)
+    @i = 0
   end
   
   def index
