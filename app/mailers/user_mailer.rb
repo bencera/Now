@@ -2,7 +2,7 @@
 # require 'haml/template/plugin'
 
 class UserMailer < ActionMailer::Base
-  default from: "ubimachine <ben@ubimachine.com>" #a verifier
+  default from: "Now <ben@getnowapp.com>" #a verifier
 
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:
@@ -20,7 +20,7 @@ class UserMailer < ActionMailer::Base
   def trending(new_event)
     
     @new_event = new_event
-    mail to: "ben.broca@gmail.com", subject: "#{@new_event.venue.name} might be trending!"
+    mail to: "ben.broca@gmail.com", subject: "#{@new_event.venue.name} - (#{@new_event.photos.first.city})"
     
   end
   

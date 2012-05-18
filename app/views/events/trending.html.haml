@@ -47,7 +47,9 @@
 
     .comments
         -@photos.each do |p|
-            = p.caption
+            - unless p.caption.nil?
+                = p.caption
+                %br
 
     #map_canvas{:style => "width: 600px; height: 200px; margin-bottom: 20px"}
 

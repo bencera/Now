@@ -53,7 +53,9 @@
                 = check_box_tag(:push)
                 = label_tag(:push_desc, "Push Notification")
         - @photos.each do |p|
-            = p.caption
+            - unless p.caption.nil?
+                = p.caption
+                %br
         = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=13&size=320x100&maptype=roadmap&markers=icon:http://www.ubimachine.com/assets/map_pin.png%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false&scale=2", :id => "map"
         .photos{:style => ""}
             - @photos.each do |p|

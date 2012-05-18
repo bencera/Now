@@ -1,2 +1,12 @@
-Can you please confirm?
 <%= "http://www.ubimachine.com/events/trending/#{@new_event.id}" %>
+<%= "#{@new_event.photos.count} photos" %>
+<% unless @new_event.keywords.empty? %>
+	<%= "There are keywords" %>
+	<% @new_event.keywords.each do |k| %>
+		<%= k %>
+	<% end %>
+<% end %>
+<% @new_event.photos.each do |p| %>
+	<%= p.caption unless p.caption.nil? %>
+	<br />
+<% end %>
