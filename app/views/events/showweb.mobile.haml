@@ -27,6 +27,7 @@
         = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=13&size=320x100&maptype=roadmap&markers=icon:http://www.ubimachine.com/assets/map_pin.png%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false&scale=2", :id => "map"
         .photos{:style => ""}
             - @photos.each do |p|
-                = image_tag p.url[1], :width => "32.5%", :style => "margin-bottom: 2px"
+                %a{:href => "/"}
+                    = image_tag p.url[1], :width => "32.5%", :style => "margin-bottom: 2px"
 :javascript
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
