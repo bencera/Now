@@ -87,16 +87,23 @@ class EventsController < ApplicationController
     if params[:cmd] == "userToken"
       if APN::Device.where(:udid => params[:deviceid]).first
         d = APN::Device.where(:udid => params[:deviceid]).first
-        d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        if params[:token]
+          d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        end
       else
         d = APN::Device.create(:udid => params[:deviceid])
-        d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        if params[:token]
+          d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        end
         #definir location of user
       end
 
     elsif params[:cmd] == "userCoords"
       if APN::Device.where(:udid => params[:deviceid]).first
         d = APN::Device.where(:udid => params[:deviceid]).first
+        if !(d.subscriptions.where(:token => params[:token]).first) && params[:token]
+          d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        end
       else
         d = APN::Device.create(:udid => params[:deviceid])
         if params[:token]
@@ -109,6 +116,9 @@ class EventsController < ApplicationController
     elsif params[:cmd] == "notifications"
       if APN::Device.where(:udid => params[:deviceid]).first
         d = APN::Device.where(:udid => params[:deviceid]).first
+        if !(d.subscriptions.where(:token => params[:token]).first) && params[:token]
+          d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        end
       else
         d = APN::Device.create(:udid => params[:deviceid])
         if params[:token]
