@@ -8,6 +8,8 @@ module APN
     field :device_info
     field :latitude
     field :longitude
+    field :city
+    field :country
     field :notifications, :type => Boolean, default: -> { true }
 
     index :udid, :unique => true, :background => true
