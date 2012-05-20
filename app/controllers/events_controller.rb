@@ -84,33 +84,41 @@ class EventsController < ApplicationController
   end
 
   def user
-    #make sure we have device in DB and save notification subscription
-    if APN::Device.where(:udid => params[:deviceid]).first
-      d = APN::Device.where(:udid => params[:deviceid]).first
-      if !(d.subscriptions.where(:token => params[:token]).first) && params[:token]
-        d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
-      end
-    else
-      d = APN::Device.create(:udid => params[:deviceid])
-      if params[:token]
-        d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
-      end
-    end
 
     if params[:cmd] == "userToken"
-      #do nothing
-    elsif params[:cmd] == "userCoords"
-      d.update_attribute(:latitude, params[:latitude])
-      d.update_attribute(:longitude, params[:longitude])
-      
-    elsif params[:cmd] == "notifications"
-      if params[:notificationswitch]  == "yes"
-        d.update_attribute(:notifications, true)
-      elsif params[:notificationswitch] == "no"
-        d.update_attribute(:notifications, false)
+    #do nothing
+
+    else
+
+      if APN::Device.where(:udid => params[:deviceid]).first
+        d = APN::Device.where(:udid => params[:deviceid]).first
+        if !(d.subscriptions.where(:token => params[:token]).first) && params[:token]
+          d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        end
+      else
+        d = APN::Device.create(:udid => params[:deviceid])
+        if params[:token]
+          d.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        end
       end
+
+      if params[:cmd] == "userCoords"
+        d.update_attribute(:latitude, params[:latitude])
+        d.update_attribute(:longitude, params[:longitude])
+        
+      elsif params[:cmd] == "notifications"
+        if params[:notificationswitch]  == "yes"
+          d.update_attribute(:notifications, true)
+        elsif params[:notificationswitch] == "no"
+          d.update_attribute(:notifications, false)
+        end
+      end
+
+
     end
+
     render :text => 'OK'
+    
   end
 
 
