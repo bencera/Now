@@ -1,3 +1,8 @@
+%script{:type=>"text/javascript"}
+    mixpanel.track("Show:loaded")
+    mixpanel.track_links("#nowlogo a", "Show:logo")
+    mixpanel.track_links("#downloadlogo a", "Show:download")
+    mixpanel.track_links("#content a", "Show:photo")
 #header-container
     #header
         #logo-container{:style => "margin-bottom: 80px;"}
