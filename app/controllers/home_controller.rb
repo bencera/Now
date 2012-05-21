@@ -27,7 +27,7 @@ class HomeController < ApplicationController
           end
         end
       end
-      @countries = countries
+      @countries = countries.sort_by{|u,v| v}.reverse
 
       APN::Device.all.each do |d|
         unless d.city.nil?
@@ -38,7 +38,7 @@ class HomeController < ApplicationController
           end
         end
       end
-      @cities = cities
+      @cities = cities.sort_by{|u,v| v}.reverse
 
   end
   
