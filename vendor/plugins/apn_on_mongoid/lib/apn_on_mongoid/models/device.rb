@@ -30,6 +30,7 @@ module APN
     #         obj.country = geo.country
     #     end
     # end
+    reverse_geocoded_by :coordinates
 
     before_update :get_location
 
