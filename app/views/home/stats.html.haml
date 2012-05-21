@@ -1,24 +1,9 @@
-Stats
-%p All Photos 
-= Photo.all.count
-%p Photos in the last 24 hours 
-= Photo.where(:time_taken.gt => 24.hours.ago.to_i).count
-%p Photos in Paris
-= Photo.where(city: "paris").count
-%p Photos in New York
-= Photo.where(city: "newyork").count
-%p Photos in San Francisco
-= Photo.where(city: "sanfrancisco").count
-%p Photos in London
-= Photo.where(city: "london").count
-%p All Venues
-= Venue.all.count
+%h1 Users
+%h2{:style => "color:black"} Number of users
+%p= APN::Device.count
 
-%p Users
-= User.excludes(:ig_accesstoken => nil).count
-%p Usefuls (not me)
-= Useful.count - Useful.where(:user_id => "1200123").count
-%p Questions asked
-= Request.count
-%p Rqtio questions repondues
-= Request.excludes(:time_answered => nil).count.to_f / Request.count
+%h2{:style => "color:black"}  User countries
+%p= @countries
+
+%h2{:style => "color:black"}  User cities
+%p= @cities

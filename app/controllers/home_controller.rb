@@ -15,6 +15,31 @@ class HomeController < ApplicationController
   end
 
   def stats
+
+      countries = {}
+      cities = {}
+      APN::Device.all.each do |d|
+        unless d.country.nil?
+          if countries.include?(d.country)
+            countries[d.country] += 1
+          else
+            countries[d.country] = 1
+          end
+        end
+      end
+      @countries = countries
+
+      APN::Device.all.each do |d|
+        unless d.city.nil?
+          if cities.include?(d.city)
+            cities[d.city] += 1
+          else
+            cities[d.city] = 1
+          end
+        end
+      end
+      @cities = cities
+
   end
   
   def cities
@@ -73,6 +98,8 @@ class HomeController < ApplicationController
    private
     def choose_layout    
       if action_name == "index_now"
+        'application_now_landing'
+      elsif action_name == "stats"
         'application_now_landing'
       else
         'application'

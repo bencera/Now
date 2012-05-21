@@ -103,9 +103,10 @@ class EventsController < ApplicationController
       end
 
       if params[:cmd] == "userCoords"
-        d.update_attribute(:latitude, params[:latitude])
-        d.update_attribute(:longitude, params[:longitude])
-        
+        d.coordinates = [params[:longitude].to_f,params[:latitude].to_f]
+        d.inc(:visits, 1)
+        d.save
+
       elsif params[:cmd] == "notifications"
         if params[:notificationswitch]  == "yes"
           d.update_attribute(:notifications, true)
@@ -118,7 +119,7 @@ class EventsController < ApplicationController
     end
 
     render :text => 'OK'
-    
+
   end
 
 
