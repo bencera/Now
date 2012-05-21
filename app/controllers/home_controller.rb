@@ -47,9 +47,8 @@ class HomeController < ApplicationController
           pushs["SF"] += 1
         elsif d.distance_from([48.86,2.34]) < 20 and d.notifications == true
           pushs["Paris"] += 1
-        elsif d.distance_from([40.74, -74]) < 20 and d.notifications == true
-          pushs["LN"] += 1
         elsif d.distance_from([51.51,-0.13]) < 20 and d.notifications == true
+          pushs["LN"] += 1
         end
       end
 
