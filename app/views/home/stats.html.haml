@@ -8,6 +8,9 @@
 %h2{:style => "color:black"}  User cities
 %p= @cities
 
+%h2{:style => "color:black"} Number of pushs per city
+%p= @pushs
+
 %h2{:style => "color:black"}  Users in the last day
 %p= APN::Device.where(:updated_at.gt => 1.day.ago).count
 
