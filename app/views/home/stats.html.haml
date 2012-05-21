@@ -7,3 +7,12 @@
 
 %h2{:style => "color:black"}  User cities
 %p= @cities
+
+%h2{:style => "color:black"}  Users in the last day
+%p= APN::Device.where(:updated_at.gt => 1.day.ago).count
+
+%h2{:style => "color:black"}  Users in the last week
+%p= APN::Device.where(:updated_at.gt => 1.week.ago).count
+
+%h2{:style => "color:black"}  Users in the last month
+%p= APN::Device.where(:updated_at.gt => 1.month.ago).count
