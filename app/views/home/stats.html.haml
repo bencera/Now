@@ -1,6 +1,15 @@
 %h2{:style => "color:black"} Number of users
 %p= APN::Device.count
 
+%h2{:style => "color:black"} User created today
+%p= APN::Device.where(:created_at.gt => 1.day.ago).count
+
+%h2{:style => "color:black"} User created this week
+%p= APN::Device.where(:created_at.gt => 1.week.ago).count
+
+%h2{:style => "color:black"} User created this month
+%p= APN::Device.where(:created_at.gt => 1.month.ago).count
+
 %h2{:style => "color:black"}  User countries
 %p= @countries
 
@@ -14,6 +23,7 @@
 
 %h2{:style => "color:black"}  Users in the last day
 %p= APN::Device.where(:updated_at.gt => 1.day.ago).count
+%p= @pushs_1day
 
 %h2{:style => "color:black"}  Users in the last 3 days
 %p= APN::Device.where(:updated_at.gt => 3.days.ago).count
@@ -31,6 +41,7 @@
 
 %h2{:style => "color:black"}  Users used 10+ times
 %p= APN::Device.where(:visits.gt => 10).count
+%p= @pushs_10times
 
 %h2{:style => "color:black"}  Users used 25+ times
 %p= APN::Device.where(:visits.gt => 50).count

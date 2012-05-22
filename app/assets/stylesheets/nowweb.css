@@ -373,3 +373,25 @@
     .advertisement a { border: none; }
     .advertisement img { border: 1px solid #ccc; }
     .advertisement h5 { text-transform: uppercase;  font-size: 10px; }
+
+/* Social
+================================================== */
+
+#social a.tw:hover, #social a.fb:hover {
+background-position: 0px -60px;
+}
+
+#social a.tw {
+background: url(/assets/ico-twitter.png) no-repeat 0px 0px;
+}
+
+#social a.fb {
+background: url(/assets/ico-facebook.png) no-repeat 0px 0px;
+}
+
+#social a {
+display: block;
+margin-left: 20px;
+width: 50px;
+height: 60px;
+}

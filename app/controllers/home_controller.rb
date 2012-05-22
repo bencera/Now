@@ -54,6 +54,36 @@ class HomeController < ApplicationController
 
       @pushs = pushs
 
+      pushs_1day = {"NY" => 0, "Paris" => 0, "SF" => 0, "LN" => 0}
+      APN::Device.all.each do |d|
+        if d.distance_from([40.74, -73.99]) < 20 and d.notifications == true
+          pushs["NY"] += 1
+        elsif d.distance_from([37.76,-122.45]) < 20 and d.notifications == true
+          pushs["SF"] += 1
+        elsif d.distance_from([48.86,2.34]) < 20 and d.notifications == true
+          pushs["Paris"] += 1
+        elsif d.distance_from([51.51,-0.13]) < 20 and d.notifications == true
+          pushs["LN"] += 1
+        end
+      end
+
+      @pushs_1day = pushs_1day
+
+      pushs_10times = {"NY" => 0, "Paris" => 0, "SF" => 0, "LN" => 0}
+      APN::Device.where(:visits.gt => 10).each do |d|
+        if d.distance_from([40.74, -73.99]) < 20 and d.notifications == true
+          pushs["NY"] += 1
+        elsif d.distance_from([37.76,-122.45]) < 20 and d.notifications == true
+          pushs["SF"] += 1
+        elsif d.distance_from([48.86,2.34]) < 20 and d.notifications == true
+          pushs["Paris"] += 1
+        elsif d.distance_from([51.51,-0.13]) < 20 and d.notifications == true
+          pushs["LN"] += 1
+        end
+      end
+
+      @pushs_10times = pushs_10times
+
   end
   
   def cities
