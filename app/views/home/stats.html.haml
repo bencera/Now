@@ -22,20 +22,20 @@
 %p="__________________________________"
 
 %h2{:style => "color:black"}  Users in the 12h
-%p= (APN::Device.where(:updated_at.gt => 12.hours.ago).count - APN::Device.where(:created_at.gt => 12.hours.ago).count)
+%p= APN::Device.where(:updated_at.gt => 12.hours.ago).count
 %p= @pushs_1day
 
 %h2{:style => "color:black"}  Users in the last day
-%p= (APN::Device.where(:updated_at.gt => 24.hours.ago).count - APN::Device.where(:created_at.gt => 24.hours.ago).count)
+%p= APN::Device.where(:updated_at.gt => 24.hours.ago).count
 
 %h2{:style => "color:black"}  Users in the last 36h
-%p= (APN::Device.where(:updated_at.gt => 36.hours.ago).count - APN::Device.where(:created_at.gt => 36.hours.ago).count)
+%p= APN::Device.where(:updated_at.gt => 36.hours.ago).count
 
 %h2{:style => "color:black"}  Users in the 2 days
-%p= (APN::Device.where(:updated_at.gt => 48.hours.ago).count - APN::Device.where(:created_at.gt => 48.hours.ago).count)
+%p= APN::Device.where(:updated_at.gt => 48.hours.ago).count
 
 %h2{:style => "color:black"}  Users in the 3 days
-%p= (APN::Device.where(:updated_at.gt => 72.hours.ago).count - APN::Device.where(:created_at.gt => 72.hours.ago).count)
+%p= APN::Device.where(:updated_at.gt => 72.hours.ago).count
 
 %p="__________________________________"
 
