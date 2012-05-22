@@ -32,6 +32,9 @@
 %h2{:style => "color:black"}  Users used 10+ times
 %p= APN::Device.where(:visits.gt => 10).count
 
+%h2{:style => "color:black"}  Users used 25+ times
+%p= APN::Device.where(:visits.gt => 50).count
+
 %h2{:style => "color:black"}  Users used 50+ times
 %p= APN::Device.where(:visits.gt => 50).count
 
@@ -41,7 +44,4 @@
 %p="__________________________________"
 
 %h2{:style => "color:black"}  Users with location 0
-%p= APN::Device.where(:latitude => "0.000000").count
-
-%h2{:style => "color:black"}  Users with location nil
-%p= APN::Device.where(:latitude => nil).count
+%p= APN::Device.where(:coordinates => [0,0]).count
