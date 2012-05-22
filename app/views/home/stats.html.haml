@@ -22,20 +22,20 @@
 %p="__________________________________"
 
 %h2{:style => "color:black"}  Users in the 12h
-%p= number_to_percentage((APN::Device.where(:updated_at.gt => 12.hours.ago).count.to_f - APN::Device.where(:created_at.gt => 12.hours.ago).count.to_f) / (APN::Device.count.to_f - APN::Device.where(:created_at.gt => 12.hours.ago).count.to_f))
+%p= (APN::Device.where(:updated_at.gt => 12.hours.ago).count - APN::Device.where(:created_at.gt => 12.hours.ago).count)
 %p= @pushs_1day
 
 %h2{:style => "color:black"}  Users in the last day
-%p= number_to_percentage((APN::Device.where(:updated_at.gt => 24.hours.ago).count.to_f - APN::Device.where(:created_at.gt => 24.hours.ago).count.to_f) / (APN::Device.count.to_f - APN::Device.where(:created_at.gt => 24.hours.ago).count.to_f))
+%p= (APN::Device.where(:updated_at.gt => 24.hours.ago).count - APN::Device.where(:created_at.gt => 24.hours.ago).count)
 
 %h2{:style => "color:black"}  Users in the last 36h
-%p= number_to_percentage((APN::Device.where(:updated_at.gt => 36.hours.ago).count.to_f - APN::Device.where(:created_at.gt => 36.hours.ago).count.to_f) / (APN::Device.count.to_f - APN::Device.where(:created_at.gt => 36.hours.ago).count.to_f))
+%p= (APN::Device.where(:updated_at.gt => 36.hours.ago).count - APN::Device.where(:created_at.gt => 36.hours.ago).count)
 
 %h2{:style => "color:black"}  Users in the 2 days
-%p= number_to_percentage((APN::Device.where(:updated_at.gt => 48.hours.ago).count.to_f - APN::Device.where(:created_at.gt => 48.hours.ago).count.to_f) / (APN::Device.count.to_f - APN::Device.where(:created_at.gt => 48.hours.ago).count.to_f))
+%p= (APN::Device.where(:updated_at.gt => 48.hours.ago).count - APN::Device.where(:created_at.gt => 48.hours.ago).count)
 
 %h2{:style => "color:black"}  Users in the 3 days
-%p= number_to_percentage((APN::Device.where(:updated_at.gt => 3.days.ago).count.to_f - APN::Device.where(:created_at.gt => 3.days.ago).count.to_f) / (APN::Device.count.to_f - APN::Device.where(:created_at.gt => 3.days.ago).count.to_f))
+%p= (APN::Device.where(:updated_at.gt => 72.hours.ago).count - APN::Device.where(:created_at.gt => 72.hours.ago).count)
 
 %p="__________________________________"
 
