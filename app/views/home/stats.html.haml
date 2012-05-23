@@ -26,20 +26,20 @@
 %p="__________________________________"
 
 %h2{:style => "color:black"}  Users in the last 12h
-%p= "#{APN::Device.where(:updated_at.gt => 12.hours.ago).count} (#{number_to_percentage((APN::Device.where(:updated_at.gt => 12.hours.ago).count - APN::Device.where(:created_at.gt => 12.hours.ago).count) / (APN::Device.count - APN::Device.where(:created_at.gt => 12.hours.ago).count) *100)})"
+%p= "#{APN::Device.where(:updated_at.gt => 12.hours.ago).count.to_f} (#{number_to_percentage((APN::Device.where(:updated_at.gt => 12.hours.ago).count - APN::Device.where(:created_at.gt => 12.hours.ago).count) / (APN::Device.count - APN::Device.where(:created_at.gt => 12.hours.ago).count) *100)})"
 
 %h2{:style => "color:black"}  Users in the last day
-%p= "#{APN::Device.where(:updated_at.gt => 24.hours.ago).count} (#{number_to_percentage((APN::Device.where(:updated_at.gt => 24.hours.ago).count - APN::Device.where(:created_at.gt => 24.hours.ago).count) / (APN::Device.count - APN::Device.where(:created_at.gt => 24.hours.ago).count) *100)})"
+%p= "#{APN::Device.where(:updated_at.gt => 24.hours.ago).count.to_f} (#{number_to_percentage((APN::Device.where(:updated_at.gt => 24.hours.ago).count - APN::Device.where(:created_at.gt => 24.hours.ago).count) / (APN::Device.count - APN::Device.where(:created_at.gt => 24.hours.ago).count) *100)})"
 %p= @pushs_1day
 
 %h2{:style => "color:black"}  Users in the last 36h
-%p= "#{APN::Device.where(:updated_at.gt => 36.hours.ago).count} (#{number_to_percentage((APN::Device.where(:updated_at.gt => 36.hours.ago).count - APN::Device.where(:created_at.gt => 36.hours.ago).count) / (APN::Device.count - APN::Device.where(:created_at.gt => 36.hours.ago).count) *100)})"
+%p= "#{APN::Device.where(:updated_at.gt => 36.hours.ago).count.to_f} (#{number_to_percentage((APN::Device.where(:updated_at.gt => 36.hours.ago).count - APN::Device.where(:created_at.gt => 36.hours.ago).count) / (APN::Device.count - APN::Device.where(:created_at.gt => 36.hours.ago).count) *100)})"
 
 %h2{:style => "color:black"}  Users in the 2 days
-%p= "#{APN::Device.where(:updated_at.gt => 48.hours.ago).count} (#{number_to_percentage((APN::Device.where(:updated_at.gt => 48.hours.ago).count - APN::Device.where(:created_at.gt => 48.hours.ago).count) / (APN::Device.count - APN::Device.where(:created_at.gt => 48.hours.ago).count) *100)})"
+%p= "#{APN::Device.where(:updated_at.gt => 48.hours.ago).count.to_f} (#{number_to_percentage((APN::Device.where(:updated_at.gt => 48.hours.ago).count - APN::Device.where(:created_at.gt => 48.hours.ago).count) / (APN::Device.count - APN::Device.where(:created_at.gt => 48.hours.ago).count) *100)})"
 
 %h2{:style => "color:black"}  Users in the 3 days
-%p= "#{APN::Device.where(:updated_at.gt => 72.hours.ago).count} (#{number_to_percentage((APN::Device.where(:updated_at.gt => 72.hours.ago).count - APN::Device.where(:created_at.gt => 72.hours.ago).count) / (APN::Device.count - APN::Device.where(:created_at.gt => 72.hours.ago).count) *100)})"
+%p= "#{APN::Device.where(:updated_at.gt => 72.hours.ago).count.to_f} (#{number_to_percentage((APN::Device.where(:updated_at.gt => 72.hours.ago).count - APN::Device.where(:created_at.gt => 72.hours.ago).count) / (APN::Device.count - APN::Device.where(:created_at.gt => 72.hours.ago).count) *100)})"
 
 %p="__________________________________"
 
