@@ -18,6 +18,8 @@ class HomeController < ApplicationController
 
       countries = {}
       cities = {}
+      states = {}
+
       APN::Device.all.each do |d|
         unless d.country.nil?
           if countries.include?(d.country)
@@ -39,6 +41,22 @@ class HomeController < ApplicationController
         end
       end
       @cities = cities.sort_by{|u,v| v}.reverse
+
+
+      countries_today = {}
+
+     APN::Device.where(:created_at.gt => 1.day.ago).each do |d|
+        unless d.country.nil?
+          if countries_today.include?(d.country)
+            countries_today[d.country] += 1
+          else
+            countries_today[d.country] = 1
+          end
+        end
+      end
+      @countries_today = countries_today.sort_by{|u,v| v}.reverse
+
+
       pushs = {"NY" => 0, "Paris" => 0, "SF" => 0, "LN" => 0}
       APN::Device.all.each do |d|
         if d.distance_from([40.74, -73.99]) < 20 and d.notifications == true
@@ -51,6 +69,18 @@ class HomeController < ApplicationController
           pushs["LN"] += 1
         end
       end
+
+     APN::Device.all.each do |d|
+        unless d.state.nil?
+          if states.include?(d.state)
+            states[d.state] += 1
+          else
+            states[d.state] = 1
+          end
+        end
+      end
+      @states = states.sort_by{|u,v| v}.reverse
+
 
       @pushs = pushs
 

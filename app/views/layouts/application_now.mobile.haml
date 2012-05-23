@@ -4,6 +4,9 @@
 	%title= "Now - #{@event.description}"
 	= csrf_meta_tag
 	%meta{:name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;"}
+	%meta{:name => "description", :content => "Now is an free iphone app that let's you know in real time about events happening in your city."}
+	%meta{:name => "keywords", :content => "realtime, photos, events, trending, iphone, explore, discover, things to do, news, city"}
+	%link{:rel=>"shortcut icon", :href=>"/assets/favicon.ico"}
 	%meta{:name => "apple-mobile-web-app-capable", :content =>"yes"}
 	%meta{:name => "apple-mobile-web-app-status-bar-style", :content=>"black"}
 	= stylesheet_link_tag "mobile/mobile_now.css"
