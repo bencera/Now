@@ -3,7 +3,7 @@
 
 %h2{:style => "color:black"} User created today
 %p= APN::Device.where(:created_at.gt => 1.day.ago).count
-%p= @countries_today
+%p= @cities_today
 
 %h2{:style => "color:black"} User created this week
 %p= APN::Device.where(:created_at.gt => 1.week.ago).count
@@ -43,18 +43,18 @@
 
 %p="__________________________________"
 
+%h2{:style => "color:black"}  Users used 2+ times
+%p= APN::Device.where(:visits.gt => 2).count
+%p= @pushs_2times
+
+%h2{:style => "color:black"}  Users used 5+ times
+%p= APN::Device.where(:visits.gt => 4).count
+
 %h2{:style => "color:black"}  Users used 10+ times
-%p= APN::Device.where(:visits.gt => 10).count
-%p= @pushs_10times
+%p= APN::Device.where(:visits.gt => 9).count
 
-%h2{:style => "color:black"}  Users used 25+ times
-%p= APN::Device.where(:visits.gt => 50).count
-
-%h2{:style => "color:black"}  Users used 50+ times
-%p= APN::Device.where(:visits.gt => 50).count
-
-%h2{:style => "color:black"}  Users used 100+ times
-%p= APN::Device.where(:visits.gt => 100).count
+%h2{:style => "color:black"}  Users used 20+ times
+%p= APN::Device.where(:visits.gt => 19).count
 
 %p="__________________________________"
 

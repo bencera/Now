@@ -43,18 +43,18 @@ class HomeController < ApplicationController
       @cities = cities.sort_by{|u,v| v}.reverse
 
 
-      countries_today = {}
+      cities_today = {}
 
      APN::Device.where(:created_at.gt => 1.day.ago).each do |d|
-        unless d.country.nil?
-          if countries_today.include?(d.country)
-            countries_today[d.country] += 1
+        unless d.city.nil?
+          if cities_today.include?(d.city)
+            cities_today[d.city] += 1
           else
-            countries_today[d.country] = 1
+            cities_today[d.city] = 1
           end
         end
       end
-      @countries_today = countries_today.sort_by{|u,v| v}.reverse
+      @cities_today = cities_today.sort_by{|u,v| v}.reverse
 
 
       pushs = {"NY" => 0, "Paris" => 0, "SF" => 0, "LN" => 0}
@@ -100,7 +100,7 @@ class HomeController < ApplicationController
       @pushs_1day = pushs_1day
 
       pushs_10times = {"NY" => 0, "Paris" => 0, "SF" => 0, "LN" => 0}
-      APN::Device.where(:visits.gt => 10).each do |d|
+      APN::Device.where(:visits.gt => 2).each do |d|
         if d.distance_from([40.74, -73.99]) < 20 and d.notifications == true
           pushs_10times["NY"] += 1
         elsif d.distance_from([37.76,-122.45]) < 20 and d.notifications == true

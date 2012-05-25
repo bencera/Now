@@ -11,7 +11,7 @@ module APN
     field :city
     field :state
     field :country
-    field :visits, type: Integer, default: 1
+    field :visits, type: Integer, default: 0
     field :notifications, :type => Boolean, default: -> { true }
 
     index :udid, :unique => true, :background => true
