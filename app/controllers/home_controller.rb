@@ -112,7 +112,7 @@ class HomeController < ApplicationController
         end
       end
 
-      @pushs_10times = pushs_10times
+      @pushs_2times = pushs_10times
 
   end
   
