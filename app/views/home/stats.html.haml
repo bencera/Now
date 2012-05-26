@@ -25,6 +25,20 @@
 
 %p="__________________________________"
 
+%h2{:style => "color:black"} Percentage of actives in New York (in last 3 days)
+%p= number_to_percentage(APN::Device.where(:updated_at.gt => 3.days.ago).where(:city => "New York").count.to_f/APN::Device.where(:city => "New York").count * 100)
+
+%h2{:style => "color:black"} Percentage of actives in SF
+%p= number_to_percentage(APN::Device.where(:updated_at.gt => 3.days.ago).where(:city => "San Francisco").count.to_f/APN::Device.where(:city => "San Francisco").count * 100)
+
+%h2{:style => "color:black"} Percentage of actives in Paris
+%p= number_to_percentage(APN::Device.where(:updated_at.gt => 3.days.ago).where(:city => "Paris").count.to_f/APN::Device.where(:city => "Paris").count * 100)
+
+%h2{:style => "color:black"} Percentage of actives in London
+%p= number_to_percentage(APN::Device.where(:updated_at.gt => 3.days.ago).where(:city => "London").count.to_f/APN::Device.where(:city => "London").count * 100)
+
+%p="__________________________________"
+
 %h2{:style => "color:black"}  Users in the last 12h
 %p= "#{APN::Device.where(:updated_at.gt => 12.hours.ago).count} (#{number_to_percentage((APN::Device.where(:updated_at.gt => 12.hours.ago).count.to_f - APN::Device.where(:created_at.gt => 12.hours.ago).count) / (APN::Device.count - APN::Device.where(:created_at.gt => 12.hours.ago).count) *100)})"
 
