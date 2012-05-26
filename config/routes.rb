@@ -18,6 +18,8 @@ Ubimachine::Application.routes.draw do
 
   match "/stats" => "home#stats"
 
+  match "/download" => "home#download"
+
   match "/help" => "home#help"
   
   match "/auth/instagram/callback" => "sessions#callback"

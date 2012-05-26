@@ -14,6 +14,10 @@ class HomeController < ApplicationController
     redirect_to "http://checkthis.com/1k4o"
   end
 
+  def download
+    redirect_to "http://itunes.apple.com/app/now./id525956360"
+  end
+
   def stats
 
       countries = {}
