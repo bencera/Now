@@ -11,6 +11,11 @@
 %h2{:style => "color:black"} User created this month
 %p= APN::Device.where(:created_at.gt => 1.month.ago).count
 
+
+%h2{:style => "color:black"} Users coming from Instagram
+%p= $redis.get("instagram_downloads")
+
+
 %h2{:style => "color:black"}  User countries
 %p= @countries
 
