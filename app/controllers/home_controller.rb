@@ -15,6 +15,7 @@ class HomeController < ApplicationController
   end
 
   def download
+    $redis.incr("instagram_downloads")
     redirect_to "http://itunes.apple.com/app/now./id525956360"
   end
 
