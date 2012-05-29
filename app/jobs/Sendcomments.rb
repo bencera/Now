@@ -14,7 +14,7 @@ class Sendcomments
           users.delete(photo.user.id)
           puts "sent"
           $redis.sadd("instagram_users_asked", photo.user.id)
-          sleep(60)
+          sleep(15)
         rescue
           puts "there was a problem"
         end
