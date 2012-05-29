@@ -81,8 +81,7 @@ class EventsController < ApplicationController
       Resque.enqueue(Sendnotifications, params[:event_id])
     end
     if params[:should_ask] == "1"
-      questions = [params[:question1], params[:question2], params[:question3]]
-      Resque.enqueue(Sendcomments, params[:event_id], questions)
+      Resque.enqueue(Sendcomments, params[:event_id], params[:question1], params[:question2], params[:question3] )
     end
 
     redirect_to "http://checkthis.com/okzf"

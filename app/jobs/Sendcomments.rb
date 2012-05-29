@@ -1,6 +1,7 @@
 class Sendcomments
   @queue = :sendcomments_queue
-  def self.perform(event_id, questions)
+  def self.perform(event_id, question1, question2, question3)
+    questions = [question1, question2, question3]
     event = Event.find(event_id)
     users = event.photos.distinct(:user_id)
     question_end = [" Thanks! - via @nowapp", " Thank you! - via @nowapp", " Thks! - via @nowapp"]
