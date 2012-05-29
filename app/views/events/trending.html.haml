@@ -17,6 +17,9 @@
         = form_tag "/events", :method => "post" do
             = text_field_tag :description,  nil, :placeholder => "Describe the event", :style => "width: 200px; height: 40px"
             = text_field_tag :link, nil, :placeholder => "Put a link on the event"
+            = text_field_tag :question1, nil, :placeholder => "question1"
+            = text_field_tag :question2, nil, :placeholder => "question2"
+            = text_field_tag :question3, nil, :placeholder => "question3"
             = hidden_field_tag :confirm, "yes"
             = hidden_field_tag :event_id, @event.id
             = submit_tag "Yes!"
@@ -44,6 +47,8 @@
             = label_tag(:category_name, "performance")
             = check_box_tag(:push)
             = label_tag(:push_desc, "Push Notification")
+            = check_box_tag(:should_ask)
+            = label_tag(:ask_desc, "Comments")
 
     .comments
         -@photos.each do |p|

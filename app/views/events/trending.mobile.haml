@@ -26,6 +26,9 @@
                 = text_field_tag :description,  nil, :placeholder => "Describe the event", :style => "width: 200px"
                 = hidden_field_tag :confirm, "yes"
                 = text_field_tag :link, nil, :placeholder => "Put a link on the event"
+                = text_field_tag :question1, nil, :placeholder => "question1"
+                = text_field_tag :question2, nil, :placeholder => "question2"
+                = text_field_tag :question3, nil, :placeholder => "question3"
                 = hidden_field_tag :event_id, @event.id
                 = submit_tag "Yes!"
                 = radio_button_tag(:category, "Concert")
@@ -52,11 +55,12 @@
                 = label_tag(:category_name, "celebrity")
                 = check_box_tag(:push)
                 = label_tag(:push_desc, "Push Notification")
+                = check_box_tag(:should_ask)
+                = label_tag(:ask_desc, "Comments")
         - @photos.each do |p|
             - unless p.caption.nil?
                 = p.caption
                 %br
-        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=13&size=320x100&maptype=roadmap&markers=icon:http://www.ubimachine.com/assets/map_pin.png%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=false&scale=2", :id => "map"
         .photos{:style => ""}
             - @photos.each do |p|
-                = image_tag p.url[1], :width => "32.5%", :style => "margin-bottom: 2px"
+                = image_tag p.url[2], :width => "32.5%", :style => "margin-bottom: 2px"
