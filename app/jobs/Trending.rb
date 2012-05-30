@@ -184,7 +184,7 @@ class Trending
         new_event = venue.events.create(:venue_id => event[0], 
                                  :start_time => photos.last.time_taken,
                                  :end_time => photos.first.time_taken,
-                                 :coordinates => venue.coordinates,
+                                 :coordinates => photos.first.coordinates,
                                  :n_photos => venue.photos.last_hours(hours).count,
                                  :status => "waiting",
                                  :city => city,
