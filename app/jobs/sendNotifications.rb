@@ -36,7 +36,7 @@ class Sendnotifications
       alert = alert + " (#{event.venue.neighborhood})" unless event.venue.neighborhood.nil?
 
       APN::Device.all.each do |device|
-        if event.distance_from([device.latitude.to_f, device.longitude.to_f]) < 20 and device.notifications == true
+        if event.distance_from([device.coordinates[1].to_f, device.coordinates[0].to_f]) < 20 and device.notifications == true
           unless device.subscriptions.first.nil?
             device.subscriptions.each do |sub|
               n = APN::Notification.new
