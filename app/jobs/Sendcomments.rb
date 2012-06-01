@@ -21,5 +21,9 @@ class Sendcomments
         end
       end
     end
+    $redis.incrby("comment_event_#{event_id}", 1)
+    unless $redis.get("comment_event_#{event_id}").to_i > 3
+      Resque.enqueue_in(1.hour, Sendcomments, event_id, question1, question2, question3)
+    end
   end
 end
