@@ -7,7 +7,7 @@ module APN
 
     field :udid
     field :device_info
-    field :coordinates, :type => Array
+    field :coordinates, :type => Array, default: -> { [0,0] }
     field :city
     field :state
     field :country
