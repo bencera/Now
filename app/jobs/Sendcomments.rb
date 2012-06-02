@@ -7,7 +7,7 @@ class Sendcomments
     question_end = [" Thanks! - via @nowapp", " Thank you! - via @nowapp", " Thks! - via @nowapp"]
     client = Instagram.client(:access_token => "1200123.6c3d78e.0d51fa6ae5c54f4c99e00e85df38c435")
     event.photos.each do |photo|
-      if users.include?(photo.user.id) && !($redis.sismember("instagram_users_asked", photo.user.id))
+      if users.include?(photo.user.id) && !($redis.sismember("instagram_users_asked", photo.user.id)) && Time.now.to_i > $redis.get("time_wait_comments").to_i
         begin
           client.like_media(photo.ig_media_id)
           question = "@#{photo.user.ig_username} " + questions[rand(questions.size)] + question_end[rand(question_end.size)]
@@ -17,7 +17,7 @@ class Sendcomments
           $redis.sadd("instagram_users_asked", photo.user.id)
           sleep(15)
         rescue
-          puts "there was a problem"
+          $redis.set("time_wait_comments", 30.minutes.from_now.to_i)
         end
       end
     end
