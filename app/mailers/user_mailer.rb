@@ -20,7 +20,7 @@ class UserMailer < ActionMailer::Base
   def trending(new_event)
     
     @new_event = new_event
-    mail to: "ben.broca@gmail.com", subject: "#{@new_event.venue.name} - (#{@new_event.photos.first.city})"
+    mail to: "ben.broca@gmail.com,pierre@valade.info,ocallaghan@gmail.com", subject: "#{@new_event.venue.name} - (#{@new_event.photos.first.city})"
     
   end
   

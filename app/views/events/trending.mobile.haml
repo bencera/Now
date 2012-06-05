@@ -22,6 +22,8 @@
         
     #content
         %p.title
+            - unless @event.description.nil?
+                %h1 Event already has description
             = form_tag "/events", :method => "post" do
                 = text_field_tag :description,  nil, :placeholder => "Describe the event", :style => "width: 200px"
                 = hidden_field_tag :confirm, "yes"
