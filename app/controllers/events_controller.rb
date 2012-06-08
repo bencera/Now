@@ -83,6 +83,7 @@ class EventsController < ApplicationController
     if params[:should_ask] == "1"
       Resque.enqueue(Sendcomments, params[:event_id], params[:question1], params[:question2], params[:question3] )
     end
+    Resque.enqueue(VerifyURL, params[:event_id])
 
     redirect_to "http://checkthis.com/okzf"
   end
