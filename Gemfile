@@ -33,6 +33,8 @@ gem 'redis'
 gem 'fb_graph'
 gem 'rabl'
 
+gem 'httparty'
+
 
 #gem 'infinitescrolling-rails'
 gem 'mathstats'

@@ -62,7 +62,7 @@ class Trending
         limit_photos = 4
       when "london"
         limit_photos = 4
-      end  
+      end
       
     
     photos_lasthours = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
@@ -232,6 +232,15 @@ class Trending
       Event.where(:status => "waiting").each do |event|
         if (Time.now.to_i - event.start_time) >  12*3600
           event.update_attribute(:status, "not_trending")
+        end
+      end
+
+      Event.where(:status.in => ["trending", "trended"]).each do |event|
+        event.photos.each do |photo|
+          response = HTTParty.get(photo.url[0])
+          if response.code == 403 && response.message == "Forbidden"
+            photo.destroy
+          end
         end
       end
   
