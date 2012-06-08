@@ -235,7 +235,7 @@ class Trending
         end
       end
 
-      Event.where(:status.in => ["trending", "trended"]).each do |event|
+      Event.where(:status => "trending").each do |event|
         event.photos.each do |photo|
           response = HTTParty.get(photo.url[0])
           if response.code == 403 && response.message == "Forbidden"
