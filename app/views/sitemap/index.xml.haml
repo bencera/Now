@@ -3,5 +3,5 @@
 %urlset{:xmlns => "http://www.sitemaps.org/schemas/sitemap/0.9"}
   - for event in @events
     %url
-      %loc #{base_url}#{event.shortid}
+      %loc http://getnowapp.com/#{event.shortid}
       %lastmod=Time.at(event.end_time.to_i)
