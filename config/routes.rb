@@ -10,7 +10,7 @@ Ubimachine::Application.routes.draw do
   # get "tags/index"
 
   # get "tags/create"
-  #match "/sitemap.xml", :to => "sitemap#index", :defaults => {:format => :xml}
+  match "/sitemap.xml", :to => "sitemap#index", :defaults => {:format => :xml}
 
 
 

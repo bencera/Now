@@ -4,4 +4,4 @@
   - for event in @events
     %url
       %loc #{base_url}#{event.shortid}
-      %lastmod=event.endtime
+      %lastmod=Time.at(event.end_time.to_i)

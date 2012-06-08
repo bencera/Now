@@ -3,10 +3,10 @@ class SitemapController < ApplicationController
   
   def index
     headers['Content-Type'] = 'application/xml'
-    latest = Post.last
-    if stale?(:etag => latest, :last_modified => latest.updated_at.utc)
+    latest = Event.last
+    if stale?(:etag => latest, :last_modified => Time.at(latest.end_time.to_i))
       respond_to do |format|
-        format.xml { @events = Event.sitemap.trending }
+        format.xml { @events = Event.where(:status.in => ["trending", "trended"]).limit(50000) }
       end
     end
   end
