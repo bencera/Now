@@ -10,6 +10,8 @@ Ubimachine::Application.routes.draw do
   # get "tags/index"
 
   # get "tags/create"
+  #match "/sitemap.xml", :to => "sitemap#index", :defaults => {:format => :xml}
+
 
 
   get "subscriptions/index"
@@ -138,6 +140,7 @@ Ubimachine::Application.routes.draw do
   #       get 'recent', :on => :collection
   #     end
   #   end
+
 
   # Sample resource route within a namespace:
   #   namespace :admin do

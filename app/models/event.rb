@@ -23,6 +23,11 @@ class Event
   
   validates_presence_of :coordinates, :venue_id, :n_photos, :end_time
   validates_presence_of :description, :category, :shortid, :on => :update
+
+  named_scope :trending, :conditions => { :status.in => ["trending", "trended"] }
+  named_scope :sitemap, :select => 'slug, created_at, updated_at',
+              :limit => 49999 # +1 for About page to make 50,000
+
   #description should be 50char long max...
 
    CHARS = ('0'..'9').to_a + ('a'..'z').to_a + ('A'..'Z').to_a
