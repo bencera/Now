@@ -28,6 +28,17 @@ class RequestsController < ApplicationController
       format.js
     end
   end
+
+
+  def comment
+      client = Instagram.client(:access_token => "1200123.6c3d78e.0d51fa6ae5c54f4c99e00e85df38c435")
+      comment = "@#{params[:username]} #{params[:comment]} - via @nowapp"
+      client.create_media_comment(params[:ig_media_id], comment)
+      respond_to do |format|
+        format.html { redirect_to :back }
+        format.js
+      end
+  end
   
   def show
     

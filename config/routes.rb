@@ -12,7 +12,8 @@ Ubimachine::Application.routes.draw do
   # get "tags/create"
   match "/sitemap.xml", :to => "sitemap#index", :defaults => {:format => :xml}
 
-
+  match "/comment_instagram" => "requests#comment"
+  match "/ben/comments/instagram" => "commment_instagram#index"
 
   get "subscriptions/index"
 
@@ -27,11 +28,12 @@ Ubimachine::Application.routes.draw do
   match "/auth/instagram/callback" => "sessions#callback"
   match "/auth/facebook/callback" => "sessions#facebook_callback"
   
-  resources :venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls, :dones, :events
+  resources :events, :requests
   
-  resources :photos do  
-    resources :comments  
-  end
+  #:venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls, :dones,
+  # resources :photos do  
+  #   resources :comments  
+  # end
   
   match "/now/user" => "events#user"
   match "/now/user/signup" => "sessions#now_signup"

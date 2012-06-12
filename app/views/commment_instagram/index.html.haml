@@ -1,0 +1,32 @@
+%h1 Ben's Instagram comments
+- @photos.each do |photo|
+	= image_tag photo.images.standard_resolution.url, :width => "300px"
+	= photo.location.name
+	- photo.comments.data.each do |comment|
+		- if comment.from.id == photo.user.id || comment.from.id == "1200123"
+			%p= "#{comment.from.username} - #{comment.text} - #{time_ago_in_words(Time.at comment.created_time.to_i)}"
+	= form_tag "/comment_instagram",  :remote => true do
+		= hidden_field_tag :ig_media_id, photo.id
+		= hidden_field_tag :username, photo.user.username
+		= text_field_tag :comment, "", :style => "width: 500px;"
+		= submit_tag "Comment"
+	%ul
+		%li
+			Ok thanks! Everything looks good on the photos on Now app, but will definetly try this!
+		%li
+			Ok thanks, this looks really fun indeed! Will check it out! Love to go to events i see on Now :)
+		%li
+			Ok thanks, this exhibition looks really cool! Really cool stuff to do on that Now app.
+		%li
+			Oh awesome, i'm coming! Love to discover new places on Now!
+		%li
+			Ok thanks! This place has been trending on Now app a couple of days in a row, has to be good!
+		%li
+			ok thanks! This looks like a great place, didnt know about it before i saw it on Now. Will check it soon!
+		%li
+			ok good to know! Saw this place Union Pool a couple of times trending on Now, it looks like a very good place, need to check it out!
+		%li
+			Yes, it's mostly photos of people drinking beers on Now.. but will check it out, it looks great!
+
+
+= link_to "Next page", "/ben/comments/instagram?next_max_like_id=#{@next_id}"

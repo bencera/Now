@@ -211,6 +211,33 @@ class Trending
         #   event.update_attribute(:status, "not_trending")
         # end
     end  
+
+    Event.where(:status => "trending").each do |event|
+      begin
+        continue = true
+        start_time = event.start_time
+        next_max_id = nil
+        while continue
+          access_token = $redis.smembers("accesstokens")[rand($redis.smembers("accesstokens").size)]
+          client = Instagram.client(:access_token => access_token)
+          response = client.location_recent_media(event.venue.ig_venue_id, options={:max_id => next_max_id})
+          puts response
+          next_max_id = response.pagination.next_max_id
+          response.data.each do |media|
+            unless media.location.id.nil?
+              unless Photo.exists?(conditions: {ig_media_id: media.id})
+                Photo.new.find_location_and_save(media,nil)
+              end
+            end
+            if media.created_time.to_i < start_time
+              continue = false
+            end
+          end
+        end
+      rescue
+      end
+    end
+
     
      Event.where(:status => "trending").each do |event|
         if (Venue.find(event.venue_id).photos.last_hours(5).count == 0)
