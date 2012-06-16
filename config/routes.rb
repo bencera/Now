@@ -90,6 +90,8 @@ Ubimachine::Application.routes.draw do
   # match "disrupt" => "photos#index_v2"
   
   match "events/trending/:id" => "events#trending"
+  match "events/main/:city" => "events#showstream"
+  match "events/pullsearch" => "events#pullsearch"
 
   match "/:shortid" => "events#showweb"
   

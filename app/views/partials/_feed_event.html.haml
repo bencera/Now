@@ -1,0 +1,40 @@
+#content{:style => "margin-top: 100px"}
+  %li{:id => event.id}
+    %h2
+      = "#{event.venue.name} (#{event.venue.categories[0]["name"]})" 
+    - @keywords = get_keywords(event, :how_many => 8)
+    %b Keywords:
+    %p
+      - @keywords.each do |keyword|
+        = keyword
+    - if event.photos.any?
+      %p
+        = get_unique_users(event).count
+        unique users, #{event.photos.count} photos
+        
+      - event.photos[0..5].each do |p|
+        = image_tag p.url[0], :width => '197px'
+    .row
+      = time_ago_in_words(Time.at(event.photos.last.time_taken))
+      %div{:id => "chart#{event.id}", :style => "width: 600px; height: 100px;"}
+        = render_chart get_chart(event), "chart#{event.id}"
+      = time_ago_in_words(Time.at(event.photos.first.time_taken))
+
+    - if event.google.nil?
+      = form_tag "/events/pullsearch" do
+        = hidden_field_tag :event_id, event.id 
+        = submit_tag "Search"
+    - else
+      %h3 First Google Result Text
+      = raw event.google
+
+    = form_tag "/events", :method => "post" do
+      = text_field_tag :description,  nil, :placeholder => "Describe the event", :style => "width: 200px"
+      = hidden_field_tag :confirm, "confirm" 
+      = hidden_field_tag :event_id, event.id 
+      = collection_select :category, to_s, categories, :to_s, :to_s
+      %br
+      = check_box_tag(:push)
+      = label_tag(:push_desc, "Push Notification")
+      %br
+      = submit_tag "Confirm"

@@ -1,6 +1,8 @@
 class EventsController < ApplicationController
    layout :choose_layout
   respond_to :json, :xml
+
+  include EventsHelper
   
   def show
     @event = Event.find(params[:id])
@@ -11,9 +13,21 @@ class EventsController < ApplicationController
   end
 
   def showstream
-    @city = "newyork"
-    @events = Event.paginate(:page => params[:page])
-    @categories = 
+    if !params[:city]
+      params[:city] = "newyork"
+    end
+    @cities = {:newyork => "New York", :paris => "Paris", :london => "London", :sanfrancisco => "San Francisco"}
+    @events = Event.where(:city => params[:city]).where(:status.in => ["waiting"]).order_by([[:end_time, :desc]]).take(10)
+    @categories = "Concert Party Sport Art Movie Food Outdoors Exceptional Celebrity Conference Performance".split
+  end
+
+  def pullsearch
+    event = Event.find(params[:event_id])
+    result = get_first_google_result(["#{event.venue.name} #{Time.at(event.end_time).strftime("%b %d")} #{event.venue.address["postalCode"]}"])
+    event.update_attribute(:google, result) unless result.blank?
+    event.save
+    redirect_to request.referer
+
   end
   
   def index
@@ -70,7 +84,7 @@ class EventsController < ApplicationController
 
 
   def create
-    if params[:confirm] == "yes"
+    if params[:confirm] == "confirm"
       event = Event.find(params[:event_id])
       event.update_attribute(:status, "trending")
       event.update_attribute(:description, params[:description])
@@ -89,7 +103,7 @@ class EventsController < ApplicationController
     if params[:should_ask] == "1"
       Resque.enqueue(Sendcomments, params[:event_id], params[:question1], params[:question2], params[:question3] )
     end
-    Resque.enqueue(VerifyURL, params[:event_id])
+    #Resque.enqueue(VerifyURL, params[:event_id])
 
     redirect_to "http://checkthis.com/okzf"
   end
@@ -146,6 +160,8 @@ class EventsController < ApplicationController
         'application_now'
       elsif action_name == "showweb"
         'application_now'
+      elsif action_name == 'showstream'
+        'application_now_stream'
       else
         'application'
       end

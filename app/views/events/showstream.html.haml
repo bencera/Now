@@ -1,0 +1,13 @@
+#header-container
+  #header
+/    = form_tag "/events/showstream" do
+/      = label_tag(:category_name, "Select City")
+/      = collection_select :city, :to_s, @cities, :to_s, :to_s, {}
+
+#content{:style => "margin-top: 100px"}
+  %p.title
+
+  - if @events.any?
+    %ol.experiences
+      - @events.each do |event|
+        = render :partial => 'partials/feed_event', :locals => { :event => event , :categories => @categories}

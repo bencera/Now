@@ -10,8 +10,15 @@ gem 'heroku'
 #gem 'sqlite3'
 
 gem "mongoid", "~> 2.3"
+# to pull the dev mongodb, must install mongodb and plugin: 
+# 'heroku plugins:install http://github.com/pedro/heroku-mongo-sync.git'
+
 gem "bson_ext", "~> 1.4"
 gem 'unicorn'
+
+#conall added
+gem 'google_visualr', ">= 2.1"
+gem 'nokogiri'
 #gem instagram .. wait for it to be resolved
 
 # Gems used only for assets and not required

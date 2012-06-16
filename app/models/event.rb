@@ -13,6 +13,7 @@ class Event
   field :n_photos
   field :city
   field :keywords
+  field :google
   #field :n_people
   
   belongs_to :venue
