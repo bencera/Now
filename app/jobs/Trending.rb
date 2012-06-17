@@ -212,31 +212,31 @@ class Trending
         # end
     end  
 
-    Event.where(:status => "trending").each do |event|
-      begin
-        continue = true
-        start_time = event.start_time
-        next_max_id = nil
-        while continue
-          access_token = $redis.smembers("accesstokens")[rand($redis.smembers("accesstokens").size)]
-          client = Instagram.client(:access_token => access_token)
-          response = client.location_recent_media(event.venue.ig_venue_id, options={:max_id => next_max_id})
-          puts response
-          next_max_id = response.pagination.next_max_id
-          response.data.each do |media|
-            unless media.location.id.nil?
-              unless Photo.exists?(conditions: {ig_media_id: media.id})
-                Photo.new.find_location_and_save(media,nil)
-              end
-            end
-            if media.created_time.to_i < start_time
-              continue = false
-            end
-          end
-        end
-      rescue
-      end
-    end
+    # Event.where(:status => "trending").each do |event|
+    #   begin
+    #     continue = true
+    #     start_time = event.start_time
+    #     next_max_id = nil
+    #     while continue
+    #       access_token = $redis.smembers("accesstokens")[rand($redis.smembers("accesstokens").size)]
+    #       client = Instagram.client(:access_token => access_token)
+    #       response = client.location_recent_media(event.venue.ig_venue_id, options={:max_id => next_max_id})
+    #       puts response
+    #       next_max_id = response.pagination.next_max_id
+    #       response.data.each do |media|
+    #         unless media.location.id.nil?
+    #           unless Photo.exists?(conditions: {ig_media_id: media.id})
+    #             Photo.new.find_location_and_save(media,nil)
+    #           end
+    #         end
+    #         if media.created_time.to_i < start_time
+    #           continue = false
+    #         end
+    #       end
+    #     end
+    #   rescue
+    #   end
+    # end
 
     
      Event.where(:status => "trending").each do |event|
@@ -262,14 +262,14 @@ class Trending
         end
       end
 
-      Event.where(:status => "trending").each do |event|
-        event.photos.each do |photo|
-          response = HTTParty.get(photo.url[0])
-          if response.code == 403 && response.message == "Forbidden"
-            photo.destroy
-          end
-        end
-      end
+      # Event.where(:status => "trending").each do |event|
+      #   event.photos.each do |photo|
+      #     response = HTTParty.get(photo.url[0])
+      #     if response.code == 403 && response.message == "Forbidden"
+      #       photo.destroy
+      #     end
+      #   end
+      # end
   
 end
 end

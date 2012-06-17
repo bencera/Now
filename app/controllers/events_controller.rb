@@ -123,12 +123,27 @@ class EventsController < ApplicationController
         elsif params[:notificationswitch] == "no"
           d.update_attribute(:notifications, false)
         end
+
+
+      elsif params[:cmd] == "facebook"
+        if params[:fb_accesstoken]
+          user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken])
+          unless user.devices.include?(d)
+            user.devices << d
+          end
+        end
+        @user = {"now_token" => user.now_token}
+        return render :json => @user
       end
 
 
     end
 
     render :text => 'OK'
+
+  end
+
+  def like
 
   end
 

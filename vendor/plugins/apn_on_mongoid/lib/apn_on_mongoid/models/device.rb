@@ -13,13 +13,17 @@ module APN
     field :country
     field :visits, type: Integer, default: 0
     field :notifications, :type => Boolean, default: -> { true }
+    field :fb_id
+    field :fb_accesstoken
 
     index :udid, :unique => true, :background => true
     
     referenced_in :notification, :class_name => "APN::Notification", :inverse_of => :device
     
     embeds_many :subscriptions, :class_name => "APN::Subscription"
-    
+    belongs_to :facebook_user
+
+
     validates_presence_of :udid
     validates_uniqueness_of :udid
 
