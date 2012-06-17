@@ -19,6 +19,10 @@ Ubimachine::Application.routes.draw do
 
   get "home/index"
 
+  match "/facebook_connect_test" => "events#facebook_connect_test"
+  match "/facebook_event_test" => "events#facebook_event_test"
+
+
   match "/stats" => "home#stats"
 
   match "/download" => "home#download"
@@ -36,6 +40,8 @@ Ubimachine::Application.routes.draw do
   # end
   
   match "/now/user" => "events#user"
+  match "/now/like" => "events#like"
+
   match "/now/user/signup" => "sessions#now_signup"
   
   match "/now/cities" => "events#cities"

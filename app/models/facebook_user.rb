@@ -8,6 +8,9 @@ class FacebookUser
   field :fb_accesstoken
   field :fb_details, type: Hash
 
+  index({ now_token: 1 }, { unique: true, name: "now_token_index" })
+
+
   before_create :generate_now_token
 
   has_many :devices, class_name: "APN::Device"
@@ -31,6 +34,10 @@ class FacebookUser
       end
       user.save!
       user
+    end
+
+    def find_by_nowtoken(token)
+    	FacebookUser.first(conditions: {now_token: token})
     end
 end
 

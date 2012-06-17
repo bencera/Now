@@ -144,7 +144,38 @@ class EventsController < ApplicationController
   end
 
   def like
+    if params[:cmd] == "like"
+      user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
+      if params[:like] == "+1"
+        $redis.sadd("liked_events:#{user_id}",params[:shortid])
+        $redis.sadd("event_likes:#{params[:shortid]}", user_id)
+      elsif params[:like] == "-1"
+        $redis.srem("liked_events:#{user_id}",params[:shortid])
+        $redis.srem("event_likes:#{params[:shortid]}", user_id)
+      end
+      render :text => 'OK'
+    end
+  end
 
+
+  def facebook_connect_test
+    
+  end
+
+  def facebook_event_test
+    @event = Event.where(:shortid => "fULbXn").first
+    @venue = @event.venue
+    @photos = @event.photos
+    case @photos.first.city
+    when "newyork"
+      @city = "New York"
+    when "paris"
+      @city = "Paris"
+    when "london"
+      @city = "London"
+    when "sanfrancisco"
+      @city = "San Francisco"
+    end  
   end
 
 
@@ -153,7 +184,9 @@ class EventsController < ApplicationController
     def choose_layout    
       if action_name == "trending"
         'application_now'
-      elsif action_name == "showweb"
+      elsif action_name == "facebook_connect_test"
+        nil
+      elsif action_name == "showweb" or action_name == "facebook_event_test"
         'application_now'
       else
         'application'
