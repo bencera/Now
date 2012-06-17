@@ -146,10 +146,10 @@ class EventsController < ApplicationController
   def like
     if params[:cmd] == "like"
       user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
-      if params[:like] == "+1"
+      if params[:like] == "like"
         $redis.sadd("liked_events:#{user_id}",params[:shortid])
         $redis.sadd("event_likes:#{params[:shortid]}", user_id)
-      elsif params[:like] == "-1"
+      elsif params[:like] == "unlike"
         $redis.srem("liked_events:#{user_id}",params[:shortid])
         $redis.srem("event_likes:#{params[:shortid]}", user_id)
       end
