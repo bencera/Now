@@ -1,0 +1,83 @@
+%script{:type=>"text/javascript"}
+    mixpanel.track("Show:loaded")
+    mixpanel.track_links("#nowlogo a", "Show:logo")
+    mixpanel.track_links("#downloadlogo a", "Show:download")
+    mixpanel.track_links("#content a", "Show:photo")
+#header-container
+    #header
+        #logo-container{:style => "margin-bottom: 80px;"}
+            #nowlogo{:style => "float:left;  margin-left: 36px"}
+                %a{:href => "/"}
+                    =image_tag "logo_eventpage2.png"
+            #downloadlogo{:style => "float:right; margin-right: 40px"}
+                %a{:href => "http://itunes.apple.com/app/now./id525956360"}
+                    %p.download_btn Get the app
+        %p
+        .title= @event.description.capitalize
+        .time_place
+            - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
+                Happened
+                %span.timeago= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
+            - else
+                Happening
+                %span.timeago now
+            at 
+            %span.timeago= truncate(@venue.name, :length => 40)
+            in 
+            %span.timeago= @city
+        %form
+            %input{:type=>"button", :value=>"Like", :onclick=>"postLike()"}
+#content
+
+    #map_canvas{:style => "width: 600px; height: 200px; margin-bottom: 20px"}
+
+    - @photos.each do |p|
+        %a{:href => "/"}
+            = image_tag p.url[0], :width => '197px'
+
+
+
+%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
+%script{:src=>"http://srobbin.github.com/chosen/chosen.jquery.min.js"}
+%script{:src=>"http://srobbin.github.com/intelligist/jquery.intelligist.min.js"}
+%script{:src=>"http://srobbin.github.com/backstretch/jquery.backstretch.min.js"}
+:javascript
+    $.backstretch("#{@photos.all[rand(@photos.count)].url[1]}");
+:javascript
+    function initialize() {
+      var myLatlng = new google.maps.LatLng(#{@venue.coordinates[1]},#{@venue.coordinates[0]});
+      var myOptions = {
+        center: myLatlng,
+        zoom: 15,
+        scrollwheel: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(document.getElementById("map_canvas"),
+          myOptions);
+      var image = '/assets/map_pin.png';
+      var marker = new google.maps.Marker({
+            position: myLatlng,
+            title:"#{@venue.name}",
+            icon: image,
+            map: map
+            });
+            marker.setMap(map);
+
+        }
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+
+:javascript
+    function postLike()
+    {
+        FB.api(
+        '/me/getnowapp:like',
+        'post',
+        { experience: 'http://getnowapp.com/fULbXn' },
+        function(response) {
+        if (!response || response.error) {
+            alert('Error occured');
+        } else {
+            alert('Like was successful! Action ID: ' + response.id);
+            }
+        });
+    }

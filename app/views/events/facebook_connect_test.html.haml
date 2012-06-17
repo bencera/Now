@@ -1,0 +1,28 @@
+%html
+  %head
+    %title My Facebook Login Page
+  %body
+    #fb-root
+    :javascript
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '174358702691912',
+          status     : true, 
+          cookie     : true,
+          xfbml      : true,
+          oauth      : true,
+        });
+        FB.Event.subscribe('auth.authResponseChange', function(response) {
+          if (response.status === 'connected') {
+            window.top.location = '//getnowapp.com/facebook_event_test';
+          }
+        });
+      };
+      (function(d){
+         var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+         js = d.createElement('script'); js.id = id; js.async = true;
+         js.src = "//connect.facebook.net/en_US/all.js";
+         d.getElementsByTagName('head')[0].appendChild(js);
+       }(document));
+
+    .fb-login-button{:scope=>"email,user_checkins,publish_actions", :'data-redirect-uri'=>"http://getnowapp.com/facebook_event_test"} Login with Facebook
