@@ -17,6 +17,12 @@ class EventsController < ApplicationController
     else
       @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
     end
+    begin
+      if params[:nowtoken]
+        @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
+      end
+    rescue
+    end
   end
 
   def showweb
@@ -135,7 +141,6 @@ class EventsController < ApplicationController
         @user = {"now_token" => user.now_token}
         return render :json => @user
       end
-
 
     end
 

@@ -24,7 +24,6 @@ class Event
   validates_presence_of :coordinates, :venue_id, :n_photos, :end_time
   validates_presence_of :description, :category, :shortid, :on => :update
 
-  named_scope :trending, :conditions => { :status.in => ["trending", "trended"] }
 
   #description should be 50char long max...
 
@@ -44,5 +43,18 @@ class Event
     s.reverse!
     s
   end
+
+  def liked_by_user(user_id)
+    if user_id.nil?
+      false
+    else
+      $redis.sismember("event_likes:#{self.shortid}", user_id)
+    end
+  end
+
+  def like_count
+    $redis.scard("event_likes:#{self.shortid}")
+  end
+
 
 end
