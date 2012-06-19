@@ -173,6 +173,7 @@ class EventsController < ApplicationController
             return render :text => "OK", :status => :ok
           else
             return render :text => "ERROR", :status => :error
+            #test
           end
         end
       end
