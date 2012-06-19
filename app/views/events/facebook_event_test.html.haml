@@ -72,7 +72,8 @@
         FB.api(
         '/me/getnowapp:love',
         'post',
-        { experience: 'http://getnowapp.com/5GDujJ' },
+        { experience: 'http://getnowapp.com/5GDujJ',
+          end_time: '2050-01-01'   },
         function(response) {
         if (!response || response.error) {
             alert('Error occured');
