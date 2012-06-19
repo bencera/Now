@@ -15,8 +15,8 @@
     %meta{:property=>"og:description", :content=>"at #{@venue.name} in #{@city}"}
     %meta{:property=>"fb:app_id", :content=>"174358702691912"}
     %meta{:property=>"og:type", :content=>"getnowapp:experience"}
-    %meta{:property=>"og:end_time", :content=>"2050-01-01"}
-    %meta{:property=>"og:expires_in", :content=>"2000000"}    
+    %meta{:property=>"getnowapp:end_time", :content=>"2050-01-01"}
+    %meta{:property=>"getnowapp:expires_in", :content=>"2000000"}    
     %meta{:property=>"og:url", :content=>"http://www.getnowapp.com/#{@event.shortid}"}
     %meta{:property=>"og:image", :content=>@photos.all[rand(@photos.count)].url[0]}
     %meta{:property=>"og:site_name", :content=>"Now"}
