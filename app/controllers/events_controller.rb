@@ -16,7 +16,7 @@ class EventsController < ApplicationController
       @events = events
     else
       @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
-    end
+    end_time
     begin
       if params[:nowtoken]
         @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
@@ -150,15 +150,32 @@ class EventsController < ApplicationController
 
   def like
     if params[:cmd] == "like"
-      user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
-      if params[:like] == "like"
-        $redis.sadd("liked_events:#{user_id}",params[:shortid])
-        $redis.sadd("event_likes:#{params[:shortid]}", user_id)
-      elsif params[:like] == "unlike"
-        $redis.srem("liked_events:#{user_id}",params[:shortid])
-        $redis.srem("event_likes:#{params[:shortid]}", user_id)
+      user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+      if user.nil?
+        return render :text => "ERROR", :status => :error
+      else
+        user_id = user.facebook_id
+        if params[:like] == "like"
+          response = HTTParty.post("https://graph.facebook.com/me/getnowapp:love?access_token=#{params[:access_token]}&experience=http://getnowapp.com/#{params[:shortid]}&end_time=2050-01-01")
+          if response['id']
+            $redis.zadd("event_likes:#{params[:shortid]}", response['id'], user_id )
+            $redis.sadd("liked_events:#{user_id}",params[:shortid])
+            return render :text => "OK", :status => :ok
+          else
+            return render :text => "ERROR", :status => :error
+          end
+
+        elsif params[:like] == "unlike"
+          response = HTTParty.delete("https://graph.facebook.com/#{$redis.zscore("event_likes:#{params[:shortid]}","#{user_id}")}?access_token=#{params[:access_token]}")
+          if response.parsed_response == true
+            $redis.srem("liked_events:#{user_id}",params[:shortid])
+            $redis.zrem("event_likes:#{params[:shortid]}", user_id)
+            return render :text => "OK", :status => :ok
+          else
+            return render :text => "ERROR", :status => :error
+          end
+        end
       end
-      render :text => 'OK'
     end
   end
 
