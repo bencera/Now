@@ -45,5 +45,17 @@ end
     self.now_token = Digest::SHA1.hexdigest([Time.now, rand].join)
   end
 
+  def like_event(event_shortid, access_token)
+  	$redis.sadd("event_likes:#{event_shortid}", facebook_id)
+    $redis.sadd("liked_events:#{facebook_id}", event_shortid)
+  	Resque.enqueue(Facebooklike, access_token, event_shortid, facebook_id, true)
+  end
+
+  def unlike_event(event_shortid, access_token)
+    $redis.srem("event_likes:#{event_shortid}", facebook_id)
+    $redis.srem("liked_events:#{facebook_id}",event_shortid)
+    Resque.enqueue(Facebooklike, access_token, event_shortid, facebook_id, false)
+  end
+
 
 end

@@ -151,34 +151,19 @@ class EventsController < ApplicationController
   def like
     if params[:cmd] == "like"
       user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+
       if user.nil?
         return render :text => "ERROR", :status => :error
       else
-        user_id = user.facebook_id
         if params[:like] == "like"
-          response = HTTParty.post("https://graph.facebook.com/me/getnowapp:love?access_token=#{params[:access_token]}&experience=http://getnowapp.com/#{params[:shortid]}&end_time=2050-01-01")
-          if response['id']
-            $redis.sadd("event_likes:#{params[:shortid]}", user_id)
-            $redis.sadd("liked_events:#{user_id}", params[:shortid])
-            $redis.set("facebook_love:#{user_id}:#{params[:shortid]}", response['id'])
-            return render :text => "OK", :status => :ok
-          else
-            return render :text => "ERROR", :status => :error
-          end
-
+          user.like_event(params[:shortid], params[:access_token])
+          return render :text => "OK", :status => :ok
         elsif params[:like] == "unlike"
-          response = HTTParty.delete("https://graph.facebook.com/#{$redis.get("facebook_love:#{user_id}:#{params[:shortid]}")}?access_token=#{params[:access_token]}")
-          if response.parsed_response == true
-            $redis.srem("event_likes:#{params[:shortid]}", user_id)
-            $redis.srem("liked_events:#{user_id}",params[:shortid])
-            $redis.del("facebook_love:#{user_id}:#{params[:shortid]}")
-            return render :text => "OK", :status => :ok
-          else
-            return render :text => "ERROR", :status => :error
-            #test
-          end
+          user.unlike_event(params[:shortid], params[:access_token])
+          return render :text => "OK", :status => :ok
         end
       end
+      
     end
   end
 
