@@ -16,12 +16,12 @@ class EventsController < ApplicationController
       @events = events
     else
       @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
-      begin
-        if params[:nowtoken]
-          @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
-        end
-      rescue
+    end
+    begin
+      if params[:nowtoken]
+        @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
       end
+    rescue
     end
   end
 
