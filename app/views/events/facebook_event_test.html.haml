@@ -26,7 +26,7 @@
             in 
             %span.timeago= @city
         %form
-            %input{:type=>"button", :value=>"Love", :onclick=>"postLove()"}
+            %input{:type=>"button", :value=>"Like", :onclick=>"postLike()"}
 #content
 
     #map_canvas{:style => "width: 600px; height: 200px; margin-bottom: 20px"}
@@ -67,18 +67,17 @@
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
 
 :javascript
-    function postLove()
+    function postLike()
     {
         FB.api(
-        '/me/getnowapp:love',
+        '/me/og:likes',
         'post',
-        { experience: 'http://getnowapp.com/5GDujJ',
-          end_time: '2050-01-01'   },
+        { object: 'http://getnowapp.com/5GDujJ'  },
         function(response) {
         if (!response || response.error) {
             alert('Error occured');
         } else {
-            alert('Love action was successful! Action ID: ' + response.id);
+            alert('Like action was successful! Action ID: ' + response.id);
             }
         });
     }
