@@ -173,7 +173,7 @@ class EventsController < ApplicationController
   end
 
   def facebook_event_test
-    @event = Event.where(:shortid => "OhulgE").first
+    @event = Event.where(:shortid => "OhuIgE").first
     @venue = @event.venue
     @photos = @event.photos
     case @photos.first.city
