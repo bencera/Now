@@ -163,7 +163,7 @@ class EventsController < ApplicationController
           return render :text => "OK", :status => :ok
         end
       end
-      
+
     end
   end
 
@@ -173,7 +173,7 @@ class EventsController < ApplicationController
   end
 
   def facebook_event_test
-    @event = Event.where(:shortid => "5GDujJ").first
+    @event = Event.where(:shortid => "OhulgE").first
     @venue = @event.venue
     @photos = @event.photos
     case @photos.first.city
