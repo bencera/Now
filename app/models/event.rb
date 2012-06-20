@@ -53,7 +53,11 @@ class Event
   end
 
   def like_count
+    begin
     $redis.scard("event_likes:#{self.shortid}")
+    rescue
+      0
+    end
   end
 
 

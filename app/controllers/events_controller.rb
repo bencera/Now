@@ -16,12 +16,12 @@ class EventsController < ApplicationController
       @events = events
     else
       @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
-      # begin
-      #   if params[:nowtoken]
-      #     @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
-      #   end
-      # rescue
-      # end
+      begin
+        if params[:nowtoken]
+          @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
+        end
+      rescue
+      end
     end
   end
 
@@ -158,18 +158,20 @@ class EventsController < ApplicationController
         if params[:like] == "like"
           response = HTTParty.post("https://graph.facebook.com/me/getnowapp:love?access_token=#{params[:access_token]}&experience=http://getnowapp.com/#{params[:shortid]}&end_time=2050-01-01")
           if response['id']
-            $redis.zadd("event_likes:#{params[:shortid]}", response['id'], user_id )
-            $redis.sadd("liked_events:#{user_id}",params[:shortid])
+            $redis.sadd("event_likes:#{params[:shortid]}", user_id)
+            $redis.sadd("liked_events:#{user_id}", params[:shortid])
+            $redis.set("facebook_love:#{user_id}:#{params[:shortid]}", response['id'])
             return render :text => "OK", :status => :ok
           else
             return render :text => "ERROR", :status => :error
           end
 
         elsif params[:like] == "unlike"
-          response = HTTParty.delete("https://graph.facebook.com/#{$redis.zscore("event_likes:#{params[:shortid]}","#{user_id}")}?access_token=#{params[:access_token]}")
+          response = HTTParty.delete("https://graph.facebook.com/#{$redis.get("facebook_love:#{user_id}:#{params[:shortid]}")}?access_token=#{params[:access_token]}")
           if response.parsed_response == true
+            $redis.srem("event_likes:#{params[:shortid]}", user_id)
             $redis.srem("liked_events:#{user_id}",params[:shortid])
-            $redis.zrem("event_likes:#{params[:shortid]}", user_id)
+            $redis.del("facebook_love:#{user_id}:#{params[:shortid]}")
             return render :text => "OK", :status => :ok
           else
             return render :text => "ERROR", :status => :error
