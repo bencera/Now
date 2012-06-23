@@ -9,4 +9,4 @@ node :category do |u|
 u.categories.first["name"] unless u.categories.nil?
 end
 end
-node(:like) { @user_id }
+node(:like) { |event| event.liked_by_user(@user_id) }
