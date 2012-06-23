@@ -4,11 +4,8 @@ class EventsController < ApplicationController
   
   def show
     @event = Event.find(params[:id])
-    begin
     if params[:nowtoken]
       @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
-    end
-    rescue
     end
   end
   
