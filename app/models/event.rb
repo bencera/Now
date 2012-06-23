@@ -46,15 +46,15 @@ class Event
 
   def liked_by_user(user_id)
     if user_id.nil?
-      false
+      "test"
     else
-      $redis.sismember("event_likes:#{self.shortid}", user_id)
+      $redis.sismember("event_likes:#{shortid}", user_id)
     end
   end
 
   def like_count
     begin
-    $redis.scard("event_likes:#{self.shortid}")
+    $redis.scard("event_likes:#{shortid}")
     rescue
       0
     end
