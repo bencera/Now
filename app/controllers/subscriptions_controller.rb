@@ -1,5 +1,7 @@
 class SubscriptionsController < ApplicationController
   
+  layout nil
+
   http_basic_authenticate_with :name => "ben_cera", :password => "London123"
   before_filter :verify_params, :only => :create
   
@@ -16,7 +18,7 @@ class SubscriptionsController < ApplicationController
   def create
     if Rails.env.development?
       #tunnel
-      url = "http://47ar.localtunnel.com/callbacks"
+      url = "http://4sdj.localtunnel.com/callbacks"
     else
       # production
       url = "http://pure-sky-4808.herokuapp.com/auth/instagram/callback"

@@ -298,20 +298,38 @@ class Venue
       Geocoder::Calculations.distance_between([lat,lng], [40.76813,-73.96439]) < 20
       "newyork"
     elsif
-      Geocoder::Calculations.distance_between([lat,lng], [48.86,2.34]) < 20
+      Geocoder::Calculations.distance_between([lat,lng], [37.76423,-122.47743]) < 20
+      "sanfrancisco"
+    elsif
+      Geocoder::Calculations.distance_between([lat,lng], [37.76912,-122.42593]) < 20
+      "sanfrancisco"
+    elsif
+      Geocoder::Calculations.distance_between([lat,lng], [48.85887,2.30965]) < 20
       "paris"
     elsif
-      Geocoder::Calculations.distance_between([lat,lng], [35.69,139.73]) < 20
-      "tokyo"
+      Geocoder::Calculations.distance_between([lat,lng], [48.86068,2.36389]) < 20
+      "paris"
     elsif
       Geocoder::Calculations.distance_between([lat,lng], [51.51,-0.13]) < 20
       "london"
     elsif
-      Geocoder::Calculations.distance_between([lat,lng], [37.76,-122.45]) < 20
-      "sanfrancisco"
+      Geocoder::Calculations.distance_between([lat,lng], [-23.57664,-46.69787]) < 20
+      "saopaulo"
     elsif
-      Geocoder::Calculations.distance_between([lat,lng], [30.2622,-97.7396]) < 20
-      "austin"
+      Geocoder::Calculations.distance_between([lat,lng], [-23.55838,-46.64362]) < 20
+      "saopaulo"
+    elsif
+      Geocoder::Calculations.distance_between([lat,lng], [35.64446,139.70695]) < 20
+      "tokyo"
+    elsif
+      Geocoder::Calculations.distance_between([lat,lng], [35.70136,139.73991]) < 20
+      "tokyo"
+    elsif
+      Geocoder::Calculations.distance_between([lat,lng], [34.06901,-118.35904]) < 20
+      "losangeles"
+    elsif
+      Geocoder::Calculations.distance_between([lat,lng], [34.07499,-118.28763]) < 20
+      "losangeles"
     else
       "unknown"
     end

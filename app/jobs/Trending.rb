@@ -51,7 +51,7 @@ class Trending
      "wonder", "would", "would", "wouldn't", "yes", "yet", "you", "you'd", "you'll", "you're", "you've",
       "your", "yours", "yourself", "yourselves", "zero"] 
 
-   cities = ["newyork", "paris", "sanfrancisco", "london"]
+   cities = ["newyork", "paris", "sanfrancisco", "london", "tokyo", "saopaulo", "losangeles"]
    cities.each do |city|
     case city
       when "newyork"
@@ -62,6 +62,12 @@ class Trending
         limit_photos = 4
       when "london"
         limit_photos = 4
+      when "saopaulo"
+        limit_photos = 5
+      when "losangeles"
+        limit_photos = 5
+      when "tokyo"
+        limit_photos = 5
       end
       
     

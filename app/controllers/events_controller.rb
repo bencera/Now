@@ -38,6 +38,12 @@ class EventsController < ApplicationController
       @city = "London"
     when "sanfrancisco"
       @city = "San Francisco"
+    when "tokyo"
+      @city = "Tokyo"
+    when "saopaulo"
+      @city = "Sao Paulo"
+    when "losangeles"
+      @city = "Los Angeles"
     end
   end
   
@@ -64,6 +70,12 @@ class EventsController < ApplicationController
       @city = "London"
     when "sanfrancisco"
       @city = "San Francisco"
+    when "tokyo"
+      @city = "Tokyo"
+    when "saopaulo"
+      @city = "Sao Paulo"
+    when "losangeles"
+      @city = "Los Angeles"
     end
   end
   

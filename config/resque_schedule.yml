@@ -1,39 +1,83 @@
 fetch_photos_newyork1:
   every: "30s"
   class: Fetchigphotos
-  args: "1120383"
+  args: "1235419"
   description: "Fetchs instagram pics every minute"
-  
+
 fetch_photos_newyork2:
   every: "30s"
   class: Fetchigphotos
-  args: "1120385"
+  args: "1235421"
   description: "Fetchs instagram pics every minute"
-  
-fetch_photos_paris:
+
+fetch_photos_sanfrancisco1:
   every: "30s"
   class: Fetchigphotos
-  args: "976141"
+  args: "1235436"
   description: "Fetchs instagram pics every minute"
-  
-# fetch_photos_tokyo:
-#   every: "2m"
-#   class: Fetchigphotos
-#   args: "772800"
-#   description: "Fetchs instagram pics every minute"
-  
+
+fetch_photos_sanfrancisco2:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1235437"
+  description: "Fetchs instagram pics every minute"
+
+fetch_photos_paris1:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1235440"
+  description: "Fetchs instagram pics every minute"
+
+fetch_photos_paris2:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1235442"
+  description: "Fetchs instagram pics every minute"
+
+fetch_photos_losangeles1:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1235468"
+  description: "Fetchs instagram pics every minute"
+
+fetch_photos_losangeles2:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1235470"
+  description: "Fetchs instagram pics every minute"
+
+fetch_photos_saopaulo1:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1235479"
+  description: "Fetchs instagram pics every minute"
+
+fetch_photos_saopaulo2:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1235480"
+  description: "Fetchs instagram pics every minute"
+
+fetch_photos_tokyo1:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1235487"
+  description: "Fetchs instagram pics every minute"
+
+fetch_photos_tokyo2:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1235490"
+  description: "Fetchs instagram pics every minute"
+
 fetch_photos_london:
   every: "30s"
   class: Fetchigphotos
-  args: "976145"
+  args: "1235443"
   description: "Fetchs instagram pics every minute"
-  
-fetch_photos_sanfrancisco:
-  every: "30s"
-  class: Fetchigphotos
-  args: "976142"
-  description: "Fetchs instagram pics every minute"
-  
+
+
+
 trending:
   every: "10m"
   class: Trending
