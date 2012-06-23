@@ -46,7 +46,7 @@ class Event
 
   def liked_by_user(user_id)
     if user_id.nil?
-      "test"
+      false
     else
       $redis.sismember("event_likes:#{shortid}", user_id)
     end
