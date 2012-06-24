@@ -59,6 +59,7 @@ class EventsController < ApplicationController
                {"name" => "San Francisco", "url" => "url1"},
               {"name" => "Paris", "url" => "url1"},
               {"name" => "London", "url" => "url1"}
+              {"name" => "Los Angeles", "url" => "https://www.cityyear.org/uploadedImages/CityYear/Local/Los_Angeles/Our_Work/los-angeles[1].jpg"}
               ]
     render :json => @cities
   end
