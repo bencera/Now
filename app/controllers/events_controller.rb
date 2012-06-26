@@ -32,6 +32,11 @@ class EventsController < ApplicationController
     end
   end
 
+  def events_trending
+    @events = Event.where(:city => params[:city]).where(:status => "waiting").order_by([[:end_time, :desc]])
+  end
+
+
   def showweb
     @event = Event.where(:shortid => params[:shortid]).first
     @venue = @event.venue
@@ -66,7 +71,7 @@ class EventsController < ApplicationController
   
   
   def trending
-      @event = Event.find(params[:id])
+    @event = Event.find(params[:id])
     @venue = @event.venue
     @photos = @event.photos
     case @photos.first.city
@@ -86,8 +91,6 @@ class EventsController < ApplicationController
       @city = "Los Angeles"
     end
   end
-  
-
 
   def create
     if params[:confirm] == "yes"
@@ -214,7 +217,7 @@ class EventsController < ApplicationController
     def choose_layout    
       if action_name == "trending"
         'application_now'
-      elsif action_name == "facebook_connect_test"
+      elsif action_name == "facebook_connect_test" or action_name == "events_trending"
         nil
       elsif action_name == "showweb" or action_name == "facebook_event_test"
         'application_now'

@@ -19,6 +19,8 @@ Ubimachine::Application.routes.draw do
 
   get "home/index"
 
+  match "confirmation/trending/events" => "events#events_trending"
+
   match "/facebook_connect_test" => "events#facebook_connect_test"
   match "/facebook_event_test" => "events#facebook_event_test"
 

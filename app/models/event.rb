@@ -13,6 +13,7 @@ class Event
   field :n_photos
   field :city
   field :keywords
+  field :likes
   #field :n_people
   
   belongs_to :venue
@@ -53,11 +54,13 @@ class Event
   end
 
   def like_count
-    begin
-    $redis.scard("event_likes:#{shortid}")
-    rescue
-      0
-    end
+    test = [5,34,450]
+    test[rand(test.size)]
+    # begin
+    # $redis.scard("event_likes:#{shortid}")
+    # rescue
+    #   0
+    # end
   end
 
 
