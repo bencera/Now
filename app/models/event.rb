@@ -54,7 +54,7 @@ class Event
   end
 
   def like_count
-    test = [5,34,450]
+    test = [0,5,34,450]
     test[rand(test.size)]
     # begin
     # $redis.scard("event_likes:#{shortid}")
