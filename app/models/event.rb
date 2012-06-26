@@ -54,13 +54,13 @@ class Event
   end
 
   def like_count
-    test = [0,9,99,999]
-    test[rand(test.size)]
-    # begin
-    # $redis.scard("event_likes:#{shortid}")
-    # rescue
-    #   0
-    # end
+    # test = [0,9,99,999]
+    # test[rand(test.size)]
+    begin
+    $redis.scard("event_likes:#{shortid}")
+    rescue
+      0
+    end
   end
 
 
