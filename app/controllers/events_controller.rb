@@ -97,6 +97,8 @@ class EventsController < ApplicationController
       event.update_attribute(:status, "trending")
       event.update_attribute(:description, params[:description])
       event.update_attribute(:category, params[:category])
+      likes = [2,3,4,5,6,7,8,9]
+      event.update_attribute(:initial_likes, likes[rand(likes.size)])
 
       shortid = Event.random_url(rand(62**6))
       while Event.where(:shortid => shortid).first

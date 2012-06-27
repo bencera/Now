@@ -14,6 +14,7 @@ class Event
   field :city
   field :keywords
   field :likes
+  field :initial_likes, type: Integer, default: 0
   #field :n_people
   
   belongs_to :venue
@@ -49,15 +50,17 @@ class Event
     if user_id.nil?
       false
     else
-      $redis.sismember("event_likes:#{shortid}", user_id)
+      begin
+        $redis.sismember("event_likes:#{shortid}", user_id)
+      rescue
+        false
+      end
     end
   end
 
   def like_count
-    # test = [0,9,99,999]
-    # test[rand(test.size)]
     begin
-    $redis.scard("event_likes:#{shortid}")
+      $redis.scard("event_likes:#{shortid}") + initial_likes
     rescue
       0
     end
