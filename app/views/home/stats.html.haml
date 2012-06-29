@@ -79,3 +79,7 @@
 
 %h2{:style => "color:black"}  Users with location 0
 %p= APN::Device.where(:coordinates => [0,0]).count
+
+#footer
+	%a{:href=>"https://mixpanel.com/f/partner"}
+		%img{:src=>"https://mixpanel.com/site_media/images/partner/badge_light.png", :alt=>"Mobile and Web Analytics"}
