@@ -19,6 +19,10 @@ class HomeController < ApplicationController
     redirect_to "http://itunes.apple.com/app/now./id525956360"
   end
 
+  def blitz
+    render :text => "42"
+  end
+
   def stats
 
       countries = {}
