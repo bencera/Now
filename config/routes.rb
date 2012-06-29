@@ -9,6 +9,10 @@ Ubimachine::Application.routes.draw do
 
   # get "tags/index"
 
+  get '/mu-34dfab81-28f6d162-ec82daa2-3f6b93cd' do
+    '42'
+  end
+
   # get "tags/create"
   match "/sitemap.xml", :to => "sitemap#index", :defaults => {:format => :xml}
 
