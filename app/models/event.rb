@@ -67,7 +67,7 @@ class Event
   end
 
   def venue_category
-    if venue.categories.first.nil?
+    if venue.categories.nil?
       ""
     else
       venue.categories.first["name"]
