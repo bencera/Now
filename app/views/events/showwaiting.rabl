@@ -6,4 +6,4 @@ end
 child :venue do
 attributes :name
 end
-node(:venue_category) { |event| event.photos.first.category }
+node(:venue_category) { |event| event.venue.categories.first["name"] }
