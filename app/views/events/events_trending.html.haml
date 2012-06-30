@@ -1,0 +1,87 @@
+!!! Strict
+%html
+%head
+    %script{:type=>"text/javascript"}
+        var _sf_startpt=(new Date()).getTime()
+    %title= "Now - #{@event.description}"
+    = csrf_meta_tag
+    %meta{:name=>"viewport",:content=>"width=1024"}
+    %link{:rel=>"shortcut icon", :href=>"/assets/favicon.ico"}
+    = stylesheet_link_tag "nowweb"
+    %script{:type=>"text/javascript",:src=>"http://maps.googleapis.com/maps/api/js?key=AIzaSyDaB7Lbgnwfni3jrzOephB8HW7_6tJf-Es&sensor=false"}
+%body
+    #header-container
+        #header
+            %p Event confirmation page
+    #content{:style => "margin-top: 100px"}
+        %p.title
+            - unless @event.description.nil?
+                %h1 Event already has description
+            = form_tag "/events", :method => "post" do
+                = text_field_tag :description,  nil, :placeholder => "Describe the event", :style => "width: 200px; height: 40px"
+                = text_field_tag :link, nil, :placeholder => "Put a link on the event"
+                = text_field_tag :question1, nil, :placeholder => "question1"
+                = text_field_tag :question2, nil, :placeholder => "question2"
+                = text_field_tag :question3, nil, :placeholder => "question3"
+                = hidden_field_tag :confirm, "yes"
+                = hidden_field_tag :event_id, @event.id
+                = submit_tag "Yes!"
+                = radio_button_tag(:category, "Concert")
+                = label_tag(:category_name, "concert")
+                = radio_button_tag(:category, "Party")
+                = label_tag(:category_name, "party")
+                = radio_button_tag(:category, "Sport")
+                = label_tag(:category_name, "sport")
+                = radio_button_tag(:category, "Art")
+                = label_tag(:category_name, "art")
+                = radio_button_tag(:category, "Movie")
+                = label_tag(:category_name, "movie")
+                = radio_button_tag(:category, "Food")
+                = label_tag(:category_name, "food")
+                = radio_button_tag(:category, "Outdoors")
+                = label_tag(:category_name, "outdoors")
+                = radio_button_tag(:category, "Exceptional")
+                = label_tag(:category_name, "exceptional")
+                = radio_button_tag(:category, "Celebrity")
+                = label_tag(:category_name, "celebrity")
+                = radio_button_tag(:category, "Conference")
+                = label_tag(:category_name, "conference")
+                = radio_button_tag(:category, "Performance")
+                = label_tag(:category_name, "performance")
+                = check_box_tag(:push)
+                = label_tag(:push_desc, "Push Notification")
+                = check_box_tag(:should_ask)
+                = label_tag(:ask_desc, "Comments")
+
+        .comments
+            -@event.photos.each do |p|
+                - unless p.caption.nil?
+                    = p.caption
+                    %br
+
+        #map_canvas{:style => "width: 600px; height: 200px; margin-bottom: 20px"}
+
+        - @event.photos.each do |p|
+            = image_tag p.url[0], :width => '197px'
+
+    :javascript
+        function initialize() {
+          var myLatlng = new google.maps.LatLng(#{@event.venue.coordinates[1]},#{@event.venue.coordinates[0]});
+          var myOptions = {
+            center: myLatlng,
+            zoom: 15,
+            scrollwheel: false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+          };
+          var map = new google.maps.Map(document.getElementById("map_canvas"),
+              myOptions);
+          var image = '/assets/map_pin.png';
+          var marker = new google.maps.Marker({
+                position: myLatlng,
+                title:"#{@event.venue.name}",
+                icon: image,
+                map: map
+                });
+                marker.setMap(map);
+
+            }
