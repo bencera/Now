@@ -106,6 +106,9 @@ class EventsController < ApplicationController
       end
       event.update_attribute(:shortid, shortid)
       event.update_attribute(:link, params[:link]) unless params[:link].nil?
+    elsif params[:confirm] == "no"
+      event = Event.find(params[:event_id])
+      event.update_attribute(:status, "not_trending")
     end
     if params[:push] == "1"
       Resque.enqueue(Sendnotifications, params[:event_id])
