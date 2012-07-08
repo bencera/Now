@@ -201,8 +201,10 @@ class Trending
         end
         puts new_event.venue.name
         UserMailer.trending(new_event).deliver #avec un lien image different selon si levent a deja ete anote par quelqu un dautre (different photo)
+      elsif Event.where(:venue_id => event[0]).where(:status => "not_trending").where(:start_time.gt => 6.hours.ago.to_i).first
+        #do nothing
       else
-       #rajouter les nouvelles photos, updater nb photos, nb_people, revoir intensite?
+        #rajouter les nouvelles photos, updater nb photos, nb_people, revoir intensite?
         Venue.find(event[0]).photos.last_hours(hours).each do |photo|
           unless photo.events.first == event_i
             event_i.photos << photo
