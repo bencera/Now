@@ -15,6 +15,11 @@
 %h2{:style => "color:black"} Users coming from Instagram
 %p= $redis.get("instagram_downloads")
 
+%h2{:style => "color:black"} Facebook Users
+%p= FacebookUser.count
+
+%h2{:style => "color:black"} Facebook Users
+%p= @likedEvents
 
 %h2{:style => "color:black"}  User countries
 %p= @countries

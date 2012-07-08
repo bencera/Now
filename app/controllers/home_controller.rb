@@ -129,6 +129,13 @@ class HomeController < ApplicationController
 
       @pushs_2times = pushs_10times
 
+      likedEvents = {}
+      FacebookUser.all.each do |user|
+        likedEvents[user.fb_details["name"]] = $redis.scard("liked_events:#{user.facebook_id}") unless user.fb_details["name"].nil?
+      end
+
+      @likedEvents = likedEvents
+
   end
   
   def cities
