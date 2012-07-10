@@ -16,11 +16,11 @@ class FacebookUser
   has_many :devices, class_name: "APN::Device"
 
   class << self
-	def find_by_facebook_id(id)
+	  def find_by_facebook_id(id)
       FacebookUser.first(conditions: { facebook_id: id })
     end
 
-     def find_or_create_by_facebook_token(token)
+    def find_or_create_by_facebook_token(token)
       facebook_client = FacebookClient.new(token: token)
 
       if user = FacebookUser.find_by_facebook_id(facebook_client.user_id)

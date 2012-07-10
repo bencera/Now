@@ -190,7 +190,6 @@ class EventsController < ApplicationController
           return render :text => "OK", :status => :ok
         end
       end
-
     end
   end
 
