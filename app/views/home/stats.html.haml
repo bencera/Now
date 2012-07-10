@@ -21,6 +21,9 @@
 %h2{:style => "color:black"} Facebook Users
 %p= @likedEvents
 
+%h2{:style => "color:black"} Problems with Facebook likes
+%p= $redis.smembers("problemFacebookLikes")
+
 %h2{:style => "color:black"}  User countries
 %p= @countries
 
