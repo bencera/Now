@@ -33,7 +33,11 @@ class EventsController < ApplicationController
   end
 
   def events_trending
-    @events = Event.where(:city => params[:city]).where(:status => "waiting").order_by([[:end_time, :desc]])
+    if params[:city] == "world"
+      @events = Event.where(:city.in => ["newyork", "paris", "sanfrancisco", "london", "losangeles"]).where(:status => "waiting").order_by([[:end_time, :desc]])
+    else
+      @events = Event.where(:city => params[:city]).where(:status => "waiting").order_by([[:end_time, :desc]])
+    end
   end
 
 
