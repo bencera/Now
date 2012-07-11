@@ -77,14 +77,14 @@
 %p= APN::Device.where(:visits.gt => 2).count
 %p= @pushs_2times
 
-%h2{:style => "color:black"}  Users used 5+ times
-%p= APN::Device.where(:visits.gt => 4).count
-
 %h2{:style => "color:black"}  Users used 10+ times
 %p= APN::Device.where(:visits.gt => 9).count
 
-%h2{:style => "color:black"}  Users used 20+ times
-%p= APN::Device.where(:visits.gt => 19).count
+%h2{:style => "color:black"}  Users used 50+ times
+%p= APN::Device.where(:visits.gt => 49).count
+
+%h2{:style => "color:black"}  Users used 100+ times
+%p= APN::Device.where(:visits.gt => 99).count
 
 %p="__________________________________"
 
