@@ -136,6 +136,14 @@ class HomeController < ApplicationController
 
       @likedEvents = likedEvents
 
+      nbVisitsFB = {}
+      FacebookUser.all.each do |user|
+        nbVisitsFB[user.fb_details["name"]] = user.devices.first.visits unless user.devices.nil?
+      end
+
+      @nbVisitsFB = nbVisitsFB
+
+
   end
   
   def cities
