@@ -138,7 +138,7 @@ class HomeController < ApplicationController
 
       nbVisitsFB = {}
       FacebookUser.all.each do |user|
-        nbVisitsFB[user.fb_details["name"]] = user.devices.first.visits unless user.devices.nil?
+        nbVisitsFB[user.fb_details["name"]] = user.devices.first.visits unless user.devices.empty?
       end
 
       @nbVisitsFB = nbVisitsFB
