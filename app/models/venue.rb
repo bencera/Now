@@ -330,6 +330,9 @@ class Venue
     elsif
       Geocoder::Calculations.distance_between([lat,lng], [34.07499,-118.28763]) < 20
       "losangeles"
+    elsif
+      Geocoder::Calculations.distance_between([lat,lng], [34.02663,-118.45998]) < 20
+      "losangeles"
     else
       "unknown"
     end

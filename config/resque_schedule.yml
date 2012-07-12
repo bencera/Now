@@ -46,6 +46,12 @@ fetch_photos_losangeles2:
   args: "1235470"
   description: "Fetchs instagram pics every minute"
 
+fetch_photos_losangeles3:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1281808"
+  description: "Fetchs instagram pics every minute"
+
 fetch_photos_saopaulo1:
   every: "30s"
   class: Fetchigphotos

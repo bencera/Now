@@ -67,12 +67,14 @@ class EventsController < ApplicationController
     @cities = [{"name" => "New York", "url" => "url1"}, 
                {"name" => "San Francisco", "url" => "url1"},
               {"name" => "Paris", "url" => "url1"},
-              {"name" => "London", "url" => "url1"},
-              {"name" => "Los Angeles", "url" => "http://s3.amazonaws.com/Now_backup/now_cities/losangeles%402x.png"}
+              {"name" => "London", "url" => "url1"}
               ]
     render :json => @cities
   end
-  
+
+  #{"name" => "Los Angeles", "url" => "http://s3.amazonaws.com/Now_backup/now_cities/losangeles%402x.png"}
+
+
   
   def trending
     @event = Event.find(params[:id])
