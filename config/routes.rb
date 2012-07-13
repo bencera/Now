@@ -10,6 +10,8 @@ Ubimachine::Application.routes.draw do
   # get "tags/index"
   match "/mu-34dfab81-28f6d162-ec82daa2-3f6b93cd" => "home#blitz"
 
+  match "/HeaCFj" => "home#newfeatures"
+
   # get "tags/create"
   match "/sitemap.xml", :to => "sitemap#index", :defaults => {:format => :xml}
 
