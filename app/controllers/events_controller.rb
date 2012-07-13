@@ -24,7 +24,7 @@ class EventsController < ApplicationController
     else
       @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
     end
-    @events.insert(-1, Event.find("4fff296ad0acef0002000003"))
+    @events = @events.insert(-1, Event.find("4fff296ad0acef0002000003"))
     begin
       if params[:nowtoken]
         @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
@@ -69,7 +69,7 @@ class EventsController < ApplicationController
                {"name" => "San Francisco", "url" => "url1"},
               {"name" => "Paris", "url" => "url1"},
               {"name" => "London", "url" => "url1"},
-              {"name" => "Los Angeles", "url" => "https://s3.amazonaws.com/now_assets/LosAngeles_high.jpg"}
+              {"name" => "Los Angeles", "url" => "http://s3.amazonaws.com/now_assets/LosAngeles_high.jpg"}
               ]
     render :json => @cities
   end
