@@ -12,6 +12,10 @@ Ubimachine::Application.routes.draw do
 
   match "/HeaCFj" => "home#newfeatures"
 
+  match "/sendcomments" => "events#comment_events"
+
+  match "/event/comment" => "events#comment"
+
   # get "tags/create"
   match "/sitemap.xml", :to => "sitemap#index", :defaults => {:format => :xml}
 

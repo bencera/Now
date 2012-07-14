@@ -133,6 +133,14 @@ class EventsController < ApplicationController
     redirect_to "http://checkthis.com/okzf"
   end
 
+  def comment
+      Resque.enqueue(Sendcomments, params[:event_id], params[:question1], params[:question2], params[:question3] )
+  end
+
+  def comment_events
+    @events = Event.where(:end_time.gt => 3.hours.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
+  end
+
   def user
 
     if params[:cmd] == "userToken"
@@ -232,7 +240,7 @@ class EventsController < ApplicationController
     def choose_layout    
       if action_name == "trending"
         'application_now'
-      elsif action_name == "facebook_connect_test" or action_name == "events_trending"
+      elsif action_name == "facebook_connect_test" or action_name == "events_trending" or action_name =="comment_events"
         nil
       elsif action_name == "showweb" or action_name == "facebook_event_test"
         'application_now'
