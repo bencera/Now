@@ -135,6 +135,7 @@ class EventsController < ApplicationController
 
   def comment
       Resque.enqueue(Sendcomments, params[:event_id], params[:question1], params[:question2], params[:question3] )
+      redirect_to :back
   end
 
   def comment_events
