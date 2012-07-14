@@ -15,7 +15,7 @@ class Sendcomments
           users.delete(photo.user.id)
           puts "sent"
           $redis.sadd("instagram_users_asked", photo.user.id)
-          sleep(30)
+          sleep(15)
         rescue
           $redis.set("time_wait_comments", 30.minutes.from_now.to_i)
         end
