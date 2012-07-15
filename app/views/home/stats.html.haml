@@ -12,17 +12,17 @@
 %p= APN::Device.where(:created_at.gt => 1.month.ago).count
 
 
-%h2{:style => "color:black"} Users coming from Instagram
-%p= $redis.get("instagram_downloads")
+%h2{:style => "color:black"} Question asked / Responses / downloads
+%p= "#{$redis.get("instagram_asked")} / #{$redis.get("instagram_responses")} / #{$redis.get("instagram_downloads")}"
 
 %h2{:style => "color:black"} % Users responses Instagram
-%p= $redis.get("instagram_responses").to_i.to_f /  $redis.get("instagram_asked").to_i
+%p= $redis.get("instagram_responses").to_i.to_f * 100 /  $redis.get("instagram_asked").to_i
 
 %h2{:style => "color:black"} % Users download Instagram
-%p= $redis.get("instagram_downloads").to_i.to_f /  $redis.get("instagram_responses").to_i
+%p= $redis.get("instagram_downloads").to_i.to_f * 100 /  $redis.get("instagram_responses").to_i
 
 %h2{:style => "color:black"} % Users download Instagram 1 -> 3
-%p= $redis.get("instagram_downloads").to_i.to_f /  $redis.get("instagram_asked").to_i
+%p= $redis.get("instagram_downloads").to_i.to_f  * 100 /  $redis.get("instagram_asked").to_i
 
 %h2{:style => "color:black"} Facebook Users
 %p= FacebookUser.count
