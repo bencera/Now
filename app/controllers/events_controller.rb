@@ -27,7 +27,6 @@ class EventsController < ApplicationController
     else
       @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
     end
-    @events = @events.insert(-1, Event.find("4fff296ad0acef0002000003"))
     begin
       if params[:nowtoken]
         @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
@@ -142,6 +141,10 @@ class EventsController < ApplicationController
     @events = Event.where(:end_time.gt => 3.hours.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
   end
 
+  def confirm_events_web
+    @events = Event.all #Event.where(:city.in => ["newyork", "paris", "sanfrancisco", "london", "losangeles"]).where(:status => "waiting").order_by([[:n_photos, :desc]])
+  end
+
   def user
 
     if params[:cmd] == "userToken"
@@ -241,7 +244,7 @@ class EventsController < ApplicationController
     def choose_layout    
       if action_name == "trending"
         'application_now'
-      elsif action_name == "facebook_connect_test" or action_name == "events_trending" or action_name =="comment_events"
+      elsif action_name == "facebook_connect_test" or action_name == "events_trending" or action_name =="comment_events" or action_name == "confirm_events_web"
         nil
       elsif action_name == "showweb" or action_name == "facebook_event_test"
         'application_now'
