@@ -1,0 +1,14 @@
+- @events.each do |e|
+	= "#{e.keywords} @ #{e.venue.name} in #{e.photos.first.city} (#{e.photos.count} photos)"
+	%br
+	- e.photos.each do |photo|
+		= image_tag photo.url[0], :width => "100px"
+	%br
+	- e.photos.each do |photo|
+		= photo.caption
+	= form_tag(:controller => "events", :action => "create", :method => "post") do
+		= text_field_tag :description, nil, :placeholder => "Description"
+		= hidden_field_tag :event_id, e.id
+		= hidden_field_tag :confirm, "yes"
+		category
+		= submit_tag "Comment"
