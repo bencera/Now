@@ -8,9 +8,6 @@ class EventsController < ApplicationController
     if params[:nowtoken]
       @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
     end
-    if params[:id] == "4fff296ad0acef0002000003"
-      $redis.incr("new_features_page")
-    end
     rescue
     end
   end

@@ -35,6 +35,10 @@ class Event
      photos.limit(6)
    end
 
+   def previous_events
+      venue.events.where(:status => "trended").order_by(:end_time, :desc)
+   end
+
   def self.random_url(i)
     return '0' if i == 0
     s = ''
