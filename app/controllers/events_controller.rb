@@ -10,7 +10,7 @@ class EventsController < ApplicationController
     end
     rescue
     end
-    if params[:more] == "more"
+    if params[:more] == "yes"
       @more = "yes"
     end
   end
