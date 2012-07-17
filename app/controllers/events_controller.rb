@@ -10,12 +10,19 @@ class EventsController < ApplicationController
     end
     rescue
     end
+    if params[:more] == "more"
+      @more = "yes"
+    end
   end
   
   def showless
     @event = Event.find(params[:id])
   end
   
+  def showmore
+    @event = Event.find(params[:id])
+  end
+
   def index
 
     events = Event.where(:city => params[:city]).where(:end_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
