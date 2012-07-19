@@ -142,6 +142,7 @@ class EventsController < ApplicationController
           event.save
         end
       end
+    end
     #redirect_to "http://checkthis.com/okzf"
   end
 
