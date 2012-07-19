@@ -57,5 +57,13 @@ end
     Resque.enqueue(Facebookunlike, access_token, event_shortid, facebook_id)
   end
 
+  def is_white_listed
+    if ["571905313","681606530"].include?(facebook_id)
+      true
+    else
+      false
+    end
+  end
+
 
 end

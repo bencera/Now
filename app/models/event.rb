@@ -15,6 +15,7 @@ class Event
   field :keywords
   field :likes
   field :initial_likes, type: Integer, default: 0
+  field :other_descriptions, type: Array, default: []
   #field :n_people
   
   belongs_to :venue

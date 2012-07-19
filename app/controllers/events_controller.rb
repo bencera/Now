@@ -107,33 +107,42 @@ class EventsController < ApplicationController
   end
 
   def create
-    if params[:confirm] == "yes"
-      event = Event.find(params[:event_id])
-      event.update_attribute(:status, "trending")
-      event.update_attribute(:description, params[:description])
-      event.update_attribute(:category, params[:category])
-      likes = [2,3,4,5,6,7,8,9]
-      event.update_attribute(:initial_likes, likes[rand(likes.size)])
+    event = Event.find(params[:event_id])
+    user = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
-      shortid = Event.random_url(rand(62**6))
-      while Event.where(:shortid => shortid).first
-        shortid = Event.random_url(rand(62**6))
+    if event.status != "waiting"
+      event.other_descriptions << [user.facebook_id, params[:category], params[:description]]
+      event.save
+    else
+      if user.is_white_listed
+        if params[:confirm] == "yes"
+          event.status = "trending"
+          event.description = params[:description]
+          event.category = params[:category]
+          likes = [2,3,4,5,6,7,8,9]
+          event.initial_likes = likes[rand(likes.size)]
+          shortid = Event.random_url(rand(62**6))
+          while Event.where(:shortid => shortid).first
+            shortid = Event.random_url(rand(62**6))
+          end
+          event.shortid = shortid
+          event.save
+          Resque.enqueue(VerifyURL, params[:event_id])
+          if params[:push] == "1"
+            Resque.enqueue(Sendnotifications, params[:event_id])
+          end
+          #event.update_attribute(:link, params[:link]) unless params[:link].nil?
+        elsif params[:confirm] == "no"
+          event.update_attribute(:status, "not_trending")
+        end
+      elsif user
+        if params[:confirm] == "yes"
+          event.status =  "waiting_confirmation"
+          event.other_descriptions << [user.facebook_id, params[:category], params[:description]]
+          event.save
+        end
       end
-      event.update_attribute(:shortid, shortid)
-      event.update_attribute(:link, params[:link]) unless params[:link].nil?
-    elsif params[:confirm] == "no"
-      event = Event.find(params[:event_id])
-      event.update_attribute(:status, "not_trending")
-    end
-    if params[:push] == "1"
-      Resque.enqueue(Sendnotifications, params[:event_id])
-    end
-    if params[:should_ask] == "1"
-      Resque.enqueue(Sendcomments, params[:event_id], params[:question1], params[:question2], params[:question3] )
-    end
-    Resque.enqueue(VerifyURL, params[:event_id])
-
-    redirect_to "http://checkthis.com/okzf"
+    #redirect_to "http://checkthis.com/okzf"
   end
 
   def comment
