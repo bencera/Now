@@ -39,14 +39,6 @@ class FacebookUser
     def find_by_nowtoken(token)
     	FacebookUser.first(conditions: {now_token: token})
     end
-
-    def is_white_listed
-      if ["571905313"].include?(facebook_id)
-        true
-      else
-        false
-      end
-    end
   end
 
   def generate_now_token  	
@@ -65,5 +57,12 @@ class FacebookUser
     Resque.enqueue(Facebookunlike, access_token, event_shortid, facebook_id)
   end
 
+  def is_white_listed
+    if ["571905313"].include?(facebook_id)
+      true
+    else
+      false
+    end
+  end
 
 end
