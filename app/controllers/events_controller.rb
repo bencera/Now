@@ -136,8 +136,7 @@ class EventsController < ApplicationController
           end
           #event.update_attribute(:link, params[:link]) unless params[:link].nil?
         elsif params[:confirm] == "no"
-          event.status =  "not_trending"
-          event.save
+          event.update_attribute(:status, "not_trending")
         end
       elsif user
         if params[:confirm] == "yes"
