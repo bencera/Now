@@ -58,7 +58,7 @@ end
   end
 
   def is_white_listed
-    if ["571905313","681606530"].include?(facebook_id)
+    if ["571905313"].include?(facebook_id)
       true
     else
       false

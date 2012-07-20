@@ -109,10 +109,11 @@ class EventsController < ApplicationController
   def create
     event = Event.find(params[:event_id])
     user = FacebookUser.find_by_nowtoken(params[:nowtoken])
-
-    if event.status != "waiting"
+    if event.status != "waiting" && user
       event.other_descriptions << [user.facebook_id, params[:category], params[:description]]
       event.save
+      $redis.sadd("confirmed_events:#{user.facebook_id}", params[:event_id])
+      UserMailer.confirmation(event).deliver
     else
       if user.is_white_listed
         if params[:confirm] == "yes"
@@ -128,22 +129,26 @@ class EventsController < ApplicationController
           end
           event.shortid = shortid
           event.save
+          $redis.sadd("confirmed_events:#{user.facebook_id}", params[:event_id])
           Resque.enqueue(VerifyURL, params[:event_id])
           if params[:push] == "1"
             Resque.enqueue(Sendnotifications, params[:event_id])
           end
           #event.update_attribute(:link, params[:link]) unless params[:link].nil?
         elsif params[:confirm] == "no"
-          event.update_attribute(:status, "not_trending")
+          event.status =  "not_trending"
+          event.save
         end
       elsif user
         if params[:confirm] == "yes"
           event.status =  "waiting_confirmation"
           event.other_descriptions << [user.facebook_id, params[:category], params[:description]]
           event.save
+          $redis.sadd("confirmed_events:#{user.facebook_id}", params[:event_id])
         end
       end
     end
+    return render :text => "OK", :status => :ok
     #redirect_to "http://checkthis.com/okzf"
   end
 

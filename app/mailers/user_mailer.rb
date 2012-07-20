@@ -23,5 +23,9 @@ class UserMailer < ActionMailer::Base
     mail to: "ben.broca@gmail.com", subject: "#{@new_event.venue.name} - (#{@new_event.photos.first.city})"
     
   end
-  
+
+  def confirmation(new_event)
+    @new_event = new_event
+    mail to: "ben.broca@gmail.com", subject: "#{@new_event.venue.description} - (#{@new_event.venue.name})"
+  end
 end

@@ -1,0 +1,5 @@
+<%= "http://www.ubimachine.com/events/trending/#{@new_event.id}" %>
+<%= "#{@new_event.other_descriptions} photos" %>
+<% @new_event.photos.each do |p| %>
+	<%= p.caption unless p.caption.nil? %>
+<% end %>
