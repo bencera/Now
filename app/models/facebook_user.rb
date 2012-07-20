@@ -39,7 +39,15 @@ class FacebookUser
     def find_by_nowtoken(token)
     	FacebookUser.first(conditions: {now_token: token})
     end
-end
+
+    def is_white_listed
+      if ["571905313"].include?(facebook_id)
+        true
+      else
+        false
+      end
+    end
+  end
 
   def generate_now_token  	
     self.now_token = Digest::SHA1.hexdigest([Time.now, rand].join)
@@ -55,14 +63,6 @@ end
     $redis.srem("event_likes:#{event_shortid}", facebook_id)
     $redis.srem("liked_events:#{facebook_id}",event_shortid)
     Resque.enqueue(Facebookunlike, access_token, event_shortid, facebook_id)
-  end
-
-  def is_white_listed
-    if ["571905313"].include?(facebook_id)
-      true
-    else
-      false
-    end
   end
 
 

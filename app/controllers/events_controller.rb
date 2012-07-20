@@ -109,7 +109,7 @@ class EventsController < ApplicationController
   def create
     event = Event.find(params[:event_id])
     user = FacebookUser.find_by_nowtoken(params[:nowtoken])
-    if event.status != "waiting" && user
+    if event.status != "waiting" && user && params[:confirm] == "yes"
       event.other_descriptions << [user.facebook_id, params[:category], params[:description]]
       event.save
       $redis.sadd("confirmed_events:#{user.facebook_id}", params[:event_id])
