@@ -57,7 +57,7 @@ class FacebookUser
     Resque.enqueue(Facebookunlike, access_token, event_shortid, facebook_id)
   end
 
-  def self.is_white_listed
+  def is_white_listed
     if ["571905313"].include?(self.facebook_id)
       true
     else
