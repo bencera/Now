@@ -40,6 +40,22 @@ class Event
       venue.events.where(:status => "trended").order_by(:end_time, :desc)
    end
 
+  def city_fullname
+    case city
+    when "newyork"
+      city_fullname = "New York"
+    when "paris"
+      city_fullname = "Paris"
+    when "sanfrancisco"
+      city_fullname = "San Francisco"
+    when "london"
+      city_fullname = "London"
+    when "losangeles"
+      city_fullname = "Los Angeles"
+    end
+    city_fullname
+  end
+
   def self.random_url(i)
     return '0' if i == 0
     s = ''
