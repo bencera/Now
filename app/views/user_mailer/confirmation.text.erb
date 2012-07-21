@@ -1,5 +1,4 @@
-<%= "http://www.ubimachine.com/events/trending/#{@new_event.id}" %>
-<%= "#{@new_event.other_descriptions} photos" %>
-<% @new_event.photos.each do |p| %>
-	<%= p.caption unless p.caption.nil? %>
+<%= "http://www.ubimachine.com/events/trending/confirm/#{@new_event.id}" %>
+<% @new_event.other_descriptions.each do |od| %>
+	<%= "#{FacebookUser.where(:facebook_id => od[0]).first.fb_details['name']}: #{od[1]} : #{od[2]} @ #{@new_event.venue.name} " %>
 <% end %>

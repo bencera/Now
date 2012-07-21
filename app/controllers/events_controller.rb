@@ -123,11 +123,6 @@ class EventsController < ApplicationController
           event.super_user = user.facebook_id
           likes = [2,3,4,5,6,7,8,9]
           event.initial_likes = likes[rand(likes.size)]
-          shortid = Event.random_url(rand(62**6))
-          while Event.where(:shortid => shortid).first
-            shortid = Event.random_url(rand(62**6))
-          end
-          event.shortid = shortid
           event.save
           $redis.sadd("confirmed_events:#{user.facebook_id}", params[:event_id])
           Resque.enqueue(VerifyURL, params[:event_id])
@@ -162,6 +157,10 @@ class EventsController < ApplicationController
 
   def confirm_events_web
     @events = Event.all #Event.where(:city.in => ["newyork", "paris", "sanfrancisco", "london", "losangeles"]).where(:status => "waiting").order_by([[:n_photos, :desc]])
+  end
+
+  def confirm_trending
+    @event = Event.find(params[:id])
   end
 
   def user

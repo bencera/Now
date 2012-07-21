@@ -110,6 +110,8 @@ Ubimachine::Application.routes.draw do
   
   match "events/trending/:id" => "events#trending"
 
+  match "events/trending/confirm/:id" => "events#confirm_trending"
+
   match "/:shortid" => "events#showweb"
   
   

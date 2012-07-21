@@ -199,7 +199,11 @@ class Trending
         photos.each do |photo|
           new_event.photos << photo
         end
-        puts new_event.venue.name
+        shortid = Event.random_url(rand(62**6))
+        while Event.where(:shortid => shortid).first
+          shortid = Event.random_url(rand(62**6))
+        end
+        new_event.update_attribute(:shortid, shortid)
         UserMailer.trending(new_event).deliver #avec un lien image different selon si levent a deja ete anote par quelqu un dautre (different photo)
       elsif Event.where(:venue_id => event[0]).where(:status => "not_trending").where(:start_time.gt => 6.hours.ago.to_i).first
         #do nothing
@@ -267,6 +271,7 @@ class Trending
       Event.where(:status => "waiting").each do |event|
         if (Time.now.to_i - event.start_time) >  12*3600
           event.update_attribute(:status, "not_trending")
+          event.update_attribute(:shortid, nil)
         end
       end
 
