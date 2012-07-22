@@ -14,6 +14,7 @@ class Event
   field :city
   field :keywords
   field :likes
+  field :illustration
   field :initial_likes, type: Integer, default: 0
   field :other_descriptions, type: Array, default: []
   #field :n_people

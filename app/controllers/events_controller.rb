@@ -120,6 +120,7 @@ class EventsController < ApplicationController
           event.status = "trending"
           event.description = params[:description]
           event.category = params[:category]
+          event.illustration = params[:illustration]
           event.super_user = user.facebook_id
           likes = [2,3,4,5,6,7,8,9]
           event.initial_likes = likes[rand(likes.size)]
