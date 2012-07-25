@@ -133,6 +133,7 @@ class EventsController < ApplicationController
           #event.update_attribute(:link, params[:link]) unless params[:link].nil?
         elsif params[:confirm] == "no"
           event.update_attribute(:status, "not_trending")
+          event.update_attribute(:shortid, nil)
         end
       elsif user
         if params[:confirm] == "yes"
@@ -140,6 +141,7 @@ class EventsController < ApplicationController
           event.other_descriptions << [user.facebook_id, params[:category], params[:description]]
           event.save
           $redis.sadd("confirmed_events:#{user.facebook_id}", params[:event_id])
+          UserMailer.confirmation(event).deliver
         end
       end
     end
