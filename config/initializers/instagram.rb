@@ -1,6 +1,6 @@
 Instagram.configure do |config|
-  config.client_id = "583b64d3e53c40ad81b26d9d6edaa10a"
-  config.client_secret = "bc8a1540f6234d7688382c1e19df0b94"
+  config.client_id = "72235431b1684a59a6a39ca9cdb9725a"
+  config.client_secret = "68dea894236b40d98b31c164e06a312b"
 end
 
 require "apn_on_mongoid"
