@@ -1,88 +1,62 @@
 fetch_photos_newyork1:
   every: "30s"
   class: Fetchigphotos
-  args: "1235419"
+  args: "1325529"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_newyork2:
   every: "30s"
   class: Fetchigphotos
-  args: "1235421"
+  args: "1325530"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_sanfrancisco1:
   every: "30s"
   class: Fetchigphotos
-  args: "1235436"
+  args: "1325531"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_sanfrancisco2:
   every: "30s"
   class: Fetchigphotos
-  args: "1235437"
+  args: "1325534"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_paris1:
   every: "30s"
   class: Fetchigphotos
-  args: "1235440"
+  args: "1325535"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_paris2:
   every: "30s"
   class: Fetchigphotos
-  args: "1235442"
+  args: "1325536"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_losangeles1:
   every: "30s"
   class: Fetchigphotos
-  args: "1235468"
+  args: "1325545"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_losangeles2:
   every: "30s"
   class: Fetchigphotos
-  args: "1235470"
+  args: "1325547"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_losangeles3:
   every: "30s"
   class: Fetchigphotos
-  args: "1281808"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_saopaulo1:
-  every: "30s"
-  class: Fetchigphotos
-  args: "1235479"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_saopaulo2:
-  every: "30s"
-  class: Fetchigphotos
-  args: "1235480"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_tokyo1:
-  every: "30s"
-  class: Fetchigphotos
-  args: "1235487"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_tokyo2:
-  every: "30s"
-  class: Fetchigphotos
-  args: "1235490"
+  args: "1325550"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_london:
   every: "30s"
   class: Fetchigphotos
-  args: "1235443"
+  args: "1325542"
   description: "Fetchs instagram pics every minute"
-
-
 
 trending:
   every: "10m"

@@ -152,7 +152,8 @@ h6 {
 }
 
 img {
-	max-width: 100%;
+	/*max-width: 100%;*/
+	/*margin-left: 28px;*/
 }
 
 table {
@@ -199,11 +200,22 @@ td h3 {
 .left {
 	float: left;
 	display: block;
+	background-color:red;
+	width:460px;
+
 }
 
 .right {
 	float: right;
 	display: block;
+	background-color:blue;
+	width:460px;
+}
+
+.footer{
+	background-color:green;
+	margin-top: 700px;
+
 }
 
 
@@ -214,6 +226,7 @@ td h3 {
 	margin: 0 auto;
 	width: 920px;
 	padding-top: 20px;
+	background-color:black;
 }
 
 #iphone {
@@ -222,7 +235,7 @@ td h3 {
 
 #content {
 	margin: 160px 0 0;
-	width: 500px;
+	width: 460px;
 }
 
 #content p {
@@ -311,6 +324,15 @@ display: none;
 
 }
 
+.footer{
+	text-align: center;
+	padding: 20px 0;
+	color: #ff4a6f;
+	text-shadow: 0 1px #ff7591;
+}
 
+.footer a:link, .footer a:visited, .footer a:active {
+color: #c54b64;
+}
 
 
