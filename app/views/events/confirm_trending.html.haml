@@ -1,0 +1,39 @@
+- @event.other_descriptions.each do |od|
+    = "#{FacebookUser.where(:facebook_id => od[0]).first.fb_details['name']} : #{od[1]} : #{od[2]}"
+= "#{@event.venue.name} in #{@event.photos.first.city} (#{@event.n_photos} photos)"
+- @event.photos.each do |p|
+    = image_tag p.url[0], :width => '100px'
+= @event.photos.each do |p|
+    = p.caption
+
+= form_tag "/events", :method => "post" do
+    = text_field_tag :description,  @event.other_descriptions.first[2], :style => "width: 200px; height: 40px"
+    = hidden_field_tag :confirm, "yes"
+    = hidden_field_tag :event_id, @event.id
+    = submit_tag "Yes!"
+    = radio_button_tag(:category, "Concert")
+    = label_tag(:category_name, "concert")
+    = radio_button_tag(:category, "Party")
+    = label_tag(:category_name, "party")
+    = radio_button_tag(:category, "Sport")
+    = label_tag(:category_name, "sport")
+    = radio_button_tag(:category, "Art")
+    = label_tag(:category_name, "art")
+    = radio_button_tag(:category, "Movie")
+    = label_tag(:category_name, "movie")
+    = radio_button_tag(:category, "Food")
+    = label_tag(:category_name, "food")
+    = radio_button_tag(:category, "Outdoors")
+    = label_tag(:category_name, "outdoors")
+    = radio_button_tag(:category, "Exceptional")
+    = label_tag(:category_name, "exceptional")
+    = radio_button_tag(:category, "Celebrity")
+    = label_tag(:category_name, "celebrity")
+    = radio_button_tag(:category, "Conference")
+    = label_tag(:category_name, "conference")
+    = radio_button_tag(:category, "Performance")
+    = label_tag(:category_name, "performance")
+    = check_box_tag(:push)
+    = label_tag(:push_desc, "Push Notification")
+    = check_box_tag(:should_ask)
+    = label_tag(:ask_desc, "Comments")
