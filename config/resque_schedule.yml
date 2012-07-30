@@ -1,61 +1,61 @@
 fetch_photos_newyork1:
-  every: "30s"
+  every: "25s"
   class: Fetchigphotos
-  args: "1326720"
+  args: "1327809"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_newyork2:
-  every: "30s"
+  every: "25s"
   class: Fetchigphotos
-  args: "1326721"
+  args: "1327810"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_sanfrancisco1:
-  every: "30s"
+  every: "35s"
   class: Fetchigphotos
-  args: "1326722"
+  args: "1327811"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_sanfrancisco2:
-  every: "30s"
+  every: "35s"
   class: Fetchigphotos
-  args: "1326723"
+  args: "1327814"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_paris1:
-  every: "30s"
+  every: "45s"
   class: Fetchigphotos
-  args: "1326726"
+  args: "1327815"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_paris2:
-  every: "30s"
+  every: "45s"
   class: Fetchigphotos
-  args: "1326730"
+  args: "1327816"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_losangeles1:
-  every: "30s"
+  every: "25s"
   class: Fetchigphotos
-  args: "1326734"
+  args: "1327818"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_losangeles2:
-  every: "30s"
+  every: "25s"
   class: Fetchigphotos
-  args: "1326735"
+  args: "1327819"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_losangeles3:
-  every: "30s"
+  every: "25s"
   class: Fetchigphotos
-  args: "1326736"
+  args: "1327821"
   description: "Fetchs instagram pics every minute"
 
 fetch_photos_london:
-  every: "30s"
+  every: "40s"
   class: Fetchigphotos
-  args: "1326732"
+  args: "1327817"
   description: "Fetchs instagram pics every minute"
 
 trending:
@@ -63,9 +63,3 @@ trending:
   class: Trending
   args: "2"
   description: "Trending emails"
-
-venue_photos:
-  every: "10m"
-  class: Fetchvenuephotos
-  args: "2"
-  description: "Fetch famous venue photos"

@@ -37,6 +37,7 @@ class CallbacksController < ApplicationController
     #   #end
     #end
     #return :text => "Successful"
+    return :text => "OK"
   end
   
 end
