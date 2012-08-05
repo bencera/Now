@@ -63,3 +63,9 @@ trending:
   class: Trending
   args: "3"
   description: "Trending emails"
+
+fetch_venue_photos:
+  every: "10m"
+  class: Fetchvenuephotos
+  args: "3"
+  description: "Fetch Venue photos"
