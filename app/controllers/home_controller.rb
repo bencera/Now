@@ -70,17 +70,23 @@ class HomeController < ApplicationController
       @cities_today = cities_today.sort_by{|u,v| v}.reverse
 
 
-      pushs = {"NY" => 0, "Paris" => 0, "SF" => 0, "LN" => 0}
+      pushs = {"NY" => 0, "Paris" => 0, "SF" => 0, "LN" => 0, "LA" => 0, "CG" => 0, "MA" => 0}
       APN::Device.all.each do |d|
         unless d.coordinates.nil?
-          if d.distance_from([40.74, -73.99]) < 20 and d.notifications == true
+          if d.distance_from([40.74, -73.99]) < 30
             pushs["NY"] += 1
-          elsif d.distance_from([37.76,-122.45]) < 20 and d.notifications == true
+          elsif d.distance_from([37.76,-122.45]) < 30
             pushs["SF"] += 1
-          elsif d.distance_from([48.86,2.34]) < 20 and d.notifications == true
+          elsif d.distance_from([48.86,2.34]) < 30
             pushs["Paris"] += 1
-          elsif d.distance_from([51.51,-0.13]) < 20 and d.notifications == true
+          elsif d.distance_from([51.51,-0.13]) < 30
             pushs["LN"] += 1
+          elsif d.distance_from([34.07,-118.36]) < 30
+            pushs["LA"] += 1
+          elsif d.distance_from([41.78,-87.87]) < 30
+            pushs["CG"] += 1
+          elsif d.distance_from([25.81,-80.27]) < 30
+            pushs["MA"] += 1
           end
         end
       end
