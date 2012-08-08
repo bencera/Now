@@ -1,0 +1,12 @@
+- @events.each do |e|
+	= image_tag "http://graph.facebook.com/#{FacebookUser.find_by_facebook_id(e.super_user).facebook_id}/picture", :width => "50px"
+	= FacebookUser.find_by_facebook_id(e.super_user).fb_details["name"]
+	%br
+	= "#{e.description} (#{e.category}) @ #{e.venue.name} in #{e.photos.first.city} (#{e.photos.count} photos)"
+	%br
+	- e.photos.each do |photo|
+		= image_tag photo.url[0], :width => "100px"
+	= form_tag(:controller => "events", :action => "confirmation_trending", :method => "post") do
+		= hidden_field_tag :event_id, e.id
+		= submit_tag "OK"
+		= submit_tag "NO"

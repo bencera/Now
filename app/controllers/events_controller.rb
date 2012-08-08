@@ -167,8 +167,18 @@ class EventsController < ApplicationController
     @events = Event.all #Event.where(:city.in => ["newyork", "paris", "sanfrancisco", "london", "losangeles"]).where(:status => "waiting").order_by([[:n_photos, :desc]])
   end
 
-  def confirm_trending
-    @event = Event.find(params[:id])
+  def confirmation_trending
+    event = Event.find(params[:event_id])
+    if params[:commit] == "OK"
+      event.update_attribute(:status, "trending")
+    elsif params[:commit] == "NO"
+      event.update_attribute(:status, "waiting")
+    end
+    redirect_to :back
+  end
+
+  def confirm_trending_events
+    @events = Event.where(:status => "waiting_confirmation")
   end
 
   def user
@@ -270,7 +280,7 @@ class EventsController < ApplicationController
     def choose_layout    
       if action_name == "trending"
         'application_now'
-      elsif action_name == "facebook_connect_test" or action_name == "events_trending" or action_name =="comment_events" or action_name == "confirm_events_web"
+      elsif action_name == "facebook_connect_test" or action_name == "events_trending" or action_name =="comment_events" or action_name == "confirm_events_web" or action_name == "confirm_trending_events"
         nil
       elsif action_name == "showweb" or action_name == "facebook_event_test"
         'application_now'

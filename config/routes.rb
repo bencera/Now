@@ -18,6 +18,10 @@ Ubimachine::Application.routes.draw do
 
   match "/event/confirm" => "events#confirm_events_web"
 
+  match "/event/confirmation_trending" => "events#confirmation_trending"
+
+  match "/event_trending_comfirmation" => "events#confirm_trending_events"
+
   # get "tags/create"
   match "/sitemap.xml", :to => "sitemap#index", :defaults => {:format => :xml}
 
