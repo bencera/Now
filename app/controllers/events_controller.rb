@@ -138,7 +138,12 @@ class EventsController < ApplicationController
       elsif user
         if params[:confirm] == "yes"
           event.status =  "waiting_confirmation"
-          event.other_descriptions << [user.facebook_id, params[:category], params[:description]]
+          event.description = params[:description]
+          event.category = params[:category]
+          event.illustration = params[:illustration]
+          event.super_user = user.facebook_id
+          likes = [2,3,4,5,6,7,8,9]
+          event.initial_likes = likes[rand(likes.size)]
           event.save
           $redis.sadd("confirmed_events:#{user.facebook_id}", params[:event_id])
           UserMailer.confirmation(event).deliver
