@@ -58,7 +58,7 @@ class FacebookUser
   end
 
   def is_white_listed
-    ["571905312"].include?(self.facebook_id)
+    ["571905313"].include?(self.facebook_id)
   end
 
 end
