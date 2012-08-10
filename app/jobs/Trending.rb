@@ -55,19 +55,19 @@ class Trending
    cities.each do |city|
     case city
       when "newyork"
-        limit_photos = 4
+        limit_photos = 6
       when "sanfrancisco"
-        limit_photos = 4
+        limit_photos = 6
       when "paris"
-        limit_photos = 3
+        limit_photos = 4
       when "london"
-        limit_photos = 3
+        limit_photos = 5
       when "saopaulo"
-        limit_photos = 4
+        limit_photos = 6
       when "losangeles"
-        limit_photos = 4
+        limit_photos = 6
       when "tokyo"
-        limit_photos = 4
+        limit_photos = 6
       end
       
     
