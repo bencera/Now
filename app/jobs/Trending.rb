@@ -90,6 +90,9 @@ class Trending
       end
     end
 
+    thisMorning = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0).to_i
+    twoWeeksAgo = DateTime.new(2.weeks.ago.year, 2.weeks.ago.month, 2.weeks.ago.day, 0, 0, 0, 0).to_i
+    twoMonthsAgo = DateTime.new(2.month.ago.year, 2.month.ago.month, 2.month.ago.day, 0, 0, 0, 0).to_i
 
     trending_venues = {}
     venues.sort_by { |k,v| v["n_photos"]}.reverse.each do |venue|
@@ -100,7 +103,7 @@ class Trending
                 #30-day stats
 
         photos_count = {}
-        Venue.find(venue[0]).photos.where(:time_taken.lt => 1.day.ago.to_i).where(:time_taken.gt => 2.weeks.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
+        Venue.find(venue[0]).photos.where(:time_taken.lt => thisMorning).where(:time_taken.gt => twoWeeksAgo).order_by([[:time_taken, :desc]]).each do |photo|
           if photos_count.include?(Time.at(photo.time_taken).yday)
             photos_count[Time.at(photo.time_taken).yday] += 1
           else
@@ -120,7 +123,7 @@ class Trending
 
         today_wday = Time.now.wday
         photos_count = {}
-        Venue.find(venue[0]).photos.where(:time_taken.lt => 1.day.ago.to_i).where(:time_taken.gt => 2.month.ago.to_i).order_by([[:time_taken, :desc]]).each do |photo|
+        Venue.find(venue[0]).photos.where(:time_taken.lt => thisMorning).where(:time_taken.gt => twoMonthsAgo).order_by([[:time_taken, :desc]]).each do |photo|
           if photos_count.include?(Time.at(photo.time_taken).yday) and Time.at(photo.time_taken).wday == today_wday
             photos_count[Time.at(photo.time_taken).yday] += 1
           elsif Time.at(photo.time_taken).wday == today_wday
