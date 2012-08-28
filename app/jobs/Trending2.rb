@@ -55,9 +55,104 @@ class Trending2
     hours = hours.to_i
     min_users = min_users.to_i;
 
+    new_events = find_new_trending(14, 8, hours, city, min_users)
+    #could log how many events we created here
 
+    perform_event_maintenance(new_events)
 
   end
+
+
+#TODO: this can be separated into smaller modules still
+  def find_new_trending(num_consecutive, num_days_of_week, hours, city, min_users)
+
+    venues = intentify_venues(hours, city, min_users)
+
+    now = Time.now
+
+    thisMorning = DateTime.new(now.year, now.month, now.day, 0, 0, 0, 0)
+
+    consecutiveDaysBegin = DateTime.new(num_consecutive.days.ago.year, 
+                               num_consecutive.days.ago.month, 
+                               num_consecutive.days.ago.day, 0, 0, 0, 0)
+
+    weekDaysBegin = DateTime.new(num_days_of_weeknum_days_of_week.weeks.ago.year, 
+                                num_days_of_weeknum_days_of_week.weeks.ago.month, 
+                                num_days_of_weeknum_days_of_week.weeks.ago.day, 0, 0, 0, 0)
+
+    start_time = [consecutiveDaysBegin, weeksDaysBegin].min
+
+    new_events = []
+
+    venues.each do |venue, values| 
+      
+      consecutive_user_lists = Array.new(num_consecutive, [])
+      weekdays_user_lists = Array.new(num_days_of_week, [])
+
+      event = last_event(venue)
+
+      #TODO: event should have functions trending? can_trend? etc simplify this logic
+      if(!event || !cannot_trend(event))
+        
+        find(venue).photos.where(:time_taken.gt => start_time).where(:time_taken.lt => thisMorning).order_by([[:time_taken, :desc]]).each do |photo|
+          photodt = DateTime.new(photo.time_taken)
+
+          #we need to know how many unique users upload photos on a given day, not how many photos we see each day
+          if(photodt > consecutiveDaysBegin)
+            index = photodt.mjd - consecutiveDaysBegin.mjd
+            consecutive_user_lists[index] << photo.user_id unless consecutive_user_lists[index].include? photo.user_id
+          end
+
+          if(photodt > weekDaysBegin && photodt.wday == now.wday)
+            index = (photodt.mjd - weekDaysBegin.mjd) / 7
+            weekdays_user_lists[index] << photo.user_id unless weekdays_user_lists[index].include? photo.user_id
+          end
+        end
+
+        consecutive_series = consecutive_user_lists.collect { |x| x.count }
+        weekday_series = weekdays_user_lists.collect { |x| x.count }
+
+        values[:mean_consecutive] = Mathstats.average(consecutive_series)
+        values[:std_consecutive] = Mathstats.standard_deviation(consecutive_series)
+        values[:mean_weekday] = Mathstats.average(weekday_series)
+        values[:std_weekday] = Mathstats.standard_deviation(weekday_series)
+
+        photos = venue.photos.last_hours(hours).order_by([[:time_taken, :desc]])
+        keywords = get_keywords(venue.name, photos)
+        #original code seemed to include trending venues if > max(mean_month/2, min_photos) 
+        new_events << trend_new_event(venue, photos, keywords) if values[:users].count >= values[:mean_consecutive]
+      end
+    end
+
+    return new_events
+  end
+
+  def perform_event_maintenance(ignore_events)
+
+    Event.where(:status => "trending").each do |event|
+      if( (Time.now.to_i - event.start_time > 12.hours.to_i) ||
+       (Venue.find(event.venue_id).photos.last_hours(5).count == 0) )
+        event.update_attribute(:status, "trended")
+      elsif 
+        event.update_attribute(:status, "trended")
+      else
+      #rajouter les nouvelles photos, updater nb photos, nb_people, revoir intensite?
+        update_event_photos(event)
+      end
+    end
+
+    wating_events = Event.where(:status => "waiting") - ignore_events
+
+    waiting_events.each do |event|
+      if (Time.now.to_i - event.start_time) >  12.hours.to_i
+        event.update_attribute(:status, "not_trending")
+        event.update_attribute(:shortid, nil)
+      else
+        update_event_photos(event)
+      end
+    end
+  end
+
 
   def identify_venues(hours, city, min_users)
     photos_lasthours = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
@@ -79,96 +174,83 @@ class Trending2
     venues.keep_if { |k, v| v[:users].count >= min_users }
   end
 
-  def get_trending_venues(venues, num_consecutive, num_days_of_week)
+  def trend_new_event(trending_venue, photos, keywords)
 
-    now = Time.now
-
-    thisMorning = DateTime.new(now.year, now.month, now.day, 0, 0, 0, 0)
-
-    consecutiveDaysBegin = DateTime.new(num_consecutive.days.ago.year, 
-                               num_consecutive.days.ago.month, 
-                               num_consecutive.days.ago.day, 0, 0, 0, 0)
-
-    weekDaysBegin = DateTime.new(num_days_of_weeknum_days_of_week.weeks.ago.year, 
-                                num_days_of_weeknum_days_of_week.weeks.ago.month, 
-                                num_days_of_weeknum_days_of_week.weeks.ago.day, 0, 0, 0, 0)
-
-    start_time = [consecutiveDaysBegin, weeksDaysBegin].min
+    # if this venue has never trended or if the most recent event 1) isn't trending/waiting
+    # and 2) didn't start in the last 6 hours, create a new event 
     
+    venue = Venue.find(trending_venue)
+    new_event = venue.events.create(:start_time => photos.last.time_taken,
+                             :end_time => photos.first.time_taken,
+                             :coordinates => photos.first.coordinates,
+                             :n_photos => venue.photos.last_hours(hours).count,
+                             :status => "waiting",
+                             :city => city,
+                             :keywords => keywords)
+    
+    new_event.photos.push(*photos)
 
-
-    trending_venues = []
-
-    venues.each do |venue, values| 
-      
-      consecutive_user_lists = Array.new(num_consecutive, [])
-      weekdays_user_lists = Array.new(num_days_of_week, [])
-
-      find(venue).photos.where(:time_taken.gt => start_time).where(:time_taken.lt => thisMorning).order_by([[:time_taken, :desc]]).each do |photo|
-        photodt = DateTime.new(photo.time_taken)
-
-        #we need to know how many unique users upload photos on a given day, not how many photos we see each day
-        if(photodt > consecutiveDaysBegin)
-          index = photodt.mjd - consecutiveDaysBegin.mjd
-          consecutive_user_lists[index] << photo.user_id unless consecutive_user_lists[index].include? photo.user_id
-        end
-
-        if(photodt > weekDaysBegin && photodt.wday == now.wday)
-          index = (photodt.mjd - weekDaysBegin.mjd) / 7
-          weekdays_user_lists[index] << photo.user_id unless weekdays_user_lists[index].include? photo.user_id
-        end
-
-        consecutive_series = consecutive_user_lists.collect { |x| x.count }
-        weekday_series = weekdays_user_lists.collect { |x| x.count }
-
-        values[:mean_consecutive] = Mathstats.average(consecutive_series)
-        values[:std_consecutive] = Mathstats.standard_deviation(consecutive_series)
-        values[:mean_weekday] = Mathstats.average(weekday_series)
-        values[:std_weekday] = Mathstats.standard_deviation(weekday_series)
-
-        #original code seemed to include trending venues if > max(mean_month/2, min_photos) 
-        trending_venues << venue if values[:users].count >= values[:mean_consecutive]
-      end
+    shortid = Event.random_url(rand(62**6))
+    while Event.where(:shortid => shortid).first
+      shortid = Event.random_url(rand(62**6))
     end
-    return trending_venues
+    new_event.update_attribute(:shortid, shortid)
+    UserMailer.trending(new_event).deliver
+
+    return new_event
   end
 
-  def trend_new_events(trending_venues)
-    trending_venues.each do |venue|
-
-      #examine the most recent event
-      event = Event.where(:venue_id => venue).order_by([[:start_time, :desc]]).first
-      if event.nil? || (event.status)
-
-        venue = Venue.find(event[0])
-        photos = venue.photos.last_hours(hours).order_by([[:time_taken, :desc]])
-        new_event = venue.events.create(:venue_id => event[0], 
-                                 :start_time => photos.last.time_taken,
-                                 :end_time => photos.first.time_taken,
-                                 :coordinates => photos.first.coordinates,
-                                 :n_photos => venue.photos.last_hours(hours).count,
-                                 :status => "waiting",
-                                 :city => city,
-                                 :keywords => event[1]["keywords"])
-        
-        photos.each do |photo|
-          new_event.photos << photo
-        end
-        shortid = Event.random_url(rand(62**6))
-        while Event.where(:shortid => shortid).first
-          shortid = Event.random_url(rand(62**6))
-        end
-        new_event.update_attribute(:shortid, shortid)
-        UserMailer.trending(new_event).deliver
-
-      elsif condition
-      end
-          
-
-    end
+  def last_event(venue)
+    event = Event.where(:venue_id => trending_venue).order_by([[:start_time, :desc]]).first  
   end
 
-  def get_keywords
+  def cannot_trend(event)
+    return(event.status == "trending" || event.status == "waiting" || (event.start_time > 6.hours.ago.to_i &&
+      event.status == "not trending")
+  end
+
+  def get_keywords(venue_name, photos)
+    comments = ""
+    photos.each do |photo|
+      comments << photo.caption unless Photo.find(photo).caption.nil?
+      comments << " "
+    end
+    stop_characters.each do |c|
+      comments = comments.gsub(c, '')
+    end
+    comments = comments.downcase
+    words = comments.split(/ /)
+    relevant_words = words - stop_words
+    venue_words = venue_name.split(/ /)
+    relevant_words = relevant_words - venue_words
+
+    sorted_words = {}
+    relevant_words.each do |word|
+      if sorted_words.include?(word)
+        sorted_words[word] += 1
+      else
+        sorted_words[word] = 1
+      end
+    end
+    keywords = [] 
+    sorted_words.sort_by{|u,v| v}.reverse.each do |word|
+      unless word[1] < 3 or word[0] == ""
+        keywords << word[0]
+      end
+    end
+
+    return keywords
+  end
+
+  def update_event_photos(event)
+    event.venue.photos.last_hours(hours).each do |photo|
+      unless photo.events.first == event
+        event.photos << photo
+        event.inc(:n_photos, 1)
+      end
+    end
+    #i don't like this magic constant here, but i'll leave it for now
+    event.update_attribute(:end_time, event.venue.photos.last_hours(2).first.time_taken) unless event.venue.photos.last_hours(2).first.nil?
   end
 end
 
