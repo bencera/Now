@@ -49,7 +49,9 @@ class Trending
      "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "who's", "whoever",
       "whole", "whom", "whose", "why", "will", "willing", "wish", "with", "within", "without", "won't",
      "wonder", "would", "would", "wouldn't", "yes", "yet", "you", "you'd", "you'll", "you're", "you've",
-      "your", "yours", "yourself", "yourselves", "zero"] 
+      "your", "yours", "yourself", "yourselves", "zero"] i
+
+    Rails.logger.info("Starting trending calculation")
 
    cities = ["newyork", "paris", "sanfrancisco", "london", "losangeles"]
    cities.each do |city|
@@ -70,6 +72,7 @@ class Trending
         limit_photos = 6
       end
       
+    Rails.logger.info("city: #{city}")
     
     photos_lasthours = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
     venues = {}
