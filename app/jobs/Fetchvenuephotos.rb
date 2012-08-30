@@ -40,5 +40,6 @@ class Fetchvenuephotos
       rescue
       end
     end
+    Rails.logger.info("finished venue photos fetch")
   end
 end
