@@ -1,6 +1,7 @@
 class Fetchigphotos
   @queue = :fetchphotos_queue
   def self.perform(subscription)
+    Rails.logger.info("Fetching instagram photos subscription #{subscription}")
     #access_token = $redis.smembers("accesstokens")[rand($redis.smembers("accesstokens").size)]
     #client = Instagram.client(:access_token => access_token)
     min_id = nil
@@ -17,5 +18,6 @@ class Fetchigphotos
         end
       end
     end
+    Rails.logger.info("Finished fetching instagram photos subscription #{subscription}")
   end
 end
