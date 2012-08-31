@@ -10,3 +10,6 @@ u.categories.first["name"] unless u.categories.nil?
 end
 end
 node(:like) { |event| event.liked_by_user(@user_id) }
+child(:previous_events, :if => @more == "yes") do
+attributes :description, :end_time, :category
+end

@@ -10,9 +10,9 @@ class EventsController < ApplicationController
     end
     rescue
     end
-    # if params[:more] == "yes"
-    #   @more = "yes"
-    # end
+    if params[:more] == "yes"
+      @more = "yes"
+    end
   end
   
   def showless
