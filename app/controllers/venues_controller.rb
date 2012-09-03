@@ -112,7 +112,7 @@ class VenuesController < ApplicationController
     n = 0
     n_photos = @venue.photos.count
     more_3_photos = []
-    @photos = @venue.photos.order_by([:time_taken, :asc])
+    @photos = @venue.photos.take(500).reverse
     while n  < n_photos - 2
       i = 1
       p = @photos[n]
@@ -121,6 +121,9 @@ class VenuesController < ApplicationController
       while Venue.new.week_day(@photos[n+1].time_taken) == week_day && @photos[n+1].time_taken - time_taken < 3600*24
         i = i + 1
         n = n + 1
+        if @photos[n+1].nil?
+          break
+        end
       end
       if i >= 3
         more_3_photos << [i, n - i + 1]
