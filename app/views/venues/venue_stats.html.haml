@@ -8,5 +8,6 @@
 	%br
 	- @photos[g[1]..(g[0] + g[1] - 1)].each do |p|
 		= Time.at(p.time_taken).hour
+		= p.user.ig_username
 		= image_tag p.url[0], :width => "100px"
 	%br
