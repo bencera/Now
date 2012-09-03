@@ -117,6 +117,8 @@ Ubimachine::Application.routes.draw do
   match "events/trending/confirm/:id" => "events#confirm_trending"
 
   match "/:shortid" => "events#showweb"
+
+  match "/venue/stats" => "venues#venue_stats"
   
   
   # match "/restaurants" => "photos#restaurants" 

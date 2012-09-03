@@ -105,11 +105,37 @@ class VenuesController < ApplicationController
     end
     
   end
+
+
+  def venue_stats
+    @venue = Venue.find(params[:id])
+    n = 0
+    n_photos = @venue.photos.count
+    more_3_photos = []
+    @photos = @venue.photos.order_by([:time_taken, :asc])
+    while n  < n_photos - 2
+      i = 1
+      p = @photos[n]
+      week_day = Venue.new.week_day(p.time_taken)
+      time_taken = p.time_taken
+      while Venue.new.week_day(@photos[n+1].time_taken) == week_day && @photos[n+1].time_taken - time_taken < 3600*24
+        i = i + 1
+        n = n + 1
+      end
+      if i >= 3
+        more_3_photos << [i, n - i + 1]
+      end
+      n = n + 1
+    end
+    @groups = more_3_photos
+  end
   
   private
     def choose_layout    
       if action_name == "venue_v2"
         'application_v2'
+      elsif action_name == "venue_stats"
+        nil
       else
         'application'
       end
