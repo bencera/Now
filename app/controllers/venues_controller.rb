@@ -116,6 +116,9 @@ class VenuesController < ApplicationController
     while n  < n_photos - 2
       i = 1
       p = @photos[n]
+      if @photos[n+1].nil?
+        break
+      end
       week_day = Venue.new.week_day(p.time_taken)
       time_taken = p.time_taken
       while Venue.new.week_day(@photos[n+1].time_taken) == week_day && @photos[n+1].time_taken - time_taken < 3600*24
