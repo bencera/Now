@@ -10,6 +10,9 @@ class Venue
   field :neighborhood
   field :week_stats, :type => Hash
   field :city
+  field :autotrend, :type => Boolean
+  field :descriptions, :type => Array
+  field :threshold, :type => Array #[number of people, in number of hours, before time]
   key :fs_venue_id
   has_many :photos, dependent: :destroy
   has_and_belongs_to_many :users
