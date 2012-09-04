@@ -13,6 +13,8 @@ class Venue
   field :autotrend, :type => Boolean, default: false
   field :descriptions, :type => Array
   field :threshold, :type => Array #[number of people, in number of hours, before time]
+  field :autocategory
+  field :autoillustrations, :type => Array
   key :fs_venue_id
   has_many :photos, dependent: :destroy
   has_and_belongs_to_many :users
