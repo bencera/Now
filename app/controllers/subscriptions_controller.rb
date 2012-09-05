@@ -18,10 +18,10 @@ class SubscriptionsController < ApplicationController
   def create
     if Rails.env.development?
       #tunnel
-      url = "http://57kx.localtunnel.com/callbacks"
+      url = "http://4sng.localtunnel.com/callbacks"
     else
       # production
-      url = "http://falling-flower-8721.herokuapp.com/callbacks"
+      url = "http://now-instagram.herokuapp.com/callbacks"
     end
     #client = Instagram.client(:access_token => "1200123.6c3d78e.0d51fa6ae5c54f4c99e00e85df38c435")
     response = Instagram.create_subscription(options={:object => "geography", 
