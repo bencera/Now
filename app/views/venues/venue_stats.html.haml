@@ -1,4 +1,4 @@
-= "#{@venue.name} - #{@venue.categories.first["name"]}"
+%h1= "#{@venue.name} - #{@venue.categories.first["name"]}"
 %br
 - @photos.take(100).each do |photo|
 	= image_tag photo.url[0], :width => "100px", :alt => "#{photo.ig_media_id}"

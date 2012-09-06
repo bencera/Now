@@ -1,0 +1,10 @@
+- @venues.each do |v|
+	%h1= "#{v.name} - #{v.categories.first["name"]}"
+	%br
+	- v.autoillustrations.each do |photo|
+		= image_tag Photo.where(:ig_media_id => photo).first.url[0], :width => "200px"
+	%br
+	%h2= "category: #{v.autocategory}"
+	%h3 Titles
+	- v.descriptions.each do |d|
+		%p= d

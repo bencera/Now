@@ -47,7 +47,7 @@ Ubimachine::Application.routes.draw do
   match "/auth/instagram/callback" => "sessions#callback"
   match "/auth/facebook/callback" => "sessions#facebook_callback"
   
-  resources :events, :requests, :subscriptions, :searches, :callbacks
+  resources :events, :requests, :subscriptions, :searches, :callbacks, :venues
   #
   
   #:venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls, :dones,
@@ -119,8 +119,13 @@ Ubimachine::Application.routes.draw do
   match "/:shortid" => "events#showweb"
 
   match "/venue/stats" => "venues#venue_stats"
+
+  match "/venue/autotrend/edit" => "venues#venue_autotrend_edit"
   
+  match "/venue/autotrend/index" => "venues#venue_autotrend_index"
   
+  match "/venue/venue_autotrend_create" => "venues#venue_autotrend_create"
+
   # match "/restaurants" => "photos#restaurants" 
   # match "/nightlife" => "photos#nightlife"  
   # match "/entertainment" => "photos#entertainment"  

@@ -6,7 +6,7 @@ class Autotrending
 			#if it hasn't trended in the past 3 days
 			if Time.now.to_i - Event.where(:venue_id => venue.id).where(:status => "trended").order_by([:end_time, :desc]).first.end_time > 3 * 24 * 3600
 				#if the venue is already detected and pending
-				event = Event.where(:venue_id => venue.id).where(:status => ["waiting"]).first
+				event = Event.where(:venue_id => venue.id).where(:status => "waiting").first
 				if event
 	      	event.status = "trending"
 	        event.description = venue.descriptions[rand(venue.descriptions.size)]

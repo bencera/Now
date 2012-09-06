@@ -15,6 +15,7 @@ class Venue
   field :threshold, :type => Array #[number of people, in number of hours, before time]
   field :autocategory
   field :autoillustrations, :type => Array
+  field :blacklist, :type => Boolean, default: false
   key :fs_venue_id
   has_many :photos, dependent: :destroy
   has_and_belongs_to_many :users

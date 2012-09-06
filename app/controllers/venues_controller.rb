@@ -135,10 +135,38 @@ class VenuesController < ApplicationController
     end
     @groups = more_3_photos
   end
+
+  def venue_autotrend_edit
+    @venue = Venue.find(params[:id])
+  end
+
+  def venue_autotrend_create
+    venue = Venue.find(params[:venue_id])
+    if params[:autotrend] == "1"
+      venue.autotrend = true
+    else
+      venue.autotrend = false
+    end
+    if params[:blacklist] == "1"
+      venue.blacklist = true
+    else
+      venue.blacklist = false
+    end
+    venue.autocategory = params[:category].first
+    venue.descriptions = [params[:title1], params[:title2], params[:title3]]
+    venue.autoillustrations = [params[:photo1], params[:photo2], params[:photo3], params[:photo4], params[:photo5], params[:photo6]]
+    venue.threshold = [params[:people].to_i, params[:hours].to_i, params[:close_time].to_i]
+    venue.save
+    redirect_to :back
+  end
+
+  def venue_autotrend_index
+    @venues = Venue.where(:autotrend => true).where(:city => params[:city])
+  end
   
   private
     def choose_layout    
-      if action_name == "venue_v2"
+      if action_name == "venue_v2" or action_name == "venue_autotrend_edit" or action_name == "venue_autotrend_index"
         'application_v2'
       elsif action_name == "venue_stats"
         nil
