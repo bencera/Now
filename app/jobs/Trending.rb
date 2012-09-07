@@ -222,7 +222,7 @@ class Trending
             event_i.inc(:n_photos, 1)
           end
         end
-        event_i.update_attribute(:end_time, Venue.find(event[0]).photos.last_hours(2).first.time_taken)
+        event_i.update_attribute(:end_time, Venue.find(event[0]).photos.last_hours(hours).first.time_taken)
       end
     end
     
@@ -271,7 +271,7 @@ class Trending
               event.inc(:n_photos, 1)
             end
           end
-          event.update_attribute(:end_time, event.venue.photos.last_hours(2).first.time_taken) unless event.venue.photos.last_hours(2).first.nil?
+          event.update_attribute(:end_time, event.venue.photos.last_hours(hours).first.time_taken) unless event.venue.photos.last_hours(2).first.nil?
         end
       end
 
