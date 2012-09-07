@@ -35,8 +35,10 @@ class Venue
       tz = "Eastern Time (US & Canada)"
     elsif city == "sanfrancisco" || city == "losangeles"
       tz = "Pacific Time (US & Canada)"
-    elsif city == "paris" || city == "london"
+    elsif city == "paris"
       tz = "Paris"
+    elsif city == "london"
+      tz = "Edinburgh"
     end
     time = Time.at(time_s.to_i).in_time_zone(tz)
     week_day = time.wday

@@ -4,9 +4,9 @@
 	= image_tag photo.url[0], :width => "100px", :alt => "#{photo.ig_media_id}"
 %br
 - @groups.each do |g|
-	%h2= "#{g[2]} users in #{(@photos[g[1]].time_taken - @photos[g[0]].time_taken)/3600} hours  on a #{Venue.new.day_to_text(Venue.new.week_day(@photos[g[0]].time_taken,@venue.city))} starting at #{Time.at(@photos[g[3]].time_taken.in_time_zone("Eastern Time (US & Canada)") + @h * 3600).hour}"
+	%h2= "#{g[2]} users in #{(@photos[g[1]].time_taken - @photos[g[0]].time_taken)/3600} hours  on a #{Venue.new.day_to_text(Venue.new.week_day(@photos[g[0]].time_taken,@venue.city))} starting at #{Time.at(@photos[g[3]].time_taken.to_i + @h.to_i * 3600).in_time_zone("Eastern Time (US & Canada)").hour}"
 	%p= "#{time_ago_in_words(Time.at @photos[g[0]].time_taken.to_i)} ago"
 	%br
 	- @photos[g[0]..g[1]].each do |p|
-		= Time.at(p.time_taken.in_time_zone("Eastern Time (US & Canada)") + @h * 3600).hour
+		= Time.at(p.time_taken.to_i + @h.to_i * 3600).in_time_zone("Eastern Time (US & Canada)").hour
 		= image_tag p.url[0], :width => "100px"
