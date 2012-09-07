@@ -225,7 +225,7 @@ class Trending
         #add logic to make this not run if no new photos added after we know this code works
         Resque.enqueue(VerifyURL2, event_i.id, event_i.end_time)
         Resque.enqueue_in(10.minutes, VerifyURL2, event_i.id, event.end_time)
-        event_i.update_attribute(:end_time, Venue.find(event[0]).photos.last_hours(2).first.time_taken)
+        event_i.update_attribute(:end_time, Venue.find(event[0]).photos.last_hours(hours).first.time_taken)
       end
     end
     
@@ -276,7 +276,7 @@ class Trending
           end
           Resque.enqueue(VerifyURL2, event.id, event.end_time)
           Resque.enqueue_in(10.minutes, VerifyURL2, event.id, event.end_time)
-          event.update_attribute(:end_time, event.venue.photos.last_hours(2).first.time_taken) unless event.venue.photos.last_hours(2).first.nil?
+          event.update_attribute(:end_time, event.venue.photos.last_hours(hours).first.time_taken) unless event.venue.photos.last_hours(2).first.nil?
         end
       end
 
