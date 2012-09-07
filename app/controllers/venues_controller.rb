@@ -108,16 +108,17 @@ class VenuesController < ApplicationController
 
 
   def venue_stats
-    if params[:city] == "newyork"
+    @venue = Venue.find(params[:id])
+    city = @venue.city
+    if city == "newyork"
       @h = 0
-    elsif params[:city] == "sanfrancisco" || params[:city] == "losangeles"
+    elsif city == "sanfrancisco" || city == "losangeles"
       @h = - 3
-    elsif params[:city] == "paris"
+    elsif city == "paris"
       @h = 6
-    elsif params[:city] == "london"
+    elsif city == "london"
       @h = 5
     end
-    @venue = Venue.find(params[:id])
     n = 0
     @photos = @venue.photos.take(500).reverse
     n_photos = @photos.count
@@ -126,7 +127,7 @@ class VenuesController < ApplicationController
     groups = []
     while  n < n_photos -2
       n_initial = n
-      week_day = Venue.new.week_day(@photos[n_initial].time_taken,@venue.city)
+      week_day = Venue.new.week_day(@photos[n_initial].time_taken,city)
       users = [@photos[n].user.id]
       initial_time = @photos[n].time_taken
       while @photos[n+1].time_taken < initial_time + 3600*params[:n_hours].to_i
@@ -138,7 +139,7 @@ class VenuesController < ApplicationController
       end
       if users.count >= params[:n_users].to_i
         n_detected = n
-        while @photos[n+1].time_taken < initial_time + 3600*24 && Venue.new.week_day(@photos[n+1].time_taken,@venue.city) == week_day && (@photos[n+1].time_taken - @photos[n].time_taken) < 3600 * 3
+        while @photos[n+1].time_taken < initial_time + 3600*24 && Venue.new.week_day(@photos[n+1].time_taken,city) == week_day && (@photos[n+1].time_taken - @photos[n].time_taken) < 3600 * 3
           n = n +1
           if n == 499
             break
