@@ -1,4 +1,4 @@
-class VerifyURL
+class VerifyURL2
   @queue = :verifyiURL2_queue
   def self.perform(event_id, since_time)
       
@@ -6,7 +6,8 @@ class VerifyURL
       unverified.each do |photo|
           response = HTTParty.get(photo.url[0])
           if response.code == 403 && response.message == "Forbidden"
-            photo.destroy
+            #photo.destroy
+            puts "would destroy photo #{photo.id}"
           end
       end  
   end
