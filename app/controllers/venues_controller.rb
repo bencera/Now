@@ -108,6 +108,15 @@ class VenuesController < ApplicationController
 
 
   def venue_stats
+    if params[:city] == "newyork"
+      @h = 0
+    elsif params[:city] == "sanfrancisco" || params[:city] == "losangeles"
+      @h = - 3
+    elsif params[:city] == "paris"
+      @h = 6
+    elsif params[:city] == "london"
+      @h = 5
+    end
     @venue = Venue.find(params[:id])
     n = 0
     @photos = @venue.photos.take(500).reverse
