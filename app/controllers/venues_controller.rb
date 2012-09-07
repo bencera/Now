@@ -112,6 +112,7 @@ class VenuesController < ApplicationController
     n = 0
     @photos = @venue.photos.take(500).reverse
     n_photos = @photos.count
+    n_detected = 0
     # more_3_photos = []
     groups = []
     while  n < n_photos -2
@@ -127,13 +128,14 @@ class VenuesController < ApplicationController
         end
       end
       if users.count >= params[:n_users].to_i
+        n_detected = n
         while @photos[n+1].time_taken < initial_time + 3600*24 && Venue.new.week_day(@photos[n+1].time_taken) == week_day && (@photos[n+1].time_taken - @photos[n].time_taken) < 3600 * 3
           n = n +1
           if n == 499
             break
           end
         end
-        groups << [n_initial, n-1, users.count]
+        groups << [n_initial, n-1, users.count, n_detected]
       else
         n = n_initial + 1
       end
