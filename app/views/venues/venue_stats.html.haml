@@ -4,13 +4,9 @@
 	= image_tag photo.url[0], :width => "100px", :alt => "#{photo.ig_media_id}"
 %br
 - @groups.each do |g|
-	%h2= "#{g[0]} photos in #{(@photos[g[0] + g[1] - 1].time_taken - @photos[g[1]].time_taken)/3600} hours  on a #{Venue.new.day_to_text(Venue.new.week_day(@photos[g[1]].time_taken))} starting at #{Time.at(@photos[g[1]].time_taken).hour}"
-	%p= "#{time_ago_in_words(Time.at @photos[g[1]].time_taken.to_i)} ago"
+	%h2= "#{g[2]} users in #{(@photos[g[1]].time_taken - @photos[g[0]].time_taken)/3600} hours  on a #{Venue.new.day_to_text(Venue.new.week_day(@photos[g[0]].time_taken))} starting at #{Time.at(@photos[g[0]].time_taken).hour}"
+	%p= "#{time_ago_in_words(Time.at @photos[g[0]].time_taken.to_i)} ago"
 	%br
-	- @users = []
-	- @photos[g[1]..(g[0] + g[1] - 1)].each do |p|
+	- @photos[g[0]..g[1]].each do |p|
 		= Time.at(p.time_taken).hour
 		= image_tag p.url[0], :width => "100px"
-		- @users << p.user.ig_username unless @users.include?(p.user.ig_username)
-	= @users
-	%br

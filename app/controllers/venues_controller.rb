@@ -110,30 +110,87 @@ class VenuesController < ApplicationController
   def venue_stats
     @venue = Venue.find(params[:id])
     n = 0
-    n_photos = @venue.photos.count
-    more_3_photos = []
     @photos = @venue.photos.take(500).reverse
-    while n  < n_photos - 2
-      i = 1
-      p = @photos[n]
-      if @photos[n+1].nil?
-        break
-      end
-      week_day = Venue.new.week_day(p.time_taken)
-      time_taken = p.time_taken
-      while Venue.new.week_day(@photos[n+1].time_taken) == week_day && @photos[n+1].time_taken - time_taken < 3600*24
-        i = i + 1
-        n = n + 1
-        if @photos[n+1].nil?
+    n_photos = @photos.count
+    # more_3_photos = []
+    groups = []
+    while  n < n_photos -2
+      n_initial = n
+      users = [@photos[n].user.id]
+      initial_time = @photos[n].time_taken
+      while @photos[n+1].time_taken < initial_time + 3600*params[:n_hours].to_i
+        users = users | [@photos[n+1].user.id]
+        n = n+1
+        if n == 499
           break
         end
       end
-      if i >= 3
-        more_3_photos << [i, n - i + 1]
+      if users.count >= params[:n_users].to_i
+        while @photos[n+1].time_taken < initial_time + 3600*12
+          n = n +1
+          if n == 499
+            break
+          end
+        end
+        groups << [n_initial, n-1, users.count]
+      else
+        n = n_initial + 1
       end
-      n = n + 1
     end
-    @groups = more_3_photos
+    @groups = groups
+    # while n  < n_photos - 2
+    #   i = 1
+    #   p = @photos[n]
+    #   if @photos[n+1].nil?
+    #     break
+    #   end
+    #   week_day = Venue.new.week_day(p.time_taken)
+    #   time_taken = p.time_taken
+    #   while Venue.new.week_day(@photos[n+1].time_taken) == week_day && @photos[n+1].time_taken - time_taken < 3600*24
+    #     i = i + 1
+    #     n = n + 1
+    #     if @photos[n+1].nil?
+    #       break
+    #     end
+    #   end
+    #   if i >= 3
+    #     more_3_photos << [i, n - i + 1]
+    #   end
+    #   n = n + 1
+    # end
+    # @groups = more_3_photos
+
+  end
+
+  def venue_trending_yn
+    @photos = @venue.photos.take(500).reverse
+    n_photos = @photos.count
+    n = 0
+    groups = []
+    while  n < n_photos -2
+      n_initial = n
+      users = [@photos[n].user.id]
+      initial_time = @photos[n].time_taken
+      while @photos[n+1].time_taken < initial_time + 3600*params[:n_hours]
+        users = users | [@photos[n+1].user.id]
+        n = n+1
+        if n == 499
+          break
+        end
+      end
+      if users.count > params[:n_users]
+        while @photos[n+1].time_taken < initial_time + 3600*12
+          n = n +1
+          if n == 499
+            break
+          end
+        end
+        groups << [n_initial, n-1, users.count]
+      else
+        n = n_initial + 1
+      end
+    end
+    @groups = groups
   end
 
   def venue_autotrend_edit
