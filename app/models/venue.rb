@@ -30,8 +30,15 @@ class Venue
   validates_uniqueness_of :fs_venue_id
   before_validation :create_new_venue
   
-  def week_day(time_s) #time in seconds
-    time = Time.at(time_s.to_i)
+  def week_day(time_s, city) #time in seconds
+    if city == "newyork"
+      tz = "Eastern Time (US & Canada)"
+    elsif city == "sanfrancisco" || city == "losangeles"
+      tz = "Pacific Time (US & Canada)"
+    elsif city == "paris" || city == "london"
+      tz = "Paris"
+    end
+    time = Time.at(time_s.to_i).in_time_zone(tz)
     week_day = time.wday
     hour = time.hour
     if hour <= 5 #days start at 6am

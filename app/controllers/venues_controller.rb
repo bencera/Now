@@ -117,7 +117,7 @@ class VenuesController < ApplicationController
     groups = []
     while  n < n_photos -2
       n_initial = n
-      week_day = Venue.new.week_day(@photos[n_initial].time_taken)
+      week_day = Venue.new.week_day(@photos[n_initial].time_taken,@venue.city)
       users = [@photos[n].user.id]
       initial_time = @photos[n].time_taken
       while @photos[n+1].time_taken < initial_time + 3600*params[:n_hours].to_i
@@ -129,7 +129,7 @@ class VenuesController < ApplicationController
       end
       if users.count >= params[:n_users].to_i
         n_detected = n
-        while @photos[n+1].time_taken < initial_time + 3600*24 && Venue.new.week_day(@photos[n+1].time_taken) == week_day && (@photos[n+1].time_taken - @photos[n].time_taken) < 3600 * 3
+        while @photos[n+1].time_taken < initial_time + 3600*24 && Venue.new.week_day(@photos[n+1].time_taken,@venue.city) == week_day && (@photos[n+1].time_taken - @photos[n].time_taken) < 3600 * 3
           n = n +1
           if n == 499
             break
