@@ -6,8 +6,8 @@ class VerifyURL2
       unverified.each do |photo|
           response = HTTParty.get(photo.url[0])
           if response.code == 403 && response.message == "Forbidden"
-            #photo.destroy
-            puts "would destroy photo #{photo.id}"
+            photo.destroy
+            puts "destroyed photo #{photo.id}"
           end
       end  
   end
