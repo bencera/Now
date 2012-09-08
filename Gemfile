@@ -78,6 +78,10 @@ gem "typhoeus", '~> 0.2.2'
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
+group :development do
+  gem 'faker', '1.0.1'
+end
+
 group :test do
   # Pretty printed test output
   gem 'turn', '0.8.2', :require => false
