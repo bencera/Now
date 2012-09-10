@@ -1,8 +1,8 @@
 class Trending2
   @queue = :trending2_queue
 
-  stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "#", "/", "@", ":", "<", ">", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-  stop_words = ["a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+  @stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "#", "/", "@", ":", "<", ">", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+  @stop_words = ["a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
     "a's", "able", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", 
     "again", "against", "ain't", "all", "allow", "allows", "almost", "alone", "along", "already", "also", "although", "always", 
     "am", "among", "amongst", "an", "and", "another", "any", "anybody", "anyhow", "anyone", "anything", "anyway", "anyways", 
@@ -58,7 +58,7 @@ class Trending2
     new_events = find_new_trending(14, 8, hours, city, min_users)
     #could log how many events we created here
 
-    perform_event_maintenance(new_events)
+    perform_event_maintenance(new_events, hours)
 
   end
 
@@ -129,28 +129,26 @@ class Trending2
     return new_events
   end
 
-  def self.perform_event_maintenance(ignore_events)
+  def self.perform_event_maintenance(ignore_events, hours)
 
     Event.where(:status => "trending").each do |event|
       if( (Time.now.to_i - event.start_time > 12.hours.to_i) ||
        (Venue.find(event.venue_id).photos.last_hours(5).count == 0) )
         event.update_attribute(:status, "trended")
-      elsif 
-        event.update_attribute(:status, "trended")
       else
       #rajouter les nouvelles photos, updater nb photos, nb_people, revoir intensite?
-        update_event_photos(event)
+        update_event_photos(event, hours)
       end
     end
 
-    wating_events = Event.where(:status => "waiting") - ignore_events
+    waiting_events = Event.where(:status => "waiting") - ignore_events
 
     waiting_events.each do |event|
       if (Time.now.to_i - event.start_time) >  12.hours.to_i
         event.update_attribute(:status, "not_trending")
         event.update_attribute(:shortid, nil)
       else
-        update_event_photos(event)
+        update_event_photos(event, hours)
       end
     end
   end
@@ -184,9 +182,9 @@ class Trending2
     new_event = venue.events.create(:start_time => photos.last.time_taken,
                              :end_time => photos.first.time_taken,
                              :coordinates => photos.first.coordinates,
-                             :n_photos => venue.photos.last_hours(hours).count,
+                             :n_photos => photos.count,
                              :status => "waiting",
-                             :city => city,
+                             :city => venue.city,
                              :keywords => keywords)
     
     new_event.photos.push(*photos)
@@ -216,12 +214,12 @@ class Trending2
       comments << photo.caption unless photo.caption.blank?
       comments << " "
     end
-    stop_characters.each do |c|
+    @stop_characters.each do |c|
       comments = comments.gsub(c, '')
     end
     comments = comments.downcase
     words = comments.split(/ /)
-    relevant_words = words - stop_words
+    relevant_words = words - @stop_words
     venue_words = venue_name.split(/ /)
     relevant_words = relevant_words - venue_words
 
@@ -243,7 +241,7 @@ class Trending2
     return keywords
   end
 
-  def self.update_event_photos(event)
+  def self.update_event_photos(event, hours)
     event.venue.photos.last_hours(hours).each do |photo|
       unless photo.events.first == event
         event.photos << photo
