@@ -64,9 +64,9 @@ class Trending2
 
 
 #TODO: this can be separated into smaller modules still
-  def find_new_trending(num_consecutive, num_days_of_week, hours, city, min_users)
+  def self.find_new_trending(num_consecutive, num_days_of_week, hours, city, min_users)
 
-    venues = intentify_venues(hours, city, min_users)
+    venues = identify_venues(hours, city, min_users)
 
     now = Time.now
 
@@ -84,17 +84,19 @@ class Trending2
 
     new_events = []
 
-    venues.each do |venue, values| 
+    venues.each do |venue_name, values| 
       
       consecutive_user_lists = Array.new(num_consecutive, [])
       weekdays_user_lists = Array.new(num_days_of_week, [])
+
+      venue = Venue.find(venue_name)
 
       event = last_event(venue)
 
       #TODO: event should have functions trending? can_trend? etc simplify this logic
       if(!event || !cannot_trend(event))
         
-        Venue.find(venue).photos.where(:time_taken.gt => start_time).where(:time_taken.lt => thisMorning).order_by([[:time_taken, :desc]]).each do |photo|
+        venue.photos.where(:time_taken.gt => start_time).where(:time_taken.lt => thisMorning).order_by([[:time_taken, :desc]]).each do |photo|
           photodt = DateTime.new(photo.time_taken)
 
           #we need to know how many unique users upload photos on a given day, not how many photos we see each day
@@ -118,7 +120,7 @@ class Trending2
         values[:std_weekday] = Mathstats.standard_deviation(weekday_series)
 
         photos = venue.photos.last_hours(hours).order_by([[:time_taken, :desc]])
-        keywords = get_keywords(venue.name, photos)
+        keywords = get_keywords(venue_name, photos)
         #original code seemed to include trending venues if > max(mean_month/2, min_photos) 
         new_events << trend_new_event(venue, photos, keywords) if values[:users].count >= values[:mean_consecutive]
       end
@@ -127,7 +129,7 @@ class Trending2
     return new_events
   end
 
-  def perform_event_maintenance(ignore_events)
+  def self.perform_event_maintenance(ignore_events)
 
     Event.where(:status => "trending").each do |event|
       if( (Time.now.to_i - event.start_time > 12.hours.to_i) ||
@@ -154,7 +156,7 @@ class Trending2
   end
 
 
-  def identify_venues(hours, city, min_users)
+  def self.identify_venues(hours, city, min_users)
     photos_lasthours = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
     venues = {}
     photos_lasthours.each do |photo|
@@ -174,12 +176,11 @@ class Trending2
     venues.keep_if { |k, v| v[:users].count >= min_users }
   end
 
-  def trend_new_event(trending_venue, photos, keywords)
+  def self.trend_new_event(venue, photos, keywords)
 
     # if this venue has never trended or if the most recent event 1) isn't trending/waiting
     # and 2) didn't start in the last 6 hours, create a new event 
     
-    venue = Venue.find(trending_venue)
     new_event = venue.events.create(:start_time => photos.last.time_taken,
                              :end_time => photos.first.time_taken,
                              :coordinates => photos.first.coordinates,
@@ -200,19 +201,19 @@ class Trending2
     return new_event
   end
 
-  def last_event(venue)
-    event = Event.where(:venue_id => venue).order_by([[:start_time, :desc]]).first  
+  def self.last_event(venue)
+    event = Event.where(:venue_id => venue.id).order_by([[:start_time, :desc]]).first  
   end
 
-  def cannot_trend(event)
+  def self.cannot_trend(event)
     return(event.status == "trending" || event.status == "waiting" || (event.start_time > 6.hours.ago.to_i &&
       event.status == "not trending"))
   end
 
-  def get_keywords(venue_name, photos)
+  def self.get_keywords(venue_name, photos)
     comments = ""
     photos.each do |photo|
-      comments << photo.caption unless Photo.find(photo).caption.nil?
+      comments << photo.caption unless photo.caption.blank?
       comments << " "
     end
     stop_characters.each do |c|
@@ -242,7 +243,7 @@ class Trending2
     return keywords
   end
 
-  def update_event_photos(event)
+  def self.update_event_photos(event)
     event.venue.photos.last_hours(hours).each do |photo|
       unless photo.events.first == event
         event.photos << photo
