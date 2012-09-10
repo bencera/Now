@@ -194,7 +194,6 @@ class Trending2
       shortid = Event.random_url(rand(62**6))
     end
     new_event.update_attribute(:shortid, shortid)
-    UserMailer.trending(new_event).deliver
 
     return new_event
   end
@@ -248,8 +247,9 @@ class Trending2
         event.inc(:n_photos, 1)
       end
     end
-    #i don't like this magic constant here, but i'll leave it for now
-    event.update_attribute(:end_time, event.venue.photos.last_hours(2).first.time_taken) unless event.venue.photos.last_hours(2).first.nil?
+    Resque.enqueue(VerifyURL2, event.id, event.end_time)
+    Resque.enqueue_in(10.minutes, VerifyURL2, event.id, event.end_time)
+    event.update_attribute(:end_time, event.venue.photos.last_hours(hours).first.time_taken) unless event.venue.photos.last_hours(hours).first.nil?
   end
 end
 
