@@ -63,11 +63,11 @@ class Trending
         limit_photos = 5
         hours = 2
       when "paris"
-        limit_photos = 2
-        hours = 3
+        limit_photos = 4
+        hours = 2
       when "london"
-        limit_photos = 2
-        hours = 3
+        limit_photos = 4
+        hours = 2
       when "saopaulo"
         limit_photos = 6
       when "losangeles"
