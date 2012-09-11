@@ -53,10 +53,11 @@ class Trending2
   def self.perform(hours, city, min_users)
 
     hours = hours.to_i
-    min_users = min_users.to_i;
+    min_users = min_users.to_i
 
     new_events = find_new_trending(14, 8, hours, city, min_users)
     #could log how many events we created here
+
 
     perform_event_maintenance(new_events, hours)
 
