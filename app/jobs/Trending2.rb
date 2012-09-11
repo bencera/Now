@@ -198,6 +198,8 @@ class Trending2
 
 # commented out for testing on workers CONALL
 
+    new_event = nil
+
 #    new_event = venue.events.create(:start_time => photos.last.time_taken,
 #                             :end_time => photos.first.time_taken,
 #                             :coordinates => photos.first.coordinates,

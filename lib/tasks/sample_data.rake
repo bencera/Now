@@ -99,7 +99,8 @@ def make_photos_for_new_events
                          :time_taken => (m * 5).minutes.ago.to_i,
                          :coordinates => [-74.00313913822174, 40.73359624463056],
                          :city => "newyork",
-                         :venue => venue)
+                         :venue => venue,
+                         :caption => Faker::Lorem.sentence(35))
     end
   end
 
@@ -113,7 +114,8 @@ def make_photos_for_new_events
                          :time_taken => (m * 5).minutes.ago.to_i,
                          :coordinates => [-74.00313913822174, 40.73359624463056],
                          :city => "newyork",
-                         :venue => venue)
+                         :venue => venue,
+                         :caption => Faker::Lorem.sentence(35))
     end
   end
 end
