@@ -79,11 +79,11 @@ class Trending2
 
   def self.identify_venues(recent_photos, min_users)
     
-    venues = Hash.new { |h,k| h[k] = [] }
+    venue_users = Hash.new { |h,k| h[k] = [] }
 
     #only keep venues with min_users 
     recent_photos.each do |photo|
-      venues[photo.venue_id] << photo.user_id unless venues[photo.venue_id].include?(photo.user_id)
+      venue_users[photo.venue_id] << photo.user_id unless venue_users[photo.venue_id].include?(photo.user_id)
     end
     venues.keep_if { |k, v| v[:users].count >= min_users }
   end
