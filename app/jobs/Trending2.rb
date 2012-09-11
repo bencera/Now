@@ -52,8 +52,18 @@ class Trending2
 
   def self.perform(hours, city, min_users)
 
+    #does resque only pass strings?  find this out
     hours = hours.to_i
     min_users = min_users.to_i
+<<<<<<< HEAD
+=======
+
+    recent_photos = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
+
+    throw_out_already_identified(recent_photos)
+
+    venues = identify_venues(recent_photos, min_users)
+>>>>>>> saving work in progress on trending2 rewrite
 
     new_events = find_new_trending(14, 8, hours, city, min_users)
     #could log how many events we created here
@@ -63,11 +73,27 @@ class Trending2
 
   end
 
+  def self.throw_out_already_identified(recent_photos)
+    #no need to identify a venue if it already has a trending or waiting event
+    recent_photos.keep_if do |photo| 
+      event = last_event(photo.venue)
+      event.nil || (event.status != "trending" && event.status != "waiting")
+    end
+  end
+
+  def self.identify_venues(recent_photos, min_users)
+    
+    venues = Hash.new { |h,k| h[k] = [] }
+
+    #only keep venues with min_users 
+    recent_photos.each do |photo|
+      venues[photo.venue_id] << photo.user_id unless venues[photo.venue_id].include?(photo.user_id)
+    end
+    venues.keep_if { |k, v| v[:users].count >= min_users }
+  end
 
 #TODO: this can be separated into smaller modules still
   def self.find_new_trending(num_consecutive, num_days_of_week, hours, city, min_users)
-
-    venues = identify_venues(hours, city, min_users)
 
     now = Time.now
 
@@ -155,25 +181,6 @@ class Trending2
   end
 
 
-  def self.identify_venues(hours, city, min_users)
-    photos_lasthours = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
-    venues = {}
-    photos_lasthours.each do |photo|
-      if venues.include?(photo.venue_id)
-        venues[photo.venue_id][:photos] << photo.id.to_s
-        unless venues[photo.venue_id][:users].include?(photo.user_id)
-          venues[photo.venue_id][:users] << photo.user_id
-        end
-      else
-        venues[photo.venue_id] = {:users => [photo.user_id],
-                                  :photos => [photo.id.to_s],
-                                  :venue_photos => photo.venue_photos,
-                                  :category => photo.category
-                                   }
-      end
-    end
-    venues.keep_if { |k, v| v[:users].count >= min_users }
-  end
 
   def self.trend_new_event(venue, photos, keywords)
 
