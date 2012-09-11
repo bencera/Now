@@ -58,6 +58,12 @@ fetch_photos_london:
   args: "1434811"
   description: "Fetchs instagram pics every minute"
 
+fetch_photos_prague:
+  every: "30s"
+  class: Fetchigphotos
+  args: "1449368"
+  description: "Fetchs instagram pics every minute"
+
 trending:
   every: "10m"
   class: Trending

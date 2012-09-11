@@ -52,28 +52,31 @@ class Trending
       "your", "yours", "yourself", "yourselves", "zero"]
 
 
-   cities = ["newyork", "paris", "sanfrancisco", "london", "losangeles"]
+   cities = ["newyork", "paris", "sanfrancisco", "london", "losangeles", "prague"]
    Rails.logger.info("Starting trending calculation")
    cities.each do |city|
     case city
       when "newyork"
         limit_photos = 5
-        hours = 2
+        hours = 3
       when "sanfrancisco"
         limit_photos = 5
-        hours = 2
+        hours = 3
       when "paris"
         limit_photos = 4
-        hours = 2
+        hours = 3
       when "london"
         limit_photos = 4
-        hours = 2
+        hours = 3
       when "saopaulo"
         limit_photos = 6
       when "losangeles"
         limit_photos = 6
       when "tokyo"
         limit_photos = 6
+      when "prague"
+        limit_photos = 4
+        hours = 3
       end
 
     Rails.logger.info("city: #{city}")

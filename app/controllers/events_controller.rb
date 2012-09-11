@@ -67,6 +67,8 @@ class EventsController < ApplicationController
       @city = "Sao Paulo"
     when "losangeles"
       @city = "Los Angeles"
+    when "prague"
+      @city = "Prague"
     end
   end
   
@@ -103,6 +105,8 @@ class EventsController < ApplicationController
       @city = "Sao Paulo"
     when "losangeles"
       @city = "Los Angeles"
+    when "prague"
+      @city = "Prague"
     end
   end
 
