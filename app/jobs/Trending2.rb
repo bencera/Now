@@ -66,7 +66,7 @@ class Trending2
     venues = identify_venues(recent_photos, min_users)
 
     # calculate the mean daily users for last 14 days in this venue 
-    get_venue_stats(venues, 14, min_users)
+    get_venue_stats(venues, 14)
 
 
     new_events = []
@@ -77,7 +77,7 @@ class Trending2
     end
 
     #update photos for existing events, untrend dead events, ignore the events we just created
-    events = Event.where(:status.in => ["trending", "waiting"]) - ignore_events
+    events = Event.where(:status.in => ["trending", "waiting"]) - new_events
 
     events.each do |event| 
       status = event.status
@@ -110,15 +110,18 @@ class Trending2
 
   def self.identify_venues(recent_photos, min_users)
      
-    venue = Hash.new do |h,k| 
+    venues = Hash.new do |h,k| 
       h[k] = {} 
       h[k][:users] = []
       h[k][:photos] = []
     end
 
     recent_photos.each do |photo|
-      venue[photo.venue_id][:photos] << photo
-      venue[photo.venue_id][:users] << photo.user_id unless venue[photo.venue_id][:users].include?(photo.user_id)
+      #for some reason, it needs to initialize here -- i'm sure there's a prettier way of doing this
+      venues[photo.venue_id]
+
+      venues[photo.venue_id][:photos] << photo
+      venues[photo.venue_id][:users] << photo.user_id unless venues[photo.venue_id][:users].include?(photo.user_id)
     end
 
     #only keep venues with min_users 
@@ -265,9 +268,11 @@ class Trending2
     keywords = get_keywords(event.venue.name, event.photos)
     event.update_attribute(:keywords, keywords)
 
-    Resque.enqueue(VerifyURL2, event.id, event.end_time)
-    Resque.enqueue_in(10.minutes, VerifyURL2, event.id, event.end_time)
-    event.update_attribute(:end_time, event.venue.photos.last_hours(hours).first.time_taken) unless event.venue.photos.last_hours(hours).first.nil?
+    new_end_time = event.photos.last.time_taken
+
+    #####Resque.enqueue(VerifyURL2, event.id, event.end_time)
+    #####Resque.enqueue_in(10.minutes, VerifyURL2, event.id, event.end_time)
+    event.update_attribute(:end_time, new_end_time) 
   end
 end
 
