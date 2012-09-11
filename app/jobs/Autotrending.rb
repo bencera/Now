@@ -29,7 +29,7 @@ class Autotrending
 	        event.category = venue.autocategory
 	        # assign it a pre-selected illustration (6 available, to be used later on web pages + app)
 	        event.illustration = venue.autoillustrations[rand(venue.autoillustrations.size)]
-	        # give it a random initial like (for the iPHone app)
+	        # give it a random initial like (for the iPhone app)
 	        likes = [2,3,4,5,6,7,8,9]
 	        event.initial_likes = likes[rand(likes.size)]
 	        # save it
