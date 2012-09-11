@@ -4,10 +4,10 @@ class Autotrending
 	def self.perform(test)
 		Venue.where(:autotrend => true).each do |venue|
 			#if it hasn't trended in the past 24h or not trending now
-			if Event.where(:venue_id => venue.id).where(:status => "trending").empty? && Time.now.to_i - Event.where(:venue_id => venue.id).where(:status => "trended").order_by([:end_time, :desc]).first.end_time > 1 * 15 * 3600
+			if Event.where(:venue_id => venue.id).where(:status => "trending").empty? && Time.now.to_i - Event.where(:venue_id => venue.id).where(:status => "trended").order_by([:end_time, :desc]).first.end_time > 15.hours
 				#if the venue is already detected and pending
 				event = Event.where(:venue_id => venue.id).where(:status => "waiting").first
-				if event
+				if event && venue.photos.last_hours(venue.threshold[1]).distinct(:user_id).count >= venue.threshold[0]
 	      	event.status = "trending"
 	        event.description = venue.descriptions[rand(venue.descriptions.size)]
 	        event.category = venue.autocategory
