@@ -64,6 +64,12 @@ trending:
   args: "3"
   description: "Trending emails"
 
+autotrending:
+  every: "10m"
+  class: Autotrending
+  args: "3"
+  description: "Autotrending venues"
+
 fetch_venue_photos:
   every: "10m"
   class: Fetchvenuephotos

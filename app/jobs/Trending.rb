@@ -75,7 +75,7 @@ class Trending
       when "tokyo"
         limit_photos = 6
       end
-      
+
     Rails.logger.info("city: #{city}")
     
     photos_lasthours = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
