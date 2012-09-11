@@ -52,6 +52,8 @@ class Trending2
 
   def self.perform(hours, city, min_users)
 
+    Rails.logger.info("started Trending2 call hours: #{hours} city #{city} min_users #{min_users}")
+
     #does resque only pass strings?  find this out
     hours = hours.to_i
     min_users = min_users.to_i
@@ -59,16 +61,21 @@ class Trending2
     # find all photos in given city for the given number of hours
     recent_photos = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
 
+    recent_photo_count = recent_photos.count 
     # we don't need photos from trending/waiting/not_trending venues
     throw_out_cannot_trend(recent_photos)
+    
+    Rails.logger.info("Trending2: pulled #{recent_photo_count} photos, dropped #{recent_photo_count - recent_photos.count} (venues cannot trend)")
 
     # create the venues hash that will contain lists of photos and users
     venues = identify_venues(recent_photos, min_users)
 
+    Rails.logger.info("Trending2: identified #{venues.count} possibly trending venues")
+
     # calculate the mean daily users for last 14 days in this venue 
     get_venue_stats(venues, 14)
 
-
+    Rails.logger.info("Trending2: finished calculating venue stats")
     new_events = []
     # create a "waiting" event all venues with more users than mean for last 14 days 
     # remember, we're only looking at venues that don't already have trending/waiting/not_trending
@@ -76,16 +83,28 @@ class Trending2
       new_events << trend_new_event(venue_id, values[:photos]) if values[:users].count >= values[:mean_consecutive]
     end
 
+    Rails.logger.info("Trending2: created #{new_events.count} new events")
+
+
+    #######
+    ####### event maintenance begins here
+    #######
+
     #update photos for existing events, untrend dead events, ignore the events we just created
     events = Event.where(:status.in => ["trending", "waiting"]) - new_events
 
+    Rails.logger.info("Trending2: beginning event maintenance")
     events.each do |event| 
       status = event.status
       update_event_photos(event)
       if( ( event.start_time < 12.hours.ago.to_i) || ( event.end_time < 5.hours.ago) )
-        event.update_attribute(:status, status == "trending" ? "trended" : "not_trending")
+# commented out for testing on workers CONALL
+#        event.update_attribute(:status, status == "trending" ? "trended" : "not_trending")
+        Rails.logger.info("Trending2: event #{event.id} transitioning status from #{status} to #{status == "trending" ? "trended" : "not_trending"}")
       end
     end
+
+    Rails.logger.info("Trending2: done with trending")
 
   end
 
@@ -177,22 +196,28 @@ class Trending2
     venue = Venue.find(venue_id) 
     keywords = get_keywords(venue.name, photos)
 
-    new_event = venue.events.create(:start_time => photos.last.time_taken,
-                             :end_time => photos.first.time_taken,
-                             :coordinates => photos.first.coordinates,
-                             :n_photos => photos.count,
-                             :status => "waiting",
-                             :city => venue.city,
-                             :keywords => keywords)
-    
-    new_event.photos.push(*photos)
+# commented out for testing on workers CONALL
+
+#    new_event = venue.events.create(:start_time => photos.last.time_taken,
+#                             :end_time => photos.first.time_taken,
+#                             :coordinates => photos.first.coordinates,
+#                             :n_photos => photos.count,
+#                             :status => "waiting",
+#                             :city => venue.city,
+#                             :keywords => keywords)
+#    
+#    new_event.photos.push(*photos)
+
+    Rails.logger.info("created new event at venue #{venue.id} with #{photos.count} photos")
 
 #TODO: this should be a method in the event model -- i've seen this copy-pasted elsewhere
     shortid = Event.random_url(rand(62**6))
     while Event.where(:shortid => shortid).first
       shortid = Event.random_url(rand(62**6))
     end
-    new_event.update_attribute(:shortid, shortid)
+
+# commented out for testing on workers CONALL
+#    new_event.update_attribute(:shortid, shortid)
 
     return new_event
   end
@@ -266,13 +291,15 @@ class Trending2
     end
 
     keywords = get_keywords(event.venue.name, event.photos)
-    event.update_attribute(:keywords, keywords)
+# commented out for testing on workers CONALL
+#    event.update_attribute(:keywords, keywords)
 
     new_end_time = event.photos.last.time_taken
 
+# commented out for testing on workers CONALL
     #####Resque.enqueue(VerifyURL2, event.id, event.end_time)
     #####Resque.enqueue_in(10.minutes, VerifyURL2, event.id, event.end_time)
-    event.update_attribute(:end_time, new_end_time) 
+#   event.update_attribute(:end_time, new_end_time) 
   end
 end
 
