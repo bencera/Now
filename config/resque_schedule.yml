@@ -89,7 +89,7 @@ fetch_venue_photos:
   description: "Fetch Venue photos"
 
 maintenance:
-  every: "30m"
-  class: maintenance
+  every: "10m"
+  class: Maintenance
   args: 
   description: "remove duplicate events and photos"
