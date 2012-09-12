@@ -50,7 +50,7 @@ class Trending2
     "your", "yours", "yourself", "yourselves", "zero"] 
 
 
-  def self.perform(hours, city, min_users)
+  def self.perform(city, hours, min_users)
 
     Rails.logger.info("started Trending2 call hours: #{hours} city #{city} min_users #{min_users}")
 
