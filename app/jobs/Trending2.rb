@@ -101,7 +101,7 @@ class Trending2
     events.each do |event| 
       status = event.status
       update_event_photos(event)
-      if( ( event.start_time < 12.hours.ago.to_i) || ( event.end_time < 5.hours.ago) )
+      if( ( event.start_time < 12.hours.ago.to_i) || ( event.end_time < 5.hours.ago.to_i) )
 # commented out for testing on workers CONALL
 #        event.update_attribute(:status, status == "trending" ? "trended" : "not_trending")
         Rails.logger.info("Trending2: event #{event.id} transitioning status from #{status} to #{status == "trending" ? "trended" : "not_trending"}")
