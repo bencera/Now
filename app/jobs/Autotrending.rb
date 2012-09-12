@@ -54,12 +54,17 @@ class Autotrending
 	      	while Event.where(:shortid => shortid).first
 	        	shortid = Event.random_url(rand(62**6))
 	      	end
+	      	likes = [2,3,4,5,6,7,8,9]
 	      	#create a new event in the DB that is already "trending"
 	      	new_event = venue.events.create(:venue_id => venue.id,
 	                               :start_time => photos.last.time_taken,
 	                               :end_time => photos.first.time_taken,
+	                               :description => venue.descriptions[rand(venue.descriptions.size)],
+	                               :category => venue.autocategory,
+	                               :illustration => venue.autoillustrations[rand(venue.autoillustrations.size)],
 	                               :coordinates => photos.first.coordinates,
 	                               :n_photos => venue.photos.last_hours(venue.threshold[1]).count,
+	                               :initial_likes => likes[rand(likes.size)],
 	                               :status => "trending",
 	                               :city => venue.city,
 	                               :shortid => shortid)
@@ -74,7 +79,7 @@ class Autotrending
 	        	n = APN::Notification.new
 	        	n.subscription = s
 	        	n.alert = alert
-	        	n.event = event.id
+	        	n.event = new_event.id
 	        	n.deliver
 	        end
 	      end
