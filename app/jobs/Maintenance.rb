@@ -31,6 +31,9 @@ class Maintenance
         end
 
         bad_photo_list.each do |bad_photo|
+          # i'm not destroying the photo for now because i want to see if we can learn anything from it
+          # eventually this line should be changed to Photo.find(bad_photo).destroy so we don't have 
+          # duplicates taking up space in the db.
           event.photos.delete(Photo.find(bad_photo))
         end
         if bad_photo_list.count > 0
