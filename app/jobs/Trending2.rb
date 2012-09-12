@@ -50,13 +50,17 @@ class Trending2
     "your", "yours", "yourself", "yourselves", "zero"] 
 
 
-  def self.perform(city, hours, min_users)
+  def self.perform(args)
+
+    argv = args.split(" ")
+
+    city = argv[0]
+
+    hours = argv[1].to_i
+
+    min_users = argv[2].to_i
 
     Rails.logger.info("started Trending2 call hours: #{hours} city #{city} min_users #{min_users}")
-
-    #does resque only pass strings?  find this out
-    hours = hours.to_i
-    min_users = min_users.to_i
 
     # find all photos in given city for the given number of hours
     recent_photos = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
