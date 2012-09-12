@@ -11,8 +11,7 @@ class Maintenance
 
       if venue_list.include? event.venue_id
         #remove event if it's at a venue that has another event trending
-        # Commented out for safety
-        #######event.destroy
+        event.destroy
         Rails.logger.info("Maintenance: found duplicate event at venue #{event.venue_id}, event_id #{event.id}")
       else
 
