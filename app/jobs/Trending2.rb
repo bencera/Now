@@ -95,7 +95,7 @@ class Trending2
     #######
 
     #update photos for existing events, untrend dead events, ignore the events we just created
-    events = Event.where(:status.in => ["trending", "waiting"]) - new_events
+    events = Event.where(:city => city).where(:status.in => ["trending", "waiting"]) - new_events
 
     Rails.logger.info("Trending2: beginning event maintenance")
     events.each do |event| 
