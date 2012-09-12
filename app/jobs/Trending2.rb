@@ -175,7 +175,7 @@ class Trending2
       venue = Venue.find(venue_id)
 
       venue.photos.where(:time_taken.gt => start_time).where(:time_taken.lt => thisMorning).order_by([[:time_taken, :desc]]).each do |photo|
-        photodt = DateTime.new(photo.time_taken)
+        photodt = Time.at(photo.time_taken).to_datetime
 
         #we need to know how many unique users upload photos on a given day
         if(photodt > consecutiveDaysBegin)
