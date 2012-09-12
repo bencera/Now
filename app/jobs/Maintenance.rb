@@ -15,6 +15,8 @@ class Maintenance
         ######event.update_attribute(:status => "error")
         Rails.logger.info("Maintenance: found duplicate event at venue #{event.venue_id}, event_id #{event.id}")
       else
+
+        venue_list << event.venue_id
         #remove dupilicate photos
         
         photo_list = []
@@ -23,6 +25,8 @@ class Maintenance
         event.photos.each do |photo|
           if photo_list.include? photo.ig_media_id
             bad_photo_list << photo.id
+          else
+            photo_list << photo.ig_media_id
           end
         end
 
