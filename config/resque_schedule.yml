@@ -73,7 +73,7 @@ trending:
 trending_2_test:
   every: "10m"
   class: Trending2
-  args: "newyork" 3 5
+  args: "newyork" "3" "5"
   description: "Trending emails"
 
 trending_2_test:
