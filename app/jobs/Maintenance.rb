@@ -32,6 +32,8 @@ class Maintenance
 
         event.photos.delete_if { |photo| bad_photo_list.include? photo.id }
         if bad_photo_list.count > 0
+          event.update_attribute(:n_photos, event.photos.count)
+          event.save!
           Rails.logger.info("Maintenance: removed #{bad_photo_list.count} duplicate photos from event #{event.id} -- #{bad_photo_list.join("\t")}")
         end
       end
