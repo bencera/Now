@@ -28,8 +28,9 @@ class Maintenance
 
         #commented out things that will change db -- CONALL
         #####event.photos.delete_if { |photo| bad_photo_list.include? photo.id }
-        Rails.logger.info("Maintenance: removed #{bad_photo_list.count} duplicate photos from event #{event.id} -- #{bad_photo_list.join("\t")}")
-
+        if bad_photo_list.count > 0
+          Rails.logger.info("Maintenance: removed #{bad_photo_list.count} duplicate photos from event #{event.id} -- #{bad_photo_list.join("\t")}")
+        end
       end
     end
     Rails.logger.info("Maintenance: finished event duplicate maintenance")
