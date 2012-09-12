@@ -29,7 +29,8 @@ class Fetchvenuephotos
         #access_token = $redis.smembers("accesstokens")[rand($redis.smembers("accesstokens").size)]
         #client = Instagram.client(:access_token => access_token)
         response = Instagram.location_recent_media(venue_id)
-        puts "#{Venue.where(:ig_venue_id => venue_id).first.name}"
+        
+        #puts "#{Venue.where(:ig_venue_id => venue_id).first.name}"
         response.data.each do |media|
           unless media.location.id.nil?
             unless Photo.exists?(conditions: {ig_media_id: media.id})
