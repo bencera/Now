@@ -179,8 +179,8 @@ class Trending2
         photodt = Time.at(photo.time_taken).to_datetime
 
         #we need to know how many unique users upload photos on a given day
-        if(photodt > consecutiveDaysBegin)
-          index = photodt.mjd - consecutiveDaysBegin.mjd
+        if(photodt > start_time)
+          index = photodt.mjd - start_time.mjd
           consecutive_user_lists[index] << photo.user_id unless consecutive_user_lists[index].include? photo.user_id
         end
       end
