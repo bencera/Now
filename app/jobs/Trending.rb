@@ -150,7 +150,7 @@ class Trending
         
         if venue[1]["n_photos"] > mean_month or Venue.find(venue[0]).photos.last_hours(2).distinct(:user_id).count >= [limit_photos, mean_month/2].max_by {|x| x }
           
-        
+          Rails.logger.info("added event at venue #{venue[0]} with #{venue[1]["n_photos"]} >= #{mean_month} / 2")
           trending_venues[venue[0]] = {"n_photos" => venue[1]["n_photos"], "keywords" => [], "stats" => []}
           trending_venues[venue[0]]["stats"] << mean_month
           trending_venues[venue[0]]["stats"] << std_month

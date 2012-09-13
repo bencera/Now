@@ -83,11 +83,12 @@ class Trending2
     get_venue_stats(venues, 14)
 
     Rails.logger.info("Trending2: finished calculating venue stats")
+
     new_events = []
     # create a "waiting" event all venues with more users than mean for last 14 days 
     # remember, we're only looking at venues that don't already have trending/waiting/not_trending
     venues.each do |venue_id, values| 
-      # TODO: find a better value than just mean / 2 -- this should be more sophisticated
+
       new_events << trend_new_event(venue_id, values[:photos]) if values[:users].count >= values[:mean_consecutive]/2
 
       #this log should be taken out when done testing (or make it a debug) CONALL
