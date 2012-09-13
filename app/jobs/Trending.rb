@@ -215,6 +215,8 @@ class Trending
         end
         new_event.update_attribute(:shortid, shortid)
         UserMailer.trending(new_event).deliver #avec un lien image different selon si levent a deja ete anote par quelqu un dautre (different photo)
+
+        Rails.logger.info("Trending1: created new event at venue #{venue.id} with #{photos.count} photos")
       elsif Event.where(:venue_id => event[0]).where(:status => "not_trending").where(:start_time.gt => 6.hours.ago.to_i).first
         #do nothing
       else
