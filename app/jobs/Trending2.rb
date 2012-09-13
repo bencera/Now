@@ -124,7 +124,7 @@ class Trending2
   def self.throw_out_cannot_trend(recent_photos)
     #no need to identify a venue if it already has a trending or waiting event
     recent_photos.keep_if do |photo| 
-      event = last_event(photo.venue)
+      event = last_event(photo.venue) unless photo.venue.nil?
       event.nil? || !(cannot_trend(event))
     end
   end
