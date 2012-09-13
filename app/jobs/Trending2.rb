@@ -105,7 +105,7 @@ class Trending2
     events.each do |event| 
       status = event.status
       update_event_photos(event)
-      if( ( event.start_time < 12.hours.ago.to_i) || ( event.end_time < 6.hours.ago.to_i) )
+      if( !event_began_today?(event) || ( event.start_time < 12.hours.ago.to_i) || ( event.end_time < 6.hours.ago.to_i) )
 # commented out for testing on workers CONALL
 #        event.update_attribute(:status, status == "trending" ? "trended" : "not_trending")
         Rails.logger.info("Trending2: event #{event.id} transitioning status from #{status} to #{status == "trending" ? "trended" : "not_trending"}")
@@ -204,10 +204,10 @@ class Trending2
     venue = Venue.find(venue_id) 
     keywords = get_keywords(venue.name, photos)
 
-# commented out for testing on workers CONALL
-
+# remove this when we're done testing CONALL
     new_event = nil
 
+# commented out for testing on workers CONALL
 #    new_event = venue.events.create(:start_time => photos.last.time_taken,
 #                             :end_time => photos.first.time_taken,
 #                             :coordinates => photos.first.coordinates,
@@ -218,7 +218,7 @@ class Trending2
 #    
 #    new_event.photos.push(*photos)
 
-    Rails.logger.info("created new event at venue #{venue.id} with #{photos.count} photos")
+    Rails.logger.info("Trending2: created new event at venue #{venue.id} with #{photos.count} photos")
 
 #TODO: this should be a method in the event model -- i've seen this copy-pasted elsewhere
     shortid = Event.random_url(rand(62**6))
