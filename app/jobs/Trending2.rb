@@ -233,7 +233,7 @@ class Trending2
   end
 
 
-#TODO: these next two functions should be model methods
+#TODO: these next three functions should be model methods
   def self.last_event(venue)
     event = Event.where(:venue_id => venue.id).order_by([[:start_time, :desc]]).first  
   end
@@ -242,6 +242,36 @@ class Trending2
   def self.cannot_trend(event)
     return(event.status == "trending" || event.status == "waiting" || (event.start_time > 6.hours.ago.to_i &&
       event.status == "not trending"))
+  end
+
+  def self.event_began_today?(event)
+    # the day begins at 6am.  if an event started before 3am today, it must stop trending
+    # at 6.  if it started after 3am, then it can continue.  we don't want truly exceptional
+    # events that occur early to suddenly cut off at 6
+
+    #quick break just to make sure it's within 24 hours
+    if event.start_time < 24.hours.ago.to_i
+      return false
+    end
+
+    if event.city == "newyork"
+      tz = "Eastern Time (US & Canada)"
+    elsif event.city == "sanfrancisco" || event.city == "losangeles"
+      tz = "Pacific Time (US & Canada)"
+    elsif event.city == "paris"
+      tz = "Paris"
+    elsif event.city == "london"
+      tz = "Edinburgh"
+    end
+
+    current_time = Time.now.in_time_zone(tz)
+    event_start_time = Time.at(event.start_time).in_time_zone(tz)
+
+    current_day = ( current_time.wday - ( current_time.hour < 6 ? 1 : 0 ) ) % 7
+    event_start_day = ( event_start_time.wday - ( event_start_time.hour < 3 ? 1 : 0 ) ) % 7
+
+    # using >= because for events starting between 3 and 6, current day < event_start_day
+    event_start_day >= current_day
   end
 
 
