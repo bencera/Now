@@ -180,7 +180,7 @@ class Trending2
     # for all venues, get all photos since start_time, count how many users uploaded photos each day 
     venues.each do |venue_id, values| 
       
-      consecutive_user_lists = Array.new(num_consecutive, [])
+      consecutive_user_lists = Array.new(num_consecutive) { |i| [] }
 
       venue = Venue.find(venue_id)
 
