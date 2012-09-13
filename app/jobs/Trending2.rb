@@ -66,7 +66,10 @@ class Trending2
     recent_photos = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]]).entries
 
     recent_photo_count = recent_photos.count 
+    
     # we don't need photos from trending/waiting/not_trending venues
+    # note:  this might not be very efficient use of DB -- querying venue each time to see its latest event
+    # probably more efficient to get list of venues that cannot trend right now, and ignore their photos
     throw_out_cannot_trend(recent_photos)
     
     Rails.logger.info("Trending2: pulled #{recent_photo_count} photos, dropped #{recent_photo_count - recent_photos.count} (venues cannot trend)")
