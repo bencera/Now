@@ -74,7 +74,6 @@ class Trending2
     
     Rails.logger.info("Trending2: pulled #{recent_photo_count} photos, dropped #{recent_photo_count - recent_photos.count} (venues cannot trend)")
 
-    # create the venues hash that will contain lists of photos and users
     venues = identify_venues(recent_photos, min_users)
 
     Rails.logger.info("Trending2: identified #{venues.count} possibly trending venues")
@@ -85,7 +84,7 @@ class Trending2
     Rails.logger.info("Trending2: finished calculating venue stats")
 
     new_events = []
-    # create a "waiting" event all venues with more users than mean for last 14 days 
+    # create a "waiting" event all venues with more users than mean/2 for last 14 days 
     # remember, we're only looking at venues that don't already have trending/waiting/not_trending
     venues.each do |venue_id, values| 
 
@@ -112,8 +111,8 @@ class Trending2
       status = event.status
       update_event_photos(event)
       if( !event_began_today?(event) || ( event.start_time < 12.hours.ago.to_i) || ( event.end_time < 6.hours.ago.to_i) )
-# commented out for testing on workers CONALL
-#        event.update_attribute(:status, status == "trending" ? "trended" : "not_trending")
+#        commented out for testing on workers CONALL
+        event.update_attribute(:status, status == "trending" ? "trended" : "not_trending")
         Rails.logger.info("Trending2: event #{event.id} transitioning status from #{status} to #{status == "trending" ? "trended" : "not_trending"}")
       end
     end
@@ -211,18 +210,18 @@ class Trending2
     keywords = get_keywords(venue.name, photos)
 
 # remove this when we're done testing CONALL
-    new_event = nil
+#    new_event = nil
 
 # commented out for testing on workers CONALL
-#    new_event = venue.events.create(:start_time => photos.last.time_taken,
-#                             :end_time => photos.first.time_taken,
-#                             :coordinates => photos.first.coordinates,
-#                             :n_photos => photos.count,
-#                             :status => "waiting",
-#                             :city => venue.city,
-#                             :keywords => keywords)
-#    
-#    new_event.photos.push(*photos)
+    new_event = venue.events.create(:start_time => photos.last.time_taken,
+                             :end_time => photos.first.time_taken,
+                             :coordinates => photos.first.coordinates,
+                             :n_photos => photos.count,
+                            :status => "waiting",
+                             :city => venue.city,
+                             :keywords => keywords)
+    
+    new_event.photos.push(*photos)
 
     Rails.logger.info("Trending2: created new event at venue #{venue.id} with #{photos.count} photos")
 
@@ -233,7 +232,7 @@ class Trending2
     end
 
 # commented out for testing on workers CONALL
-#    new_event.update_attribute(:shortid, shortid)
+    new_event.update_attribute(:shortid, shortid)
 
     return new_event
   end
@@ -330,23 +329,23 @@ class Trending2
     last_update = event.end_time
 
 # commented out for testing on workers CONALL
-#    event.photos.where(:time_taken.gt => last_update).each do |photo|
-#      unless photo.events.first == event
-#        event.photos << photo
-#        event.inc(:n_photos, 1)
-#      end
-#    end
+    event.photos.where(:time_taken.gt => last_update).each do |photo|
+      unless photo.events.first == event
+        event.photos << photo
+        event.inc(:n_photos, 1)
+      end
+    end
 
     keywords = get_keywords(event.venue.name, event.photos)
 # commented out for testing on workers CONALL
-#    event.update_attribute(:keywords, keywords)
+    event.update_attribute(:keywords, keywords)
 
     new_end_time = event.photos.last.time_taken
 
 # commented out for testing on workers CONALL
-    #####Resque.enqueue(VerifyURL2, event.id, event.end_time)
-    #####Resque.enqueue_in(10.minutes, VerifyURL2, event.id, event.end_time)
-#   event.update_attribute(:end_time, new_end_time) 
+    Resque.enqueue(VerifyURL2, event.id, event.end_time)
+    Resque.enqueue_in(10.minutes, VerifyURL2, event.id, event.end_time)
+    event.update_attribute(:end_time, new_end_time) 
   end
 end
 
