@@ -269,10 +269,10 @@ class Trending
      Event.where(:status => "trending").each do |event|
         if (Venue.find(event.venue_id).photos.last_hours(5).count == 0)
           event.update_attribute(:status, "trended")
-          Rails.logger.info("Trending2: event #{event.id} transitioning status from trending to trended")
+          Rails.logger.info("Trending1: event #{event.id} transitioning status from trending to trended")
         elsif (Time.now.to_i - event.start_time > 12.hours.to_i)
           event.update_attribute(:status, "trended")
-          Rails.logger.info("Trending2: event #{event.id} transitioning status from trending to trended")
+          Rails.logger.info("Trending1: event #{event.id} transitioning status from trending to trended")
         else
           #rajouter les nouvelles photos, updater nb photos, nb_people, revoir intensite?
           event.venue.photos.last_hours(hours).each do |photo|
@@ -290,7 +290,7 @@ class Trending
       Event.where(:status => "waiting").each do |event|
         if (Time.now.to_i - event.start_time) >  12*3600
           event.update_attribute(:status, "not_trending")
-          Rails.logger.info("Trending2: event #{event.id} transitioning status from waiting to not_trending")
+          Rails.logger.info("Trending1: event #{event.id} transitioning status from waiting to not_trending")
           event.update_attribute(:shortid, nil)
         end
       end
