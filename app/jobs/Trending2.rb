@@ -67,7 +67,7 @@ class Trending2
 
     recent_photo_count = recent_photos.count 
     # we don't need photos from trending/waiting/not_trending venues
-    throw_out_cannot_trend(recent_photos)
+    throw_out_caot_trend(recent_photos)
     
     Rails.logger.info("Trending2: pulled #{recent_photo_count} photos, dropped #{recent_photo_count - recent_photos.count} (venues cannot trend)")
 
@@ -84,7 +84,8 @@ class Trending2
     # create a "waiting" event all venues with more users than mean for last 14 days 
     # remember, we're only looking at venues that don't already have trending/waiting/not_trending
     venues.each do |venue_id, values| 
-      new_events << trend_new_event(venue_id, values[:photos]) if values[:users].count >= values[:mean_consecutive]
+      # TODO: find a better value than just mean / 2 -- this should be more sophisticated
+      new_events << trend_new_event(venue_id, values[:photos]) if values[:users].count >= values[:mean_consecutive]/2
     end
 
     Rails.logger.info("Trending2: created #{new_events.count} new events")
@@ -121,7 +122,7 @@ class Trending2
     #no need to identify a venue if it already has a trending or waiting event
     recent_photos.keep_if do |photo| 
       event = last_event(photo.venue)
-      event.nil || !(cannot_trend(event))
+      event.nil? || !(cannot_trend(event))
     end
   end
 
@@ -161,11 +162,11 @@ class Trending2
 
     thisMorning = DateTime.new(now.year, now.month, now.day, 0, 0, 0, 0)
 
-    consecutiveDaysBegin = DateTime.new(num_consecutive.days.ago.year, 
+    start_time = DateTime.new(num_consecutive.days.ago.year, 
                                num_consecutive.days.ago.month, 
                                num_consecutive.days.ago.day, 0, 0, 0, 0)
 
-    start_time = consecutiveDaysBegin
+    
 
     # for all venues, get all photos since start_time, count how many users uploaded photos each day 
     venues.each do |venue_id, values| 

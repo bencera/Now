@@ -33,7 +33,9 @@ class Maintenance
           # i'm not destroying the photo for now because i want to see if we can learn anything from it
           # eventually this line should be changed to Photo.find(bad_photo).destroy so we don't have 
           # duplicates taking up space in the db.
-          event.photos.delete(Photo.find(bad_photo))
+          photo = Photo.find(bad_photo)
+          #event.photos.delete(photo)
+          photo.destroy
         end
         if bad_photo_list.count > 0
           event.update_attribute(:n_photos, event.photos.count)
