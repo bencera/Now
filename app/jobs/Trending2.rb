@@ -89,6 +89,11 @@ class Trending2
     venues.each do |venue_id, values| 
       # TODO: find a better value than just mean / 2 -- this should be more sophisticated
       new_events << trend_new_event(venue_id, values[:photos]) if values[:users].count >= values[:mean_consecutive]/2
+
+      #this log should be taken out when done testing (or make it a debug) CONALL
+      if values[:users].count < values[:mean_consecutive]/2
+        Rails.logger.info("Trending2: venue #{venue_id} did not trend.  #{values[:users].count} < #{values[:mean_consecutive]} / 2")
+      end
     end
 
     Rails.logger.info("Trending2: created #{new_events.count} new events")
