@@ -64,11 +64,11 @@ fetch_photos_prague:
   args: "1449368"
   description: "Fetchs instagram pics every minute"
 
-trending:
-  every: "10m"
-  class: Trending
-  args: "3"
-  description: "Trending emails"
+#trending:
+#  every: "10m"
+#  class: Trending
+#  args: "3"
+#  description: "Trending emails"
 
 trending_2_ny:
   every: "10m"
