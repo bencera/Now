@@ -67,7 +67,7 @@ class Trending2
 
     recent_photo_count = recent_photos.count 
     # we don't need photos from trending/waiting/not_trending venues
-    throw_out_caot_trend(recent_photos)
+    throw_out_cannot_trend(recent_photos)
     
     Rails.logger.info("Trending2: pulled #{recent_photo_count} photos, dropped #{recent_photo_count - recent_photos.count} (venues cannot trend)")
 
