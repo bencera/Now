@@ -63,7 +63,7 @@ class Trending2
     Rails.logger.info("started Trending2 call hours: #{hours} city #{city} min_users #{min_users}")
 
     # find all photos in given city for the given number of hours
-    recent_photos = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]])
+    recent_photos = Photo.where(city: city).last_hours(hours).order_by([[:time_taken, :desc]]).entries
 
     recent_photo_count = recent_photos.count 
     # we don't need photos from trending/waiting/not_trending venues
@@ -290,12 +290,13 @@ class Trending2
 
     last_update = event.end_time
 
-    event.photos.where(:time_taken.gt => last_update).each do |photo|
-      unless photo.events.first == event
-        event.photos << photo
-        event.inc(:n_photos, 1)
-      end
-    end
+# commented out for testing on workers CONALL
+#    event.photos.where(:time_taken.gt => last_update).each do |photo|
+#      unless photo.events.first == event
+#        event.photos << photo
+#        event.inc(:n_photos, 1)
+#      end
+#    end
 
     keywords = get_keywords(event.venue.name, event.photos)
 # commented out for testing on workers CONALL
