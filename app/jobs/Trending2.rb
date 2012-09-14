@@ -217,7 +217,7 @@ class Trending2
                              :end_time => photos.first.time_taken,
                              :coordinates => photos.first.coordinates,
                              :n_photos => photos.count,
-                            :status => "waiting",
+                             :status => "waiting",
                              :city => venue.city,
                              :keywords => keywords)
     
