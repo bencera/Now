@@ -64,60 +64,60 @@ fetch_photos_prague:
   args: "1449368"
   description: "Fetchs instagram pics every minute"
 
-trending:
-  every: "10m"
-  class: Trending
-  args: "3"
-  description: "Trending emails"
+#trending:
+#  every: "10m"
+#  class: Trending
+#  args: "3"
+#  description: "Trending emails"
 
-#trending_2_ny:
-#  every: "10m"
-#  class: Trending2
-#  args: "newyork 3 5"
-#  description: "Trending emails" 
-#
-#trending_2_lon:
-#  every: "10m"
-#  class: Trending2
-#  args: "london 3 4"
-#  description: "Trending emails" 
-#
-#trending_2_par:
-#  every: "10m"
-#  class: Trending2
-#  args: "paris 3 4"
-#  description: "Trending emails" 
-#
-#trending_2_sf:
-#  every: "10m"
-#  class: Trending2
-#  args: "sanfrancisco 3 5"
-#  description: "Trending emails" 
-#
-#trending_2_la:
-#  every: "10m"
-#  class: Trending2
-#  args: "losangeles 3 6"
-#  description: "Trending emails" 
-#
-#trending_2_tok:
-#  every: "10m"
-#  class: Trending2
-#  args: "tokyo 3 6"
-#  description: "Trending emails" 
-#
-#trending_2_saopaolo:
-#  every: "10m"
-#  class: Trending2
-#  args: "saopaulo 3 6"
-#  description: "Trending emails" 
-#
-#trending_2_pr:
-#  every: "10m"
-#  class: Trending2
-#  args: "prague 3 4"
-#  description: "Trending emails" 
-#
+trending_2_ny:
+  every: "10m"
+  class: Trending2
+  args: "newyork 3 5"
+  description: "Trending emails" 
+
+trending_2_lon:
+  every: "10m"
+  class: Trending2
+  args: "london 3 4"
+  description: "Trending emails" 
+
+trending_2_par:
+  every: "10m"
+  class: Trending2
+  args: "paris 3 4"
+  description: "Trending emails" 
+
+trending_2_sf:
+  every: "10m"
+  class: Trending2
+  args: "sanfrancisco 3 5"
+  description: "Trending emails" 
+
+trending_2_la:
+  every: "10m"
+  class: Trending2
+  args: "losangeles 3 6"
+  description: "Trending emails" 
+
+trending_2_tok:
+  every: "10m"
+  class: Trending2
+  args: "tokyo 3 6"
+  description: "Trending emails" 
+
+trending_2_saopaolo:
+  every: "10m"
+  class: Trending2
+  args: "saopaulo 3 6"
+  description: "Trending emails" 
+
+trending_2_pr:
+  every: "10m"
+  class: Trending2
+  args: "prague 3 4"
+  description: "Trending emails" 
+
 autotrending:
   every: "10m"
   class: Autotrending
