@@ -340,7 +340,7 @@ class Trending2
 # commented out for testing on workers CONALL
     event.update_attribute(:keywords, keywords)
 
-    new_end_time = event.photos.last.time_taken
+    new_end_time = event.photos.first.time_taken
 
 # commented out for testing on workers CONALL
     Resque.enqueue(VerifyURL2, event.id, event.end_time)
