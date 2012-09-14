@@ -315,7 +315,7 @@ class Trending2
       end
     end
 
-    return keywords.join(" ")
+    return keywords
   end
 
   ##############################################################
