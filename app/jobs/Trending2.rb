@@ -331,14 +331,13 @@ class Trending2
     last_update = event.end_time
 
 # commented out for testing on workers CONALL
-    count = 0
     event.venue.photos.where(:time_taken.gt => last_update).each do |photo|
       unless photo.events.first == event
         event.photos << photo
-        count += 1
         event.inc(:n_photos, 1)
       end
     end
+
 
     keywords = get_keywords(event.venue.name, event.photos)
 # commented out for testing on workers CONALL
