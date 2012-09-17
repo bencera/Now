@@ -29,6 +29,8 @@ class Maintenance
       Rails.logger.info("End of day stats: \ndestroyed #{dup_photos} duplicate photos\ndestroyed #{dup_events} duplicate events\nremoved #{dead_urls_imm} dead photos on first pass\nremoved #{dead_urls_late} photos on second pass")
     end
 
+    #
+
 
     events.each do |event|
 

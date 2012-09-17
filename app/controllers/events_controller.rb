@@ -1,6 +1,8 @@
 class EventsController < ApplicationController
    layout :choose_layout
   respond_to :json, :xml
+
+  include EventsHelper
   
   def show
     @event = Event.find(params[:id])
@@ -134,6 +136,10 @@ class EventsController < ApplicationController
           if params[:push] == "1"
             Resque.enqueue(Sendnotifications, params[:event_id])
           end
+
+          #For now, we want to send push notifications to ourselves whenever we trend a new event
+          notify_ben_and_conall("#{event.description} was confirmed in #{event.city}", event)
+
           #event.update_attribute(:link, params[:link]) unless params[:link].nil?
         elsif params[:confirm] == "no"
           event.update_attribute(:status, "not_trending")
@@ -175,6 +181,7 @@ class EventsController < ApplicationController
     event = Event.find(params[:event_id])
     if params[:commit] == "OK"
       event.update_attribute(:status, "trending")
+      notify_ben_and_conall("#{event.description} was confirmed in #{event.city}", event)
     elsif params[:commit] == "NO"
       event.update_attribute(:status, "waiting")
     end
