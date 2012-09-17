@@ -330,11 +330,14 @@ class Trending2
 
     last_update = event.end_time
 
+    new_photo_count = 0
+
 # commented out for testing on workers CONALL
     event.venue.photos.where(:time_taken.gt => last_update).each do |photo|
       unless photo.events.first == event
         event.photos << photo
         event.inc(:n_photos, 1)
+        new_photo_count += 1
       end
     end
 
@@ -349,6 +352,7 @@ class Trending2
     Resque.enqueue(VerifyURL2, event.id, event.end_time)
     Resque.enqueue_in(10.minutes, VerifyURL2, event.id, event.end_time)
     event.update_attribute(:end_time, new_end_time) 
+    Rails.logger.info("Added #{new_photo_count} photos to event #{event.id}") unless new_photo_count == 0
   end
 end
 
