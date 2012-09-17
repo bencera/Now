@@ -260,6 +260,7 @@ class Trending2
       return false
     end
 
+    # note -- if we add new cities this code needs to be updated
     if event.city == "newyork"
       tz = "Eastern Time (US & Canada)"
     elsif event.city == "sanfrancisco" || event.city == "losangeles"
@@ -274,7 +275,7 @@ class Trending2
     event_start_time = Time.at(event.start_time).in_time_zone(tz)
 
     current_day = ( current_time.wday - ( current_time.hour < 6 ? 1 : 0 ) ) % 7
-    event_start_day = ( event_start_time.wday - ( event_start_time.hour < 3 ? 1 : 0 ) ) % 7
+    event_start_day = ( event_start_time.wday - ( event_start_time.hour < 4 ? 1 : 0 ) ) % 7
 
     # using >= because for events starting between 3 and 6, current day < event_start_day
     event_start_day >= current_day
