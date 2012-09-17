@@ -7,7 +7,9 @@ class Maintenance
 
     Rails.logger.info("Maintenance: beginning event duplicate maintenance")
 
-    Event.where(:status => "trending").each do |event|
+    events = Event.where(:status => "trending").entries
+
+    events.each do |event|
 
       if venue_list.include? event.venue_id
         #remove event if it's at a venue that has another event trending
