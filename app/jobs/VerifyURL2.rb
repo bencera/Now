@@ -7,7 +7,11 @@ class VerifyURL2
         response = HTTParty.get(photo.url[0])
         if response.code == 403 && response.message == "Forbidden"
           photo.destroy
-          $redis.incr(immediate? ? "MAINT_dup_events_imm" : "MAINT_dup_events_late")
+          if immediate?
+            $redis.incr("MAINT_dup_events_imm")
+          else
+            $redis.incr("MAINT_dup_events_late")
+          end
           puts "destroyed photo #{photo.id}"
         end
     end  
