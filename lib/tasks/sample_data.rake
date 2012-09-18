@@ -9,6 +9,7 @@ namespace :db do
     make_users
     make_existing_events
     make_photos_for_new_events
+    make_scheduled_events
   end
 end
 
@@ -116,6 +117,20 @@ def make_photos_for_new_events
                          :city => "newyork",
                          :venue => venue,
                          :caption => Faker::Lorem.sentence(35))
+    end
+  end
+
+  def make_scheduled_events
+    5.times do |n|
+      venue = Venue.where(:fs_venue_id => n).first
+      scheduled_event = venue.scheduled_events.create!( :saturday => true,
+                                                    :night => true,
+                                                    :description => Faker::Lorem.sentence(6),
+                                                    :informative_description  => Faker::Lorem.sentence(15),
+                                                    :next_start_time => Time.now.to_i + n.days.to_i,
+                                                    :next_end_time => Time.now.to_i + 3.hours.to_i + n.days.to_i,
+                                                    :city => "newyork",
+                                                    :active_until => Time.now.to_i + 3.hours.to_i + n.days.to_i)
     end
   end
 end

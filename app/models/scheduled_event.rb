@@ -3,8 +3,8 @@ class ScheduledEvent
   include Mongoid::Timestamps
 
 # not entirely sure how we'll use these yet.  may be different if recurring or not
-  field :start_time
-  field :end_time
+  field :next_start_time
+  field :next_end_time
 
 # at least for now, just one description.  may have a list of descriptions to choose from for
 # recurring events
@@ -42,5 +42,10 @@ class ScheduledEvent
 
   has_many :events
   belongs_to :venue
+  belongs_to :facebook_user
+
+  validates_presence_of :venue_id
+  validates_presence_of :description, :category, :on => :update
+
 
 end

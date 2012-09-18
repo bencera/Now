@@ -14,6 +14,7 @@ class FacebookUser
   before_create :generate_now_token
 
   has_many :devices, class_name: "APN::Device"
+  has_many :scheduled_events
 
   class << self
 	  def find_by_facebook_id(id)
