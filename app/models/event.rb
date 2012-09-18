@@ -22,7 +22,9 @@ class Event
   #field :n_people
   
   belongs_to :venue
+  belongs_to :scheduled_event
   has_and_belongs_to_many :photos
+
   
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates
