@@ -135,3 +135,9 @@ maintenance:
   class: Maintenance
   args: 
   description: "remove duplicate events and photos"
+
+waiting_notification:
+  every: "60m"
+  class: WaitingNotification
+  args: 
+  description: "notifying users of events waiting confirmation"
