@@ -1,5 +1,7 @@
 class Venue
   include Mongoid::Document
+  include Mongoid::Timestamps
+  
   field :ig_venue_id
   field :fs_venue_id
   field :categories, :type => Array
