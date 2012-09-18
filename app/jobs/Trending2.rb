@@ -247,7 +247,7 @@ class Trending2
   def self.cannot_trend(event)
     return(event.status == "trending" || event.status == "waiting_confirmation" || 
       event.status == "waiting" || (event.start_time > 6.hours.ago.to_i &&
-      event.status == "not trending"))
+      event.status == "not_trending"))
   end
 
   def self.event_began_today?(event)
