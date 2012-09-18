@@ -27,7 +27,7 @@ class WaitingNotification
   #i don't like having this here, but it wasn't working to include the
   # events helper, so this is just a temp fix until we go through all the
   # jobs and clean up their calls -- move methods to the models etc
-  def notify_ben_and_conall(alert, event)
+  def self.notify_ben_and_conall(alert, event)
 
     subscriptions = [APN::Device.find("4fa6f2cb2c1c0f000f000013").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
 
