@@ -11,6 +11,10 @@ class ScheduledEvent
   field :description
   field :category
 
+# 
+  field :informative_description
+  field :event_url
+
 # let's set strict times for these time-groups
 
   field :morning, :type => Boolean, default: false
