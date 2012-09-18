@@ -1,7 +1,5 @@
 class WaitingNotification
 
-  include EventsHelper
-
   @queue = :waiting_notification_queue
   @cities = [["newyork", "NY"], ["london", "LN"], 
             ["paris", "PA"], ["sanfrancisco", "SF"], 
@@ -23,6 +21,22 @@ class WaitingNotification
       dummy_event = Event.where(:status => "trending").first
       notify_ben_and_conall(message, dummy_event)
 
+    end
+  end
+
+  #i don't like having this here, but it wasn't working to include the
+  # events helper, so this is just a temp fix until we go through all the
+  # jobs and clean up their calls -- move methods to the models etc
+  def notify_ben_and_conall(alert, event)
+
+    subscriptions = [APN::Device.find("4fa6f2cb2c1c0f000f000013").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
+
+    subscriptions.each do |s|
+      n = APN::Notification.new
+      n.subscription = s
+      n.alert = alert
+      n.event = event.id
+      n.deliver
     end
   end
 end
