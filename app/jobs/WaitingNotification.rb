@@ -1,4 +1,7 @@
 class WaitingNotification
+
+  include EventsHelper
+
   @queue = :waiting_notification_queue
   @cities = [["newyork", "NY"], ["london", "LN"], 
             ["paris", "PA"], ["sanfrancisco", "SF"], 
