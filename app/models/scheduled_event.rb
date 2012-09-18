@@ -2,7 +2,7 @@ class ScheduledEvent
   include Mongoid::Document
   include Mongoid::Timestamps
 
-# will only use time of day from these timestamps, not date or year
+# not entirely sure how we'll use these yet.  may be different if recurring or not
   field :start_time
   field :end_time
 
@@ -10,6 +10,7 @@ class ScheduledEvent
 # recurring events
   field :description
   field :category
+  field :city
 
 # 
   field :informative_description
@@ -22,6 +23,7 @@ class ScheduledEvent
   field :afternoon, :type => Boolean, default: false
   field :evening, :type => Boolean, default: false
   field :night, :type => Boolean, default: false
+  field :latenight, :type => Boolean, default: false
 
   field :monday, :type => Boolean, default: false
   field :tuesday, :type => Boolean, default: false
@@ -36,7 +38,7 @@ class ScheduledEvent
   field :recurring, :type => Boolean, default: false
  
   #a timestamp after which :past => true 
-  field :active_until:
+  field :active_until
 
   has_many :events
   belongs_to :venue

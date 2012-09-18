@@ -48,6 +48,8 @@ Ubimachine::Application.routes.draw do
   match "/auth/facebook/callback" => "sessions#facebook_callback"
   
   resources :events, :requests, :subscriptions, :searches, :callbacks, :venues
+  
+  resources :scheduled_events, :only => [:index, :show, :create, :edit, :destroy]
   #
   
   #:venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls, :dones,
