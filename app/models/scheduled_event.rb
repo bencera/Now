@@ -43,6 +43,7 @@ class ScheduledEvent
   has_many :events
   belongs_to :venue
   belongs_to :facebook_user
+  has_many :photos
 
   validates_presence_of :venue_id
   validates_presence_of :description, :category, :on => :update

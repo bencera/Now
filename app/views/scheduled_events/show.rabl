@@ -4,5 +4,8 @@ attributes :id, :next_start_time, :description, :category, :city,
 :afternoon, :dinner, :night, :latenight, :monday, :tuesday, :wednesday,
 :thursday, :friday, :saturday, :sunday, :recurring, :active_until
 child :venue do
-attributes :id, :name
+  attributes :id, :name
+end
+node do |u|
+  { :photos => partial("scheduled_events/photo", :object => u.photos.take(6)) }
 end

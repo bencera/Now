@@ -22,6 +22,7 @@ class Photo
   field :user_details, :type => Hash
   belongs_to :venue
   belongs_to :user
+  belongs_to :scheduled_event
   has_many :requests
   has_many :usefuls
   embeds_many :comments
