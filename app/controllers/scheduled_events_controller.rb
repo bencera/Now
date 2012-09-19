@@ -21,6 +21,8 @@ class ScheduledEventsController < ApplicationController
     scheduled_event = ScheduledEvent.new(:params[:scheduled_event])
     user = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
+    #for security, we should probably verify that user == :params[:facebook_user_id]
+
     if scheduled_event.save
       return render :text => "OK", :status => :ok
     else
