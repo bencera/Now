@@ -4,7 +4,13 @@ class ScheduledEventsController < ApplicationController
   #TODO: we should build in the system for verifying that a user is authorized to schedule events
 
   def index
-    @scheduled_events = ScheduledEvent.where(:past => false).order_by([[:next_start_time, :asc]])
+    if(params[:city])
+      @scheduled_events = ScheduledEvent.where(:past => false).where(:city => params[:city]).order_by([[:next_start_time, :asc]])
+    elsif(params[:venue_id])
+      @scheduled_events = Venue.find(params[:venue_id].scheduled_events.where(:past => false).order_by([[:next_start_time, :asc]])
+    else
+      @scheduled_events = ScheduledEvent.where(:past => false).order_by([[:next_start_time, :asc]])
+    end
   end
 
   def show
@@ -42,6 +48,10 @@ class ScheduledEventsController < ApplicationController
     scheduled_event = ScheduledEvent.find(params[:id])
     user = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
-    scheduled_event.update_attribute(:past, true)
+    if scheduled_event.update_attribute(:past, true)
+      return render :text => "OK", :status => :ok
+    else
+      return render :text => scheduled_event.errors, :status => :error
+    end
   end
 end
