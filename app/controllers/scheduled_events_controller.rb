@@ -7,7 +7,7 @@ class ScheduledEventsController < ApplicationController
     if(params[:city])
       @scheduled_events = ScheduledEvent.where(:past => false).where(:city => params[:city]).order_by([[:next_start_time, :asc]])
     elsif(params[:venue_id])
-      @scheduled_events = Venue.find(params[:venue_id].scheduled_events.where(:past => false).order_by([[:next_start_time, :asc]])
+      @scheduled_events = Venue.find(params[:venue_id]).scheduled_events.where(:past => false).order_by([[:next_start_time, :asc]])
     else
       @scheduled_events = ScheduledEvent.where(:past => false).order_by([[:next_start_time, :asc]])
     end
