@@ -37,7 +37,7 @@ class ScheduledEvent
   field :past, :type => Boolean, default: false
   field :recurring, :type => Boolean, default: false
  
-  #a timestamp after which :past => true 
+  #a timestamp after which :past => true, must be set explicitly if recurring
   field :active_until
 
   has_many :events
@@ -52,12 +52,13 @@ class ScheduledEvent
   before_save do |scheduled_event|
     scheduled_event.city = scheduled_event.venue.city unless scheduled_event.venue.nil?
 
-    #do we want to allow creation of already past events?  for now, i'll let it validate but autofill
-    if scheduled_event.recurring
-      scheduled_event.past = !scheduled_event.active_until.nil? && scheduled_event.active_until > Time.now.to_i
-    else
-      scheduled_event.past = !scheduled_event.next_end_time.nil? && Time.now.to_i > scheduled_event.next_end_time
+    # if non-recurring, set the active_until to be next_end_time
+    if !scheduled_event.recurring
+      scheduled_event.active_until = scheduled_event.next_end_time
     end
+
+    #do we want to allow creation of already past events?  for now, i'll let it validate but autofill
+    scheduled_event.past = !scheduled_event.active_until.nil? && scheduled_event.active_until > Time.now.to_i
     
     return true
   end
