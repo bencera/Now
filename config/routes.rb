@@ -65,6 +65,8 @@ Ubimachine::Application.routes.draw do
   match "/now/cities" => "events#cities"
   
   match "/photos/json/:id" => "photos#show_json"
+
+  match "/venuephotos" => "photos#venueindex"
   
   match "/events/showless" => "events#showless"
 

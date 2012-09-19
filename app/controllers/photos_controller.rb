@@ -451,6 +451,14 @@ class PhotosController < ApplicationController
       end
     end
   end
+
+  def venueindex
+    if params[:venue_id]
+      @photos = Venue.find(params[:venue_id]).photos.order_by([[:time_taken, :desc]]).take(100)
+    else
+      redirect_to '/nophotos'
+    end
+  end
   
   private
     def choose_layout    
