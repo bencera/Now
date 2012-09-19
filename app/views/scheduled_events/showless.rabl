@@ -1,5 +1,5 @@
 object @scheduled_event
-attributes :id, :next_start_time, :description, :category
+attributes :id, :next_start_time, :description, :category, :recurring
 child :venue do
-attributes :name
+attributes :id, :name
 end
