@@ -69,17 +69,17 @@ class ScheduledEvent
   ## TODO: may want to make time groups overlap and this returns an array of labels
   ## TODO: this will probably be moved to city model when that exists (see Asana task https://app.asana.com/0/1784210809145/1901246404308)
   def self.get_time_group_from_time(time)
-    if time.hour <= 1 || time.hour > 22
+    if time.hour < 2 || time.hour >= 22
       return :night
-    elsif time.hour > 1 && time.hour <= 4
+    elsif time.hour >= 2 && time.hour < 6
       return :latenight
-    elsif time.hour > 4 && time.hour <= 10
+    elsif time.hour >= 6 && time.hour < 10
       return :morning
-    elsif time.hour > 10 && time.hour <= 14
+    elsif time.hour >= 10 && time.hour < 14
       return :lunch
-    elsif time.hour > 14 && time.hour <= 17
+    elsif time.hour >= 14 && time.hour < 18
       return :afternoon
-    elsif time.hour > 17 && time.hour <= 22
+    elsif time.hour >= 18 && time.hour < 22
       return :evening
     end
   end
