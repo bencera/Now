@@ -147,13 +147,13 @@ class Event
       comments << photo.caption unless photo.caption.blank?
       comments << " "
     end
-    @stop_characters.each do |c|
+    EventsHelper.stop_characters.each do |c|
       comments = comments.gsub(c, '')
     end
     comments = comments.downcase
     words = comments.split(/ /)
-    relevant_words = words - @stop_words
-    venue_words = self.venue_name.split(/ /)
+    relevant_words = words - EventsHelper.stop_words
+    venue_words = self.venue.name.split(/ /)
     relevant_words = relevant_words - venue_words
 
     sorted_words = {}
@@ -167,13 +167,16 @@ class Event
     self.keywords = [] 
     sorted_words.sort_by{|u,v| v}.reverse.each do |word|
       unless word[1] < 3 or word[0] == ""
-        keywords << word[0]
+        self.keywords << word[0]
       end
     end
 
     self.save
   end
 
+  ##############################################################
+  # generates a new shortid unless one already exists
+  ##############################################################
   def generate_short_id
     if(self.shortid.nil?)
       new_shortid = Event.random_url(rand(62**6))
@@ -181,11 +184,8 @@ class Event
         new_shortid = Event.random_url(rand(62**6))
       end
 
-    self.update_attribute(:shortid, new_shortid)
-  end
-
-# commented out for testing on workers CONALL
-    new_event.update_attribute(:shortid, shortid)
+      self.update_attribute(:shortid, new_shortid)
+    end
   end
 
 
@@ -216,8 +216,8 @@ class Event
     new_end_time = self.photos.first.time_taken
 
 # commented out for testing on workers CONALL
-    Resque.enqueue(VerifyURL2, self.id, last_update, true)
-    Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
+    #Resque.enqueue(VerifyURL2, self.id, last_update, true)
+    #Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
     self.update_attribute(:end_time, new_end_time) 
     Rails.logger.info("Added #{new_photo_count} photos to event #{self.id}") unless new_photo_count == 0
   end

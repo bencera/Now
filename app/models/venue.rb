@@ -396,10 +396,41 @@ class Venue
 
   def cannot_trend()
     event = self.last_event
-    return(event.status == "trending" || event.status == "waiting_confirmation" || 
+    if event.nil? 
+      return false
+    else
+      return( event.status == "trending" || event.status == "waiting_confirmation" || 
       event.status == "waiting" || (event.start_time > 6.hours.ago.to_i &&
       event.status == "not_trending"))
+    end
   end
+
+
+  ##############################################################
+  # trends a new event given a list of photos to put in the new event 
+  ##############################################################
+  def create_new_event(status, new_photos)
+    #TODO: should take start_time instead
+
+  # commented out for testing on workers CONALL
+    new_event = self.events.create(:start_time => new_photos.last.time_taken,
+                             :end_time => new_photos.first.time_taken,
+                             :coordinates => new_photos.first.coordinates,
+                             :n_photos => new_photos.count,
+                             :status => status,
+                             :city => self.city)
+
+    new_event.photos.push(*new_photos)
+
+    new_event.update_keywords
+
+    Rails.logger.info("Venue::create_new_event: created new event at venue #{self.id} with #{new_photos.count} photos")
+
+    new_event.generate_short_id
+
+    return new_event
+  end
+
 
   private
 
@@ -416,30 +447,4 @@ class Venue
     def cache_key value
       "venue:#{self.id}:#{value}"
     end
-
-
-    ##############################################################
-    # trends a new event given a list of photos to put in the new event 
-    ##############################################################
-    def create_new_event(status, photos)
-
-    # commented out for testing on workers CONALL
-      new_event = venue.events.create(:start_time => photos.last.time_taken,
-                               :end_time => photos.first.time_taken,
-                               :coordinates => photos.first.coordinates,
-                               :n_photos => photos.count,
-                               :status => status,
-                               :city => venue.city)
-
-      new_event.photos.push(*photos)
-
-      new_event.update_keywords
-
-      Rails.logger.info("Venue::create_new_event: created new event at venue #{venue.id} with #{photos.count} photos")
-
-      new_event.generate_short_id
-
-      return new_event
-    end
-
 end

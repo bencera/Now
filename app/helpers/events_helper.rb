@@ -1,8 +1,8 @@
 module EventsHelper
 
-  
-  @stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "#", "/", "@", ":", "<", ">", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-  @stop_words = ["a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+
+  @@stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "#", "/", "@", ":", "<", ">", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+  @@stop_words = ["a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
     "a's", "able", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", 
     "again", "against", "ain't", "all", "allow", "allows", "almost", "alone", "along", "already", "also", "although", "always", 
     "am", "among", "amongst", "an", "and", "another", "any", "anybody", "anyhow", "anyone", "anything", "anyway", "anyways", 
@@ -49,6 +49,13 @@ module EventsHelper
     "wonder", "would", "would", "wouldn't", "yes", "yet", "you", "you'd", "you'll", "you're", "you've",
     "your", "yours", "yourself", "yourselves", "zero"] 
 
+  def self.stop_words
+    @@stop_words
+  end
+
+  def self.stop_characters
+    @@stop_characters
+  end
 
   def notify_ben_and_conall(alert, event)
 
