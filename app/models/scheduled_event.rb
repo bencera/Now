@@ -45,9 +45,9 @@ class ScheduledEvent
   belongs_to :facebook_user
   has_and_belongs_to_many :photos
 
-  validates_presence_of :venue_id
+  validates_presence_of :venue
   validate :check_date_time
-  validates_presence_of :description, :category, :on => :update
+  validates_presence_of :description, :category
 
   before_save do |scheduled_event|
     scheduled_event.city = scheduled_event.venue.city unless scheduled_event.venue.nil?

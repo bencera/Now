@@ -26,7 +26,7 @@ class ScheduledEventsController < ApplicationController
     if scheduled_event.save
       return render :text => "OK", :status => :ok
     else
-      return render :text => scheduled_event.errors, :status => :error
+      return render :text => scheduled_event.errors.messages, :status => :error
     end
 
   end
@@ -41,7 +41,7 @@ class ScheduledEventsController < ApplicationController
     if scheduled_event.update_attributes(params[:scheduled_event])
       return render :text => "OK", :status => :ok
     else
-      return render :text => scheduled_event.errors, :status => :error
+      return render :text => scheduled_event.errors.messages, :status => :error
     end
     
   end
