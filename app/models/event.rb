@@ -137,8 +137,8 @@ class Event
       if( !self.began_today? || ( self.start_time < 12.hours.ago.to_i) || ( self.end_time < 4.hours.ago.to_i) )
       
         # this should be a method in the event -- something like event.untrend()
-        self.update_attribute(:status, self.status == "trending" ? "trended" : "not_trending")
         Rails.logger.info("transition_status: event #{self.id} transitioning status from #{status} to #{status == "trending" ? "trended" : "not_trending"}")
+        self.update_attribute(:status, self.status == "trending" ? "trended" : "not_trending")
       end
     end
   end
