@@ -18,7 +18,7 @@ class ScheduledEventsController < ApplicationController
   end
 
   def create
-    scheduled_event = ScheduledEvent.new(:params[:scheduled_event])
+    scheduled_event = ScheduledEvent.new(params[:scheduled_event])
     user = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
     #for security, we should probably verify that user == :params[:facebook_user_id]
@@ -36,7 +36,7 @@ class ScheduledEventsController < ApplicationController
 
   def update
     scheduled_event = ScheduledEvent.find(params[:id])
-    user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+    #user = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
     if scheduled_event.update_attributes(params[:scheduled_event])
       return render :text => "OK", :status => :ok
