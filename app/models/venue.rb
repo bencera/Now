@@ -388,46 +388,6 @@ class Venue
       
   end
 
-  private
-  
-  def self.client
-    @@client ||= Foursquare::Base.new("RFBT1TT41OW1D22SNTR21BGSWN2SEOUNELL2XKGBFLVMZ5X2", "W1FN2P3PR30DIKSWEKFEJVF51NJMZTBUY3KY3T0JNCG51QD0")
-  end
-  
-  def fs_venue_json
-    Rails.cache.fetch cache_key('foursquare:venue'), :compress => true do
-      Venue.client.venues.find(self.fs_venue_id).json
-    end
-  end
-  
-  def cache_key value
-    "venue:#{self.id}:#{value}"
-  end
-
-
-  ##############################################################
-  # trends a new event given a list of photos to put in the new event 
-  ##############################################################
-  def create_new_event(status, photos)
-
-# commented out for testing on workers CONALL
-    new_event = venue.events.create(:start_time => photos.last.time_taken,
-                             :end_time => photos.first.time_taken,
-                             :coordinates => photos.first.coordinates,
-                             :n_photos => photos.count,
-                             :status => status,
-                             :city => venue.city)
-
-    new_event.photos.push(*photos)
-
-    new_event.update_keywords
-
-    Rails.logger.info("Venue::create_new_event: created new event at venue #{venue.id} with #{photos.count} photos")
-
-    new_event.generate_short_id
-
-    return new_event
-  end
 
   def last_event
     self.events.order_by([[:start_time, :desc]]).first  
@@ -441,5 +401,45 @@ class Venue
       event.status == "not_trending"))
   end
 
-  
+  private
+
+    def self.client
+      @@client ||= Foursquare::Base.new("RFBT1TT41OW1D22SNTR21BGSWN2SEOUNELL2XKGBFLVMZ5X2", "W1FN2P3PR30DIKSWEKFEJVF51NJMZTBUY3KY3T0JNCG51QD0")
+    end
+
+    def fs_venue_json
+      Rails.cache.fetch cache_key('foursquare:venue'), :compress => true do
+        Venue.client.venues.find(self.fs_venue_id).json
+      end
+    end
+
+    def cache_key value
+      "venue:#{self.id}:#{value}"
+    end
+
+
+    ##############################################################
+    # trends a new event given a list of photos to put in the new event 
+    ##############################################################
+    def create_new_event(status, photos)
+
+    # commented out for testing on workers CONALL
+      new_event = venue.events.create(:start_time => photos.last.time_taken,
+                               :end_time => photos.first.time_taken,
+                               :coordinates => photos.first.coordinates,
+                               :n_photos => photos.count,
+                               :status => status,
+                               :city => venue.city)
+
+      new_event.photos.push(*photos)
+
+      new_event.update_keywords
+
+      Rails.logger.info("Venue::create_new_event: created new event at venue #{venue.id} with #{photos.count} photos")
+
+      new_event.generate_short_id
+
+      return new_event
+    end
+
 end
