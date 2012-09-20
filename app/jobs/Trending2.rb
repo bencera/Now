@@ -1,54 +1,6 @@
 class Trending2
   @queue = :trending2_queue
 
-  @stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "#", "/", "@", ":", "<", ">", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-  @stop_words = ["a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-    "a's", "able", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", 
-    "again", "against", "ain't", "all", "allow", "allows", "almost", "alone", "along", "already", "also", "although", "always", 
-    "am", "among", "amongst", "an", "and", "another", "any", "anybody", "anyhow", "anyone", "anything", "anyway", "anyways", 
-    "anywhere", "apart", "appear", "appreciate", "appropriate", "are", "aren't", "around", "as", "aside", "ask", "asking", "associated", 
-    "at", "available", "away", "awfully", "be", "became", "because", "become", "becomes", "becoming", "been", "before", "beforehand", 
-    "behind", "being", "believe", "below", "beside", "besides", "best", "better", "between", "beyond", "both", "brief", "but", "by",
-    "c'mon", "c's", "came", "can", "can't", "cannot", "cant", "cause", "causes", "certain", "certainly", "changes", "clearly", "co",
-    "com", "come", "comes", "concerning", "consequently", "consider", "considering", "contain", "containing", "contains", 
-    "corresponding", "could", "couldn't", "course", "currently", "definitely", "described", "despite", "did", "didn't", "different",
-    "do", "does", "doesn't", "doing", "don't", "done", "down", "downwards", "during", "each", "edu", "eg", "eight", "either", 
-    "else", "elsewhere", "enough", "entirely", "especially", "et", "etc", "even", "ever", "every", "everybody", "everyone", 
-    "everything", "everywhere", "ex", "exactly", "example", "except", "far", "few", "fifth", "first", "five", "followed",
-    "following", "follows", "for", "former", "formerly", "forth", "four", "from", "further", "furthermore", "get", "gets",
-    "getting", "given", "gives", "go", "goes", "going", "gone", "got", "gotten", "greetings", "had", "hadn't", "happens", "hardly",
-    "has", "hasn't", "have", "haven't", "having", "he", "he's", "hello", "help", "hence", "her", "here", "here's", "hereafter", 
-    "hereby", "herein", "hereupon", "hers", "herself", "hi", "him", "himself", "his", "hither", "hopefully", "how", "howbeit", 
-    "however", "i'd", "i'll", "i'm", "i've", "ie", "if", "ignored", "immediate", "in", "inasmuch", "inc", "indeed", "indicate",
-    "indicated", "indicates", "inner", "insofar", "instead", "into", "inward", "is", "isn't", "it", "it'd", "it'll", "it's",
-    "its", "itself", "just", "keep", "keeps", "kept", "know", "knows", "known", "last", "lately", "later", "latter", "latterly",
-    "least", "less", "lest", "let", "let's", "like", "liked", "likely", "little", "look", "looking", "looks", "ltd", "mainly",
-    "many", "may", "maybe", "me", "mean", "meanwhile", "merely", "might", "more", "moreover", "most", "mostly", "much", "must", 
-    "my", "myself", "name", "namely", "nd", "near", "nearly", "necessary", "need", "needs", "neither", "never", "nevertheless",
-    "new", "next", "nine", "no", "nobody", "non", "none", "noone", "nor", "normally", "not", "nothing", "novel", "now",
-    "nowhere", "obviously", "of", "off", "often", "oh", "ok", "okay", "old", "on", "once", "one", "ones", "only", "onto",
-    "or", "other", "others", "otherwise", "ought", "our", "ours", "ourselves", "out", "outside", "over", "overall", "own",
-    "particular", "particularly", "per", "perhaps", "placed", "please", "plus", "possible", "presumably", "probably",
-    "provides", "que", "quite", "qv", "rather", "rd", "re", "really", "reasonably", "regarding", "regardless", "regards",
-    "relatively", "respectively", "right", "said", "same", "saw", "say", "saying", "says", "second", "secondly", 
-    "see", "seeing", "seem", "seemed", "seeming", "seems", "seen", "self", "selves", "sensible", "sent", "serious", 
-    "seriously", "seven", "several", "shall", "she", "should", "shouldn't", "since", "six", "so", "some", "somebody",
-    "somehow", "someone", "something", "sometime", "sometimes", "somewhat", "somewhere", "soon", "sorry", "specified",
-    "specify", "specifying", "still", "sub", "such", "sup", "sure", "t's", "take", "taken", "tell", "tends", "th", 
-    "than", "thank", "thanks", "thanx", "that", "that's", "thats", "the", "their", "theirs", "them", "themselves", 
-    "then", "thence", "there", "there's", "thereafter", "thereby", "therefore", "therein", "theres", "thereupon", 
-    "these", "they", "they'd", "they'll", "they're", "they've", "think", "third", "this", "thorough", "thoroughly",
-    "those", "though", "three", "through", "throughout", "thru", "thus", "to", "together", "too", "took",
-    "toward", "towards", "tried", "tries", "truly", "try", "trying", "twice", "two", "un", "under", "unfortunately",
-    "unless", "unlikely", "until", "unto", "up", "upon", "us", "use", "used", "useful", "uses", "using", 
-    "usually", "value", "various", "very", "via", "viz", "vs", "want", "wants", "was", "wasn't", "way", 
-    "we", "we'd", "we'll", "we're", "we've", "welcome", "well", "went", "were", "weren't", "what", "what's",
-    "whatever", "when", "whence", "whenever", "where", "where's", "whereafter", "whereas", "whereby",
-    "wherein", "whereupon", "wherever", "whether", "which", "while", "whither", "who", "who's", "whoever",
-    "whole", "whom", "whose", "why", "will", "willing", "wish", "with", "within", "without", "won't",
-    "wonder", "would", "would", "wouldn't", "yes", "yet", "you", "you'd", "you'll", "you're", "you've",
-    "your", "yours", "yourself", "yourselves", "zero"] 
-
 
   def self.perform(args)
 
@@ -88,7 +40,9 @@ class Trending2
     # remember, we're only looking at venues that don't already have trending/waiting/not_trending
     venues.each do |venue_id, values| 
 
-      new_events << trend_new_event(venue_id, values[:photos]) if values[:users].count >= values[:mean_consecutive]/2
+      venue = Venue.find(venue_id)
+
+      new_events << venue.create_new_event("waiting", values[:photos]) if values[:users].count >= values[:mean_consecutive]/2
 
       #this log should be taken out when done testing (or make it a debug) CONALL
       if values[:users].count < values[:mean_consecutive]/2
@@ -108,13 +62,8 @@ class Trending2
 
     Rails.logger.info("Trending2: beginning event maintenance")
     events.each do |event| 
-      status = event.status
-      update_event_photos(event)
-      if( !event_began_today?(event) || ( event.start_time < 12.hours.ago.to_i) || ( event.end_time < 4.hours.ago.to_i) )
-#        commented out for testing on workers CONALL
-        event.update_attribute(:status, status == "trending" ? "trended" : "not_trending")
-        Rails.logger.info("Trending2: event #{event.id} transitioning status from #{status} to #{status == "trending" ? "trended" : "not_trending"}")
-      end
+      event.update_photos
+      event.transition_status
     end
 
     Rails.logger.info("Trending2: done with trending")
@@ -128,10 +77,7 @@ class Trending2
 
   def self.throw_out_cannot_trend(recent_photos)
     #no need to identify a venue if it already has a trending or waiting event
-    recent_photos.keep_if do |photo| 
-      event = last_event(photo.venue) unless photo.venue.nil?
-      event.nil? || !(cannot_trend(event))
-    end
+    recent_photos.keep_if { |photo| !photo.venue.nil? && !photo.venue.cannot_trend }
   end
 
   ##############################################################
@@ -197,162 +143,6 @@ class Trending2
       values[:mean_consecutive] = Mathstats.average(consecutive_series)
 
     end
-  end
-
-  ##############################################################
-  # trends a new event given the venue_id and list of photos to 
-  # put in the new event 
-  ##############################################################
-
-  def self.trend_new_event(venue_id, photos)
-
-    venue = Venue.find(venue_id) 
-    keywords = get_keywords(venue.name, photos)
-
-# remove this when we're done testing CONALL
-#    new_event = nil
-
-# commented out for testing on workers CONALL
-    new_event = venue.events.create(:start_time => photos.last.time_taken,
-                             :end_time => photos.first.time_taken,
-                             :coordinates => photos.first.coordinates,
-                             :n_photos => photos.count,
-                             :status => "waiting",
-                             :city => venue.city,
-                             :keywords => keywords)
-    
-    new_event.photos.push(*photos)
-
-    Rails.logger.info("Trending2: created new event at venue #{venue.id} with #{photos.count} photos")
-
-#TODO: this should be a method in the event model -- i've seen this copy-pasted elsewhere
-    shortid = Event.random_url(rand(62**6))
-    while Event.where(:shortid => shortid).first
-      shortid = Event.random_url(rand(62**6))
-    end
-
-# commented out for testing on workers CONALL
-    new_event.update_attribute(:shortid, shortid)
-
-    return new_event
-  end
-
-
-#TODO: these next three functions should be model methods
-  def self.last_event(venue)
-    event = Event.where(:venue_id => venue.id).order_by([[:start_time, :desc]]).first  
-  end
-
-
-  def self.cannot_trend(event)
-    return(event.status == "trending" || event.status == "waiting_confirmation" || 
-      event.status == "waiting" || (event.start_time > 6.hours.ago.to_i &&
-      event.status == "not_trending"))
-  end
-
-  def self.event_began_today?(event)
-    # the day begins at 6am.  if an event started before 3am today, it must stop trending
-    # at 6.  if it started after 3am, then it can continue.  we don't want truly exceptional
-    # events that occur early to suddenly cut off at 6
-
-    #quick break just to make sure it's within 24 hours
-    if event.start_time < 24.hours.ago.to_i
-      return false
-    end
-
-    # note -- if we add new cities this code needs to be updated
-    if event.city == "newyork"
-      tz = "Eastern Time (US & Canada)"
-    elsif event.city == "sanfrancisco" || event.city == "losangeles"
-      tz = "Pacific Time (US & Canada)"
-    elsif event.city == "paris"
-      tz = "Paris"
-    elsif event.city == "london"
-      tz = "Edinburgh"
-    end
-
-    current_time = Time.now.in_time_zone(tz)
-    event_start_time = Time.at(event.start_time).in_time_zone(tz)
-
-    current_day = ( current_time.wday - ( current_time.hour < 6 ? 1 : 0 ) ) % 7
-    event_start_day = ( event_start_time.wday - ( event_start_time.hour < 4 ? 1 : 0 ) ) % 7
-
-    # using >= because for events starting between 3 and 6, current day < event_start_day
-    event_start_day >= current_day
-  end
-
-
-  ##############################################################
-  # this is a direct copy of old keyword code -- probably should
-  # be a model method for event
-  ##############################################################
-
-  def self.get_keywords(venue_name, photos)
-    comments = ""
-    photos.each do |photo|
-      comments << photo.caption unless photo.caption.blank?
-      comments << " "
-    end
-    @stop_characters.each do |c|
-      comments = comments.gsub(c, '')
-    end
-    comments = comments.downcase
-    words = comments.split(/ /)
-    relevant_words = words - @stop_words
-    venue_words = venue_name.split(/ /)
-    relevant_words = relevant_words - venue_words
-
-    sorted_words = {}
-    relevant_words.each do |word|
-      if sorted_words.include?(word)
-        sorted_words[word] += 1
-      else
-        sorted_words[word] = 1
-      end
-    end
-    keywords = [] 
-    sorted_words.sort_by{|u,v| v}.reverse.each do |word|
-      unless word[1] < 3 or word[0] == ""
-        keywords << word[0]
-      end
-    end
-
-    return keywords
-  end
-
-  ##############################################################
-  # adds any photos that may have come in since last update
-  ##############################################################
-
-  def self.update_event_photos(event)
-
-    #TODO: this method might be better as part of event model
-
-    last_update = event.end_time
-
-    new_photo_count = 0
-
-# commented out for testing on workers CONALL
-    event.venue.photos.where(:time_taken.gt => last_update).each do |photo|
-      unless photo.events.first == event
-        event.photos << photo
-        event.inc(:n_photos, 1)
-        new_photo_count += 1
-      end
-    end
-
-
-    keywords = get_keywords(event.venue.name, event.photos)
-# commented out for testing on workers CONALL
-    event.update_attribute(:keywords, keywords)
-
-    new_end_time = event.photos.first.time_taken
-
-# commented out for testing on workers CONALL
-    Resque.enqueue(VerifyURL2, event.id, event.end_time, true)
-    Resque.enqueue_in(10.minutes, VerifyURL2, event.id, event.end_time, false)
-    event.update_attribute(:end_time, new_end_time) 
-    Rails.logger.info("Added #{new_photo_count} photos to event #{event.id}") unless new_photo_count == 0
   end
 end
 
