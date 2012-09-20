@@ -12,7 +12,11 @@ class ScheduledEvent
   field :category
   field :city
 
-# 
+# if we want to alert users about this, special push and push message -- if no push message, just use description
+  field :push, :type => Boolean, default: false
+  field :push_message
+
+
   field :informative_description
   field :event_url
 
