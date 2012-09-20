@@ -65,6 +65,10 @@ class ScheduledEvent
     if(!scheduled_event.active_until.nil?)
       scheduled_event.past = scheduled_event.active_until < Time.now.to_i
     end
+
+    if(scheduled_event.push && scheduled_event.push_message.nil?)
+      scheduled_event.push_message = scheduled_event.description
+    end
     
     return true
   end
