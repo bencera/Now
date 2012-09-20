@@ -216,9 +216,11 @@ class Event
     new_end_time = self.photos.first.time_taken
 
 # commented out for testing on workers CONALL
-    Resque.enqueue(VerifyURL2, self.id, last_update, true)
-    Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
-    self.update_attribute(:end_time, new_end_time) 
-    Rails.logger.info("Added #{new_photo_count} photos to event #{self.id}") unless new_photo_count == 0
+    if(new_photo_count != 0) 
+      Resque.enqueue(VerifyURL2, self.id, last_update, true)
+      Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
+      self.update_attribute(:end_time, new_end_time) 
+      Rails.logger.info("Added #{new_photo_count} photos to event #{self.id}") 
+    end
   end
 end
