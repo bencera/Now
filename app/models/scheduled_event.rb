@@ -58,7 +58,9 @@ class ScheduledEvent
     end
 
     #do we want to allow creation of already past events?  for now, i'll let it validate but autofill
-    scheduled_event.past = !scheduled_event.active_until.nil? && scheduled_event.active_until > Time.now.to_i
+    if(!scheduled_event.active_until.nil?)
+      scheduled_event.past = scheduled_event.active_until < Time.now.to_i
+    end
     
     return true
   end
