@@ -203,8 +203,8 @@ class Event
     new_photo_count = 0
 
 # commented out for testing on workers CONALL
-    self.venue.photos.where(:time_taken.gt => last_update).each do |photo|
-      unless photo.events.first == event
+    self.venue.photos.where(:time_taken.gt => self.last_update).each do |photo|
+      unless photo.events.first == self 
         self.photos << photo
         self.inc(:n_photos, 1)
         new_photo_count += 1
