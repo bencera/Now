@@ -1,4 +1,8 @@
 class EventSchedule
+
+  #TODO: intitially, because i'm worried about trending stepping on this, we should actually call
+  # EventSchedule.perform from Trending2 -- it makes sense since they have similar functionalities
+
   @queue = :event_sched_queue
 
   @days = [:sunday, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday]
@@ -17,20 +21,24 @@ class EventSchedule
     end
     current_time = Time.now.in_time_zone(tz)
 
+    #first close old events so they don't clutter our scheduling
+    close_old_events(current_time)
+
+
+    # this logic should be done somewhere else (model method)
     time_group = ScheduledEvent.get_time_group_from_time(current_time)
-    
-    #this is a trick to get around the day change thing -- this logic should be done somewhere else, one time
     wday = @days[Time.now.wday - ( (time_group == :latenight) ? 1 : 0 )]
 
 
     # check all recurring events that could trend right now
-    schedule_group_1 = ScheduledEvent.where(:past => false).where(:recurring => true).where(wday => true).where(:time_group => true)
+    schedule_group_1 = ScheduledEvent.where(:past => false).where(:city => city).where(:recurring => true).
+              where(wday => true).where(:time_group => true)
 
     create_or_update(wday, time_group, schedule_group_1)
 
-    # check all non-recurring events that could trend 
-    schedule_group_2 = ScheduledEvent.where(:past => false).where(:recurring => false).where(:next_start_time.lt => current_time.to_i).
-                            where(:next_end_time.gt => current_time.to_i)
+    # check all non-recurring events that could trend now
+    schedule_group_2 = ScheduledEvent.where(:past => false).where(:city => city).where(:recurring => false).
+              where(:next_start_time.lt => current_time.to_i).where(:next_end_time.gt => current_time.to_i)
     
     create_or_update(wday, time_group, schedule_group_2)
 
@@ -94,6 +102,15 @@ class EventSchedule
         end
       end
     end
+  end
+
+########################################################
+# set events whose active_until time has passed to past => true
+######################################################## 
+
+  def self.close_old_events(current_time)
+    old_events = Event.where(:past => false).where(:active_until.lt => current_time.now).entries
+    old_events.each { |scheduled_event| scheduled_event.update_attribute(:past, true)}
   end
 
 end
