@@ -1,2 +1,2 @@
 collection @scheduled_events
-extends "scheduled_events/showless"
+extends "scheduled_events/show"
