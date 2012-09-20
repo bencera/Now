@@ -13,7 +13,7 @@ class ScheduledEvent
   field :city
 
 # if we want to alert users about this, special push and push message -- if no push message, just use description
-  field :push, :type => Boolean, default: false
+  field :push_to_users, :type => Boolean, default: false
   field :push_message
 
 
