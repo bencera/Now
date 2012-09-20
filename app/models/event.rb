@@ -2,6 +2,18 @@ class Event
   include Mongoid::Document
   include EventsHelper
 
+##### CONSTANTS
+
+TRENDING              = "trending"
+WAITNG                = "waiting"
+NOT_TRENDING          = "not_trending"
+TRENDING_FORWARDING   = "trending_forwarding"
+TRENDING_SCHEDULED    = "trending_scheduled" 
+WAITING_CONFIRMATION  = "waiting_confirmation"
+WAITING_SCHEUDLED     = "waiting_scheduled"
+
+#####
+
   field :coordinates, :type => Array
   field :start_time
   field :end_time
@@ -102,6 +114,12 @@ class Event
     end
   end
 
+# TODO: this could be done more efficiently probably, but i don't anticipate it being called much
+  def num_users
+    users = []
+    self.photos.each { |photo| users << photo.user_id unless users.include? photo.user_id}
+    users.count
+  end
 
   def began_today?
     # the day begins at 6am.  if an event started before 3am today, it must stop trending
@@ -192,6 +210,9 @@ class Event
   ##############################################################
 
   def update_photos
+
+    #TODO: return false / throw exception if not trending/waiting etc?
+    # probably won't be needed - photos will come in from fetch instead
 
     last_update = self.end_time
 

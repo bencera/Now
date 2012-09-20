@@ -17,55 +17,83 @@ class EventSchedule
     end
     current_time = Time.now.in_time_zone(tz)
 
-    #TODO: this is still essentially pseudocode -- this doesn't account for the fact that new day
-    #actually begins at 6am local time -- shouldn't have to put saturday and sunday => true
-    #to allow something to autotrend from 11pm to 2am saturday night.
-
     time_group = ScheduledEvent.get_time_group_from_time(current_time)
     
     #this is a trick to get around the day change thing -- this logic should be done somewhere else, one time
     wday = @days[Time.now.wday - ( (time_group == :latenight) ? 1 : 0 )]
 
-    can_trend = ScheduledEvent.where(wday => true).where(:time_group => true).entries
 
-    # if the most recent event on scheduled_event is trending, leave it
-    # there's a lot to worry about if somehow 1) a waiting event somehow ends up on this scheduled_event
-    # or if the most recent event is not_trending but the one behind it somehow is... will be easier to
-    # address when we've restructured the jobs and models
+    # check all recurring events that could trend right now
+    schedule_group_1 = ScheduledEvent.where(:past => false).where(:recurring => true).where(wday => true).where(:time_group => true)
 
-    can_trend.each do |scheduled_event|
-      event = scheduled_event.events.order_by([[:start_time, :desc]]).first
-      if( event.status != "trending" && event.status != "waiting_auto")
-        #now look at the venue to make sure it's not trending.
-        #TODO: venue should be able to tell you if it's currently trending
-        if( venue.events.order_by([[:start_time, :desc]]).first.status != trending )
-          #nothing standing in our way.  let's create a "waiting_auto" event to gather pictures
-        end
-      end
-    end
+    create_or_update(wday, time_group, schedule_group_1)
 
-    #now, find all "waiting_auto" events and see if they reach the 
+    # check all non-recurring events that could trend 
+    schedule_group_2 = ScheduledEvent.where(:past => false).where(:recurring => false).where(:next_start_time.lt => current_time.to_i).
+                            where(:next_end_time.gt => current_time.to_i)
+    
+    create_or_update(wday, time_group, schedule_group_2)
 
     # now, find all currently trending events that were created by schedule, and see if they can 
     # stop trending now (their time is up, maybe if no recent pictures?)
 
-    currently_trending = Event.where(:city => city).where(:status.in => ["waiting_auto", "trending"]).entries
+    finish_trending(wday, time_group, current_time)
+
+  end
+
+
+########################################################
+# Find all events in Schedule that can trend now
+########################################################
+
+  def self.create_or_update(wday, time_group, can_trend)
+
+    # there's a lot to worry about if somehow 1) a waiting event somehow ends up on this scheduled_event
+    # or if the most recent event is not_trending but the one behind it somehow is trending... will be easier to
+    # address when we've restructured the jobs and models
+
+    can_trend.each do |scheduled_event|
+      event = scheduled_event.last_event
+      venue = scheduled_event.venue
+
+      # if no events on this schedule, or nothing blocking it in the venue, create an event to fill with photos
+      if(event.nil? || !venue.cannot_trend)
+        #note that if there's a "waiting" event, it will block this -- might want to change this (maybe turn waiting into waiting_scheduled?)
+        scheduled_event.create_new_event(venue)
+        event.update_photos
+      elsif( event.status == "waiting_scheduled" )
+        event.update_photos
+
+        #if the waiting event meets our minimums, trend it
+        if(event.photos.count >= scheduled_event.min_photos && event.num_users >= scheduled_event.min_users)
+          event.update_attribute(:status, "trending")
+          Rails.logger.info("EventSchedule: trended event #{event.id} with #{event.photos.count} photos and #{event.num_users} users")
+        end
+      elsif( event.status == "trending" )
+        event.update_photos
+      end
+    end
+  end
+
+########################################################
+# End any trending events that were scheduled to end now
+######################################################## 
+
+  def self.finish_trending(wday, time_group, current_time)
+
+    currently_trending = Event.where(:city => city).where(:status.in => ["waiting_scheduled", "trending"]).entries
 
     currently_trending.each do |event|
       scheduled_event = event.scheduled_event
       if(scheduled_event)
-
         # if outside of trendable time, untrend the event        
-        if(!scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
-          event.update_attribute(:status, "trended")
-          Rails.logger.info("EventSchedule: event #{event.id} transitioning status from trending to trended")
+        if scheduled_event.recurring 
+          event.transition_status if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
+        else
+          event.transition_status if ( current_time.to_i > scheduled_event.next_end_time )
         end
-
       end
     end
-
-    # if we're using a different status tag for trending from schedule, need to update their photos
-    # directly, unless we've changed the event.photos update from trending to fetch
   end
 
 end

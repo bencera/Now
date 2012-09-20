@@ -15,6 +15,10 @@ class ScheduledEvent
   field :next_start_time
   field :next_end_time
 
+# minimums for allowing trending
+  field :min_photos, default: 6
+  field :min_users, default: 5
+
 # at least for now, just one description.  may have a list of descriptions to choose from for
 # recurring events
   field :description
@@ -82,9 +86,9 @@ class ScheduledEvent
   end
 
 
-##################################################
-# Class Methods
-##################################################
+#########################################################
+# CLASS METHODS
+#########################################################
 
   ## this gets morning, lunch ... from time
   ## does NOT correct for timezone -- you have to set the timezone on your Time obj yourself
@@ -220,6 +224,44 @@ class ScheduledEvent
   def get_end_date
     end_date = Time.at(self.active_until).in_time_zone(EventsHelper.get_tz(self.city))
     (end_date.year * 10000) + (end_date.month * 100) + (end_date.day)
+  end
+
+#########################################################
+# INSTANCE METHODS
+#########################################################
+
+  def last_event
+    self.events.order_by([[:start_time, :desc]]).first  
+  end
+
+
+  ##############################################################
+  # trends a new event given a list of photos to put in the new event 
+  ##############################################################
+  def create_new_event(venue)
+    #TODO: should take start_time instead
+
+
+    # we want to make sure this event has latest start time of any events waiting on that venue
+    # otherwise it will mess up trending
+    start_time = Time.now.to_i 
+    end_time = self.recurring ? self.active_until : self.next_end_time
+
+  # commented out for testing on workers CONALL
+    new_event = self.events.create(:start_time => start_time,
+                             :end_time => end_time,
+                             :coordinates => venue.coordinates,
+                             :n_photos => 0,
+                             :status => "waiting_scheduled",
+                             :city => self.city,
+                             :venue_id => venue.id
+                             :description => self.description)
+
+    Rails.logger.info("ScheduledEvent::create_new_event: created new event at venue #{self.id} ")
+
+    new_event.generate_short_id
+
+    return new_event
   end
 
   private

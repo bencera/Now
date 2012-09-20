@@ -22,7 +22,7 @@ class Venue
   has_many :photos, dependent: :destroy
   has_and_belongs_to_many :users
   has_many :events
-  has_many :scheduled_events
+  has_many :scheduled_events, dependent: :destroy
   
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates, :address => :address_geo
@@ -401,7 +401,8 @@ class Venue
       return false
     else
       return( event.status == "trending" || event.status == "waiting_confirmation" || 
-      event.status == "waiting" || (event.start_time > 6.hours.ago.to_i &&
+      event.status == "waiting" || event.status == "waiting_scheduled" || 
+      event.status == "trending_scheduled" || (event.start_time > 6.hours.ago.to_i &&
       event.status == "not_trending"))
     end
   end
