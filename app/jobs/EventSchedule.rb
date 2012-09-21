@@ -33,13 +33,13 @@ class EventSchedule
 
 
     # check all recurring events that could trend right now
-    schedule_group_1 = ScheduledEvent.where(:past => false).where(:city => city).where(:recurring => true).
+    schedule_group_1 = ScheduledEvent.where(:past => false).where(:city => city).where(:event_layer.lt => 3).
               where(wday => true).where(:time_group => true).entries
 
     create_or_update(wday, time_group, schedule_group_1)
 
     # check all non-recurring events that could trend now
-    schedule_group_2 = ScheduledEvent.where(:past => false).where(:city => city).where(:recurring => false).
+    schedule_group_2 = ScheduledEvent.where(:past => false).where(:city => city).where(:event_layer => 3).
               where(:next_start_time.lt => current_time.to_i).where(:next_end_time.gt => current_time.to_i).entries
     
     create_or_update(wday, time_group, schedule_group_2)
@@ -115,7 +115,7 @@ class EventSchedule
       scheduled_event = event.scheduled_event
       if(scheduled_event)
         # if outside of trendable time, untrend the event        
-        if scheduled_event.recurring
+        if scheduled_event.event_layer < 3
 
     # Commented out for safety CONALL 
           ######event.transition_status if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
