@@ -110,13 +110,49 @@ class ScheduledEvent
     end
   end
 
+#maybe just make this a hash
+  def self.get_tg_start_time(time_group)
+    case time_group
+    when :morning
+      return MORNING
+    when :lunch
+      return LUNCH
+    when :afternoon
+      return AFTERNOON
+    when :evening
+      return EVENING
+    when :night
+      return NIGHT
+    when :latenight
+      return LATENIGHT
+    end
+  end
+
+
+  def self.get_tg_end_time(time_group)
+    case time_group
+    when :morning
+      return LUNCH
+    when :lunch
+      return AFTERNOON
+    when :afternoon
+      return EVENING
+    when :evening
+      return NIGHT
+    when :night
+      return LATENIGHT
+    when :latenight
+      return MORNING
+    end
+  end
+
 # converts the params from the API user to model.  there must be a better way of doing this
   def self.convert_params(sched_params)
     errors = ""
 
     begin
 
-      end_date = sched_params[:end_date]
+      end_date = sched_params[:end_date].to_i
       errors += "needs an :end_date\n" if end_date.nil?
       sched_params.delete(:end_date)
 
@@ -129,7 +165,7 @@ class ScheduledEvent
 
       city = Venue.find(venue_id).city
       tz_offset = EventsHelper.get_tz_offset(city)
-      layer = sched_params[:event_layer]
+      layer = sched_params[:event_layer].to_i
 
       if layer.nil?        
         errors += "needs an :event_layer\n" 
@@ -157,8 +193,8 @@ class ScheduledEvent
         sched_params[:active_until] = active_until.to_i
 
       elsif layer == 3
-        start_time = sched_params[:start_time]
-        end_time = sched_params[:end_time]
+        start_time = sched_params[:start_time].to_i
+        end_time = sched_params[:end_time].to_i
   
         errors += "needs a :start_time\n" if start_time.nil?
         errors += "needs an :end_time\n" if end_time.nil?
@@ -235,13 +271,13 @@ class ScheduledEvent
   ##############################################################
   # trends a new event given a list of photos to put in the new event 
   ##############################################################
-  def create_new_event(venue)
+  def create_new_event(venue, time_group)
     #TODO: should take start_time instead
 
 
     # we want to make sure this event has latest start time of any events waiting on that venue
     # otherwise it will mess up trending
-    start_time = Time.now.to_i 
+    start_time = self.recurring? ? get_tg_start_time(time_group) : self.next_start_time
 
     # remove this when done testing CONALL
   #  new_event = nil
@@ -256,7 +292,7 @@ class ScheduledEvent
                              :venue_id => venue.id,
                              :description => self.description)
 
-    Rails.logger.info("ScheduledEvent::create_new_event: created new event at venue #{self.id} ")
+    Rails.logger.info("ScheduledEvent::create_new_event: created new event at venue #{venue.id} -- event_id: #{new_event.id} -- scheduled_event_id = #{self.id}")
 
   # commented out for testing on workers CONALL
   #  new_event.generate_short_id
