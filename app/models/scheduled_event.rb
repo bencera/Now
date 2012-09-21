@@ -191,6 +191,37 @@ class ScheduledEvent
 # Instance Methods
 ##################################################
 
+  def recurring?
+    return self.event_layer < 3
+  end
+
+  #accessors for getting values in the format the controller expects
+
+  # gets the start time in the military time format
+  def get_start_time
+    return nil if self.recurring?
+    start_time = Time.at(self.next_start_time).in_time_zone(EventsHelper.get_tz(self.city))
+    hour = start_time.hour
+    minute = start_time.min
+    hour *= 100
+    hour + minute
+  end
+
+  # gets the end time in the military time format
+  def get_end_time
+    return nil if self.recurring?
+    end_time = Time.at(self.next_end_time).in_time_zone(EventsHelper.get_tz(self.city))
+    hour = end_time.hour
+    minute = end_time.min
+    hour *= 100
+    hour + minute
+  end
+
+  def get_end_date
+    end_date = Time.at(self.active_until).in_time_zone(EventsHelper.get_tz(self.city))
+    (end_date.year * 10000) + (end_date.month * 100) + (end_date.day)
+  end
+
   private
 
   def check_date_time
