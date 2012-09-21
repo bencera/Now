@@ -34,20 +34,20 @@ class EventSchedule
 
     # check all recurring events that could trend right now
     schedule_group_1 = ScheduledEvent.where(:past => false).where(:city => city).where(:recurring => true).
-              where(wday => true).where(:time_group => true)
+              where(wday => true).where(:time_group => true).entries
 
     create_or_update(wday, time_group, schedule_group_1)
 
     # check all non-recurring events that could trend now
     schedule_group_2 = ScheduledEvent.where(:past => false).where(:city => city).where(:recurring => false).
-              where(:next_start_time.lt => current_time.to_i).where(:next_end_time.gt => current_time.to_i)
+              where(:next_start_time.lt => current_time.to_i).where(:next_end_time.gt => current_time.to_i).entries
     
     create_or_update(wday, time_group, schedule_group_2)
 
     # now, find all currently trending events that were created by schedule, and see if they can 
     # stop trending now (their time is up, maybe if no recent pictures?)
 
-    finish_trending(wday, time_group, current_time)
+    finish_trending(city, wday, time_group, current_time)
 
     Rails.logger.info("EventSchedule: job finished on city #{city}")
 
@@ -71,8 +71,10 @@ class EventSchedule
       # if no events on this schedule, or nothing blocking it in the venue, create an event to fill with photos
       if(event.nil? || !venue.cannot_trend)
         #note that if there's a "waiting" event, it will block this -- might want to change this (maybe turn waiting into waiting_scheduled?)
+
+        # didn't comment this line out because create_new_event is also being tested CONALL
+        event = scheduled_event.create_new_event(venue)
         # Commented out for safety CONALL
-        ######scheduled_event.create_new_event(venue)
         ######event.update_photos
 
 
@@ -105,7 +107,7 @@ class EventSchedule
 # End any trending events that were scheduled to end now
 ######################################################## 
 
-  def self.finish_trending(wday, time_group, current_time)
+  def self.finish_trending(city, wday, time_group, current_time)
 
     currently_trending = Event.where(:city => city).where(:status.in => ["waiting_scheduled", "trending"]).entries
 
@@ -132,7 +134,7 @@ class EventSchedule
 ######################################################## 
 
   def self.close_old_events(current_time)
-    old_events = Event.where(:past => false).where(:active_until.lt => current_time.now).entries
+    old_events = Event.where(:past => false).where(:active_until.lt => current_time.to_i).entries
     # Commented out for safety Conall
     ###### old_events.each { |scheduled_event| scheduled_event.update_attribute(:past, true)}
 

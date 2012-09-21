@@ -5,6 +5,7 @@ namespace :db do
     User.all.destroy
     Event.all.destroy
     Photo.all.destroy
+    ScheduledEvent.all.destroy
     make_venues
     make_users
     make_existing_events
@@ -124,13 +125,17 @@ def make_photos_for_new_events
     5.times do |n|
       venue = Venue.where(:fs_venue_id => n).first
       scheduled_event = venue.scheduled_events.create!( :saturday => true,
+                                                    :friday => true,
+                                                    :sunday => true,
+                                                    :evening => true,
+                                                    :afternoon => true,
                                                     :night => true,
                                                     :description => Faker::Lorem.sentence(6),
+                                                    :category => "outdoors",
                                                     :informative_description  => Faker::Lorem.sentence(15),
-                                                    :next_start_time => Time.now.to_i + n.days.to_i,
-                                                    :next_end_time => Time.now.to_i + 3.hours.to_i + n.days.to_i,
                                                     :city => "newyork",
-                                                    :active_until => Time.now.to_i + 3.hours.to_i + n.days.to_i)
+                                                    :active_until => Time.now.to_i + 3.hours.to_i + n.days.to_i,
+                                                    :event_layer => 1)
     end
   end
 end

@@ -244,19 +244,23 @@ class ScheduledEvent
     start_time = Time.now.to_i 
     end_time = self.recurring ? self.active_until : self.next_end_time
 
+    # remove this when done testing CONALL
+    new_event = nil
+
   # commented out for testing on workers CONALL
-    new_event = self.events.create(:start_time => start_time,
-                             :end_time => end_time,
-                             :coordinates => venue.coordinates,
-                             :n_photos => 0,
-                             :status => "waiting_scheduled",
-                             :city => self.city,
-                             :venue_id => venue.id,
-                             :description => self.description)
+  #  new_event = self.events.create(:start_time => start_time,
+  #                           :end_time => end_time,
+  #                           :coordinates => venue.coordinates,
+  #                           :n_photos => 0,
+  #                           :status => "waiting_scheduled",
+  #                           :city => self.city,
+  #                           :venue_id => venue.id,
+  #                           :description => self.description)
 
     Rails.logger.info("ScheduledEvent::create_new_event: created new event at venue #{self.id} ")
 
-    new_event.generate_short_id
+  # commented out for testing on workers CONALL
+  #  new_event.generate_short_id
 
     return new_event
   end
