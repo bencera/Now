@@ -4,7 +4,7 @@ child :photos do
 attributes :url, :caption, :time_taken, :user_details, :ig_media_id
 end
 child :venue do
-attributes :name, :neighborhood, :address
+attributes :id, :name, :neighborhood, :address
 node :category do |u|
 u.categories.first["name"] unless u.categories.nil?
 end

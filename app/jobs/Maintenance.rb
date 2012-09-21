@@ -78,6 +78,7 @@ class Maintenance
   ########
   def self.get_next_maintenance_log(time)
     time += 1.day
+    # we should change this when the city model is created
     Time.new(time.year, time.month, time.day, 6, 0, 0, Time.zone_offset('EST'))
   end
 end

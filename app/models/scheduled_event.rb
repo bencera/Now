@@ -1,6 +1,15 @@
 class ScheduledEvent
   include Mongoid::Document
   include Mongoid::Timestamps
+  include EventsHelper
+
+  LATENIGHT = 2
+  MORNING = 6
+  LUNCH = 10
+  AFTERNOON = 14
+  EVENING = 18
+  NIGHT = 22
+
 
 # not entirely sure how we'll use these yet.  may be different if recurring or not
   field :next_start_time
@@ -39,7 +48,7 @@ class ScheduledEvent
 
 
   field :past, :type => Boolean, default: false
-  field :recurring, :type => Boolean, default: false
+  field :event_layer
  
   #a timestamp after which :past => true, must be set explicitly if recurring
   field :active_until
@@ -74,26 +83,114 @@ class ScheduledEvent
   end
 
 
+##################################################
+# Class Methods
+##################################################
 
   ## this gets morning, lunch ... from time
   ## does NOT correct for timezone -- you have to set the timezone on your Time obj yourself
   ## TODO: may want to make time groups overlap and this returns an array of labels
   ## TODO: this will probably be moved to city model when that exists (see Asana task https://app.asana.com/0/1784210809145/1901246404308)
   def self.get_time_group_from_time(time)
-    if time.hour < 2 || time.hour >= 22
+    if time.hour < LATENIGHT || time.hour >= NIGHT
       return :night
-    elsif time.hour >= 2 && time.hour < 6
+    elsif time.hour >= LATENIGHT && time.hour < MORNING
       return :latenight
-    elsif time.hour >= 6 && time.hour < 10
+    elsif time.hour >= MORNING && time.hour < LUNCH
       return :morning
-    elsif time.hour >= 10 && time.hour < 14
+    elsif time.hour >= LUNCH && time.hour < AFTERNOON
       return :lunch
-    elsif time.hour >= 14 && time.hour < 18
+    elsif time.hour >= AFTERNOON && time.hour < EVENING
       return :afternoon
-    elsif time.hour >= 18 && time.hour < 22
+    elsif time.hour >= EVENING && time.hour < NIGHT
       return :evening
     end
   end
+
+# converts the params from the API user to model.  there must be a better way of doing this
+  def self.convert_params(sched_params)
+    errors = ""
+
+    begin
+
+      end_date = sched_params[:end_date]
+      errors += "needs an :end_date\n" if end_date.nil?
+      sched_params.delete(:end_date)
+
+      end_year = end_date / 10000
+      end_month = (end_date / 100 ) % 100
+      end_day = end_date % 100
+
+      venue_id = sched_params[:venue_id]
+      errors += "missing venue_id\n" if venue_id.nil?
+
+      city = Venue.find(venue_id).city
+      tz_offset = EventsHelper.get_tz_offset(city)
+      layer = sched_params[:event_layer]
+
+      if layer.nil?        
+        errors += "needs an :event_layer\n" 
+      elsif layer == 1 || layer == 2
+        # TODO: verify that booleans in params come as strings 'true' or 'false' not bools
+        end_hours = 0
+        end_hours = MORNING if sched_params[:latenight] == 'true'
+        end_hours = LUNCH if sched_params[:morning] == 'true'
+        end_hours = AFTERNOON if sched_params[:lunch] == 'true'
+        end_hours = EVENING if sched_params[:afternoon] == 'true'
+        end_hours = NIGHT if sched_params[:evening] == 'true'
+        end_hours = LATENIGHT if sched_params[:night] == 'true'
+
+        if(end_hours == 0)
+          errors += "no time_group selected\n"
+        end
+
+        puts " #{end_year} #{end_month} #{end_day} #{end_hours}"
+
+        active_until = Time.new(end_year, end_month, end_day, end_hours, 0, 0, tz_offset)
+
+        #if i say this event ends on saturday, but it's a night event, then end it sunday
+        active_until += 1.day if sched_params[:night] || sched_params[:latenight]
+
+        sched_params[:active_until] = active_until.to_i
+
+      elsif layer == 3
+        start_time = sched_params[:start_time]
+        end_time = sched_params[:end_time]
+  
+        errors += "needs a :start_time\n" if start_time.nil?
+        errors += "needs an :end_time\n" if end_time.nil?
+
+        sched_params.delete(:start_time)
+        sched_params.delete(:end_time)
+
+        start_hours = start_time / 100
+        start_minutes = start_time % 100
+        end_hours = end_time / 100
+        end_minutes = end_time % 100
+
+        next_start_time = Time.new(end_year, end_month, end_day, start_hours, start_minutes, 0, tz_offset) 
+        next_end_time = Time.new(end_year, end_month, end_day, end_hours, end_minutes, 0, tz_offset)
+
+        next_start_time -= 1.day if next_end_time > next_end_time
+
+        sched_params[:next_start_time] = next_start_time.to_i
+        sched_params[:next_end_time] = next_end_time.to_i
+      else
+        errors += "invalid event_layer"
+      end
+
+    rescue Exception => e
+      errors += "exception: #{e.message}\n#{e.backtrace.inspect}" 
+      return {:errors => errors}
+    end
+
+    sched_params[:errors] = errors unless errors == ""
+    sched_params
+  end
+
+##################################################
+# Instance Methods
+##################################################
 
   private
 

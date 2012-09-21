@@ -113,16 +113,7 @@ class Event
       return false
     end
 
-    # note -- if we add new cities this code needs to be updated
-    if self.city == "newyork"
-      tz = "Eastern Time (US & Canada)"
-    elsif self.city == "sanfrancisco" || self.city == "losangeles"
-      tz = "Pacific Time (US & Canada)"
-    elsif self.city == "paris"
-      tz = "Paris"
-    elsif self.city == "london"
-      tz = "Edinburgh"
-    end
+    tz = EventsHelper.get_tz(self.city)
 
     current_time = Time.now.in_time_zone(tz)
     event_start_time = Time.at(self.start_time).in_time_zone(tz)

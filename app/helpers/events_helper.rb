@@ -69,4 +69,23 @@ module EventsHelper
       n.deliver
     end
   end
+
+# for now we'll put these in this helper -- city will have to be its own model eventually
+  def self.get_tz(city)
+    if city == "newyork"
+      tz = "Eastern Time (US & Canada)"
+    elsif city == "sanfrancisco" || city == "losangeles"
+      tz = "Pacific Time (US & Canada)"
+    elsif city == "paris"
+      tz = "Paris"
+    elsif city == "london"
+      tz = "Edinburgh"
+    end
+    tz
+  end
+
+# there has to be a better way of doing this that doesn't require creating a time object
+  def self.get_tz_offset(city)
+    Time.now.in_time_zone(get_tz(city)).utc_offset
+  end
 end
