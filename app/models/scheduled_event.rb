@@ -226,9 +226,6 @@ class ScheduledEvent
     (end_date.year * 10000) + (end_date.month * 100) + (end_date.day)
   end
 
-#########################################################
-# INSTANCE METHODS
-#########################################################
 
   def last_event
     self.events.order_by([[:start_time, :desc]]).first  
