@@ -218,6 +218,8 @@ class ScheduledEvent
         errors += "invalid event_layer"
       end
 
+      sched_params[:event_layer] = layer
+
     rescue Exception => e
       errors += "exception: #{e.message}\n#{e.backtrace.inspect}" 
       return {:errors => errors}
