@@ -20,7 +20,7 @@ class ScheduledEventsController < ApplicationController
 
   def create
 
-    converted_params = ScheduledEvent.convert_params(params[:scheduled_event])
+    converted_params = ScheduledEvent.convert_params(params)
     
     if(converted_params[:errors])
       return render :text => converted_params[:errors], :status => :error
@@ -44,7 +44,7 @@ class ScheduledEventsController < ApplicationController
 
   def update
 
-    converted_params = ScheduledEvent.convert_params(params[:scheduled_event])
+    converted_params = ScheduledEvent.convert_params(params)
     
     if(converted_params[:errors])
       return render :text => converted_params[:errors], :status => :error
