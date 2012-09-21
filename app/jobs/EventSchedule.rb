@@ -9,6 +9,8 @@ class EventSchedule
 
   def self.perform(city)
 
+    Rails.logger.info("EventSchedule: job starting on city #{city}")
+
     #TODO: in an upcoming project, city will become its own collection and this will be simplified
     if city == "newyork"
       tz = "Eastern Time (US & Canada)"
@@ -47,6 +49,8 @@ class EventSchedule
 
     finish_trending(wday, time_group, current_time)
 
+    Rails.logger.info("EventSchedule: job finished on city #{city}")
+
   end
 
 
@@ -67,18 +71,32 @@ class EventSchedule
       # if no events on this schedule, or nothing blocking it in the venue, create an event to fill with photos
       if(event.nil? || !venue.cannot_trend)
         #note that if there's a "waiting" event, it will block this -- might want to change this (maybe turn waiting into waiting_scheduled?)
-        scheduled_event.create_new_event(venue)
-        event.update_photos
+        # Commented out for safety CONALL
+        ######scheduled_event.create_new_event(venue)
+        ######event.update_photos
+
+
+
       elsif( event.status == "waiting_scheduled" )
-        event.update_photos
+        # Commented out for safety CONALL
+        #####event.update_photos
+
+        # Comment this out when done with testing CONALL
+        Rails.logger.info("EventSchedule: updating photos for event #{event.id}")
 
         #if the waiting event meets our minimums, trend it
         if(event.photos.count >= scheduled_event.min_photos && event.num_users >= scheduled_event.min_users)
-          event.update_attribute(:status, "trending")
+          # Commented out for safety CONALL
+          #####event.update_attribute(:status, "trending")
           Rails.logger.info("EventSchedule: trended event #{event.id} with #{event.photos.count} photos and #{event.num_users} users")
         end
       elsif( event.status == "trending" )
-        event.update_photos
+        # Commented out for safety CONALL
+        #####event.update_photos
+        
+        # Comment this out when done with testing CONALL
+        Rails.logger.info("EventSchedule: updating photos for event #{event.id}")
+
       end
     end
   end
@@ -95,10 +113,15 @@ class EventSchedule
       scheduled_event = event.scheduled_event
       if(scheduled_event)
         # if outside of trendable time, untrend the event        
-        if scheduled_event.recurring 
-          event.transition_status if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
+        if scheduled_event.recurring
+
+    # Commented out for safety CONALL 
+          ######event.transition_status if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
+          Rails.logger.info("EventSchedule: transitioning status of event #{event.id} due to scheduled_event #{scheduled_event.id}") if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
         else
-          event.transition_status if ( current_time.to_i > scheduled_event.next_end_time )
+    # Commented out for safety CONALL 
+          ######event.transition_status if ( current_time.to_i > scheduled_event.next_end_time )
+          Rails.logger.info("EventSchedule: transitioning status of event #{event.id} due to scheduled_event #{scheduled_event.id}") if ( current_time.to_i > scheduled_event.next_end_time )
         end
       end
     end
@@ -110,7 +133,13 @@ class EventSchedule
 
   def self.close_old_events(current_time)
     old_events = Event.where(:past => false).where(:active_until.lt => current_time.now).entries
-    old_events.each { |scheduled_event| scheduled_event.update_attribute(:past, true)}
+    # Commented out for safety Conall
+    ###### old_events.each { |scheduled_event| scheduled_event.update_attribute(:past, true)}
+
+    # Comment this out when done with testing CONALL
+    old_events.each { |scheduled_event| Rails.logger.info("putting scheduled_event #{scheduled_event.id} in the past")}
+
+    Rails.logger.info("EventSchedule: removed #{old_events.count} old events from schedule")
   end
 
 end
