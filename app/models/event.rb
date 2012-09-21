@@ -219,7 +219,7 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
     new_photo_count = 0
 
 # commented out for testing on workers CONALL
-    self.venue.photos.where(:time_taken.gt => self.end_time).each do |photo|
+    self.venue.photos.where(:time_taken.gt => last_update).each do |photo|
       unless photo.events.first == self 
         self.photos << photo
         self.inc(:n_photos, 1)
@@ -232,7 +232,7 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
 
 
 # TODO: this should probably be in a before_save -- if you do this, remember 
-    new_end_time = self.photos.first.time_taken
+    new_end_time = self.photos.first.time_taken unless self.photos.count == 0
 
 # commented out for testing on workers CONALL
     if(new_photo_count != 0) 

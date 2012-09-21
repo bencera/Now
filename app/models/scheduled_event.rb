@@ -249,7 +249,7 @@ class ScheduledEvent
 
   # commented out for testing on workers CONALL
     new_event = self.events.create(:start_time => start_time,
-                             :end_time => end_time,
+                             :end_time => start_time,
                              :coordinates => venue.coordinates,
                              :n_photos => 0,
                              :status => "waiting_scheduled",
