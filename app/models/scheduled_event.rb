@@ -167,6 +167,9 @@ class ScheduledEvent
       tz_offset = EventsHelper.get_tz_offset(city)
       layer = sched_params[:event_layer].to_i
 
+      sched_params[:photo_ids] = sched_params[:photo_ids].split(",")
+
+
       if layer.nil?        
         errors += "needs an :event_layer\n" 
       elsif layer == 1 || layer == 2
