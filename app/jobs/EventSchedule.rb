@@ -115,7 +115,7 @@ class EventSchedule
       scheduled_event = event.scheduled_event
       if(scheduled_event)
         # if outside of trendable time, untrend the event        
-        if scheduled_event.event_layer < 3
+        if scheduled_event.recurring?
 
     # Commented out for safety CONALL 
           ######event.transition_status if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
