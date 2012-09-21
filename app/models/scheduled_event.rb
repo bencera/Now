@@ -58,15 +58,14 @@ class ScheduledEvent
   belongs_to :facebook_user
   has_and_belongs_to_many :photos
 
-  validates_presence_of :venue
+  validates_presence_of :venue, :description, :category, :event_layer
   validate :check_date_time
-  validates_presence_of :description, :category
 
   before_save do |scheduled_event|
     scheduled_event.city = scheduled_event.venue.city unless scheduled_event.venue.nil?
 
     # if non-recurring, set the active_until to be next_end_time
-    if !scheduled_event.recurring
+    if scheduled_event.event_layer && scheduled_event.event_layer == 3
       scheduled_event.active_until = scheduled_event.next_end_time
     end
 
@@ -75,7 +74,7 @@ class ScheduledEvent
       scheduled_event.past = scheduled_event.active_until < Time.now.to_i
     end
 
-    if(scheduled_event.push && scheduled_event.push_message.nil?)
+    if(scheduled_event.push_to_users && scheduled_event.push_message.nil?)
       scheduled_event.push_message = scheduled_event.description
     end
     
@@ -195,16 +194,18 @@ class ScheduledEvent
   private
 
   def check_date_time
-    if !self.recurring
+    if(self.event_layer.nil? || self.event_layer < 1 || self.event_layer > 3)
+      errors.add(:event_layer, "incorrectly defined event_layer -- must be integer between 1 and 3")
+    elsif self.event_layer == 3
       errors.add(:next_start_time, 'next_start_time cannot be nil in non-recurring event') if self.next_start_time.nil?
       errors.add(:next_end_time, 'next_end_time cannot be nil in non-recurring event') if self.next_end_time.nil?
       errors.add(:next_start_time, 'next_start_time must be less than next_end_time') if !self.next_start_time.nil? && 
                         !self.next_end_time.nil? && self.next_start_time >= self.next_end_time
     else
       errors.add(:active_until, 'recurring event must have active_until defined') if self.active_until.nil?
-      errors.add(:recurring, "must choose a day for recurring event") if !(self.monday || self.tuesday || 
+      errors.add(:event_layer, "must choose a day for recurring event") if !(self.monday || self.tuesday || 
                         self.wednesday || self.thursday || self.friday || self.saturday || self.sunday)
-      errors.add(:recurring, "must choose time group for recurring event") if !(self.morning || self.lunch || 
+      errors.add(:event_layer, "must choose time group for recurring event") if !(self.morning || self.lunch || 
                         self.afternoon || self.evening || self.night || self.latenight)
     end
   end

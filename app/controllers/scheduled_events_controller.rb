@@ -26,7 +26,7 @@ class ScheduledEventsController < ApplicationController
       return render :text => converted_params[:errors], :status => :error
     end
 
-    scheduled_event = ScheduledEvent.new_from_params(converted_params)
+    scheduled_event = ScheduledEvent.new(converted_params)
     user = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
     #for security, we should probably verify that user == :params[:facebook_user_id]
@@ -53,7 +53,7 @@ class ScheduledEventsController < ApplicationController
     scheduled_event = ScheduledEvent.find(params[:id])
     user = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
-    if scheduled_event.update_from_params(converted_params)
+    if scheduled_event.update_attributes(converted_params)
       return render :text => "OK", :status => :ok
     else
       return render :text => scheduled_event.errors.messages, :status => :error
