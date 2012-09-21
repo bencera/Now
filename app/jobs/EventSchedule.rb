@@ -14,7 +14,7 @@ class EventSchedule
     #TODO: in an upcoming project, city will become its own collection and this will be simplified
     if city == "newyork"
       tz = "Eastern Time (US & Canada)"
-    elsif city == "sanfrancisco" || event.city == "losangeles"
+    elsif city == "sanfrancisco" || city == "losangeles"
       tz = "Pacific Time (US & Canada)"
     elsif city == "paris"
       tz = "Paris"
