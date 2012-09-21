@@ -245,17 +245,17 @@ class ScheduledEvent
     end_time = self.event_layer < 3 ? self.active_until : self.next_end_time
 
     # remove this when done testing CONALL
-    new_event = nil
+  #  new_event = nil
 
   # commented out for testing on workers CONALL
-  #  new_event = self.events.create(:start_time => start_time,
-  #                           :end_time => end_time,
-  #                           :coordinates => venue.coordinates,
-  #                           :n_photos => 0,
-  #                           :status => "waiting_scheduled",
-  #                           :city => self.city,
-  #                           :venue_id => venue.id,
-  #                           :description => self.description)
+    new_event = self.events.create(:start_time => start_time,
+                             :end_time => end_time,
+                             :coordinates => venue.coordinates,
+                             :n_photos => 0,
+                             :status => "waiting_scheduled",
+                             :city => self.city,
+                             :venue_id => venue.id,
+                             :description => self.description)
 
     Rails.logger.info("ScheduledEvent::create_new_event: created new event at venue #{self.id} ")
 

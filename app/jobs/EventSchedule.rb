@@ -75,13 +75,13 @@ class EventSchedule
         # didn't comment this line out because create_new_event is also being tested CONALL
         event = scheduled_event.create_new_event(venue)
         # Commented out for safety CONALL
-        ######event.update_photos
+        event.update_photos
 
 
 
       elsif( event.status == "waiting_scheduled" )
         # Commented out for safety CONALL
-        #####event.update_photos
+        event.update_photos
 
         # Comment this out when done with testing CONALL
         Rails.logger.info("EventSchedule: updating photos for event #{event.id}")
