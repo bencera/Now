@@ -242,7 +242,6 @@ class ScheduledEvent
     # we want to make sure this event has latest start time of any events waiting on that venue
     # otherwise it will mess up trending
     start_time = Time.now.to_i 
-    end_time = self.event_layer < 3 ? self.active_until : self.next_end_time
 
     # remove this when done testing CONALL
   #  new_event = nil
