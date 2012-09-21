@@ -251,7 +251,7 @@ class ScheduledEvent
                              :n_photos => 0,
                              :status => "waiting_scheduled",
                              :city => self.city,
-                             :venue_id => venue.id
+                             :venue_id => venue.id,
                              :description => self.description)
 
     Rails.logger.info("ScheduledEvent::create_new_event: created new event at venue #{self.id} ")
