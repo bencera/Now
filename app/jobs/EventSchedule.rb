@@ -136,7 +136,7 @@ class EventSchedule
   def self.close_old_events(current_time)
     old_events = Event.where(:past => false).where(:active_until.lt => current_time.to_i).entries
     # Commented out for safety Conall
-    ###### old_events.each { |scheduled_event| scheduled_event.update_attribute(:past, true)}
+    old_events.each { |scheduled_event| scheduled_event.update_attribute(:past, true)}
 
     # Comment this out when done with testing CONALL
     old_events.each { |scheduled_event| Rails.logger.info("putting scheduled_event #{scheduled_event.id} in the past")}
