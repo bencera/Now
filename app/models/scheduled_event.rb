@@ -282,7 +282,14 @@ class ScheduledEvent
 
     # we want to make sure this event has latest start time of any events waiting on that venue
     # otherwise it will mess up trending
-    event_start_time = self.recurring? ? ScheduledEvent.get_tg_start_time(time_group) : self.next_start_time
+    if self.recurring?
+      event_start_time = Time.new(Time.now.year, Time.now.month, 
+        Time.now.day, ScheduledEvent.get_tg_start_time(time_group), 
+        0 , 0, EventsHelper.get_tz_offset(self.city))
+    else
+      event_start_time = self.next_start_time
+    end
+
 
     # remove this when done testing CONALL
   #  new_event = nil
