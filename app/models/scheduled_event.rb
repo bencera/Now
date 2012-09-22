@@ -305,6 +305,8 @@ class ScheduledEvent
                              :description => self.description,
                              :category => self.category)
 
+    new_event.photos.push(*(self.photos))
+
     Rails.logger.info("ScheduledEvent::create_new_event: created new event at venue #{venue.id} -- event_id: #{new_event.id} -- scheduled_event_id = #{self.id}")
 
   # commented out for testing on workers CONALL
