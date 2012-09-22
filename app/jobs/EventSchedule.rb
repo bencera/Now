@@ -90,7 +90,7 @@ class EventSchedule
         #if the waiting event meets our minimums, trend it
         if(event.photos.count >= scheduled_event.min_photos && event.num_users >= scheduled_event.min_users)
           # Commented out for safety CONALL
-          #####event.update_attribute(:status, "trending")
+          event.update_attribute(:status, "trending")
           EventsHelper.notify_ben_and_conall("Trending event '#{event.description}' on schedule'", event)
           Rails.logger.info("EventSchedule: trended event #{event.id} with #{event.photos.count} photos and #{event.num_users} users")
         end
