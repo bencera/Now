@@ -146,14 +146,21 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
 
   def transition_status
 
-    if(self.status == "trending" || self.status == "waiting" || self.status == "waiting_scheduled")
+    #we don't want to un-trend anything that belongs to the schedule
+    if(self.scheduled_event.nil? && (self.status == "trending" || self.status == "waiting" ) )
       if( !self.began_today? || ( self.start_time < 12.hours.ago.to_i) || ( self.end_time < 4.hours.ago.to_i) )
       
-        # this should be a method in the event -- something like event.untrend()
         Rails.logger.info("transition_status: event #{self.id} transitioning status from #{status} to #{status == "trending" ? "trended" : "not_trending"}")
         self.update_attribute(:status, self.status == "trending" ? "trended" : "not_trending")
       end
     end
+  end
+
+  # force status to transition -- 
+  def transition_status_force
+
+    Rails.logger.info("transition_status: event #{self.id} transitioning status from #{status} to #{status == "trending" ? "trended" : "not_trending"}")
+    self.update_attribute(:status, self.status == "trending" ? "trended" : "not_trending")
   end
 
   def update_keywords
@@ -236,8 +243,8 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
 
 # commented out for testing on workers CONALL
     if(new_photo_count != 0) 
-      Resque.enqueue(VerifyURL2, self.id, last_update, true)
-      Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
+      #####Resque.enqueue(VerifyURL2, self.id, last_update, true)
+      #####Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
       self.update_attribute(:end_time, new_end_time) 
       Rails.logger.info("Added #{new_photo_count} photos to event #{self.id}") 
     end

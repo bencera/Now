@@ -34,7 +34,7 @@ class EventSchedule
 
     # check all recurring events that could trend right now
     schedule_group_1 = ScheduledEvent.where(:past => false).where(:city => city).where(:event_layer.lt => 3).
-              where(wday => true).where(:time_group => true).entries
+              where(wday => true).where(time_group => true).entries
 
     create_or_update(wday, time_group, schedule_group_1)
 
@@ -73,7 +73,7 @@ class EventSchedule
         #note that if there's a "waiting" event, it will block this -- might want to change this (maybe turn waiting into waiting_scheduled?)
 
         # didn't comment this line out because create_new_event is also being tested CONALL
-        event = scheduled_event.create_new_event(venue)
+        event = scheduled_event.create_new_event(time_group)
         # Commented out for safety CONALL
         event.update_photos
 
@@ -89,12 +89,12 @@ class EventSchedule
         #if the waiting event meets our minimums, trend it
         if(event.photos.count >= scheduled_event.min_photos && event.num_users >= scheduled_event.min_users)
           # Commented out for safety CONALL
-          #####event.update_attribute(:status, "trending")
+          event.update_attribute(:status, "trending")
           Rails.logger.info("EventSchedule: trended event #{event.id} with #{event.photos.count} photos and #{event.num_users} users")
         end
       elsif( event.status == "trending" )
         # Commented out for safety CONALL
-        #####event.update_photos
+        event.update_photos
         
         # Comment this out when done with testing CONALL
         Rails.logger.info("EventSchedule: updating photos for event #{event.id}")
@@ -118,11 +118,11 @@ class EventSchedule
         if scheduled_event.recurring?
 
     # Commented out for safety CONALL 
-          ######event.transition_status if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
+          event.transition_status_force if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
           Rails.logger.info("EventSchedule: transitioning status of event #{event.id} due to scheduled_event #{scheduled_event.id}") if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
         else
     # Commented out for safety CONALL 
-          ######event.transition_status if ( current_time.to_i > scheduled_event.next_end_time )
+          event.transition_status_force if ( current_time.to_i > scheduled_event.next_end_time )
           Rails.logger.info("EventSchedule: transitioning status of event #{event.id} due to scheduled_event #{scheduled_event.id}") if ( current_time.to_i > scheduled_event.next_end_time )
         end
       end

@@ -276,25 +276,25 @@ class ScheduledEvent
   ##############################################################
   # trends a new event given a list of photos to put in the new event 
   ##############################################################
-  def create_new_event(venue, time_group)
+  def create_new_event(time_group)
     #TODO: should take start_time instead
 
 
     # we want to make sure this event has latest start time of any events waiting on that venue
     # otherwise it will mess up trending
-    start_time = self.recurring? ? get_tg_start_time(time_group) : self.next_start_time
+    event_start_time = self.recurring? ? ScheduledEvent.get_tg_start_time(time_group) : self.next_start_time
 
     # remove this when done testing CONALL
   #  new_event = nil
 
   # commented out for testing on workers CONALL
-    new_event = self.events.create(:start_time => start_time,
-                             :end_time => start_time,
+    new_event = self.events.create(:start_time => event_start_time,
+                             :end_time => event_start_time,
                              :coordinates => venue.coordinates,
                              :n_photos => 0,
                              :status => "waiting_scheduled",
                              :city => self.city,
-                             :venue_id => venue.id,
+                             :venue_id => self.venue.id,
                              :description => self.description)
 
     Rails.logger.info("ScheduledEvent::create_new_event: created new event at venue #{venue.id} -- event_id: #{new_event.id} -- scheduled_event_id = #{self.id}")

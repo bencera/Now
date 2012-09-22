@@ -120,22 +120,33 @@ def make_photos_for_new_events
                          :caption => Faker::Lorem.sentence(35))
     end
   end
+end
 
-  def make_scheduled_events
-    5.times do |n|
-      venue = Venue.where(:fs_venue_id => n).first
-      scheduled_event = venue.scheduled_events.create!( :saturday => true,
-                                                    :friday => true,
-                                                    :sunday => true,
-                                                    :evening => true,
-                                                    :afternoon => true,
-                                                    :night => true,
-                                                    :description => Faker::Lorem.sentence(6),
-                                                    :category => "outdoors",
-                                                    :informative_description  => Faker::Lorem.sentence(15),
-                                                    :city => "newyork",
-                                                    :active_until => Time.now.to_i + 3.hours.to_i + n.days.to_i,
-                                                    :event_layer => 1)
-    end
+def make_scheduled_events
+  5.times do |n|
+    venue = Venue.where(:fs_venue_id => n + 18).first
+    scheduled_event = venue.scheduled_events.create!( :next_start_time => ((n * 30)).minutes.ago.to_i,
+                                                  :next_end_time => (90 * (n + 1)).minutes.to_i + Time.now.to_i,
+                                                  :description => Faker::Lorem.sentence(6),
+                                                  :category => "outdoors",
+                                                  :informative_description  => Faker::Lorem.sentence(15),
+                                                  :city => "newyork",
+                                                  :event_layer => 3)
+  end
+
+  5.times do |n|
+    venue = Venue.where(:fs_venue_id => n + 23).first
+   scheduled_event = venue.scheduled_events.create!( :saturday => true,
+                                                  :friday => true,
+                                                  :sunday => true,
+                                                  :evening => true,
+                                                  :afternoon => true,
+                                                  :night => true,
+                                                  :description => Faker::Lorem.sentence(6),
+                                                  :category => "outdoors",
+                                                  :informative_description  => Faker::Lorem.sentence(15),
+                                                  :city => "newyork",
+                                                  :active_until => Time.now.to_i + 3.hours.to_i + n.days.to_i,
+                                                  :event_layer => 1)
   end
 end
