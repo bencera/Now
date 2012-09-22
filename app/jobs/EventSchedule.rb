@@ -1,5 +1,4 @@
 class EventSchedule
-  include EventsHelper
 
   #TODO: intitially, because i'm worried about trending stepping on this, we should actually call
   # EventSchedule.perform from Trending2 -- it makes sense since they have similar functionalities
@@ -91,7 +90,7 @@ class EventSchedule
         if(event.photos.count >= scheduled_event.min_photos && event.num_users >= scheduled_event.min_users)
           # Commented out for safety CONALL
           event.update_attribute(:status, "trending")
-          EventsHelper.notify_ben_and_conall("Trending event '#{event.description}' on schedule'", event)
+          notify_ben_and_conall("Trending event '#{event.description}' on schedule'", event)
           Rails.logger.info("EventSchedule: trended event #{event.id} with #{event.photos.count} photos and #{event.num_users} users")
         end
       elsif( event.status == "trending" )
@@ -144,6 +143,20 @@ class EventSchedule
     old_events.each { |scheduled_event| Rails.logger.info("putting scheduled_event #{scheduled_event.id} in the past")}
 
     Rails.logger.info("EventSchedule: removed #{old_events.count} old events from schedule")
+  end
+
+
+  def self.notify_ben_and_conall(alert, event)
+
+    subscriptions = [APN::Device.find("4fa6f2cb2c1c0f000f000013").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
+
+    subscriptions.each do |s|
+      n = APN::Notification.new
+      n.subscription = s
+      n.alert = alert
+      n.event = event.id
+      n.deliver
+    end
   end
 
 end
