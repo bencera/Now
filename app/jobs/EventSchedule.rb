@@ -1,4 +1,5 @@
 class EventSchedule
+  include EventsHelper
 
   #TODO: intitially, because i'm worried about trending stepping on this, we should actually call
   # EventSchedule.perform from Trending2 -- it makes sense since they have similar functionalities
@@ -89,7 +90,8 @@ class EventSchedule
         #if the waiting event meets our minimums, trend it
         if(event.photos.count >= scheduled_event.min_photos && event.num_users >= scheduled_event.min_users)
           # Commented out for safety CONALL
-          event.update_attribute(:status, "trending")
+          #####event.update_attribute(:status, "trending")
+          EventsHelper.notify_ben_and_conall("Trending event '#{event.description}' on schedule'", event)
           Rails.logger.info("EventSchedule: trended event #{event.id} with #{event.photos.count} photos and #{event.num_users} users")
         end
       elsif( event.status == "trending" )
@@ -118,7 +120,7 @@ class EventSchedule
         if scheduled_event.recurring?
 
     # Commented out for safety CONALL 
-          event.transition_status_force if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
+          event.transition_status_force if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group) || scheduled_event.past)
           Rails.logger.info("EventSchedule: transitioning status of event #{event.id} due to scheduled_event #{scheduled_event.id}") if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group))
         else
     # Commented out for safety CONALL 
@@ -134,7 +136,7 @@ class EventSchedule
 ######################################################## 
 
   def self.close_old_events(current_time)
-    old_events = Event.where(:past => false).where(:active_until.lt => current_time.to_i).entries
+    old_events = ScheduledEvent.where(:past => false).where(:active_until.lt => current_time.to_i).entries
     # Commented out for safety Conall
     old_events.each { |scheduled_event| scheduled_event.update_attribute(:past, true)}
 
