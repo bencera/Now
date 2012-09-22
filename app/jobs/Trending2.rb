@@ -68,7 +68,7 @@ class Trending2
 
     Rails.logger.info("Trending2: done with trending")
 
-    EventSchedule.perform(city)
+    #EventSchedule.perform(city)
 
   end
 
