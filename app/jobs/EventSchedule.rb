@@ -64,6 +64,9 @@ class EventSchedule
     # or if the most recent event is not_trending but the one behind it somehow is trending... will be easier to
     # address when we've restructured the jobs and models
 
+    #under the current logic, any event that's created by the schedule will start to trend, because the
+    #scheduled_event will add its 6 photos to the new event, which is enough to trend it
+
     can_trend.each do |scheduled_event|
       event = scheduled_event.last_event
       venue = scheduled_event.venue
@@ -147,16 +150,20 @@ class EventSchedule
 
 
   def self.notify_ben_and_conall(alert, event)
+    if Rails.env == "development"
+      Rails.logger.info("notifying ben and conall")
+    else
+      subscriptions = [APN::Device.find("4fa6f2cb2c1c0f000f000013").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
 
-    subscriptions = [APN::Device.find("4fa6f2cb2c1c0f000f000013").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
-
-    subscriptions.each do |s|
-      n = APN::Notification.new
-      n.subscription = s
-      n.alert = alert
-      n.event = event.id
-      n.deliver
+      subscriptions.each do |s|
+        n = APN::Notification.new
+        n.subscription = s
+        n.alert = alert
+        n.event = event.id
+        n.deliver
+      end
     end
+
   end
 
 end
