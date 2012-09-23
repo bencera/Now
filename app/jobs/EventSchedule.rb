@@ -79,7 +79,7 @@ class EventSchedule
 
 
 
-      elsif( event.status == "waiting_scheduled" )
+      elsif( event && event.status == "waiting_scheduled" )
         # Commented out for safety CONALL
         event.update_photos
 
@@ -93,7 +93,7 @@ class EventSchedule
           notify_ben_and_conall("Trending event '#{event.description}' on schedule'", event)
           Rails.logger.info("EventSchedule: trended event #{event.id} with #{event.photos.count} photos and #{event.num_users} users")
         end
-      elsif( event.status == "trending" )
+      elsif( event && event.status == "trending" )
         # Commented out for safety CONALL
         event.update_photos
         
