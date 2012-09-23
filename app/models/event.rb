@@ -30,7 +30,8 @@ class Event
   validates_presence_of :coordinates, :venue_id, :n_photos, :end_time
   validates_presence_of :description, :category, :shortid, :on => :update
 
-  #TODO: validate that start and end_time are integers -- caused a when accidentally entered a date_time
+  validates_numericality_of :start_time, :end_time, :only_integer => true
+
 
   #description should be 50char long max...
 
