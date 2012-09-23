@@ -69,7 +69,7 @@ class EventSchedule
       venue = scheduled_event.venue
 
       # if no events on this schedule, or nothing blocking it in the venue, create an event to fill with photos
-      if(event.nil? || !venue.cannot_trend)
+      if(event.nil? && !venue.cannot_trend)
         #note that if there's a "waiting" event, it will block this -- might want to change this (maybe turn waiting into waiting_scheduled?)
 
         # didn't comment this line out because create_new_event is also being tested CONALL
