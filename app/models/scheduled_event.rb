@@ -285,7 +285,7 @@ class ScheduledEvent
     if self.recurring?
       event_start_time = Time.new(Time.now.year, Time.now.month, 
         Time.now.day, ScheduledEvent.get_tg_start_time(time_group), 
-        0 , 0, EventsHelper.get_tz_offset(self.city))
+        0 , 0, EventsHelper.get_tz_offset(self.city)).to_i
     else
       event_start_time = self.next_start_time
     end
