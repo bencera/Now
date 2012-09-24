@@ -202,9 +202,6 @@ class ScheduledEvent
         errors += "needs a :start_time\n" if start_time.nil?
         errors += "needs an :end_time\n" if end_time.nil?
 
-        sched_params.delete(:start_time)
-        sched_params.delete(:end_time)
-
         start_hours = start_time / 100
         start_minutes = start_time % 100
         end_hours = end_time / 100
@@ -227,6 +224,11 @@ class ScheduledEvent
       errors += "exception: #{e.message}\n#{e.backtrace.inspect}" 
       return {:errors => errors}
     end
+
+    sched_params.delete('controller')
+    sched_params.delete('format')
+    sched_params.delete('nowtoken')
+    sched_params.delete('action')
 
     sched_params[:errors] = errors unless errors == ""
     sched_params
