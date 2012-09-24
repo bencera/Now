@@ -12,6 +12,8 @@ class Trending2
 
     min_users = argv[2].to_i
 
+    EventSchedule.perform(city)
+
     Rails.logger.info("started Trending2 call hours: #{hours} city #{city} min_users #{min_users}")
 
     # find all photos in given city for the given number of hours
@@ -68,7 +70,6 @@ class Trending2
 
     Rails.logger.info("Trending2: done with trending")
 
-    EventSchedule.perform(city)
 
   end
 
