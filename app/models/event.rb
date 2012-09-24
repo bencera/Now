@@ -246,8 +246,10 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
 
 # commented out for testing on workers CONALL
     if(new_photo_count != 0) 
-      #####Resque.enqueue(VerifyURL2, self.id, last_update, true)
-      #####Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
+      if Rails.env != "development"
+        Resque.enqueue(VerifyURL2, self.id, last_update, true) 
+        Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
+      end
       self.update_attribute(:end_time, new_end_time) 
       Rails.logger.info("Added #{new_photo_count} photos to event #{self.id}") 
     end
