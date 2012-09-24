@@ -78,27 +78,27 @@ class EventSchedule
         # didn't comment this line out because create_new_event is also being tested CONALL
         event = scheduled_event.create_new_event(time_group)
         # Commented out for safety CONALL
-        event.update_photos
-
-
+        scheduled_event.update_photos
 
       elsif( event && event.status == "waiting_scheduled" )
         # Commented out for safety CONALL
-        event.update_photos
+        scheduled_event.update_photos
 
         # Comment this out when done with testing CONALL
         Rails.logger.info("EventSchedule: updating photos for event #{event.id}")
 
         #if the waiting event meets our minimums, trend it
-        if(event.photos.count >= scheduled_event.min_photos && event.num_users >= scheduled_event.min_users)
+        if(event.live_photo_count >= scheduled_event.min_photos && event.num_users >= scheduled_event.min_users)
           # Commented out for safety CONALL
           event.update_attribute(:status, "trending_testing")
-          notify_ben_and_conall("Trending event '#{event.description}' on schedule'", event)
+          scheduled_event.update_photos
+          latency = (Time.now.to_i - event.start_time) / 60
+          notify_ben_and_conall("Trending event '#{event.description}' on schedule, latency: #{latency} minutes'", event)
           Rails.logger.info("EventSchedule: trended event #{event.id} with #{event.photos.count} photos and #{event.num_users} users")
         end
       elsif( event && event.status == "trending_testing" )
         # Commented out for safety CONALL
-        event.update_photos
+        scheduled_event.update_photos
         
         # Comment this out when done with testing CONALL
         Rails.logger.info("EventSchedule: updating photos for event #{event.id}")
@@ -113,7 +113,7 @@ class EventSchedule
 
   def self.finish_trending(city, wday, time_group, current_time)
 
-    currently_trending = Event.where(:city => city).where(:status.in => ["waiting_scheduled", "trending"]).entries
+    currently_trending = Event.where(:city => city).where(:status.in => ["waiting_scheduled", "trending_testing"]).entries
 
     currently_trending.each do |event|
       scheduled_event = event.scheduled_event

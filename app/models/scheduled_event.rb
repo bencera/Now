@@ -10,6 +10,8 @@ class ScheduledEvent
   EVENING = 18
   NIGHT = 22
 
+  MIN_VISIBLE_PHOTOS = 6
+
 
 # not entirely sure how we'll use these yet.  may be different if recurring or not
   field :next_start_time
@@ -321,6 +323,25 @@ class ScheduledEvent
   #  new_event.generate_short_id
 
     return new_event
+  end
+
+  def update_photos
+    event = last_event
+    
+    if event.nil?
+      return
+    end
+    
+    event.update_photos
+
+    #delete extra old photos from list once we don't need them
+    live_photos = event.live_photo_count
+    keep_old = [MIN_VISIBLE_PHOTOS - live_photos, 0].max
+
+    old_photos_to_remove = event.photos.where(:time_taken.lt => event.start_time).entries[keep_old .. -1]
+
+    old_photos_to_remove.each { |photo| event.photos.delete(photo) }
+
   end
 
   private

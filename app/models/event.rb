@@ -143,6 +143,9 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
     event_start_day >= current_day
   end
 
+  def live_photo_count
+    self.photos.where(time_take.gt => self.start_time - 1).count
+  end
 
   def transition_status
 
