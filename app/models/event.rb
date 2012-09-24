@@ -144,7 +144,7 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
   end
 
   def live_photo_count
-    self.photos.where(time_take.gt => self.start_time - 1).count
+    self.photos.where(:time_taken.gt => self.start_time - 1).count
   end
 
   def transition_status
