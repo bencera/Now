@@ -325,6 +325,14 @@ class ScheduledEvent
     return new_event
   end
 
+#when this is all tested and working, this might move to the event model
+  def trend_event(event)
+    event.generate_short_id
+    event.generate_initial_likes
+
+    event.update_attribute(:status, "trending_testing")
+  end
+
   def update_photos
     event = last_event
     

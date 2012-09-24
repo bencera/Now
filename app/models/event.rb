@@ -214,7 +214,12 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
     end
   end
 
-
+  def generate_initial_likes
+    likes = [2,3,4,5,6,7,8,9]
+    self.initial_likes = likes[rand(likes.size)]
+    self.save
+  end
+  
   ##############################################################
   # adds any photos that may have come in since last update
   ##############################################################

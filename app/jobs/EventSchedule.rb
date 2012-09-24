@@ -90,7 +90,7 @@ class EventSchedule
         #if the waiting event meets our minimums, trend it
         if(event.live_photo_count >= scheduled_event.min_photos && event.num_users >= scheduled_event.min_users)
           # Commented out for safety CONALL
-          event.update_attribute(:status, "trending_testing")
+          scheduled_event.trend_event(event)
           scheduled_event.update_photos
           latency = (Time.now.to_i - event.start_time) / 60
           notify_ben_and_conall("Trending event '#{event.description}' on schedule, latency: #{latency} minutes'", event)
