@@ -100,6 +100,7 @@ class ScheduledEvent
   ## TODO: may want to make time groups overlap and this returns an array of labels
   ## TODO: this will probably be moved to city model when that exists (see Asana task https://app.asana.com/0/1784210809145/1901246404308)
   def self.get_time_group_from_time(time)
+
     if time.hour < LATENIGHT || time.hour >= NIGHT
       return :night
     elsif time.hour >= LATENIGHT && time.hour < MORNING
@@ -113,6 +114,16 @@ class ScheduledEvent
     elsif time.hour >= EVENING && time.hour < NIGHT
       return :evening
     end
+  end
+
+  def self.get_time_group_array(timestamp)
+    days = [:sunday, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday]
+
+    time_group = ScheduledEvent.get_time_group_from_time(current_time)
+    wday = @days[Time.now.wday - ( (time_group == :latenight) ? 1 : 0 )]
+
+    [wday, time_group]
+  
   end
 
 #maybe just make this a hash
@@ -242,12 +253,29 @@ class ScheduledEvent
     sched_params
   end
 
+
+
 ##################################################
 # Instance Methods
 ##################################################
 
   def recurring?
     return self.event_layer < 3
+  end
+
+# takes a time object (Time.now most likely)
+  def can_trend_at?(timestamp)
+    return false if self.past
+
+    tz = EventsHelper.get_tz(self.city)
+    local_time = timestamp.in_time_zone(tz)
+    #remember to update this when we make start_time and end_time work for recurring
+    if self.recurring?
+      tg_array = ScheduledEvent.get_time_group_array(timestamp)
+      return self.read_attribute(tg_array[0]) && self.read_attribute(tg_array[1])
+    else
+      return self.next_start_time < timestamp.to_i && self.next_end_time > timestamp.to_i
+    end
   end
 
   #accessors for getting values in the format the controller expects
@@ -318,9 +346,6 @@ class ScheduledEvent
     new_event.photos.push(*(self.photos))
 
     Rails.logger.info("ScheduledEvent::create_new_event: created new event at venue #{venue.id} -- event_id: #{new_event.id} -- scheduled_event_id = #{self.id}")
-
-  # commented out for testing on workers CONALL
-  #  new_event.generate_short_id
 
     return new_event
   end

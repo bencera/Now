@@ -26,11 +26,10 @@ class EventSchedule
     #first close old events so they don't clutter our scheduling
     close_old_events(current_time)
 
+    tg_array = ScheduledEvent.get_time_group_array(current_time)
 
-    # this logic should be done somewhere else (model method)
-    time_group = ScheduledEvent.get_time_group_from_time(current_time)
-    wday = @days[Time.now.wday - ( (time_group == :latenight) ? 1 : 0 )]
-
+    wday - tg_array[0]
+    time_group = tg_array[1]
 
     # check all recurring events that could trend right now
     schedule_group_1 = ScheduledEvent.where(:past => false).where(:city => city).where(:event_layer.lt => 3).
