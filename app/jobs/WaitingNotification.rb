@@ -35,7 +35,7 @@ class WaitingNotification
       n = APN::Notification.new
       n.subscription = s
       n.alert = alert
-      n.event = event.id
+      n.event = event.id unless event.nil?
       n.deliver
     end
   end
