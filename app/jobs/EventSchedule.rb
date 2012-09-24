@@ -96,7 +96,7 @@ class EventSchedule
           notify_ben_and_conall("Trending event '#{event.description}' on schedule, latency: #{latency} minutes'", event)
           Rails.logger.info("EventSchedule: trended event #{event.id} with #{event.photos.count} photos and #{event.num_users} users")
         end
-      elsif( event && event.status == "trending_testing" )
+      elsif( event && event.status == "trending" )
         # Commented out for safety CONALL
         scheduled_event.update_photos
         
@@ -113,7 +113,7 @@ class EventSchedule
 
   def self.finish_trending(city, wday, time_group, current_time)
 
-    currently_trending = Event.where(:city => city).where(:status.in => ["waiting_scheduled", "trending_testing"]).entries
+    currently_trending = Event.where(:city => city).where(:status.in => ["waiting_scheduled", "trending"]).entries
 
     currently_trending.each do |event|
       scheduled_event = event.scheduled_event

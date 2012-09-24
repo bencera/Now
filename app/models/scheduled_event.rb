@@ -330,7 +330,7 @@ class ScheduledEvent
     event.generate_short_id
     event.generate_initial_likes
 
-    event.update_attribute(:status, "trending_testing")
+    event.update_attribute(:status, "trending")
   end
 
   def update_photos
