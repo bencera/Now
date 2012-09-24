@@ -15,9 +15,12 @@ class ScheduledEvent
   field :next_start_time
   field :next_end_time
 
+  field :start_time
+  field :end_time
+
 # minimums for allowing trending
-  field :min_photos, default: 6
-  field :min_users, default: 5
+  field :min_photos, default: 3
+  field :min_users, default: 1
 
 # at least for now, just one description.  may have a list of descriptions to choose from for
 # recurring events
@@ -151,6 +154,9 @@ class ScheduledEvent
     errors = ""
 
     begin
+
+      user = FacebookUser.find_by_nowtoken(sched_params[:nowtoken])
+      sched_params[:facebook_user_id] = user.id if user
 
       end_date = sched_params[:end_date].to_i
       errors += "needs an :end_date\n" if end_date.nil?
