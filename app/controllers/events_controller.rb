@@ -3,7 +3,6 @@ class EventsController < ApplicationController
   respond_to :json, :xml
 
   include EventsHelper
-
   
   def show
     @event = Event.find(params[:id])
@@ -43,10 +42,10 @@ class EventsController < ApplicationController
   end
 
   def events_trending
-    interesting_event_ids = ["505fcfd829b8c73df7000001", "505faa5d29b8c72d82000001", "505faf0ea0a2a71934000001", "505fe4d7a0a2a730d3000001", "505fdde2c59bf42489000001", "50600118c59bf43455000001", "505fb865a0a2a71d48000001", "505f9085a0a2a70bb1000001", "505f9086a0a2a70bb1000003", "505fa350c59bf40c87000001", "505f57e795363e6d5f000001", "505f83cb29b8c718c5000003", "505f9c4329b8c725fc000001", "505fee4da0a2a735eb000001", "505fc679c59bf41ace000001", "505f83ca29b8c718c5000001", "505f83ce29b8c718c500000c", "505f9e9329b8c7271f000001", "505f9086a0a2a70bb1000002", "505fa0fe29b8c72876000001", "505f83ce29b8c718c500000d", "505fc8d129b8c73b2f000001", "505f82aea0a2a70515000001", "505faca829b8c72e92000002", "505f83cc29b8c718c5000008", "505f5f24f247590260000002", "505fb161c59bf411cb000001", "505f83cd29b8c718c500000a", "505f4deb95363e60a4000001", "505f83cb29b8c718c5000005", "505fc8d129b8c73b2f000002", "505fd230c59bf41fb4000001", "505f82afa0a2a70515000004", "505f4ecf95363e61a8000001", "505f4c9995363e5ee6000002", "505fb60ec59bf4144c000001", "505f370e95363e4542000002", "505f5f24f247590260000001", "505faca829b8c72e92000001", "505f99eea0a2a7103e000002", "505f8bdec59bf4031a000001", "505f99eea0a2a7103e000001", "505f83cc29b8c718c5000009", "505f83cf29b8c718c5000010", "505f83cd29b8c718c500000b", "505f47bc95363e58ef000004", "505f370e95363e4542000001", "505fd230c59bf41fb4000002", "505f456a95363e563e000002", "505f8987a0a2a70960000001"]
-    @events = []
-    interesting_event_ids.each do |e|
-      @events << Event.find(e)
+    if params[:city] == "world"
+      @events = Event.where(:city.in => ["newyork", "paris", "sanfrancisco", "london", "losangeles"]).where(:status => "waiting").order_by([[:n_photos, :desc]])
+    else
+      @events = Event.where(:city => params[:city]).where(:status => "waiting").order_by([[:n_photos, :desc]])
     end
   end
 
