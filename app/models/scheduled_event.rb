@@ -120,9 +120,9 @@ class ScheduledEvent
     days = [:sunday, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday]
 
     time_group = ScheduledEvent.get_time_group_from_time(timestamp)
-    wday = @days[timestamp.wday - ( (time_group == :latenight) ? 1 : 0 )]
+    wday = days[timestamp.wday - ( (time_group == :latenight) ? 1 : 0 )]
 
-    [wday, time_group]
+    return [wday, time_group]
   
   end
 
