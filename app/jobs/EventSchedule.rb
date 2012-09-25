@@ -122,14 +122,14 @@ class EventSchedule
 
     # Commented out for safety CONALL 
           if ( !scheduled_event.read_attribute(wday) || !scheduled_event.read_attribute(time_group) || scheduled_event.past)
-            notify_ben_and_conall("untrended event: #{event.description} on schedule wtih #{event.live_photo_count} live photos") if event.status == "trending"
+            notify_ben_and_conall("untrended event: #{event.description} on schedule wtih #{event.live_photo_count} live photos", event) if event.status == "trending"
             event.transition_status_force 
             Rails.logger.info("EventSchedule: transitioning status of event #{event.id} due to scheduled_event #{scheduled_event.id}")
           end
         else
     # Commented out for safety CONALL 
           if ( current_time.to_i > scheduled_event.next_end_time )
-            notify_ben_and_conall("untrended event: #{event.description} on schedule wtih #{event.live_photo_count} live photos") if event.status == "trending"
+            notify_ben_and_conall("untrended event: #{event.description} on schedule wtih #{event.live_photo_count} live photos", event) if event.status == "trending"
             event.transition_status_force 
             Rails.logger.info("EventSchedule: transitioning status of event #{event.id} due to scheduled_event #{scheduled_event.id}")
           end

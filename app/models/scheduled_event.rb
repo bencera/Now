@@ -375,6 +375,9 @@ class ScheduledEvent
 
     old_photos_to_remove.each { |photo| event.photos.delete(photo) }
 
+    Resque.enqueue(VerifyURL2, event.id, last_update, true) 
+    Resque.enqueue_in(10.minutes, VerifyURL2, event.id, last_update, false)
+
   end
 
   private
