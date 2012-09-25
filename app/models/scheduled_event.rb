@@ -373,11 +373,7 @@ class ScheduledEvent
 
     old_photos_to_remove = event.photos.where(:time_taken.lt => event.start_time).entries[keep_old .. -1]
 
-    old_photos_to_remove.each { |photo| event.photos.delete(photo) }
-
-    Resque.enqueue(VerifyURL2, event.id, last_update, true) 
-    Resque.enqueue_in(10.minutes, VerifyURL2, event.id, last_update, false)
-
+    old_photos_to_remove.each { |photo| event.photos.delete(photo) } unless old_photos_to_remove.nil?
   end
 
   private

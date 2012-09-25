@@ -28,7 +28,7 @@ class EventSchedule
 
     tg_array = ScheduledEvent.get_time_group_array(current_time)
 
-    wday - tg_array[0]
+    wday = tg_array[0]
     time_group = tg_array[1]
 
     # check all recurring events that could trend right now
