@@ -119,8 +119,8 @@ class ScheduledEvent
   def self.get_time_group_array(timestamp)
     days = [:sunday, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday]
 
-    time_group = ScheduledEvent.get_time_group_from_time(current_time)
-    wday = @days[Time.now.wday - ( (time_group == :latenight) ? 1 : 0 )]
+    time_group = ScheduledEvent.get_time_group_from_time(timestamp)
+    wday = @days[timestamp.wday - ( (time_group == :latenight) ? 1 : 0 )]
 
     [wday, time_group]
   
