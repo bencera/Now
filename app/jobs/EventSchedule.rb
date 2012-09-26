@@ -56,10 +56,11 @@ class EventSchedule
         # to make sure regular trending doesn't somehow get in our way
         if(venue.cannot_trend)
           venue_event = venue.last_event
-          if(venue_event.status == "waiting")
-            scheduled_event.claim_event(venue_event)
-            event = venue_event
-          end
+# commented out for safety CONALL
+#          if(venue_event.status == "waiting")
+#            scheduled_event.claim_event(venue_event)
+#            event = venue_event
+#          end
         else
           event = scheduled_event.create_new_event
         end
