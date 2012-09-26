@@ -541,8 +541,6 @@ class ScheduledEvent
                         self.afternoon || self.evening || self.night || self.latenight || (self.start_time && self.end_time))
     end
 
-    #need to make sure start and end times match time_groups if both selected, as a 
-    if(self.start_time && self.end_time && (self.morning || self.lunch || self.afternoon || self.evening || self.night || self.latenight))
   end
 
 end
