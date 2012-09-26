@@ -161,9 +161,12 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
 
   # force status to transition -- 
   def transition_status_force
-
-    Rails.logger.info("transition_status: event #{self.id} transitioning status from #{status} to #{status == "trending" ? "trended" : "not_trending"}")
-    self.update_attribute(:status, self.status == "trending" ? "trended" : "not_trending")
+    trending = self.status == "trending"
+    Rails.logger.info("transition_status: event #{self.id} transitioning status from #{status} to #{ trending ? "trended" : "not_trending"}")
+    self.update_attribute(:status, trending ? "trended" : "not_trending")
+    if self.scheduled_event && trending
+      self.scheduled_event.update_attribute(:last_trended, Time.now.to_i)
+    end
   end
 
   def update_keywords

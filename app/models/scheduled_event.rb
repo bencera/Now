@@ -62,12 +62,16 @@ class ScheduledEvent
   #a timestamp after which :past => true, must be set explicitly if recurring
   field :active_until
 
+  field :last_trended
+  field :times_trended
+
   has_many :events
   belongs_to :venue
   belongs_to :facebook_user
   has_and_belongs_to_many :photos
 
   validates_presence_of :venue, :description, :category, :event_layer
+  #validates_numericality_of :start_time, :end_time, :only_integer => true
   validate :check_date_time
 
   before_save do |scheduled_event|
@@ -83,8 +87,14 @@ class ScheduledEvent
       scheduled_event.past = scheduled_event.active_until < Time.now.to_i
     end
 
+    # if we haven't specified a push message, just make it the event desc
     if(scheduled_event.push_to_users && scheduled_event.push_message.nil?)
       scheduled_event.push_message = scheduled_event.description
+    end
+
+    # for recurring event, generate next_start and next_end
+    if(scheduled_event.recurring?)
+      scheduled_event.generate_next_times
     end
     
     return true
@@ -94,6 +104,12 @@ class ScheduledEvent
 #########################################################
 # CLASS METHODS
 #########################################################
+
+@@days = [:sunday, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday]
+@@day_index = Hash[@@days.map.with_index{|*ki| ki}]
+
+@@time_groups = [:morning, :lunch, :afternoon, :evening, :night, :latenight]
+@@time_group_index = Hash[@@time_groups.map.with_index{|*ki| ki}]
 
   ## this gets morning, lunch ... from time
   ## does NOT correct for timezone -- you have to set the timezone on your Time obj yourself
@@ -117,10 +133,8 @@ class ScheduledEvent
   end
 
   def self.get_time_group_array(timestamp)
-    days = [:sunday, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday]
-
     time_group = ScheduledEvent.get_time_group_from_time(timestamp)
-    wday = days[timestamp.wday - ( (time_group == :latenight) ? 1 : 0 )]
+    wday = @@days[timestamp.wday - ( timestamp.hour < MORNING ? 1 : 0 )]
 
     return [wday, time_group]
   
@@ -162,6 +176,22 @@ class ScheduledEvent
     end
   end
 
+  def self.translate_wday_and_time_to_timestamp(current_time, wday, hour, minute, city)
+    #translating from our days, which start at 6 to real calendar days
+    if hour < MORNING
+      wday += 1
+      wday = wday % 7
+    end
+
+    tz_offset = EventsHelper.get_tz_offset(city)
+    add_days = (wday - current_time.wday) % 7
+
+    new_day = current_time + add_days.days
+
+    Time.new(new_day.year, new_day.month, new_day.day, hour, minute, 0, tz_offset).to_i
+
+  end
+
 # converts the params from the API user to model.  there must be a better way of doing this
   def self.convert_params(sched_params)
     errors = ""
@@ -201,11 +231,15 @@ class ScheduledEvent
         end_hours = NIGHT if sched_params[:evening] == 'true'
         end_hours = LATENIGHT if sched_params[:night] == 'true'
 
-        if(end_hours == 0)
-          errors += "no time_group selected\n"
+        if(end_hours == 0 || sched_params[:start_time].nil? || sched_params[:end_time].nil?)
+          errors += "no time_group, start_time, or end_time selected"
         end
 
-        puts " #{end_year} #{end_month} #{end_day} #{end_hours}"
+        sched_params[:start_time] = sched_params[:start_time].to_i
+        sched_params[:end_time] = sched_params[:end_time].to_i
+
+
+#        puts " #{end_year} #{end_month} #{end_day} #{end_hours}"
 
         active_until = Time.new(end_year, end_month, end_day, end_hours, 0, 0, tz_offset)
 
@@ -220,6 +254,9 @@ class ScheduledEvent
   
         errors += "needs a :start_time\n" if start_time.nil?
         errors += "needs an :end_time\n" if end_time.nil?
+
+        sched_params[:start_time] = sched_params[:start_time].to_i
+        sched_params[:end_time] = sched_params[:end_time].to_i
 
         start_hours = start_time / 100
         start_minutes = start_time % 100
@@ -310,24 +347,122 @@ class ScheduledEvent
     self.events.order_by([[:start_time, :desc]]).first  
   end
 
+  ##############################################################
+  # This generates next_start and next_end time for recurring events
+  # only.  Do not save or update attributes at the end, as this is
+  # called in the before_save block
+  # Note: if you select all days and time_groups, it will likely behave oddly
+  ##############################################################
+
+  def generate_next_times
+    tz = EventsHelper.get_tz(self.city)
+    current_time = Time.now.in_time_zone(tz)
+
+    #don't want to recalculate this every time we save if its end time hasn't passed
+    if( self.next_start_time && self.next_end_time && self.next_end_time > current_time.to_i)
+      return true
+    end
+
+    tg_array = ScheduledEvent.get_time_group_array(current_time)
+
+    #if start_time and end_time are already set, then we're good
+    if(self.start_time && self.end_time)
+      start_hour = self.start_time / 100
+      start_minute = self.start_time % 100
+
+      end_hour = self.end_time / 100
+      end_minute = self.end_time % 100
+    else
+      start_minute = 0
+      end_minute = 0
+
+      #to find next start, start with current time group, go forward until you find another time_group selected in scheduled_event
+     
+      # doing @@time_group_index[tg_array[1]] - 1 because i want to start on the current tg
+      tg_index_end = @@time_group_index[tg_array[1]] - 1
+      tg_index_start = @@time_group_index[tg_array[1]] - @@time_groups.count
+
+      ## DEBUG
+#      puts "currently #{tg_array[0]} #{tg_array[1]}, looking at starting #{@@time_groups[tg_index_start]} ending #{@@time_groups[tg_index_end]}"
+
+      #note: read_attribute doesn't hit the db, so it can be called on before_save and
+      #will return true if the local object is true
+
+      next_start_tg_index = nil
+
+      (tg_index_start .. tg_index_end).reverse_each do |index|
+        next_start_tg_index = index if self.read_attribute(@@time_groups[index])
+#        puts "#{@@time_groups[index]} : #{self.read_attribute(@@time_groups[index])}"
+      end
+
+#      puts "selected next_start_time as #{@@time_groups[next_start_tg_index]}"
+
+      if(next_start_tg_index.nil?)
+        Rails.logger.error("ScheduledEvent model: attempted to save a scheduled event without proper time settings")
+        return false
+      end
+
+      #now find the end time_group -- start at next_start_tg_index, go forward while(true), where you stop is the end
+
+      next_end_tg_index = next_start_tg_index > 0 ? @@time_groups.count - next_start_tg_index : next_start_tg_index
+
+#      puts "starting next_end_time as #{@@time_groups[next_end_tg_index]} because next_start_tg_index = #{next_start_tg_index}"
+
+      while self.read_attribute(@@time_groups[next_end_tg_index]) do
+        next_end_tg_index += 1
+      end
+
+#      puts "ends at  #{@@time_groups[next_end_tg_index]}"
+
+      start_hour = ScheduledEvent.get_tg_start_time(@@time_groups[next_start_tg_index])
+      #this is correct, not get_tg_end_time -- next_end_tg_index is just past last tg that's set to true
+      end_hour = ScheduledEvent.get_tg_start_time(@@time_groups[next_end_tg_index])
+
+#      puts "start_hour : #{start_hour} end_hour : #{end_hour}"
+    end
+
+    #use @@day_index instead of time.wday because our day starts at 6
+    day_index_end = @@day_index[tg_array[0]] - 1
+    day_index_start = @@day_index[tg_array[0]] - @@day_index.count
+
+#    puts "day_index_start #{@@days[day_index_start]} end #{@@days[day_index_end]}"
+
+    #if the earliest it can start is tomorrow, then shift my start/end point for day search
+    #for simplicity, i won't have it set next_start_time earlier than now -- that makes this much more complex
+    if ( current_time.hour > start_hour || (current_time.hour < MORNING && start_hour >= MORNING) )
+      day_index_end += 1
+      day_index_start += 1
+    end
+#    puts "day_index_start #{@@days[day_index_start]} end #{@@days[day_index_end]}"
+
+    next_start_day_index = nil
+
+    (day_index_start .. day_index_end).reverse_each do |index|
+      next_start_day_index = index if self.read_attribute(@@days[index])
+#      puts "#{next_start_day_index} #{index} #{@@days[index]} : #{self.read_attribute(@@days[index])}"
+    end
+
+#    puts "next_start_day_index #{next_start_day_index} "
+    next_end_day_index =  ((start_hour < MORNING && end_hour > MORNING) || 
+          ( (start_hour < MORNING || end_hour > MORNING) && end_hour < start_hour ) ) ? (next_start_day_index + 1) : next_start_day_index
+#    puts "next_start_day_index #{next_start_day_index} next_end_day_index #{next_end_day_index}"
+    start_day = next_start_day_index % @@days.count
+    end_day = next_end_day_index % @@days.count
+
+#    puts "start_day #{start_day} end_day #{end_day}"
+
+    self.next_start_time = ScheduledEvent.translate_wday_and_time_to_timestamp(current_time, start_day, start_hour, start_minute, city)
+    self.next_end_time = ScheduledEvent.translate_wday_and_time_to_timestamp(current_time, end_day, end_hour, end_minute, city)
+    return true
+
+  end
 
   ##############################################################
   # trends a new event given a list of photos to put in the new event 
   ##############################################################
-  def create_new_event(time_group)
-    #TODO: should take start_time instead
+  def create_new_event
 
-
-    # we want to make sure this event has latest start time of any events waiting on that venue
-    # otherwise it will mess up trending
-    if self.recurring?
-      event_start_time = Time.new(Time.now.year, Time.now.month, 
-        Time.now.day, ScheduledEvent.get_tg_start_time(time_group), 
-        0 , 0, EventsHelper.get_tz_offset(self.city)).to_i
-    else
-      event_start_time = self.next_start_time
-    end
-
+    event_start_time = self.next_start_time
 
     # remove this when done testing CONALL
   #  new_event = nil
@@ -376,6 +511,15 @@ class ScheduledEvent
     old_photos_to_remove.each { |photo| event.photos.delete(photo) } unless old_photos_to_remove.nil?
   end
 
+  def claim_event(event)
+    self.events.push event
+
+     #i could just make it trend if it's waiting, but we shouldn't assume that it would trend accoring to
+     # the schedule rules
+    event.update_attribute(:status, "waiting_scheduled") if(event.status == "waiting")
+    event.photos.push(*(self.photos))
+  end
+
   private
 
   def check_date_time
@@ -390,8 +534,8 @@ class ScheduledEvent
       errors.add(:active_until, 'recurring event must have active_until defined') if self.active_until.nil?
       errors.add(:event_layer, "must choose a day for recurring event") if !(self.monday || self.tuesday || 
                         self.wednesday || self.thursday || self.friday || self.saturday || self.sunday)
-      errors.add(:event_layer, "must choose time group for recurring event") if !(self.morning || self.lunch || 
-                        self.afternoon || self.evening || self.night || self.latenight)
+      errors.add(:event_layer, "must choose time group or start/end time for recurring event") if !(self.morning || self.lunch || 
+                        self.afternoon || self.evening || self.night || self.latenight || (self.start_time && self.end_time))
     end
   end
 
