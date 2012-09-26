@@ -57,10 +57,10 @@ class EventSchedule
         if(venue.cannot_trend)
           venue_event = venue.last_event
 # commented out for safety CONALL
-#          if(venue_event.status == "waiting")
-#            scheduled_event.claim_event(venue_event)
-#            event = venue_event
-#          end
+          if(venue_event.status == "waiting")
+            scheduled_event.claim_event(venue_event)
+            event = venue_event
+          end
         else
           event = scheduled_event.create_new_event
         end
@@ -79,7 +79,7 @@ class EventSchedule
           scheduled_event.trend_event(event)
           scheduled_event.update_photos
           latency = (Time.now.to_i - event.start_time) / 60
-          notify_ben_and_conall("Trending event '#{event.description}' on schedule, latency: #{latency} minutes'", event)
+          notify_ben_and_conall("New scheduled event trended: '#{event.description}'", event)
           Rails.logger.info("EventSchedule: trended event #{event.id} with #{event.photos.count} photos and #{event.num_users} users")
         end
       elsif( event && event.status == "trending" )
@@ -106,7 +106,7 @@ class EventSchedule
       if(scheduled_event)
         # if outside of trendable time, untrend the event        
         if ( current_time.to_i > scheduled_event.next_end_time || current_time.to_i < scheduled_event.next_start_time)
-          notify_ben_and_conall("untrended event: #{event.description} on schedule wtih #{event.live_photo_count} live photos", event) if event.status == "trending"
+          notify_ben_and_conall("Stopped trending '#{event.description}' on schedule. #{event.live_photo_count} photos", event) if event.status == "trending"
           #this logic might belong in the scheduled event
           event.transition_status_force 
 
