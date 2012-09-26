@@ -80,7 +80,13 @@ class Trending2
 
   def self.throw_out_cannot_trend(recent_photos)
     #no need to identify a venue if it already has a trending or waiting event
-    recent_photos.keep_if { |photo| !photo.venue.nil? && !photo.venue.cannot_trend }
+    recent_photos.keep_if do  |photo| 
+      last_event = photo.venue.last_event
+      since_time = ((last_event && last_event.status == "trended") ? last_event.end_time : 0)
+
+      # throw out all photos 1) without venue, 2) venue cannot trend, 3) are already in another trended event
+      !photo.venue.nil? && !photo.venue.cannot_trend  && !(photo.time_taken < since_time)
+    end
   end
 
   ##############################################################
