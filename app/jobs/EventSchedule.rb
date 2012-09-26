@@ -104,12 +104,13 @@ class EventSchedule
       scheduled_event = event.scheduled_event
       if(scheduled_event)
         # if outside of trendable time, untrend the event        
-        if ( current_time.to_i > scheduled_event.next_end_time )
+        if ( current_time.to_i > scheduled_event.next_end_time || current_time.to_i < scheduled_event.next_start_time)
           notify_ben_and_conall("untrended event: #{event.description} on schedule wtih #{event.live_photo_count} live photos", event) if event.status == "trending"
+          #this logic might belong in the scheduled event
           event.transition_status_force 
 
           # technically, this should never be true -- next_times are modified on every save
-          if(scheduled_event.next_start_time < Time.now.to_i)
+          if(scheduled_event.next_end_time < Time.now.to_i)
             scheduled_event.generate_next_times
             scheduled_event.save
           end
