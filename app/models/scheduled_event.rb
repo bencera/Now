@@ -239,7 +239,7 @@ class ScheduledEvent
         sched_params[:end_time] = sched_params[:end_time].to_i
 
 
-#        puts " #{end_year} #{end_month} #{end_day} #{end_hours}"
+##        puts " #{end_year} #{end_month} #{end_day} #{end_hours}"
 
         active_until = Time.new(end_year, end_month, end_day, end_hours, 0, 0, tz_offset)
 
@@ -386,7 +386,7 @@ class ScheduledEvent
       tg_index_start = @@time_group_index[tg_array[1]] - @@time_groups.count
 
       ## DEBUG
-      puts "currently #{tg_array[0]} #{tg_array[1]}, looking at starting #{@@time_groups[tg_index_start]} ending #{@@time_groups[tg_index_end]}"
+#      puts "currently #{tg_array[0]} #{tg_array[1]}, looking at starting #{@@time_groups[tg_index_start]} ending #{@@time_groups[tg_index_end]}"
 
       #note: read_attribute doesn't hit the db, so it can be called on before_save and
       #will return true if the local object is true
@@ -395,10 +395,10 @@ class ScheduledEvent
 
       (tg_index_start .. tg_index_end).reverse_each do |index|
         next_start_tg_index = index if self.read_attribute(@@time_groups[index])
-        puts "#{@@time_groups[index]} : #{self.read_attribute(@@time_groups[index])}"
+#        puts "#{@@time_groups[index]} : #{self.read_attribute(@@time_groups[index])}"
       end
 
-      puts "selected next_start_time as #{@@time_groups[next_start_tg_index]}"
+#      puts "selected next_start_time as #{@@time_groups[next_start_tg_index]}"
 
       if(next_start_tg_index.nil?)
         Rails.logger.error("ScheduledEvent model: attempted to save a scheduled event without proper time settings")
@@ -409,26 +409,26 @@ class ScheduledEvent
 
       next_end_tg_index = next_start_tg_index > 0 ? @@time_groups.count - next_start_tg_index : next_start_tg_index
 
-      puts "starting next_end_time as #{@@time_groups[next_end_tg_index]} because next_start_tg_index = #{next_start_tg_index}"
+#      puts "starting next_end_time as #{@@time_groups[next_end_tg_index]} because next_start_tg_index = #{next_start_tg_index}"
 
       while self.read_attribute(@@time_groups[next_end_tg_index]) do
         next_end_tg_index += 1
       end
 
-      puts "ends at  #{@@time_groups[next_end_tg_index]}"
+#      puts "ends at  #{@@time_groups[next_end_tg_index]}"
 
       start_hour = ScheduledEvent.get_tg_start_time(@@time_groups[next_start_tg_index])
       #this is correct, not get_tg_end_time -- next_end_tg_index is just past last tg that's set to true
       end_hour = ScheduledEvent.get_tg_start_time(@@time_groups[next_end_tg_index])
 
-      puts "start_hour : #{start_hour} end_hour : #{end_hour}"
+#      puts "start_hour : #{start_hour} end_hour : #{end_hour}"
     end
 
     #use @@day_index instead of time.wday because our day starts at 6
     day_index_end = @@day_index[tg_array[0]] - 1
     day_index_start = @@day_index[tg_array[0]] - @@day_index.count
 
-    puts "day_index_start #{@@days[day_index_start]} end #{@@days[day_index_end]}"
+#    puts "day_index_start #{@@days[day_index_start]} end #{@@days[day_index_end]}"
 
     #if the earliest it can start is tomorrow, then shift my start/end point for day search
     #for simplicity, i won't have it set next_start_time earlier than now -- that makes this much more complex
@@ -436,23 +436,23 @@ class ScheduledEvent
       day_index_end += 1
       day_index_start += 1
     end
-    puts "day_index_start #{@@days[day_index_start]} end #{@@days[day_index_end]}"
+#    puts "day_index_start #{@@days[day_index_start]} end #{@@days[day_index_end]}"
 
     next_start_day_index = nil
 
     (day_index_start .. day_index_end).reverse_each do |index|
       next_start_day_index = index if self.read_attribute(@@days[index])
-      puts "#{next_start_day_index} #{index} #{@@days[index]} : #{self.read_attribute(@@days[index])}"
+#      puts "#{next_start_day_index} #{index} #{@@days[index]} : #{self.read_attribute(@@days[index])}"
     end
 
-    puts "next_start_day_index #{next_start_day_index} "
+#    puts "next_start_day_index #{next_start_day_index} "
     next_end_day_index =  ((start_hour < MORNING && end_hour > MORNING) || 
           ( (start_hour < MORNING || end_hour > MORNING) && end_hour < start_hour ) ) ? (next_start_day_index + 1) : next_start_day_index
-    puts "next_start_day_index #{next_start_day_index} next_end_day_index #{next_end_day_index}"
+#    puts "next_start_day_index #{next_start_day_index} next_end_day_index #{next_end_day_index}"
     start_day = next_start_day_index % @@days.count
     end_day = next_end_day_index % @@days.count
 
-    puts "start_day #{start_day} end_day #{end_day}"
+#    puts "start_day #{start_day} end_day #{end_day}"
 
     self.next_start_time = ScheduledEvent.translate_wday_and_time_to_timestamp(current_time, start_day, start_hour, start_minute, city)
     self.next_end_time = ScheduledEvent.translate_wday_and_time_to_timestamp(current_time, end_day, end_hour, end_minute, city)
@@ -540,6 +540,9 @@ class ScheduledEvent
       errors.add(:event_layer, "must choose time group or start/end time for recurring event") if !(self.morning || self.lunch || 
                         self.afternoon || self.evening || self.night || self.latenight || (self.start_time && self.end_time))
     end
+
+    #need to make sure start and end times match time_groups if both selected, as a 
+    if(self.start_time && self.end_time && (self.morning || self.lunch || self.afternoon || self.evening || self.night || self.latenight))
   end
 
 end
