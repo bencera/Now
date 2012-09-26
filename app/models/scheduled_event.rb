@@ -516,7 +516,7 @@ class ScheduledEvent
      #i could just make it trend if it's waiting, but we shouldn't assume that it would trend accoring to
      # the schedule rules
     event.description = self.description
-    event.categoty = self.category
+    event.category = self.category
     event.status = "waiting_scheduled" if(event.status == "waiting")
     event.photos.push(*(self.photos))
     self.events.push event
