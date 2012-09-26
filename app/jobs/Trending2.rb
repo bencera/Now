@@ -75,12 +75,14 @@ class Trending2
 
   ##############################################################
   # this takes an array of photo objects and throws out the ones 
-  # from venues that can't have a new event  
+  # from venues that can't have a new event -- also throws out
+  # photos that were already in another event
   ##############################################################
 
   def self.throw_out_cannot_trend(recent_photos)
     #no need to identify a venue if it already has a trending or waiting event
     recent_photos.keep_if do  |photo| 
+
       last_event = photo.venue.last_event
       since_time = ((last_event && last_event.status == "trended") ? last_event.end_time : 0)
 
