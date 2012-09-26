@@ -83,7 +83,7 @@ class Trending2
     #no need to identify a venue if it already has a trending or waiting event
     recent_photos.keep_if do  |photo| 
 
-      last_event = photo.venue.last_event
+      last_event = photo.venue ? photo.venue.last_event : nil
       since_time = ((last_event && last_event.status == "trended") ? last_event.end_time : 0)
 
       # throw out all photos 1) without venue, 2) venue cannot trend, 3) are already in another trended event
