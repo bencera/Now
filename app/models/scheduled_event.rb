@@ -93,6 +93,9 @@ class ScheduledEvent
     end
 
     # for recurring event, generate next_start and next_end
+    # note, if you change start_time and or end_time, this won't update the next_start_time or end_time
+    # since they will have already been calculated.  we should make the logic here "if those changed or
+    # if the old times are past, force a recalculation, otherwise, don't"
     if(scheduled_event.recurring?)
       scheduled_event.generate_next_times
     end
@@ -362,6 +365,7 @@ class ScheduledEvent
     current_time = Time.now.in_time_zone(tz)
 
     #don't want to recalculate this every time we save if its end time hasn't passed
+    #todo: this logic should be in before_save, not here
     if( self.next_start_time && self.next_end_time && self.next_end_time > current_time.to_i)
       return true
     end
