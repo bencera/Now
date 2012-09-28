@@ -72,7 +72,10 @@ class Photo
     end
   end
   
+  #TODO: we really need to clean this up -- this is being called from Photo.new, but it's used like a class method
   def find_location_and_save(media, tag)
+    new_photo = nil
+
     if media.location.nil? #pas de geotag, for now, nothing
       #Venue.first(conditions: {_id: "novenue"}).save_photo(media, tag, "novenue")
     elsif media.location.id.nil? #geotag mais pas de venue, for now nothing
@@ -97,12 +100,12 @@ class Photo
       end
       unless fs_venue_id.nil?
         if Venue.exists?(conditions: {_id: fs_venue_id.to_s}) #should not happen..
-          Venue.first(conditions: {_id: fs_venue_id.to_s}).save_photo(media, tag, nil)
+          new_photo = Venue.first(conditions: {_id: fs_venue_id.to_s}).save_photo(media, tag, nil)
         else
           v = Venue.new(:fs_venue_id => fs_venue_id.to_s)
           v.save
           if v.new? == false
-            v.save_photo(media, tag, nil)
+            new_photo = v.save_photo(media, tag, nil)
           else #for now do nothing
             #Venue.first(conditions: {_id: "novenue"}).save_photo(media, tag, "novenue")
           end
@@ -118,6 +121,7 @@ class Photo
       #         end
       end
     end
+    return new_photo
   end
   
   #to start the process of checking photos every minute

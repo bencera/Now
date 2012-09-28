@@ -112,7 +112,24 @@ class EventsController < ApplicationController
     end
   end
 
+  def create_people
+    converted_params = Event.convert_params(params)
+    if(converted_params[:errors])
+      return render :text => converted_params[:errors], :status => :error
+    end
+    if Rails.env == "development"
+      Rails.logger.info("create_people params: #{converted_params}")
+      AddPeopleEvent.perform(converted_params)
+    else
+      Resque.enqueue(AddPeopleEvent, converted_params)
+    end
+      
+    return render :text => "OK", :status => :ok
+
+  end
+
   def create
+    #TODO: this isn't a create, it's an update method -- need to get access to the iOS code to make this more logical
     event = Event.find(params[:event_id])
     user = FacebookUser.find_by_nowtoken(params[:nowtoken])
     if event.status != "waiting" && user && params[:confirm] == "yes"

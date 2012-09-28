@@ -9,6 +9,7 @@ TRENDING              = "trending"
 WAITNG                = "waiting"
 NOT_TRENDING          = "not_trending"
 TRENDING_FORWARDING   = "trending_forwarding"
+TRENDING_PEOPLE       = "trending_people"
 TRENDING_SCHEDULED    = "trending_scheduled" 
 WAITING_CONFIRMATION  = "waiting_confirmation"
 WAITING_SCHEUDLED     = "waiting_scheduled"
@@ -32,6 +33,11 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
   field :illustration
   field :initial_likes, type: Integer, default: 0
   field :other_descriptions, type: Array, default: []
+
+  #when created in now people, this will hold string list of ig media ids until the job creates it
+  field :photo_ig_list
+  field :venue_fsq_id
+
   #field :n_people
   
   belongs_to :venue
@@ -51,6 +57,35 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
   #description should be 50char long max...
 
    CHARS = ('0'..'9').to_a + ('a'..'z').to_a + ('A'..'Z').to_a
+
+   def self.convert_params(event_params)
+
+    errors = ""
+
+    begin
+      event_params[:city] = "world" if event_params[:city].nil?
+
+      event_params.delete('controller')
+      event_params.delete('format')
+      event_params.delete('nowtoken')
+      event_params.delete('action')
+
+      errors += "no photos given" if event_params[:photo_ig_list].nil?
+      errors += "no illustration given" if event_params[:illustration_ig_id].nil? 
+      errors += "no venue given" if event_params[:venue_id].nil?
+
+      ig_list = event_params[:photo_ig_list].split(",")
+      errors += "illustration isn't on photo list" if !(ig_list.include? event_params[:illustration_ig_id])
+
+    rescue Exception => e
+      #take out backtrace when we're done testing
+      errors += "exception: #{e.message}\n#{e.backtrace.inspect}" 
+      return {:errors => errors}
+    end
+
+    return event_params
+
+   end
 
    def preview_photos
      photos.limit(6)

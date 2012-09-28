@@ -256,7 +256,7 @@ class Venue
   def save_photo(media, tag, status)
     #si la photo existe deja, juste rajouter le tag ou le status
     if Photo.exists?(conditions: {ig_media_id: media.id.to_s})
-      Photo.first(conditions: {ig_media_id: media.id.to_s}).update_attributes(:tag => tag, :status => status)
+      return Photo.first(conditions: {ig_media_id: media.id.to_s}).update_attributes(:tag => tag, :status => status)
     else
       p = self.photos.new
       unless media.nil?
@@ -306,6 +306,7 @@ class Venue
         end
       end
     end
+    return p
   end
   
   
