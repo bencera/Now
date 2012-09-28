@@ -71,19 +71,22 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
       event_params.delete('action')
 
       errors += "no photos given" if event_params[:photo_ig_list].nil?
-      errors += "no illustration given" if event_params[:illustration_ig_id].nil? 
+      errors += "no illustration given" if event_params[:illustration].nil? 
       errors += "no venue given" if event_params[:venue_id].nil?
 
       ig_list = event_params[:photo_ig_list].split(",")
-      errors += "illustration isn't on photo list" if !(ig_list.include? event_params[:illustration_ig_id])
+      errors += "illustration isn't on photo list" if !(ig_list.include? event_params[:illustration])
 
     rescue Exception => e
       #take out backtrace when we're done testing
       errors += "exception: #{e.message}\n#{e.backtrace.inspect}" 
-      return {:errors => errors}
+      return {errors: errors}
     end
-
-    return event_params
+    if errors.blank?
+      return event_params
+    else
+      return {errors: errors}
+    end
 
    end
 
