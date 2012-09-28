@@ -52,6 +52,16 @@ class Photo
   #photo doesnt always have caption, but needs to be geolocated (for now)
   validates_presence_of :ig_media_id, :url, :time_taken, :coordinates #user_id???
   validates_uniqueness_of :ig_media_id
+
+  def self.create_photo(media)
+    return nil if(media.location.nil? || media.location.id.nil? || media.location.longitude.blank?)
+    venue = Venue.where(:ig_venue_id: media.location.id.to_s).first
+    if venue.nil?
+      venue = Venue.create_venue(media.location)
+    end
+
+
+  end
   
   
   def caption_without_hashtags(caption)
@@ -73,6 +83,8 @@ class Photo
       caption
     end
   end
+
+
   
   #TODO: we really need to clean this up -- this is being called from Photo.new, but it's used like a class method
   def find_location_and_save(media, tag)
