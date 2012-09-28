@@ -4,6 +4,7 @@ class AddPeopleEvent
   def self.perform(params)
     photo_ig_ids = params[:photo_ig_list].split(",")
     photos = []
+    illustration = nil
     photo_ig_ids.each do |photo_ig|
       begin
         photo = Photo.where(:ig_media_id => photo_ig).first
@@ -14,6 +15,7 @@ class AddPeopleEvent
           unless response.blank?
             puts "response not blank"
             photo = Photo.new.find_location_and_save(response, nil) unless response.location.id.nil?
+            illustration = photo.id if photo && params[:illustration] == photo.ig_media_id 
           end
         end
         photos << photo unless photo.nil?
@@ -29,6 +31,7 @@ class AddPeopleEvent
     venue = Venue.find(params[:venue_id])
     if venue && !venue.cannot_trend
       event = venue.create_new_event("trending_people", photos)
+      event.update_attribute(:illustration, illustration) if illustration
     end
   end
 end
