@@ -15,7 +15,11 @@ class AddPeopleEvent
 
           unless response.blank?
             puts "response not blank"
-            photo = Photo.new.find_location_and_save(response, nil) unless response.location.id.nil?
+            Photo.new.find_location_and_save(response, nil) unless response.location.id.nil?
+
+            # the old method for photo creation is ugly and messy -- for now just search db to see if photo was created
+            # we'll clean this up later
+            photo = Photo.where(:ig_media_id => photo_ig).first
             illustration = photo.id if photo && params['illustration'] == photo.ig_media_id 
           end
         end
@@ -38,8 +42,14 @@ class AddPeopleEvent
       event.update_attribute(:description, params['description'])
       event.update_attribute(:category, params['category'])
 
-      Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name}")
+      Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")
+    #elsif venue.last_event.status == "trending_people"
+      #this should only happen if there was a failure
+    #  event = venue.last_event
+    #  event.photos.push(*photos)
     end
+
+    #we probably need additional logic to make sure all photos get in
 
     Rails.logger.info("AddPeopleEvent finished")
   end
