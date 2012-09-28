@@ -22,6 +22,7 @@ class AddPeopleEvent
         Rails.logger.info("AddPeopleEvent failed due to exception #{e.message}\n#{e.backtrace.inspect}")
         Resque.enqueue_in(10.minutes, AddPeopleEvent, params) unless Rails.env == "development"
       end
+      #TODO: add the illustration to the event
     end
 
     #if the photos were added properly, it should have created a venue if it wasn't already there.

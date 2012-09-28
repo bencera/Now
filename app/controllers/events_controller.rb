@@ -116,6 +116,9 @@ class EventsController < ApplicationController
   end
 
   def create_people
+    
+    #make sure this ends up handling now_token
+
     converted_params = Event.convert_params(params)
     if(converted_params[:errors])
       return render :text => converted_params[:errors], :status => :error
