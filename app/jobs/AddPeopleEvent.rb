@@ -34,7 +34,7 @@ class AddPeopleEvent
       event = venue.create_new_event("trending_people", photos)
       event.update_attribute(:illustration, illustration) if illustration
 
-      #
+      # Since these should have been checked by the model, we can assume they're safe
       event.update_attribute(:description, params['description'])
       event.update_attribute(:category, params['category'])
 
