@@ -11,10 +11,13 @@ class Maintenance
 
     #reset all maintenance numbers at the end of our day and prepare a report
     #TODO: eventually i'd like to put this in a mutex block or something
+     
+    
+    next_maintenance_log_time = $redis.get("next_maintenance_log") unless Rails.env == "development" 
+
+    if(Rails.env != "development" && (next_maintenance_log_time.nil? || Time.now.to_i > next_maintenance_log_time.to_i))
       
-    next_maintenance_log_time = $redis.get("next_maintenance_log")
-    if(next_maintenance_log_time.nil? || Time.now.to_i > next_maintenance_log_time.to_i)
-      $redis.set("next_maintenance_log", get_next_maintenance_log(Time.now).to_i)
+      $redis.set("next_maintenance_log", get_next_maintenance_log(Time.now).to_i) 
 
       dup_photos = $redis.get("MAINT_dup_photos")
       dup_events = $redis.get("MAINT_dup_events")
@@ -40,7 +43,7 @@ class Maintenance
         event.destroy
 
         # TODO: this will likely get messed up if 2 maintenance jobs run simultaneously
-        $redis.incr("MAINT_dup_events")
+        $redis.incr("MAINT_dup_events") unless Rails.env == "development"
       else
 
         venue_list << event.venue_id
@@ -61,7 +64,7 @@ class Maintenance
           photo = Photo.find(bad_photo)
           photo.destroy
           # TODO: this will likely get messed up if 2 maintenance jobs run simultaneously
-          $redis.incr("MAINT_dup_photos")
+          $redis.incr("MAINT_dup_photos")unless Rails.env == "development"
         end
         if bad_photo_list.count > 0
           event.update_attribute(:n_photos, event.photos.count)
@@ -69,7 +72,17 @@ class Maintenance
         end
       end
     end
+
     Rails.logger.info("Maintenance: finished event duplicate maintenance")
+
+    scheduled_events_needing_update = ScheduledEvent.where(:past => false).where(:next_end_time.lt => Time.now.to_i).entries
+    scheduled_events_needing_update.each do |se|
+      se.generate_next_times
+      se.save
+    end
+
+    still_broken_se_count = ScheduledEvent.where(:past => false).where(:next_end_time.lt => Time.now.to_i).count
+    Rails.logger.info("Maintenance: found #{scheduled_events_needing_update.count} events needing next_time updates -- #{still_broken_se_count} remaining")
 
   end
 
