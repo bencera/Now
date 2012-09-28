@@ -33,8 +33,14 @@ class AddPeopleEvent
     if venue && !venue.cannot_trend
       event = venue.create_new_event("trending_people", photos)
       event.update_attribute(:illustration, illustration) if illustration
+
+      #
       event.update_attribute(:description, params['description'])
       event.update_attribute(:category, params['category'])
+
+      Rails.log.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name}")
     end
+
+    Rails.log.info("AddPeopleEvent finished")
   end
 end
