@@ -2,7 +2,7 @@ class AddPeopleEvent
   @queue = :add_people_event_queue
 
   def self.perform(params)
-    Rails.logger.info("AddPeopleEvent starting #{params} #{params["photo_ig_list"]}")
+    #Rails.logger.info("AddPeopleEvent starting #{params} #{params["photo_ig_list"]}")
     photo_ig_ids = params['photo_ig_list'].split(",")
     photos = []
     illustration = nil
@@ -33,6 +33,8 @@ class AddPeopleEvent
     if venue && !venue.cannot_trend
       event = venue.create_new_event("trending_people", photos)
       event.update_attribute(:illustration, illustration) if illustration
+      event.update_attribute(:description, params['description'])
+      event.update_attribute(:category, params['category'])
     end
   end
 end
