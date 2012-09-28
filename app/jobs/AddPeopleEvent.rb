@@ -38,9 +38,9 @@ class AddPeopleEvent
       event.update_attribute(:description, params['description'])
       event.update_attribute(:category, params['category'])
 
-      Rails.log.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name}")
+      Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name}")
     end
 
-    Rails.log.info("AddPeopleEvent finished")
+    Rails.logger.info("AddPeopleEvent finished")
   end
 end
