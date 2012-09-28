@@ -77,7 +77,22 @@ class User
       Resque.enqueue(Completeiginfo, self.ig_id)
     end
   end
-  
+
+  def update_if_new(username_id, username, full_name, profile_picture, bio, website)
+
+    self.ig_id = username_id
+    self.ig_username = username
+    ig_details = self.ig_details
+    dirty = self.changed? || ig_details[0] != fullname || ig_details[1] != profile_picture ||
+            ig_details[2] != bio || ig_details[3] != website
+
+    if dirty
+      self.ig_details = [full_name, profile_picture, bio, website, "", "", ""]
+      self.save!
+    end
+  end
+
+
   protected
   
   def question_answered_email

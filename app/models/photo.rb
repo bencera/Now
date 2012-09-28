@@ -60,7 +60,16 @@ class Photo
       venue = Venue.create_venue(media.location)
     end
 
+    photo = Photo.where(:ig_media_id => media.id.to_s).first || Photo.new(:ig_media_id => media.id.to_s)
+    photo.coordinates = [media.location.longitude, media.location.latitude]
+    photo.url = [media.images.low_resolution.url, media.images.standard_resolution.url, media.images.thumbnail.url]
+    photo.caption = media.caption.text unless media.caption.nil?
+    photo.time_taken = media.created_time.to_i #UNIX timestamp
+    username_id = media.user.id
 
+    user = User.where(:ig_id => username_id.to_s) || User.new(:ig_id => username_id.to_s)
+    user.update_if_new(username_id.to_s, media.user.username, media.user.full_name, 
+                media.user.profile_picture, media.user.bio, media.user.website)
   end
   
   
