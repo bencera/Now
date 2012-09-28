@@ -403,7 +403,7 @@ class Venue
     else
       return( event.status == "trending" || event.status == "waiting_confirmation" || 
       event.status == "waiting" || event.status == "waiting_scheduled" || 
-      event.status == "trending_testing" || (event.start_time > 6.hours.ago.to_i &&
+      event.status == "trending_testing" || event.status == "trending_people" || (event.start_time > 6.hours.ago.to_i &&
       event.status == "not_trending"))
     end
   end
