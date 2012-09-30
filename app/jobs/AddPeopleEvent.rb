@@ -2,7 +2,7 @@ class AddPeopleEvent
   @queue = :add_people_event_queue
 
   def self.perform(params)
-    #Rails.logger.info("AddPeopleEvent starting #{params} #{params["photo_ig_list"]}")
+    Rails.logger.info("AddPeopleEvent starting #{params} #{params["photo_ig_list"]}")
     photo_ig_ids = params['photo_ig_list'].split(",")
     photos = []
     illustration = nil
@@ -41,8 +41,7 @@ class AddPeopleEvent
       # Since these should have been checked by the model, we can assume they're safe
       event.update_attribute(:description, params['description'])
       event.update_attribute(:category, params['category'])
-      user = FacebookUser.find_by_nowtoken(params['nowtoken'])
-      event.update_attribute(:facebook_user_id, user.id)
+      event.update_attribute(:facebook_user_id, params['facebook_user_id'])
 
       Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")
     #elsif venue.last_event.status == "trending_people"
