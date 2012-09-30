@@ -68,7 +68,8 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
 
 #      errors += "no user given" if event_params[:nowtoken].nil?
 
-      event_params[:facebook_user_id] = FacebookUser.find_by_nowtoken(event_params[:nowtoken]).id if event_params[:nowtoken]
+      #we want to require the nowtoken later
+      event_params[:facebook_user_id] = FacebookUser.find_by_nowtoken(event_params[:nowtoken]).id if !event_params[:nowtoken].blank?
 
       event_params.delete('controller')
       event_params.delete('format')
