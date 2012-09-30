@@ -39,7 +39,7 @@ class AddPeopleEvent
       event.update_attribute(:illustration, illustration) if illustration
 
       # Since these should have been checked by the model, we can assume they're safe
-      event.facebook_user = FacebookUser.find(params['facebook_user_id']
+      event.facebook_user = FacebookUser.find(params['facebook_user_id'])
       event.description = params['description']
       event.category = params['category']  
       event.save  
