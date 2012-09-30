@@ -15,6 +15,7 @@ class FacebookUser
 
   has_many :devices, class_name: "APN::Device"
   has_many :scheduled_events
+  has_many :events
 
   class << self
 	  def find_by_facebook_id(id)

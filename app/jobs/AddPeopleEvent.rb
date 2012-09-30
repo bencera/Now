@@ -39,9 +39,11 @@ class AddPeopleEvent
       event.update_attribute(:illustration, illustration) if illustration
 
       # Since these should have been checked by the model, we can assume they're safe
-      event.update_attribute(:description, params['description'])
-      event.update_attribute(:category, params['category'])
-      event.update_attribute(:facebook_user_id, params['facebook_user_id'])
+      event.facebook_user = FacebookUser.find(params['facebook_user_id'])
+      event.description = params['description'])
+      event.category = params['category'])  
+      event.save  
+
 
       Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")
     #elsif venue.last_event.status == "trending_people"
