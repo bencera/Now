@@ -41,6 +41,8 @@ class AddPeopleEvent
       # Since these should have been checked by the model, we can assume they're safe
       event.update_attribute(:description, params['description'])
       event.update_attribute(:category, params['category'])
+      user = FacebookUser.find_by_nowtoken(params['nowtoken'])
+      event.update_attribute(:facebook_user_id, user.id)
 
       Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")
     #elsif venue.last_event.status == "trending_people"
