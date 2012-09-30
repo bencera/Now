@@ -42,6 +42,7 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
   
   belongs_to :venue
   belongs_to :scheduled_event
+  belongs_to :facebook_user
   has_and_belongs_to_many :photos
 
   
@@ -64,6 +65,10 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
 
     begin
       event_params[:city] = "world" if event_params[:city].nil?
+
+      errors += "no user given" if event_params[:now_toker].nil?
+
+      event_params[:facebook_user_id] = FacebookUser.find_by_nowtoken(params[:nowtoken]).id
 
       event_params.delete('controller')
       event_params.delete('format')
