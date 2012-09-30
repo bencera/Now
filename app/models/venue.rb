@@ -415,6 +415,8 @@ class Venue
   def create_new_event(status, new_photos)
     #TODO: should take start_time instead
 
+    new_photos = new_photos.sort { |a,b| b.time_taken <=> a.time_taken}
+
   # commented out for testing on workers CONALL
     new_event = self.events.create(:start_time => new_photos.last.time_taken,
                              :end_time => new_photos.first.time_taken,
