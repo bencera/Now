@@ -35,7 +35,9 @@ class AddPeopleEvent
     #if the photos were added properly, it should have created a venue if it wasn't already there.
     venue = Venue.find(params['venue_id'])
     if venue && !venue.cannot_trend
+      Rails.logger.info("AddPeopleEvent: creating new event")
       event = venue.create_new_event("trending_people", photos)
+      Rails.logger.info("AddPeopleEvent: created new event #{event.id}")
       event.update_attribute(:illustration, illustration) if illustration
 
       # Since these should have been checked by the model, we can assume they're safe
