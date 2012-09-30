@@ -26,11 +26,11 @@ class EventsController < ApplicationController
   end
 
   def index
-    if params[:city] == "world"
-      if params[:just_me] == true
+    if params[:city] == "onlyme" 
         user = FacebookUser.find_by_nowtoken(params[:nowtoken])
         @events = Event.where(:status => "trending_people").where(:facebook_user_id => user.id).order_by([[:end_time, :desc]])
-      else
+    elsif params[:city] == "world"
+
         @events = Event.where(:status => "trending_people").order_by([[:end_time, :desc]])
       end
     else
