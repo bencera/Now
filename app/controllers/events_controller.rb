@@ -32,7 +32,6 @@ class EventsController < ApplicationController
     elsif params[:city] == "world"
 
         @events = Event.where(:status => "trending_people").order_by([[:end_time, :desc]])
-      end
     else
       events = Event.where(:city => params[:city]).where(:end_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
       if events.count >= 10
