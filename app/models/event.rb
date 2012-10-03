@@ -66,49 +66,50 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
 
   def self.convert_params(event_params)
 
-  errors = ""
+    errors = ""
 
-  begin
-    event_params[:city] = "world" if event_params[:city].nil?
+    begin
+      event_params[:city] = "world" if event_params[:city].nil?
 
-  #      errors += "no user given" if event_params[:nowtoken].nil?
+    #      errors += "no user given" if event_params[:nowtoken].nil?
 
-    #we want to require the nowtoken later
-    event_params[:facebook_user_id] = FacebookUser.find_by_nowtoken(event_params[:nowtoken]).id.to_s if !event_params[:nowtoken].blank?
+      #we want to require the nowtoken later
+      event_params[:facebook_user_id] = FacebookUser.find_by_nowtoken(event_params[:nowtoken]).id.to_s if !event_params[:nowtoken].blank?
 
-    event_params.delete('controller')
-    event_params.delete('format')
-    event_params.delete('nowtoken')
-    event_params.delete('action')
+      event_params.delete('controller')
+      event_params.delete('format')
+      event_params.delete('nowtoken')
+      event_params.delete('action')
 
-    errors += "no photos given" if event_params[:photo_ig_list].nil?
-    errors += "no illustration given" if event_params[:illustration].nil? 
-    errors += "no venue given" if event_params[:venue_id].nil?
-    errors += "no category" if event_params[:category].nil?
-    errors += "no description" if event_params[:description].nil?
+      errors += "no photos given" if event_params[:photo_ig_list].nil?
+      errors += "no illustration given" if event_params[:illustration].nil? 
+      errors += "no venue given" if event_params[:venue_id].nil?
+      errors += "no category" if event_params[:category].nil?
+      errors += "no description" if event_params[:description].nil?
 
 
-    ig_list = event_params[:photo_ig_list].split(",")
-    errors += "illustration isn't on photo list" if !(ig_list.include? event_params[:illustration])
-    errors += "too many photos chosen" if ig_list.count > 6
+      ig_list = event_params[:photo_ig_list].split(",")
+      errors += "illustration isn't on photo list" if !(ig_list.include? event_params[:illustration])
+      errors += "too many photos chosen" if ig_list.count > 6
 
-  rescue Exception => e
-    #TODO: take out backtrace when we're done testing
-    errors += "exception: #{e.message}\n#{e.backtrace.inspect}" 
+    rescue Exception => e
+      #TODO: take out backtrace when we're done testing
+      errors += "exception: #{e.message}\n#{e.backtrace.inspect}" 
 
-    ####errors += "an exception occurred, please see logs"
-    Rails.log.error("#{e.message}\n#{e.backtrace.inspect}")
-    return {errors: errors}
-  end
-  if errors.blank?
-    event_params[:id] = Event.new.id.to_s
-    # technically this isn't safe, since we could end up with duplicate shortids created
-    # chances of this are x in 62^6 where x is the number of events being created in the
-    # time between this call and the AddPeopleEvent job being called -- that's very low
-    event_params[:shortid] = Event.get_new_shortid
-    return event_params
-  else
-    return {errors: errors}
+      ####errors += "an exception occurred, please see logs"
+      Rails.log.error("#{e.message}\n#{e.backtrace.inspect}")
+      return {errors: errors}
+    end
+    if errors.blank?
+      event_params[:id] = Event.new.id.to_s
+      # technically this isn't safe, since we could end up with duplicate shortids created
+      # chances of this are x in 62^6 where x is the number of events being created in the
+      # time between this call and the AddPeopleEvent job being called -- that's very low
+      event_params[:shortid] = Event.get_new_shortid
+      return event_params
+    else
+      return {errors: errors}
+    end
   end
 
   def preview_photos
