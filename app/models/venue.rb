@@ -420,7 +420,7 @@ class Venue
     new_event.generate_short_id
   end
 
-  def get_new_event(status, new_photos)
+  def get_new_event(status, new_photos, optional_id=nil)
     #TODO: should take start_time instead
 
     new_photos = new_photos.sort { |a,b| b.time_taken <=> a.time_taken}
@@ -431,7 +431,10 @@ class Venue
                              :coordinates => new_photos.first.coordinates,
                              :n_photos => new_photos.count,
                              :status => status,
-                             :city => self.city)
+                             :city => self.city) do |e|
+
+      e.id = optional_id if optional_id
+    end
 
     new_event.photos.push(*new_photos)
 
