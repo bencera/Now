@@ -89,6 +89,8 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
       return {errors: errors}
     end
     if errors.blank?
+      event_params[:id] = Event.new.id
+      event_params[:shortid] = Event.get_new_shortid
       return event_params
     else
       return {errors: errors}
@@ -129,6 +131,15 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
     end
     s.reverse!
     s
+  end
+
+  def self.get_new_shortid
+    new_shortid = Event.random_url(rand(62**6))
+    while Event.where(:shortid => new_shortid).first
+      new_shortid = Event.random_url(rand(62**6))
+    end
+
+    new_shortid
   end
 
   def liked_by_user(user_id)
@@ -253,14 +264,17 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
   ##############################################################
   def generate_short_id
     if(self.shortid.nil?)
-      new_shortid = Event.random_url(rand(62**6))
-      while Event.where(:shortid => new_shortid).first
-        new_shortid = Event.random_url(rand(62**6))
-      end
+
+      new_shortid = Event.get_new_shortid
 
       self.update_attribute(:shortid, new_shortid)
     end
   end
+
+  ##############################################################
+  # generates a new shortid unless one already exists but doesn't
+  # save it.  TODO: clean this
+  ##############################################################
 
   def generate_initial_likes
     likes = [2,3,4,5,6,7,8,9]

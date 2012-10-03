@@ -134,7 +134,7 @@ class EventsController < ApplicationController
       Resque.enqueue(AddPeopleEvent, converted_params)
     end
       
-    return render :text => "OK", :status => :ok
+    return render :text => "OK|#{converted_params[:id]}|#{converted_params[:shortid]}", :status => :ok
 
   end
 

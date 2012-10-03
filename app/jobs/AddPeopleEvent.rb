@@ -36,14 +36,17 @@ class AddPeopleEvent
     venue = Venue.find(params['venue_id'])
     if venue && !venue.cannot_trend
       Rails.logger.info("AddPeopleEvent: creating new event")
-      event = venue.create_new_event("trending_people", photos)
+      event = venue.get_new_event("trending_people", photos)
       Rails.logger.info("AddPeopleEvent: created new event #{event.id}")
-      event.update_attribute(:illustration, illustration) if illustration
+      
 
-      # Since these should have been checked by the model, we can assume they're safe
+      # Since these should have been checked by the model method, we can assume they're safe
+      event.illustration = illustration if illustration
       event.facebook_user = FacebookUser.find(params['facebook_user_id']) if params['facebook_user_id']
       event.description = params['description']
-      event.category = params['category']  
+      event.category = params['category']
+      event.id = params['id']
+      event.shortid = params['shortid']  
       event.save  
 
 

@@ -413,12 +413,20 @@ class Venue
   # trends a new event given a list of photos to put in the new event 
   ##############################################################
   def create_new_event(status, new_photos)
+    new_event = get_new_event(status, new_photos).save
+
+    Rails.logger.info("Venue::create_new_event: created new event at venue #{self.id} with #{new_event.photos.count} photos")
+
+    new_event.generate_short_id
+  end
+
+  def get_new_event(status, new_photos)
     #TODO: should take start_time instead
 
-    #new_photos = new_photos.sort { |a,b| b.time_taken <=> a.time_taken}
+    new_photos = new_photos.sort { |a,b| b.time_taken <=> a.time_taken}
 
   # commented out for testing on workers CONALL
-    new_event = self.events.create(:start_time => new_photos.last.time_taken,
+    new_event = self.events.new(:start_time => new_photos.last.time_taken,
                              :end_time => new_photos.first.time_taken,
                              :coordinates => new_photos.first.coordinates,
                              :n_photos => new_photos.count,
@@ -428,10 +436,6 @@ class Venue
     new_event.photos.push(*new_photos)
 
     new_event.update_keywords
-
-    Rails.logger.info("Venue::create_new_event: created new event at venue #{self.id} with #{new_photos.count} photos")
-
-    new_event.generate_short_id
 
     return new_event
   end
