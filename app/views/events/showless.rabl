@@ -8,5 +8,5 @@ attributes :name
 end
 node(:like) { |event| event.liked_by_user(@user_id) }
 node(:fb_photo) do |u|
-  "https://graph.facebook.com/#{u.facebook_user.fb_details['username']}/picture"
+  "https://graph.facebook.com/#{u.facebook_user.fb_details['username']}/picture" unless u.facebook_user.nil? || u.facebook_user.fb_details.nil?
 end

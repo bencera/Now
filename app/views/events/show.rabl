@@ -15,5 +15,5 @@ attributes :description, :end_time, :category
 end
 
 node(:fb_photo) do |u|
-  "https://graph.facebook.com/#{u.facebook_user.fb_details['username']}/picture"
+  "https://graph.facebook.com/#{u.facebook_user.fb_details['username']}/picture" unless u.facebook_user.nil? || u.facebook_user.fb_details.nil?
 end
