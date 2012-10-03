@@ -40,7 +40,7 @@ class AddPeopleEvent
     if venue && !venue.cannot_trend
       Rails.logger.info("AddPeopleEvent: creating new event")
       event = venue.get_new_event("trending_people", photos, params[:id])
-      Rails.logger.info("AddPeopleEvent: created new event #{event.id}")
+      Rails.logger.info("AddPeopleEvent: created new event #{event.id}" )
       
 
       # Since these should have been checked by the model method, we can assume they're safe
@@ -48,7 +48,10 @@ class AddPeopleEvent
       event.facebook_user = FacebookUser.find(params[:facebook_user_id]) if params[:facebook_user_id]
       event.description = params[:description]
       event.category = params[:category]
-      event.shortid = params[:shortid]  
+      event.shortid = params[:shortid]
+
+      # when we make a checkin model, i think we'll probably replace this line with the creation of the event's first checkin
+      photos[0..5].each { |photo| event.main_photos.push photo.id.to_s }  
       event.save  
 
 
