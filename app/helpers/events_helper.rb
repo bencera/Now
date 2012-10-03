@@ -88,4 +88,13 @@ module EventsHelper
   def self.get_tz_offset(city)
     Time.now.in_time_zone(get_tz(city)).utc_offset
   end
+
+  def self.get_user_liked(facebook_user_id)
+    fb_user = FacebookUser.find(facebook_user_id)
+    if fb_user
+      shortids = $redis.smembers("liked_events:#{fb_user.facebook_id}")
+      return Event.where(:shortid.in => shortids)
+    end
+    return nil
+  end
 end
