@@ -84,6 +84,9 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
       errors += "no photos given" if event_params[:photo_ig_list].nil?
       errors += "no illustration given" if event_params[:illustration].nil? 
       errors += "no venue given" if event_params[:venue_id].nil?
+      errors += "no category" if event_params[:category].nil?
+      errors += "no description" if event_params[:description].nil?
+
 
       ig_list = event_params[:photo_ig_list].split(",")
       errors += "illustration isn't on photo list" if !(ig_list.include? event_params[:illustration])
