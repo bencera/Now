@@ -29,7 +29,7 @@ class EventsController < ApplicationController
     if params[:liked_by]
       @events = EventsHelper.get_user_liked(params[:liked_by])
     elsif params[:created_by] 
-      @events = Event.where(:facebook_user_id => params[:created_by]).order_by([[:end_time, :desc]])
+      @events = EventsHelper.get_user_created(params[:created_by])
     elsif params[:city] == "onlyme" 
       user = FacebookUser.find_by_nowtoken(params[:nowtoken])
       @events = Event.where(:status => "trending_people").where(:facebook_user_id => user.id).order_by([[:end_time, :desc]])
@@ -138,7 +138,7 @@ class EventsController < ApplicationController
       Resque.enqueue(AddPeopleEvent, converted_params)
     end
      
-    return render :text => "OK|#{converted_params[:id]}|#{converted_params[:shortid]}", :status => :ok
+    return render :text => "#{converted_params[:id]}|#{converted_params[:shortid]}", :status => :ok
 
   end
 
