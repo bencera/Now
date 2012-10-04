@@ -49,6 +49,7 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
   belongs_to :scheduled_event
   belongs_to :facebook_user
   has_and_belongs_to_many :photos
+  has_many :checkins
 
   
   include Geocoder::Model::Mongoid

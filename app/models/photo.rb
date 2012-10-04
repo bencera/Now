@@ -28,6 +28,7 @@ class Photo
   has_many :usefuls
   embeds_many :comments
   has_and_belongs_to_many :events
+  has_and_belongs_to_many :checkins
   
   index(
     [
