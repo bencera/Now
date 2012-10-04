@@ -466,7 +466,7 @@ class Venue
     venue = Venue.where(:_id => fs_id).first
     if venue
       start_time = venue.photos.any? ? venue.photos.first.time_taken : since_time
-      venue_ig_id = venue.ig_id
+      venue_ig_id = venue.ig_venue_id
     else
       venue_ig_id = Rails.cache.fetch "#{fs_id}:instagram:venue", :compress => true do
         Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id).first['id']
