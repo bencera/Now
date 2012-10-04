@@ -14,6 +14,10 @@ child(:previous_events, :if => @more == "yes") do
 attributes :description, :end_time, :category
 end
 
+node(:facebook_name) do |u|
+  u.facebook_user.fb_details.name unless u.facebook_user.nil?|| u.facebook_user.fb_details.nil?
+end
+
 node(:facebook_id) do |u|
   u.facebook_user.facebook_id unless u.facebook_user.nil?
 end
