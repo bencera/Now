@@ -9,7 +9,7 @@ end
 node(:like) { |event| event.liked_by_user(@user_id) }
 
 node(:facebook_name) do |u|
-  u.facebook_user.fb_details.name unless u.facebook_user.nil?|| u.facebook_user.fb_details.nil?
+  u.facebook_user.fb_details['name'] unless u.facebook_user.nil?|| u.facebook_user.fb_details.nil?
 end
 
 node(:facebook_id) do |u|
