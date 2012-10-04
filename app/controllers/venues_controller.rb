@@ -1,5 +1,7 @@
 class VenuesController < ApplicationController
   
+  include VenuesHelper
+
   def show
     if params[:page].nil?
       n = 1
@@ -232,6 +234,15 @@ class VenuesController < ApplicationController
 
   def venue_autotrend_index
     @venues = Venue.where(:autotrend => true).where(:city => params[:city])
+  end
+
+  ### CONALL
+  # we will want to make this controller RESTful.  but for now, let's just add the new route for venue has social activity
+
+# has_activity looks at the last 12 hours to see if there's 1 photo.  if so, returns photos in last 12 hours, otherwise empty set
+  def has_activity
+    # this will create the venue and photos if they don't already exist    
+    @photos = Venue.fetch_ig_photos_since(params[:id], 12.hours.ago.to_i)
   end
   
   private

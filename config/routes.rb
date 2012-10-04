@@ -8,6 +8,14 @@ Ubimachine::Application.routes.draw do
   # get "follows/index"
 
   # get "tags/index"
+
+#### Conall routes that we need to make in a RESTful way eventually
+  match "/event/peoplecreate" => "events#create_people"
+
+  match "/venue/has_activity" => "venues#has_activity"
+
+#### Conall end
+
   match "/mu-34dfab81-28f6d162-ec82daa2-3f6b93cd" => "home#blitz"
 
   match "/HeaCFj" => "home#newfeatures"
@@ -18,7 +26,6 @@ Ubimachine::Application.routes.draw do
 
   match "/event/confirm" => "events#confirm_events_web"
 
-  match "/event/peoplecreate" => "events#create_people"
 
   match "/event/confirmation_trending" => "events#confirmation_trending"
 

@@ -149,6 +149,7 @@ class Venue
     Foursquare::Venue.new Venue.client, fs_venue_json
   end
   
+  #TODO: this should be a class method, taking fs_venue_id as an argument
   def ig_venue
     Rails.cache.fetch cache_key('instagram:venue'), :compress => true do
       Instagram.location_search(nil, nil, :foursquare_v2_id => self.fs_venue_id).first
@@ -455,6 +456,40 @@ class Venue
 
     return new_event
   end
+
+
+#this will all have to be cleaned up when we rewrite the venue and photo creation
+  def self.fetch_ig_photos_since(fs_id, since_time)
+
+    start_time = since_time
+
+    venue = Venue.where(:_id => fs_id).first
+    if venue
+      start_time = venue.photos.any? ? venue.photos.first.time_taken : since_time
+      venue_ig_id = venue.ig_id
+    else
+      venue_ig_id = Rails.cache.fetch "#{fs_id}:instagram:venue", :compress => true do
+        Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id).first['id']
+      end      
+    end
+
+    Rails.logger.info("asking ig for #{venue_ig_id} media since #{start_time}")
+    response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => start_time)
+
+    if response.data.any?
+      response.data.each do |media|
+        Photo.new.find_location_and_save(media, nil)
+      end
+
+      #this is ugly, but because find_location_and_save doesn't return the newly created photo, we have to do this
+
+      return Venue.find(fs_id).photos.where(:time_taken.gt => since_time)
+    else
+      return []
+    end
+
+  end
+  
 
 
   private
