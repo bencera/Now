@@ -59,6 +59,9 @@ Ubimachine::Application.routes.draw do
   resources :events, :requests, :subscriptions, :searches, :callbacks, :venues
   
   resources :scheduled_events, :only => [:index, :show, :create, :update, :destroy]
+
+  resources :checkin, :only => [:index, :show, :create, :destroy]
+
   #
   
   #:venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls, :dones,
