@@ -459,13 +459,23 @@ class Venue
 
 
 #this will all have to be cleaned up when we rewrite the venue and photo creation
-  def self.fetch_ig_photos_since(fs_id, since_time)
 
-    start_time = since_time
+#options:
+# => :threshold_time in which we need to see min_photos
+# => :min_photo_time is the earliest photo we will show (must be <= threshold_time)
+# => :min_photos is the minimum number of photos since :threshold_time -- if we don't reach it, no photos are returned
+
+# returns the instagram json
+
+  def self.fetch_ig_photos_since(fs_id, options = {})
+
+    threshold_time = options[:threshold_time] || 0
+    min_photo_time = options[:min_photo_time] || 0
+    min_photos = options[:min_photos] || 0
+
 
     venue = Venue.where(:_id => fs_id).first
     if venue
-      start_time = venue.photos.any? ? venue.photos.first.time_taken : since_time
       venue_ig_id = venue.ig_venue_id
     else
       venue_ig_id = Rails.cache.fetch "#{fs_id}:instagram:venue", :compress => true do
@@ -473,17 +483,13 @@ class Venue
       end      
     end
 
-    Rails.logger.info("asking ig for #{venue_ig_id} media since #{start_time}")
-    response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => start_time)
+    Rails.logger.info("asking ig for #{venue_ig_id} media")
+    response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
 
     if response.data.any?
-      response.data.each do |media|
-        Photo.new.find_location_and_save(media, nil)
-      end
-
-      #this is ugly, but because find_location_and_save doesn't return the newly created photo, we have to do this
-
-      return Venue.find(fs_id).photos.where(:time_taken.gt => since_time)
+      num_qualified_photos = 0
+      response.data.each { |photo| num_qualified_photos += 1 if  photo[:created_time].to_i >= threshold_time}
+      return response.data if num_qualified_photos >= min_photos
     else
       return []
     end
