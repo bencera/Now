@@ -7,6 +7,7 @@ class FacebookUser
   field :now_token
   field :fb_accesstoken
   field :fb_details, type: Hash
+  field :whitelist_cities, type: Array, default: []
 
   index({ now_token: 1 }, { unique: true, name: "now_token_index" })
 
