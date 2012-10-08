@@ -251,11 +251,12 @@ class VenuesController < ApplicationController
 
     #for now, we can't tell what city a new venue is in, so we'll only be able to whitelist for existing venues
     venue = Venue.where(:id => params[:id]).first
-    white_listed = (venue && fb_user.whitelist_cities && (fb_user.whitelist_cities.include? venue.city))
+    white_listed = ( venue && fb_user.whitelist_cities && ( ( fb_user.whitelist_cities.include? venue.city ) || fb_user.whitelist_cities.include? "all" ) )
 
     response_json = Venue.fetch_ig_photos_since(params[:id], :min_photos => 1, :threshold_time => 12.hours.ago.to_i)
 
     #if user is whitelisted for the city in which the venue appears, event will be in city view, otherwise world (or own profile if below 3 photos)
+    #TODO: get rid of this magic constant
     response.headers["Eventlevel"] = response_json.count < 3 ? "Low" : ( white_listed ? "venue.city" : "world")
 
     return render :json => response_json
