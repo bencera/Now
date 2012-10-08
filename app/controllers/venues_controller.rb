@@ -257,7 +257,7 @@ class VenuesController < ApplicationController
 
     #if user is whitelisted for the city in which the venue appears, event will be in city view, otherwise world (or own profile if below 3 photos)
     #TODO: get rid of this magic constant
-    response.headers["Eventlevel"] = response_json.count < 3 ? "Low" : ( white_listed ? "venue.city" : "world")
+    response.headers["Eventlevel"] = response_json.count < 3 ? "Low" : ( white_listed && venue.city && venue.city != "unknown" ? venue.city : "world")
 
     return render :json => response_json
   end
