@@ -1,5 +1,6 @@
 class User
   include Mongoid::Document
+  include Mongoid::Timestamps
   field :email
   field :ig_username
   index :ig_username, background: true

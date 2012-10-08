@@ -2,6 +2,7 @@
 
 class Photo
   include Mongoid::Document
+  include Mongoid::Timestamps
   field :ig_media_id
   index :ig_media_id, background: true
   field :url, :type => Array
@@ -19,7 +20,7 @@ class Photo
   field :city
   field :neighborhood
   field :venue_photos, :type => Integer
-  field :user_details, :type => Hash
+  field :user_details, :type => Hash, default: {}
   belongs_to :venue
   belongs_to :user
   has_and_belongs_to_many :scheduled_events

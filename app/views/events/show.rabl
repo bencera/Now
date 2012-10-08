@@ -1,7 +1,10 @@
 object @event
 attributes :id, :coordinates, :end_time, :description, :category, :shortid, :like_count, :venue_category, :n_photos, :start_time, :keywords, :city_fullname, :main_photos
 child :photos do
-attributes :url, :caption, :time_taken, :user_details, :ig_media_id
+  attributes :url, :caption, :time_taken, :ig_media_id
+  node (:user_details) do |u|
+    u.user.ig_details
+  end
 end
 child :venue do
 attributes :id, :name, :neighborhood, :address
