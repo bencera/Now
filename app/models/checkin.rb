@@ -18,7 +18,7 @@ class Checkin
 
   before_save do |checkin|
     
-    if checkin.event?
+    if checkin.event
       checkin.venue = checkin.event.venue
     end
 
