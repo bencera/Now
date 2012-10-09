@@ -78,6 +78,9 @@ gem "typhoeus", '~> 0.2.2'
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
+#uses timezone gem to give cities timezones
+gem "timezone", "~> 0.1.5"
+
 group :development do
   gem 'faker', '1.0.1'
 end

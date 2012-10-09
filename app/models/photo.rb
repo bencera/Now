@@ -53,11 +53,16 @@ class Photo
   validates_presence_of :ig_media_id, :url, :time_taken, :coordinates #user_id???
   validates_uniqueness_of :ig_media_id
 
-  def self.create_photo(media)
+####Conall added
+
+#this only works for IG media, not internal now photos
+  def self.create_photo(media, fs_venue_id)
     return nil if(media.location.nil? || media.location.id.nil? || media.location.longitude.blank?)
-    venue = Venue.where(:ig_venue_id: media.location.id.to_s).first
+
+    #i'd prefer to use find, but it raises an exception when it fails -- there's a config option we could change
+    venue = Venue.where(:_id => fs_venue_id).first
     if venue.nil?
-      venue = Venue.create_venue(media.location)
+      venue = Venue.create_venue(media.location, fs_venue_id)
     end
 
     photo = Photo.where(:ig_media_id => media.id.to_s).first || Photo.new(:ig_media_id => media.id.to_s)
@@ -65,13 +70,19 @@ class Photo
     photo.url = [media.images.low_resolution.url, media.images.standard_resolution.url, media.images.thumbnail.url]
     photo.caption = media.caption.text unless media.caption.nil?
     photo.time_taken = media.created_time.to_i #UNIX timestamp
+    photo.venue = venue
     username_id = media.user.id
 
-    user = User.where(:ig_id => username_id.to_s) || User.new(:ig_id => username_id.to_s)
+    user = User.where(:ig_id => username_id.to_s).first || User.new(:ig_id => username_id.to_s)
     user.update_if_new(username_id.to_s, media.user.username, media.user.full_name, 
                 media.user.profile_picture, media.user.bio, media.user.website)
+
+    photo.save!
+    return photo
+
   end
-  
+
+  ######Conall end
   
   def caption_without_hashtags(caption)
     if caption.count("#") > 3

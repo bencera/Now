@@ -18,12 +18,18 @@ class Venue
   field :autocategory
   field :autoillustrations, :type => Array
   field :blacklist, :type => Boolean, default: false
+
+# now_version is 1 for old venues, 2 for venues created the new way
+  field :now_version, default: 1
+
   key :fs_venue_id
   has_many :photos, dependent: :destroy
   has_and_belongs_to_many :users
   has_many :events
   has_many :scheduled_events, dependent: :destroy
   has_many :checkins
+
+  belongs_to :now_city
   
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates, :address => :address_geo
@@ -157,7 +163,17 @@ class Venue
     end
   end
   
+
+  ######################################
+  # This is called before saving.  we are phasing this code out, so only call this if venue
+  # is created in old now version 1.0 way
+  ######################################
+
   def create_new_venue
+
+    # this is to help with the phase out of old code
+    return true if self.now_version > 1
+
     #done to do this before validation and before save
     return true unless new?
     #special case if the photo has no venue..
@@ -498,11 +514,77 @@ class Venue
   end
   
 
+  ######Conall --- methods for model rewrite here:
+
+  def self.create_venue(location, fs_id)
+
+    #probably want to put some error handling here
+    venue_data = Venue.fs_venue_data(fs_id)
+
+
+    new_venue = Venue.new
+    
+    #need this to stop before save code running
+    new_venue.now_version = 2
+
+    new_venue.now_city = NowCity.where(:name => venue_data.location['city'], :state => venue_data.location['state'], 
+                :country => venue_data.location['country']).first || NowCity.create_from_fs_venue_data(venue_data)
+
+
+    categories = []
+    if venue_data.categories.any?
+      venue_data.categories.each do |category|
+        categories << category.json
+      end
+      new_venue.categories = categories
+    end
+
+    new_venue.name = venue_data.name
+    new_venue.coordinates = [venue_data.location['lng'], venue_data.location['lat']]
+    new_venue.address = venue_data.location.json unless venue_data.location.nil?
+    new_venue.neighborhood = new_venue.find_neighborhood
+
+    venue_ig_id = Rails.cache.fetch "#{fs_id}:instagram:venue", :compress => true do
+      Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id).first['id']
+    end
+
+    new_venue.fs_venue_id = fs_id
+    new_venue.ig_venue_id = venue_ig_id
+
+    new_venue.save!
+    return new_venue
+
+  end
+
+  def self.find_nearest_venue(coordinates, options={})
+    conditions = {}
+    conditions["$near"] = coordinates
+
+    case options[:units]
+    when "miles"
+      dividend = 69
+    when "kilometers"
+      dividend = 111
+    else
+      #meters
+      dividend = 111000
+    end
+
+    conditions["$maxDistance"] = options[:max_distance].to_f / dividend if options[:max_distance]
+
+    Venue.where(:coordinates => conditions).first
+  end
+
 
   private
 
     def self.client
       @@client ||= Foursquare::Base.new("RFBT1TT41OW1D22SNTR21BGSWN2SEOUNELL2XKGBFLVMZ5X2", "W1FN2P3PR30DIKSWEKFEJVF51NJMZTBUY3KY3T0JNCG51QD0")
+    end
+
+    ##### Conall -- making this a class model since you're probably only calling it on creation
+    def self.fs_venue_data(fs_v2_id)
+      self.client.venues.find(fs_v2_id)
     end
 
     def fs_venue_json

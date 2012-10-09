@@ -50,6 +50,10 @@ module Ubimachine
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    Timezone::Configure.begin do |c|
+      c.username = 'ocallaco'
+    end
     
     if Rails.env == "production"
       config.middleware.use("Rack::GoogleAnalytics", :web_property_id => "UA-27892286-1")
