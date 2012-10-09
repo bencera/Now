@@ -16,6 +16,15 @@ class Checkin
   validates_presence_of :description, :broadcast #, facebook_user, event
   #should it validate the number of photos given?
 
+  before_save do |checkin|
+    
+    if self.event?
+      self.venue = self.event.venue
+    end
+
+    return true
+  end
+
 # this convert params really shouldn't exist -- iphone app should be sending a json with the necessary params
 # otherwise, at least we could come up with a generalized way to convert params.  maybe something using the 
 # model callbacks (before_validation after_save etc)
