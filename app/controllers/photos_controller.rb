@@ -1,6 +1,6 @@
 class PhotosController < ApplicationController
   
-  
+  #deprecated
   def index
     
     if params[:category] == "outdoors"
@@ -197,6 +197,7 @@ class PhotosController < ApplicationController
   
   layout :choose_layout
   
+  #probably deprecated
   def index_v2
     
     require 'will_paginate/array'
@@ -390,12 +391,13 @@ class PhotosController < ApplicationController
     
   end
   
+  #deprecated
   def geo
     
   end
   
   
-  
+  #deprecated
   def show
     @photo = Photo.first(conditions: {_id: params[:id]})
     if params[:page].nil?
@@ -452,6 +454,7 @@ class PhotosController < ApplicationController
     end
   end
 
+#probably deprecated
   def venueindex
     if params[:venue_id]
       @photos = Venue.find(params[:venue_id]).photos.order_by([[:time_taken, :desc]]).take(100)

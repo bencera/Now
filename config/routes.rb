@@ -60,7 +60,7 @@ Ubimachine::Application.routes.draw do
   
   resources :scheduled_events, :only => [:index, :show, :create, :update, :destroy]
 
-  resources :checkin, :only => [:index, :show, :create, :destroy]
+  resources :checkins, :only => [:index, :show, :create, :destroy]
 
   #
   

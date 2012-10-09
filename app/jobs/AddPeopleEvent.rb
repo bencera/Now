@@ -13,11 +13,9 @@ class AddPeopleEvent
       begin
         photo = Photo.where(:ig_media_id => photo_ig).first
         if photo.nil?
-          puts photo
           response = Instagram.media_item(photo_ig)
 
           unless response.blank?
-            puts "response not blank"
             Photo.new.find_location_and_save(response, nil) unless response.location.id.nil?
 
             # the old method for photo creation is ugly and messy -- for now just search db to see if photo was created
