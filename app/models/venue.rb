@@ -516,7 +516,7 @@ class Venue
 
   ######Conall --- methods for model rewrite here:
 
-  def self.create_venue(location, fs_id)
+  def self.create_venue(fs_id)
 
     #probably want to put some error handling here
     venue_data = Venue.fs_venue_data(fs_id)
@@ -550,6 +550,7 @@ class Venue
 
     new_venue.fs_venue_id = fs_id
     new_venue.ig_venue_id = venue_ig_id
+    new_venue.city = new_venue.now_city.name
 
     new_venue.save!
     return new_venue

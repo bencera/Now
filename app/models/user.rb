@@ -2,11 +2,24 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
   field :email
+
+  ### want to deprecate instagram specific info, make it more general
   field :ig_username
   index :ig_username, background: true
   field :ig_accesstoken
   field :ig_id
+
+  #having details as an array isn't good -- phasing this out
   field :ig_details, :type => Array
+
+  #to replace the members of :ig_details -- profile picture already exists, so we'll use that
+  field :det_full_name
+  field :det_bio
+  field :det_website
+  field :det_followed_by_count
+  field :det_follows_count
+  field :det_mediat_count
+
   field :password_hash
   field :password_salt
   field :auth_token
@@ -21,6 +34,10 @@ class User
   field :fb_website
   field :profile_picture
   field :gender
+
+  #using this to phase out old code
+  field :now_version, :default => 1
+
   key :ig_id
   has_many :photos
   has_and_belongs_to_many :requests
@@ -78,16 +95,25 @@ class User
     end
   end
 
-  def update_if_new(username_id, username, full_name, profile_picture, bio, website)
+  def update_if_new(username_id, username, full_name, ig_profile_picture, bio, website)
 
     self.ig_id = username_id
     self.ig_username = username
-    ig_details = self.ig_details
-    dirty = self.changed? || ig_details[0] != fullname || ig_details[1] != profile_picture ||
-            ig_details[2] != bio || ig_details[3] != website
+
+    #new fields to replace ig_details
+    self.det_full_name = full_name
+    self.profile_picture = ig_profile_picture
+    self.det_bio = bio
+    self.det_website = website
+    self.now_version = 2
+
+    #would like to phase this line out -- just use self.changed? eventually
+    ig_details_old = self.ig_details
+    dirty = self.changed? || ig_details_old[0] != fullname || ig_details_old[1] != ig_profile_picture ||
+            ig_details_old[2] != bio || ig_details_old[3] != website
 
     if dirty
-      self.ig_details = [full_name, profile_picture, bio, website, "", "", ""]
+      self.ig_details = [full_name, ig_profile_picture, bio, website, "", "", ""]
       self.save!
     end
   end

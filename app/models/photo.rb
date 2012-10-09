@@ -5,6 +5,19 @@ class Photo
   include Mongoid::Timestamps
   field :ig_media_id
   index :ig_media_id, background: true
+
+# this is to phase out ig_media id so that photos can be from any source, instagram, now, foursquare, twitter, etc
+  field :external_media_id
+  field :external_media_source 
+
+#these will phase out the url array
+  field :low_resolution_url
+  field :high_resolution_url
+  field :thumbnail_url
+
+# this is for the phase-out of old code
+  field :now_version, :default => 1
+
   field :url, :type => Array
   field :caption
   field :time_taken, :type => Integer
@@ -56,18 +69,35 @@ class Photo
 ####Conall added
 
 #this only works for IG media, not internal now photos
-  def self.create_photo(media, fs_venue_id)
+  def self.create_photo(media_source, media, fs_venue_id)
     return nil if(media.location.nil? || media.location.id.nil? || media.location.longitude.blank?)
 
     #i'd prefer to use find, but it raises an exception when it fails -- there's a config option we could change
     venue = Venue.where(:_id => fs_venue_id).first
     if venue.nil?
-      venue = Venue.create_venue(media.location, fs_venue_id)
+      venue = Venue.create_venue(fs_venue_id)
     end
 
-    photo = Photo.where(:ig_media_id => media.id.to_s).first || Photo.new(:ig_media_id => media.id.to_s)
+    photo = Photo.where(:ig_media_id => media.id.to_s).first|| Photo.where(:external_media_id => media.id.to_s).first || Photo.new()
+
+    ###### this will end up being the media ids we use, not ig_media_id
+    photo.external_media_id = media.id.to_s
+    photo.external_media_source = media_source
+
+    ###### the plan is to deprecate this, for compatibility, we need this line for now
+    photo.ig_media_id = media.id.to_s
+
+    photo.now_version = 2
+
     photo.coordinates = [media.location.longitude, media.location.latitude]
+
+    #leaving this in for compatibility.  delete it when deprecated in API endpoint rabl
     photo.url = [media.images.low_resolution.url, media.images.standard_resolution.url, media.images.thumbnail.url]
+
+    photo.low_resolution_url = media.images.low_resolution.url
+    photo.high_resolution_url = media.images.standard_resolution.url
+    photo.thumbnail_url = media.images.thumbnail.url
+
     photo.caption = media.caption.text unless media.caption.nil?
     photo.time_taken = media.created_time.to_i #UNIX timestamp
     photo.venue = venue
