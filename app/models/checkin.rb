@@ -18,8 +18,8 @@ class Checkin
 
   before_save do |checkin|
     
-    if self.event?
-      self.venue = self.event.venue
+    if checkin.event?
+      checkin.venue = checkin.event.venue
     end
 
     return true
