@@ -115,7 +115,7 @@ module EventsHelper
       end
     end
 
-    return events
+    return events[0..20]
 
   end
 end
