@@ -27,10 +27,10 @@ class EventsController < ApplicationController
 
   def index
     if params[:lon_lat]
-      coordinates = params[:lon_lat].split(",")
+      coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
       conditions = {}
       conditions["$near"] = coordinates
-      conditions["$maxDistance"] = params[:maxdistance].to_f / 111000
+      conditions["$maxDistance"] = params[:maxdistance].to_f / 111000 if params[:maxdistance]
       conditions[:status.in => ["trending", "trending_people", "trended"]]
       @events = Event.where(conditions).order_by([[:end_time, :desc]]).take(20)
 
