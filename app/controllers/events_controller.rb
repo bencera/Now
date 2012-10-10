@@ -31,8 +31,7 @@ class EventsController < ApplicationController
       conditions = {}
       conditions["$near"] = coordinates
       conditions["$maxDistance"] = params[:maxdistance].to_f / 111000 if params[:maxdistance]
-      conditions[:status.in => ["trending", "trending_people", "trended"]]
-      @events = Event.where(conditions).order_by([[:end_time, :desc]]).take(20)
+      @events = Event.where(:coordinates => conditions, :status.in => ["trending", "trending_people", "trended"]).order_by([[:end_time, :desc]]).take(20)
 
     elsif params[:liked_by]
       @events = EventsHelper.get_user_liked(params[:liked_by])
