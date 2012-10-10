@@ -26,7 +26,15 @@ class EventsController < ApplicationController
   end
 
   def index
-    if params[:liked_by]
+    if params[:lon_lat]
+      coordinates = params[:lon_lat].split(",")
+      conditions = {}
+      conditions["$near"] = coordinates
+      conditions["$maxDistance"] = params[:maxdistance].to_f / 111000
+      conditions[:status.in => ["trending", "trending_people", "trended"]]
+      @events = Event.where(conditions).order_by([[:end_time, :desc]]).take(20)
+
+    elsif params[:liked_by]
       @events = EventsHelper.get_user_liked(params[:liked_by])
     elsif params[:created_by] 
       @events = EventsHelper.get_user_created(params[:created_by])
