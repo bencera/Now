@@ -553,6 +553,7 @@ class Venue
     new_venue.city = new_venue.now_city.name
 
     new_venue.save!
+    Rails.logger.info("Venue.rb: created new venue #{new_venue.id} in city #{new_venue.now_city.name}")
     return new_venue
 
   end

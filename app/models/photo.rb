@@ -110,6 +110,9 @@ class Photo
     photo.user = user
 
     photo.save!
+
+#will want to comment this out when done testing
+    Rails.logger.info("Photo.rb: created new photo #{photo.id} in venue #{venue.id} by user #{user.id}")
     return photo
 
   end
