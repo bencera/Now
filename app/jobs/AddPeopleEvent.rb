@@ -16,11 +16,7 @@ class AddPeopleEvent
           response = Instagram.media_item(photo_ig)
 
           unless response.blank?
-            Photo.new.find_location_and_save(response, nil) unless response.location.id.nil?
-
-            # the old method for photo creation is ugly and messy -- for now just search db to see if photo was created
-            # we'll clean this up later
-            photo = Photo.where(:ig_media_id => photo_ig).first
+            photo = Photo.create_photo("ig", response, params[:venue_id]) unless response.location.id.nil?
             illustration = photo.id if photo && params[:illustration] == photo.ig_media_id 
           end
         end
@@ -28,7 +24,9 @@ class AddPeopleEvent
       rescue Exception => e
         #log the failed attempt, add the photo_ig_id to a redis key for the RetryPhotos job
         Rails.logger.info("AddPeopleEvent failed due to exception #{e.message}\n#{e.backtrace.inspect}")
-        Resque.enqueue_in(10.minutes, AddPeopleEvent, params) unless Rails.env == "development"
+
+        #make a different call for trying to 
+        #Resque.enqueue_in(10.minutes, AddPeopleEvent, params) unless Rails.env == "development"
       end
       #TODO: add the illustration to the event
     end
