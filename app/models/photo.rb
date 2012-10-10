@@ -107,6 +107,8 @@ class Photo
     user.update_if_new(username_id.to_s, media.user.username, media.user.full_name, 
                 media.user.profile_picture, media.user.bio, media.user.website)
 
+    photo.user = user
+
     photo.save!
     return photo
 
