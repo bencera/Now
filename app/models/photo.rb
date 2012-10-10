@@ -10,6 +10,11 @@ class Photo
   field :external_media_id
   field :external_media_source 
 
+  #external media key is just source|id -- but i didn't want to do a double field index
+  field :external_media_key
+  #commented out until we're ready to start using this
+#  index :external_media_key, background: true, unique: true
+
 #these will phase out the url array
   field :low_resolution_url
   field :high_resolution_url
@@ -78,11 +83,13 @@ class Photo
       venue = Venue.create_venue(fs_venue_id)
     end
 
-    photo = Photo.where(:ig_media_id => media.id.to_s).first|| Photo.where(:external_media_id => media.id.to_s).first || Photo.new()
+    #shouldn't have to hit db again -- i'm only calling this if i didn't find the photo already.
+    photo = Photo.new()
 
     ###### this will end up being the media ids we use, not ig_media_id
     photo.external_media_id = media.id.to_s
     photo.external_media_source = media_source
+    photo.external_media_key = get_media_key(media_source, media.id.to_s)
 
     ###### the plan is to deprecate this, for compatibility, we need this line for now
     photo.ig_media_id = media.id.to_s
@@ -115,6 +122,10 @@ class Photo
     Rails.logger.info("Photo.rb: created new photo #{photo.id} in venue #{venue.id} by user #{user.id}")
     return photo
 
+  end
+
+  def self.get_media_key(source, external_id)
+    source.to_s + "|" + external_id.to_s
   end
 
   ######Conall end
