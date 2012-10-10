@@ -29,10 +29,15 @@ class EventsController < ApplicationController
     if params[:lon_lat]
       ##### this does not work yet
       coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
-      conditions = {}
-      conditions["$near"] = coordinates
-      conditions["$maxDistance"] = params[:maxdistance].to_f / 111000 if params[:maxdistance]
-      @events = Event.where(:coordinates => conditions, :status.in => ["trending", "trending_people", "trended"]).order_by([[:end_time, :desc]]).take(20)
+
+      if params[:maxdistance]
+        max_distance = params[:maxdistance].to_f / 111000
+      else
+        # 1 kilometer
+        max_distance = 1.0 / 111
+      end 
+      
+      @events = EventsHelper.get_localized_results(coordinates, max_distance)
 
     elsif params[:liked_by]
       @events = EventsHelper.get_user_liked(params[:liked_by])

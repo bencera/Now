@@ -102,4 +102,20 @@ module EventsHelper
       return nil
     end
   end
+
+  def self.get_localized_results(lon_lat, max_dist)
+    event_list = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => ["trending", "trending_people", "trended"]).order_by([[:end_time, :desc]]).entries
+
+    venues = {}
+    events = []
+    event_list.each do |event| 
+      if venues[event.venue_id].nil?
+        events << event
+        venues[event.venue_id] = event.id
+      end
+    end
+
+    return events
+
+  end
 end
