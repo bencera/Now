@@ -27,6 +27,7 @@ class EventsController < ApplicationController
 
   def index
     if params[:lon_lat]
+      ##### this does not work yet
       coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
       conditions = {}
       conditions["$near"] = coordinates
