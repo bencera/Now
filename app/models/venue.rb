@@ -172,7 +172,7 @@ class Venue
   def create_new_venue
 
     # this is to help with the phase out of old code
-    return true if self.now_version > 1
+    return true if self.now_version && self.now_version > 1
 
     #done to do this before validation and before save
     return true unless new?
