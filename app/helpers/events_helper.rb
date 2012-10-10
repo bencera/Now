@@ -104,6 +104,7 @@ module EventsHelper
   end
 
   def self.get_localized_results(lon_lat, max_dist)
+
     event_list = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => ["trending", "trending_people", "trended"]).order_by([[:end_time, :desc]]).entries
 
     venues = {}
@@ -116,6 +117,47 @@ module EventsHelper
     end
 
     return events[0..20]
+
+  end
+
+  def self.create_localized_venue_collection()
+      ####### this map reduce function probably will never be used, but i wanted to leave the sample code for later
+      #### this is not guaranteed to work
+    map = <<EOS
+      function () {
+        emit(this.venue_id, {doc:this});
+      }
+
+EOS
+
+    reduce = <<EOS
+
+      function (key, values) {
+        var ret = {doc:[]};
+        var doc = {};
+
+        new_values = values.sort(function (a,b){ return b.end_time - a.end_time});
+
+        for(var x = 0; x < new_values.length; x++){
+          var status = new_values[x].status;
+          if(status == "trending" || status == "trending_people" || status == "trended"){
+            break;
+          }
+
+        }
+
+        return new_values[x];
+      }
+
+EOS
+
+    cursor = Event.where(:status.in => ["trending", "trended"]).collection.map_reduce(map, reduce, :out => "mr_test").find()
+    first_events = cursor.to_a
+
+    events = []
+    first_events.each {|event| events << Event.new(event["value"]["doc"])}
+
+    events
 
   end
 end

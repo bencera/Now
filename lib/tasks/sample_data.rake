@@ -61,6 +61,30 @@ def make_existing_events
     end
   end
 
+  15.times do |n|
+    venue = Venue.where(:fs_venue_id => n + 2).first
+    event = Event.create(:coordinates => [-74.00313913822174, 40.73359624463056],
+                        :venue => Venue.where(:fs_venue_id => n).first,
+                        :status => "trended",
+                        :start_time => (28 + n).hours.ago.to_i,
+                        :end_time => (22 + n).hours.ago.to_i,
+                        :n_photos => 10,
+                        :description => "",
+                        :category => "concert",
+                        :shortid => n,
+                        )
+    10.times do |m|
+      photo = User.where(:ig_id => n).first.photos.create(:ig_media_id => "#{m+4670}x#{n+4430}",
+                                    :url => fake_url,
+                                    :time_taken => (28 + n - m).hours.ago.to_i,
+                                    :coordinates => [-74.00313913822174, 40.73359624463056],
+                                    :city => "newyork",
+                                    :caption => "test test test 1",
+                                    :venue => venue)
+      event.photos << photo
+    end
+  end
+
   5.times do |n|
     event = Event.create(:coordinates => [-74.00313913822174, 40.73359624463056],
                         :venue => Venue.where(:fs_venue_id => n + 5).first,
