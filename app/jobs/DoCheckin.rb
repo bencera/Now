@@ -29,7 +29,9 @@ class DoCheckin
     rescue Exception => e
       #log the failed attempt, add the photo_ig_id to a redis key for the RetryPhotos job
       Rails.logger.info("DoCheckin failed due to exception #{e.message}\n#{e.backtrace.inspect}")
-      Resque.enqueue_in(10.minutes, DoCheckin, params) unless Rails.env == "development"
+
+      #Resque.enqueue_in(10.minutes, DoCheckin, params) unless Rails.env == "development"
+      raise
     end
 
     checkin = event.checkins.new()

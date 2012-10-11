@@ -24,9 +24,9 @@ class AddPeopleEvent
       rescue Exception => e
         #log the failed attempt, add the photo_ig_id to a redis key for the RetryPhotos job
         Rails.logger.info("AddPeopleEvent failed due to exception #{e.message}\n#{e.backtrace.inspect}")
-
         #make a different call for trying to 
         #Resque.enqueue_in(10.minutes, AddPeopleEvent, params) unless Rails.env == "development"
+        raise
       end
       #TODO: add the illustration to the event
     end

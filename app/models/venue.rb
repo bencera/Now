@@ -577,7 +577,22 @@ class Venue
     Venue.where(:coordinates => conditions).first
   end
 
+  #### Conall -- instance methods
 
+  def create_city
+    
+    venue_data = Venue.fs_venue_data(self.fs_venue_id)
+
+    self.now_city = NowCity.where(:name => venue_data.location['city'], :state => venue_data.location['state'], 
+                :country => venue_data.location['country']).first || NowCity.create_from_fs_venue_data(venue_data)
+
+    self.save!
+
+    return self.now_city
+  end
+
+
+  end
   private
 
     def self.client

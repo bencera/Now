@@ -10,6 +10,7 @@ TRENDED               = "trended"
 WAITNG                = "waiting"
 NOT_TRENDING          = "not_trending"
 TRENDING_PEOPLE       = "trending_people"
+TRENDED_PEOPLE        = "trended_people"
 WAITING_CONFIRMATION  = "waiting_confirmation"
 WAITING_SCHEUDLED     = "waiting_scheduled"
 
@@ -72,6 +73,13 @@ MIN_DESCRIPTION       = 5
       self.start_time = self.photos.last.time_taken
     end
     return true
+  end
+
+#this should only affect trending_people events for now, but will need to be there for all eventually
+  before_create do
+    current_time = Time.now.to_i
+    self.last_update = current_time
+    self.next_update = current_time
   end
 
 
@@ -237,6 +245,31 @@ MIN_DESCRIPTION       = 5
     event_start_day >= current_day
   end
 
+  ##############################################################
+  # this will be the new way to determine if an event began today
+  ##############################################################
+
+  def began_today2?(time)
+    venue = self.venue
+
+    #if venue doesn't have a now_city, we will need to create it
+    now_city = venue.now_city || venue.create_city
+
+    #putting this after for now because i'd like existing venues to be updated to the new city model even if they're old
+    if self.start_time < 24.hours.ago.to_i
+      return false
+    end
+
+    current_time = now_city.to_local_time(time)
+    event_start_time = now_city.to_local_time(Time.at(self.start_time))
+
+    current_day = ( current_time.wday - ( current_time.hour < 6 ? 1 : 0 ) ) % 7
+    event_start_day = ( event_start_time.wday - ( event_start_time.hour < 4 ? 1 : 0 ) ) % 7
+
+    # using >= because for events starting between 3 and 6, current day < event_start_day
+    event_start_day >= current_day
+  end
+
   def live_photo_count
     self.photos.where(:time_taken.gt => self.start_time - 1).count
   end
@@ -261,6 +294,23 @@ MIN_DESCRIPTION       = 5
     if self.scheduled_event && trending
       self.scheduled_event.update_attribute(:last_trended, Time.now.to_i)
     end
+  end
+
+#this will become the new way of transitioning the status
+  def transition_status2
+    old_status = self.status
+
+    case self.status
+    when TRENDING
+      self.update_attribute(:status, TRENDED)
+    when TRENDING_PEOPLE
+      self.update_attribute(:status, TRENDED_PEOPLE)
+    else
+      self.update_attribute(:status, NOT_TRENDING)
+    end
+    Rails.logger.info("transition_status: event #{self.id} transitioning status from #{old_status} to #{ self.status }")
+
+    #can notify creator of event status if we want here
   end
 
   def update_keywords
@@ -358,6 +408,48 @@ MIN_DESCRIPTION       = 5
       self.update_attribute(:end_time, new_end_time) 
       Rails.logger.info("Added #{new_photo_count} photos to event #{self.id}") 
     end
+  end
+
+
+  ##############################################################
+  # this pulls photos since event last updated -- pulls from
+  # instagram, but we may want to stop if the venue has already
+  # gotten updates from one of our city subscriptions
+  ##############################################################
+  def fetch_and_add_photos(current_time)
+    begin
+      response = Instagram.location_recent_media(self.venue.ig_venue_id, :min_timestamp => self.last_update)
+    rescue MultiJson::DecodeError => e
+      Rails.logger.error("bad response from instagram #{e.message} \n #{e.backtrace.inspect}")
+      return false
+    end
+
+    new_photos = []
+
+    response.data.each do |media|
+      begin
+        new_photos << Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, self.venue.id)
+      rescue
+        Rails.logger.info("Event Model failed to load photo")
+        raise
+      end
+    end
+
+    self.photos.push(*new_photos)
+
+    self.last_update = current_time.to_i
+    self.next_update = current_time.to_i + self.update_interval
+    self.save!
+  end
+
+  ##############################################################
+  # will want to put some smart logic in to make sure it's updating
+  # frequently when a venue is extremely active and less often when
+  # only moderate activity
+  ##############################################################
+  def update_interval
+    # for now just give a random number between 2 and 8 to load balance
+    return [*2..8].sample.minutes.to_i
   end
 
   private
