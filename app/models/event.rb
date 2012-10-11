@@ -444,6 +444,13 @@ MIN_DESCRIPTION       = 5
 
     Rails.logger.info("Event #{self.id} added #{new_photos.count} new photos")
 
+    #debug
+    if(new_photos.any?)
+      x = []
+      new_photos.each {|photo| x << photo.id}
+      Rails.logger.info(x.join(","))
+    end
+
     self.last_update = current_time.to_i
     self.next_update = current_time.to_i + self.update_interval
     self.save!
