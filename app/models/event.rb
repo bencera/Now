@@ -449,6 +449,8 @@ MIN_DESCRIPTION       = 5
       x = []
       new_photos.each {|photo| x << photo.id}
       Rails.logger.info(x.join(","))
+    else
+      Rails.logger.info("no photos were added #{new_photos}")
     end
 
     self.last_update = current_time.to_i
