@@ -6,14 +6,15 @@ class Event
 ##### CONSTANTS
 
 TRENDING              = "trending"
+TRENDED               = "trended"
 WAITNG                = "waiting"
 NOT_TRENDING          = "not_trending"
-TRENDING_FORWARDING   = "trending_forwarding"
 TRENDING_PEOPLE       = "trending_people"
-TRENDING_SCHEDULED    = "trending_scheduled" 
 WAITING_CONFIRMATION  = "waiting_confirmation"
 WAITING_SCHEUDLED     = "waiting_scheduled"
 
+MAX_DESCRIPTION       = 45
+MIN_DESCRIPTION       = 5
 #####
 
   field :coordinates, :type => Array
@@ -31,6 +32,10 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
   field :keywords
   field :likes
   field :illustration
+
+  #these fields are only used for places updating without subscription
+  field :last_update
+  field :next_update
 
  # not using a has_many relationship because i don't think this is how the model will end up looking
  # chances are, a checkin will have description and photo_list, then an event will have a main checkin
@@ -56,9 +61,18 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
   reverse_geocoded_by :coordinates
   
   validates_presence_of :coordinates, :venue_id, :n_photos, :end_time
-  validates_presence_of :description, :category, :shortid, :on => :update
-
   validates_numericality_of :start_time, :end_time, :only_integer => true
+  validate :check_dependent_fields
+
+#Conall added this callback
+  before_save do 
+    if self.photos.any?
+      last_photo_time = self.photos.first.time_taken
+      self.end_time = (self.end_time && self.end_time > last_photo_time) ? self.end_time : last_photo_time
+      self.start_time = self.photos.last.time_taken
+    end
+    return true
+  end
 
 
   #description should be 50char long max...
@@ -115,6 +129,10 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
     else
       return {errors: errors}
     end
+  end
+
+  def self.visible_in_app?(event)
+    [TRENDING, TRENDING_PEOPLE, TRENDED].include? event.status
   end
 
   def preview_photos
@@ -341,4 +359,20 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
       Rails.logger.info("Added #{new_photo_count} photos to event #{self.id}") 
     end
   end
+
+  private
+
+
+    def check_dependent_fields
+      if( Event.visible_in_app?(self))
+        errors.add(:description, "needs description") if self.description.empty?
+
+        #### until we make these user friendly in the app we shouldn't enforce these
+        #errors.add(:description, "description too long") if self.description.length > MAX_DESCRIPTION
+        #errors.add(:description, "description too short") if self.description.length < MIN_DESCRIPTION
+
+        errors.add(:category, "needs category") if self.category.empty?
+        errors.add(:shortid, "needs shortid") if self.shortid.empty?
+    end
+
 end

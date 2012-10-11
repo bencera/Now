@@ -528,22 +528,22 @@ class ScheduledEvent
 
   private
 
-  def check_date_time
-    if(self.event_layer.nil? || self.event_layer < 1 || self.event_layer > 3)
-      errors.add(:event_layer, "incorrectly defined event_layer -- must be integer between 1 and 3")
-    elsif self.event_layer == 3
-      errors.add(:next_start_time, 'next_start_time cannot be nil in non-recurring event') if self.next_start_time.nil?
-      errors.add(:next_end_time, 'next_end_time cannot be nil in non-recurring event') if self.next_end_time.nil?
-      errors.add(:next_start_time, 'next_start_time must be less than next_end_time') if !self.next_start_time.nil? && 
-                        !self.next_end_time.nil? && self.next_start_time >= self.next_end_time
-    else
-      errors.add(:active_until, 'recurring event must have active_until defined') if self.active_until.nil?
-      errors.add(:event_layer, "must choose a day for recurring event") if !(self.monday || self.tuesday || 
-                        self.wednesday || self.thursday || self.friday || self.saturday || self.sunday)
-      errors.add(:event_layer, "must choose time group or start/end time for recurring event") if !(self.morning || self.lunch || 
-                        self.afternoon || self.evening || self.night || self.latenight || (self.start_time && self.end_time))
-    end
+    def check_date_time
+      if(self.event_layer.nil? || self.event_layer < 1 || self.event_layer > 3)
+        errors.add(:event_layer, "incorrectly defined event_layer -- must be integer between 1 and 3")
+      elsif self.event_layer == 3
+        errors.add(:next_start_time, 'next_start_time cannot be nil in non-recurring event') if self.next_start_time.nil?
+        errors.add(:next_end_time, 'next_end_time cannot be nil in non-recurring event') if self.next_end_time.nil?
+        errors.add(:next_start_time, 'next_start_time must be less than next_end_time') if !self.next_start_time.nil? && 
+                          !self.next_end_time.nil? && self.next_start_time >= self.next_end_time
+      else
+        errors.add(:active_until, 'recurring event must have active_until defined') if self.active_until.nil?
+        errors.add(:event_layer, "must choose a day for recurring event") if !(self.monday || self.tuesday || 
+                          self.wednesday || self.thursday || self.friday || self.saturday || self.sunday)
+        errors.add(:event_layer, "must choose time group or start/end time for recurring event") if !(self.morning || self.lunch || 
+                          self.afternoon || self.evening || self.night || self.latenight || (self.start_time && self.end_time))
+      end
 
-  end
+    end
 
 end
