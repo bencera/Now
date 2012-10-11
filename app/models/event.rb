@@ -429,13 +429,17 @@ MIN_DESCRIPTION       = 5
     response.data.each do |media|
       begin
         new_photos << Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, self.venue.id)
+        #debug
+        #Rails.logger.info("Event Model created or identified photo #{photo.id}")
       rescue
-        Rails.logger.info("Event Model failed to load photo")
+        Rails.logger.error("Event Model failed to load photo")
         raise
       end
     end
 
     self.photos.push(*new_photos)
+
+    Rails.logger.info("Event #{self.id} added #{new_photos.count} new photos")
 
     self.last_update = current_time.to_i
     self.next_update = current_time.to_i + self.update_interval
@@ -457,14 +461,15 @@ MIN_DESCRIPTION       = 5
 
     def check_dependent_fields
       if( Event.visible_in_app?(self))
-        errors.add(:description, "needs description") if self.description.empty?
+        errors.add(:description, "needs description") if self.description.blank?
 
         #### until we make these user friendly in the app we shouldn't enforce these
         #errors.add(:description, "description too long") if self.description.length > MAX_DESCRIPTION
         #errors.add(:description, "description too short") if self.description.length < MIN_DESCRIPTION
 
-        errors.add(:category, "needs category") if self.category.empty?
-        errors.add(:shortid, "needs shortid") if self.shortid.empty?
+        errors.add(:category, "needs category") if self.category.blank?
+        errors.add(:shortid, "needs shortid") if self.shortid.blank?
+      end
     end
 
 end

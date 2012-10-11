@@ -591,8 +591,6 @@ class Venue
     return self.now_city
   end
 
-
-  end
   private
 
     def self.client
