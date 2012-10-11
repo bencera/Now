@@ -436,7 +436,9 @@ MIN_DESCRIPTION       = 5
           new_photos << photo
         else
           Rails.logger.info("photo came back null.  please investigate.  media = #{media}")
+        end
         #debug
+
         #Rails.logger.info("Event Model created or identified photo #{photo.id}")
       rescue
         Rails.logger.error("Event Model failed to load photo")
