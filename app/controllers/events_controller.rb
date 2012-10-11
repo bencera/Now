@@ -45,9 +45,9 @@ class EventsController < ApplicationController
       @events = EventsHelper.get_user_created(params[:created_by])
     elsif params[:city] == "onlyme" 
       user = FacebookUser.find_by_nowtoken(params[:nowtoken])
-      @events = Event.where(:status => "trending_people").where(:facebook_user_id => user.id).order_by([[:end_time, :desc]])
+      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).where(:facebook_user_id => user.id).order_by([[:end_time, :desc]])
     elsif params[:city] == "world"
-      @events = Event.where(:status => "trending_people").order_by([[:end_time, :desc]])
+      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]])
     else
       events = Event.where(:city => params[:city]).where(:end_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
       if events.count >= 10

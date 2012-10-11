@@ -14,6 +14,8 @@ TRENDED_PEOPLE        = "trended_people"
 WAITING_CONFIRMATION  = "waiting_confirmation"
 WAITING_SCHEUDLED     = "waiting_scheduled"
 
+TRENDED_OR_TRENDING   = [TRENDING, TRENDING_PEOPLE, TRENDED, TRENDED_PEOPLE]
+
 MAX_DESCRIPTION       = 45
 MIN_DESCRIPTION       = 5
 #####
@@ -70,7 +72,7 @@ MIN_DESCRIPTION       = 5
     if self.photos.any?
       last_photo_time = self.photos.first.time_taken
       self.end_time = (self.end_time && self.end_time > last_photo_time) ? self.end_time : last_photo_time
-      self.start_time = self.photos.last.time_taken
+      #don't want to do the same with start time since people created events won't line up with first photo
     end
     return true
   end
@@ -140,7 +142,7 @@ MIN_DESCRIPTION       = 5
   end
 
   def self.visible_in_app?(event)
-    [TRENDING, TRENDING_PEOPLE, TRENDED].include? event.status
+    TRENDED_OR_TRENDING.include? event.status
   end
 
   def preview_photos
