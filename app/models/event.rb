@@ -420,7 +420,7 @@ MIN_DESCRIPTION       = 5
   ##############################################################
   def fetch_and_add_photos(current_time)
     begin
-      response = Instagram.location_recent_media(self.venue.ig_venue_id, :min_timestamp => self.last_update)
+      response = Instagram.location_recent_media(self.venue.ig_venue_id, :min_timestamp => self.end_time)
     rescue MultiJson::DecodeError => e
       Rails.logger.error("bad response from instagram #{e.message} \n #{e.backtrace.inspect}")
       return false

@@ -1,5 +1,5 @@
 object @event
-attributes :id, :coordinates, :end_time, :description, :category, :shortid, :like_count, :venue_category, :n_photos, :start_time, :keywords, :city_fullname, :main_photos
+attributes :id, :coordinates, :end_time, :description, :category, :shortid, :like_count, :venue_category, :n_photos, :start_time, :keywords, :city_fullname, :main_photos, :status
 child :photos do
   attributes :url, :caption, :time_taken, :ig_media_id
   node (:user_details) do |u|

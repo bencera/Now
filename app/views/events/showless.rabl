@@ -1,5 +1,5 @@
 object @event
-attributes :id, :coordinates, :end_time, :description, :category, :shortid, :like_count, :main_photos
+attributes :id, :coordinates, :end_time, :description, :category, :shortid, :like_count, :main_photos, :status
 child :preview_photos do
 attributes :url
 end
