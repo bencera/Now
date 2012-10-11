@@ -49,6 +49,7 @@ class EventsController < ApplicationController
     elsif params[:city] == "world"
       @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]])
     else
+      #leavin just "trended"/"trending" for these because they're endpoints the old app uses
       events = Event.where(:city => params[:city]).where(:end_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
       if events.count >= 10
         @events = events
