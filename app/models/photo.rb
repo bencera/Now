@@ -120,7 +120,8 @@ class Photo
 
     photo.user = user
 
-    photo.save
+    photo.save!
+    #not sure if i need this  
     photo.reload
 
 #will want to comment this out when done testing

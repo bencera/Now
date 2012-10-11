@@ -441,6 +441,8 @@ MIN_DESCRIPTION       = 5
         end
     end
 
+    last_update = self.end_time
+    #since photos could have been added in subscription fetch or elsewhere, need to get from venue
     new_photos = self.venue.photos.where(:time_taken.gt => self.end_time).entries
 
     self.photos.push(*new_photos)
@@ -449,9 +451,8 @@ MIN_DESCRIPTION       = 5
 
     #debug
     if(new_photos.any?)
-      x = []
-      new_photos.each {|photo| x << photo.id}
-      Rails.logger.info(x.join(","))
+      Resque.enqueue(VerifyURL2, self.id, last_update, true) 
+      Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
     else
       Rails.logger.info("no photos were added #{new_photos}")
     end

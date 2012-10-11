@@ -36,6 +36,7 @@ class NowCity
     now_city.cc = fs_venue_data.location['cc']
 
     now_city.save!
+    #may not need this
     now_city.reload
 
 
