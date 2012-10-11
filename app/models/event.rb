@@ -70,7 +70,7 @@ MIN_DESCRIPTION       = 5
 #Conall added this callback
   before_save do 
     if self.photos.any?
-      event.n_photos = event.photos.count
+      self.n_photos = self.photos.count
       last_photo_time = self.photos.first.time_taken
       self.end_time = (self.end_time && self.end_time > last_photo_time) ? self.end_time : last_photo_time
       #don't want to do the same with start time since people created events won't line up with first photo
