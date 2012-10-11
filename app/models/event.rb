@@ -427,24 +427,21 @@ MIN_DESCRIPTION       = 5
       return false
     end
 
-    new_photos = []
-
     response.data.each do |media|
       begin
         photo = Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, self.venue.id)
-        if photo
-          new_photos << photo
-        else
-          Rails.logger.info("photo came back null.  please investigate.  media = #{media}")
-        end
+
+        Rails.logger.info("photo came back null.  please investigate.  media = #{media}") if photo.nil?
         #debug
 
         #Rails.logger.info("Event Model created or identified photo #{photo.id}")
       rescue
         Rails.logger.error("Event Model failed to load photo")
         raise
-      end
+        end
     end
+
+    new_photos = self.venue.photos.where(:time_taken.gt => self.end_time).entries
 
     self.photos.push(*new_photos)
 

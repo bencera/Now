@@ -36,6 +36,7 @@ class NowCity
     now_city.cc = fs_venue_data.location['cc']
 
     now_city.save!
+    now_city.reload
 
 
     Rails.logger.info("NowCity.rb: created new city #{now_city.name} in timezone #{now_city.time_zone}")

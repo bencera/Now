@@ -120,10 +120,11 @@ class Photo
 
     photo.user = user
 
-    photo.save!
+    photo.save
+    photo.reload
 
 #will want to comment this out when done testing
-    Rails.logger.info("Photo.rb: created new photo #{photo.id} in venue #{venue.id} by user #{user.id}")
+    Rails.logger.info("Photo.rb: created new photo #{photo.id} in venue #{photo.venue.id} by user #{photo.user.id}")
     return photo
 
   end

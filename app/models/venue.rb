@@ -588,6 +588,8 @@ class Venue
 
     self.save!
 
+    self.reload
+
     return self.now_city
   end
 
