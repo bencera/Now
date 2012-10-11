@@ -75,7 +75,11 @@ class Photo
 
 #this only works for IG media, not internal now photos
   def self.create_photo(media_source, media, fs_venue_id)
-    return nil if(media.location.nil? || media.location.id.nil? || media.location.longitude.blank?)
+
+    if(media.location.nil? || media.location.id.nil? || media.location.longitude.blank?)
+      Rails.logger.info ("media loacation / location.id / or lat_lon blank")
+      return nil 
+    end
 
     #i'd prefer to use find, but it raises an exception when it fails -- there's a config option we could change
     venue = Venue.where(:_id => fs_venue_id).first
