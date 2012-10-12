@@ -45,7 +45,8 @@ class AddPeopleEvent
       event.description = params[:description]
       event.category = params[:category]
       event.shortid = params[:shortid]
-      event.end_time = Time.now.to_i
+      event.start_time = Time.now.to_i
+      event.end_time = event.start_time
 
       # when we make a checkin model, i think we'll probably replace this line with the creation of the event's first checkin
       photos[0..5].each { |photo| event.main_photos.push photo.id.to_s }  

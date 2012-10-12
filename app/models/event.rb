@@ -259,7 +259,7 @@ MIN_DESCRIPTION       = 5
     now_city = venue.now_city || venue.create_city
 
     #putting this after for now because i'd like existing venues to be updated to the new city model even if they're old
-    if self.start_time < 24.hours.ago.to_i
+    if self.start_time < (time - 24.hours).to_i
       return false
     end
 
