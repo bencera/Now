@@ -605,7 +605,9 @@ class Venue
   def calculate_top_event
     #this isn't the logic we're going to settle on -- just placeholder code for now
 
-    top_event = self.last_event
+    return if self.events.where(:status.in => Event::TRENDED_OR_TRENDING).count == 0
+
+    top_event = self.events.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).last
     self.top_event_id = top_event.id
     self.top_event_score = top_event.get_adjusted_score
   end
