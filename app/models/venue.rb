@@ -17,7 +17,18 @@ class Venue
   field :threshold, :type => Array #[number of people, in number of hours, before time]
   field :autocategory
   field :autoillustrations, :type => Array
+  
+  # top_event is the event with the highest score currently (includes time value)
+  field :top_event_id
+  # the time adjusted score of the top event for this venue
+  field :top_event_score
+
   field :blacklist, :type => Boolean, default: false
+
+  #this is the static score that the event adds to all its events
+  field :score, :default => 0
+
+  #this is the 
 
 # now_version is 1 for old venues, 2 for venues created the new way
   field :now_version, default: 1
@@ -29,6 +40,7 @@ class Venue
   has_many :scheduled_events, dependent: :destroy
   has_many :checkins
 
+
   belongs_to :now_city
   
   include Geocoder::Model::Mongoid
@@ -38,6 +50,7 @@ class Venue
   #category might not exist for a venue
   validates_presence_of :fs_venue_id, :name, :coordinates, :ig_venue_id #, :address 
   validates_uniqueness_of :fs_venue_id
+  validates_numericality_of :score
   before_validation :create_new_venue
   
   def week_day(time_s, city) #time in seconds
@@ -327,7 +340,9 @@ class Venue
     return p
   end
   
-  
+################################################################################
+# this will be fazed out for the NowCity model 
+################################################################################
   def find_city(lat,lng)
     if Geocoder::Calculations.distance_between([lat,lng], [40.698390,-73.98843]) < 20
       "newyork"
@@ -377,7 +392,11 @@ class Venue
       "unknown"
     end
   end
-  
+
+
+################################################################################
+# this is used by new code, so don't delete it outright -- may want to delete it
+################################################################################
   def find_neighborhood
     results = Geocoder.search("#{coordinates[1]},#{coordinates[0]}")
     unless results.blank?
@@ -578,6 +597,84 @@ class Venue
   end
 
   #### Conall -- instance methods
+  
+  ################################################################################
+  # This should only be run when we're recalculating the scores of all events or
+  # determining the top event for the first time
+  ################################################################################
+  def calculate_top_event
+    #this isn't the logic we're going to settle on -- just placeholder code for now
+
+    top_event = self.last_event
+    self.top_event_id = top_event.id
+    self.top_event_score = top_event.get_adjusted_score
+  end
+
+  ################################################################################ 
+  # This is the usual method for replacing the top event of a venue due to the
+  # addition of new photos, more checkins, facebook likes, change in status.  
+  # it may be a bit inefficient, but i don't think venues will have enough events
+  # for this to be terribly processor intensive.  eventually we can make it smarter
+  ################################################################################ 
+
+  def reconsider_top_event
+
+    if self.events.empty?
+      return
+    end
+
+    if self.top_event_id.nil?
+      self.calculate_top_event
+    end
+
+    top_event = Event.find(self.top_event_id)
+    max_score_event = self.events.order_by([[:score, :desc]]).first
+
+    #only interested in events that could have a higher adjusted score 
+    min_end_time = self.oldest_meaningful_end_time(top_event, max_score_event)
+    
+    top_adjusted_score = top_event.get_adjusted_score
+    recent_events = self.events.where(:end_time.gt => min_end_time, :score.gt => top_adjusted_score).entries
+
+    new_top = top_event
+    
+    recent_events.each do |event| 
+      event_adjusted_score = event.get_adjusted_score
+      if event_adjusted_score > top_adjusted_score
+        top_adjusted_score = event_adjusted_score
+        new_top = event
+      end
+    end
+
+    if new_top != top_event 
+      self.top_event_id = new_top.id
+      self.top_event.score = new_top.get_adjusted_score
+      Rails.logger.info("Venue #{venue.id} has new top event")
+    end
+
+    self.top_event_score = top_event.get_adjusted_score
+    self.save!
+  end
+
+
+  ################################################################################
+  # this takes the top event and the highest scoring event
+  # and determines the min window of time in which a significant event could have
+  # occurred
+  ################################################################################
+  def oldest_meaningful_end_time(top_event, max_event)
+
+    #if they're the same, then no reason to do complicated math
+    if top_event == max_event
+      return top_event.end_time
+    end
+  
+    min_ratio = top_event.score.to_f / max_event.score.to_f
+    time_between = Math.log(min_ratio, 0.5) * Event::SCORE_HALF_LIFE
+    min_end_time = [top_event.end_time - time_between, max_event.end_time.to_f].max
+
+    return min_end_time
+  end
 
   def create_city
     
@@ -592,6 +689,12 @@ class Venue
     self.reload
 
     return self.now_city
+  end
+
+  def update_latest_event(event)
+    if self.latest_event.event.end_time <= event.end_time
+      self.latest_event.event = event
+    end
   end
 
   private

@@ -15,9 +15,15 @@ WAITING_CONFIRMATION  = "waiting_confirmation"
 WAITING_SCHEUDLED     = "waiting_scheduled"
 
 TRENDED_OR_TRENDING   = [TRENDING, TRENDING_PEOPLE, TRENDED, TRENDED_PEOPLE]
+TRENDING_STATUSES     = [TRENDING, TRENDING_PEOPLE]
+TRENDED_STATUSES      = [TRENDED, TRENDED_PEOPLE]
 
 MAX_DESCRIPTION       = 45
 MIN_DESCRIPTION       = 5
+
+#makes sense for events to decay 1/2 every week i think
+SCORE_HALF_LIFE       = 7.day.to_f
+
 #####
 
   field :coordinates, :type => Array
@@ -35,6 +41,9 @@ MIN_DESCRIPTION       = 5
   field :keywords
   field :likes
   field :illustration
+
+  # this the static score of the event from likes, checkins, etc -- not taking into account user specific info (friends checked in etc)
+  field :score, :default => 0
 
   #these fields are only used for places updating without subscription
   field :last_update
@@ -58,13 +67,13 @@ MIN_DESCRIPTION       = 5
   belongs_to :facebook_user
   has_and_belongs_to_many :photos
   has_many :checkins
-
   
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates
   
   validates_presence_of :coordinates, :venue_id, :n_photos, :end_time
   validates_numericality_of :start_time, :end_time, :only_integer => true
+  validates_numericality_of :score
   validate :check_dependent_fields
 
 #Conall added this callback
@@ -75,7 +84,17 @@ MIN_DESCRIPTION       = 5
       self.end_time = (self.end_time && self.end_time > last_photo_time) ? self.end_time : last_photo_time
       #don't want to do the same with start time since people created events won't line up with first photo
     end
+
+    self.calculate_score
+
     return true
+  end
+
+  ### don't necessarily want to make this call on every save since it could be costly
+  after_save do
+    if self.venue
+      self.venue.reconsider_top_event
+    end
   end
 
 #this should only affect trending_people events for now, but will need to be there for all eventually
@@ -273,6 +292,15 @@ MIN_DESCRIPTION       = 5
     event_start_day >= current_day
   end
 
+  #note, this is the same as 
+  def trending?
+    TRENDING_STATUSES.include?(self.status) 
+  end
+
+  def trended?
+    TRENDED_STATUSES.include?(self.status)
+  end
+
   def live_photo_count
     self.photos.where(:time_taken.gt => self.start_time - 1).count
   end
@@ -298,22 +326,80 @@ MIN_DESCRIPTION       = 5
       self.scheduled_event.update_attribute(:last_trended, Time.now.to_i)
     end
   end
+ 
+################################################################################  
+# new methods for trending and untrending (keep proper track of latest events
+# in a venue and making sure we don't have two events trending in the same venue
+################################################################################
+  
+  # for now, this will be how we keep the venue's top_event up to date
+  def start_trending(people=true)
 
-#this will become the new way of transitioning the status
-  def transition_status2
+    old_status = self.status
+    #make sure venue doesn't already have trending event -- this shouldn't happen
+
+    if self.venue.last_event.trending?
+      Rails.logger.error("Attempted to start trending an event in a venue #{venue.id} with a currently trending event")
+      return
+    end
+
+    self.status = people ? TRENDING_PEOPLE : TRENDING
+    
+    self.save!
+    
+    Rails.logger.info("transition_status: event #{self.id} transitioning status from #{old_status} to #{ self.status }")
+  end
+
+  def untrend
     old_status = self.status
 
     case self.status
     when TRENDING
-      self.update_attribute(:status, TRENDED)
+      self.status = TRENDED
     when TRENDING_PEOPLE
-      self.update_attribute(:status, TRENDED_PEOPLE)
+      self.status = TRENDED_PEOPLE
     else
-      self.update_attribute(:status, NOT_TRENDING)
+      self.status = NOT_TRENDING
     end
+    
+    self.save!
+
     Rails.logger.info("transition_status: event #{self.id} transitioning status from #{old_status} to #{ self.status }")
 
     #can notify creator of event status if we want here
+  end
+
+
+  ################################################################################
+  # this doesn't save at the end to make is safe to put in a callback
+  ################################################################################ 
+  
+  def calculate_score
+    
+    if Event.visible_in_app?(self)
+      new_score = 100
+    else
+      new_score = 0
+    end
+    
+    # add some amount to score for likes, checkins etc -- might add static score for the user who created it or any other factors not venue related
+    self.score = new_score
+  end
+
+################################################################################
+# This is for returning the combination of time decay + score
+################################################################################
+  def get_adjusted_score
+    
+    time_past = Time.now.to_i - self.end_time
+    if TRENDING_STATUSES.include? self.status
+      time_past = 0
+    end
+   
+    # might want to add venue static score here
+    adjusted_score = self.score * ((0.5) ** (time_past / SCORE_HALF_LIFE))
+
+    return adjusted_score
   end
 
   def update_keywords

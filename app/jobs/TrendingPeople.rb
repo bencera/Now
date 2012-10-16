@@ -13,7 +13,7 @@ class TrendingPeople
       if event.began_today2?(current_time)
         event.fetch_and_add_photos(current_time)
       else
-        event.transition_status2
+        event.untrend
       end
     end
 

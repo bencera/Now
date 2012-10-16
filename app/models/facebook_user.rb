@@ -9,6 +9,9 @@ class FacebookUser
   field :fb_details, type: Hash
   field :whitelist_cities, type: Array, default: []
 
+  #this will be the user's score as an event creator
+  field :score, :default => 0
+
   index({ now_token: 1 }, { unique: true, name: "now_token_index" })
 
 
@@ -18,6 +21,8 @@ class FacebookUser
   has_many :scheduled_events
   has_many :events
   has_many :checkins
+
+  validates_numericality_of :score
 
   class << self
 	  def find_by_facebook_id(id)
