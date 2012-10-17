@@ -607,7 +607,7 @@ class Venue
 
     return if self.events.where(:status.in => Event::TRENDED_OR_TRENDING).count == 0
 
-    top_event = self.events.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).last
+    top_event = self.events.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).first
     self.top_event_id = top_event.id
     self.top_event_score = top_event.get_adjusted_score
   end
@@ -623,9 +623,8 @@ class Venue
 
     if self.events.empty? || (self.events.where(:status.in => Event::TRENDED_OR_TRENDING).count == 0)
       ### if somehow we have a top_event_id and top_event_score but no eligible events, alert and fix it
-      self.update_attribute(:top_event_id, nil)
-      self.update_attribute(:top_event_score, nil)
-      Rails.logger.error("Venue #{self.id} had a top event but no eligible events")
+      self.update_attribute(:top_event_id, nil) if self.top_event_id
+      self.update_attribute(:top_event_score, nil) if self.top_event_score
       return
     end
 
@@ -645,7 +644,7 @@ class Venue
     min_end_time = self.oldest_meaningful_end_time(top_event, max_score_event)
     
     top_adjusted_score = top_event.get_adjusted_score
-    recent_events = self.events.where(:end_time.gt => min_end_time, :score.gt => top_adjusted_score).entries
+    recent_events = self.events.where(:end_time.gte => min_end_time, :score.gt => top_adjusted_score).entries
 
     new_top = top_event
     
