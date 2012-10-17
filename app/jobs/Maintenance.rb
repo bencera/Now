@@ -84,6 +84,10 @@ class Maintenance
     still_broken_se_count = ScheduledEvent.where(:past => false).where(:next_end_time.lt => Time.now.to_i).count
     Rails.logger.info("Maintenance: found #{scheduled_events_needing_update.count} events needing next_time updates -- #{still_broken_se_count} remaining")
 
+    Rails.logger.info("Maintenance: doing the venue top event calculation")
+    Venue.where(:top_event_id.ne => nil).each {|venue| venue.reconsider_top_event}
+    Rails.logger.info("Maintenance: completed venue top event calculation")
+
   end
 
   ########
