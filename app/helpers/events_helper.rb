@@ -57,6 +57,40 @@ module EventsHelper
     @@stop_characters
   end
 
+  def self.get_category_hash
+    category_hash = Hash.new {|h,k| h[k] = {} }
+    Event.where(:status.in => Event::TRENDED_OR_TRENDING).each do |event|
+      event_cat = event.category.downcase
+      category_hash[event_cat]
+      if event.venue.categories && event.venue.categories.any?
+        event.venue.categories.each do |category|
+          if !category_hash[event_cat][category['id']]
+            category_hash[event_cat][category['id']] = [category['name'],1]
+          else
+            category_hash[event_cat][category['id']][1] += 1
+          end
+        end
+      end
+    end
+
+    reverse_hash = Hash.new {|h,k| h[k] = {} }
+
+    category_hash.keys.each do |now_key|
+      category_hash[now_key].keys.each do |fs_key|
+        reverse_hash[fs_key][now_key] = category_hash[now_key][fs_key]
+      end
+    end
+
+    output_array = []
+    reverse_hash.keys.each do |fs_key|
+      val = reverse_hash[fs_key].sort_by {|k,v| v[1] }.reverse.first
+      output_array << "#{val[1][0]}\t#{val[0]}\t\t\t#{fs_key}"
+    end
+
+    output_array.sort_by {|v| v[0] }.each {|entry| puts entry}
+
+  end
+
   def notify_ben_and_conall(alert, event)
 
     subscriptions = [APN::Device.find("4fa6f2cb2c1c0f000f000013").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
