@@ -1,4 +1,4 @@
-class VenuesController < ApplicationController
+selfclass VenuesController < ApplicationController
   
   include VenuesHelper
 
@@ -243,11 +243,11 @@ class VenuesController < ApplicationController
   def has_activity
     # this will create the venue and photos if they don't already exist    
 
-    fb_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+    #fb_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
-    if fb_user.nil? 
-      return render :text => "access denied", :status => :error
-    end
+    #if fb_user.nil? 
+    #  return render :text => "access denied", :status => :error
+    #end
 
     #for now, we can't tell what city a new venue is in, so we'll only be able to whitelist for existing venues
     venue = Venue.where(:_id => params[:id]).first
