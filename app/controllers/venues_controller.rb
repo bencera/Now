@@ -241,23 +241,10 @@ selfclass VenuesController < ApplicationController
 
 # has_activity looks at the last 12 hours to see if there's 1 photo.  if so, returns photos in last 12 hours, otherwise empty set
   def has_activity
-    # this will create the venue and photos if they don't already exist    
 
-    #fb_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
-
-    #if fb_user.nil? 
-    #  return render :text => "access denied", :status => :error
-    #end
-
-    #for now, we can't tell what city a new venue is in, so we'll only be able to whitelist for existing venues
     venue = Venue.where(:_id => params[:id]).first
-    white_listed = ( venue && fb_user.whitelist_cities && ( ( fb_user.whitelist_cities.include? venue.city ) || ( fb_user.whitelist_cities.include? "all") ) )
 
     response_json = Venue.fetch_ig_photos_since(params[:id], :min_photos => 1, :threshold_time => 12.hours.ago.to_i)
-
-    #if user is whitelisted for the city in which the venue appears, event will be in city view, otherwise world (or own profile if below 3 photos)
-    #TODO: get rid of this magic constant
-    response.headers["Eventlevel"] = response_json.count < 3 ? "Low" : ( white_listed && venue.city && venue.city != "unknown" ? venue.city : "world")
 
     return render :json => response_json
   end
