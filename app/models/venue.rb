@@ -659,7 +659,7 @@ class Venue
     if new_top != top_event 
       self.top_event_id = new_top.id
       self.top_event_score = new_top.get_adjusted_score
-      Rails.logger.info("Venue #{venue.id} has new top event")
+      Rails.logger.info("Venue #{self.id} has new top event")
     end
 
     self.top_event_score = top_event.get_adjusted_score
