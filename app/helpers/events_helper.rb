@@ -91,6 +91,30 @@ module EventsHelper
 
   end
 
+  def get_unmatched_fs_categories
+    client = Foursquare::Base.new("RFBT1TT41OW1D22SNTR21BGSWN2SEOUNELL2XKGBFLVMZ5X2", "W1FN2P3PR30DIKSWEKFEJVF51NJMZTBUY3KY3T0JNCG51QD0")
+    categories = client.venues.categories
+    leaf_categories = []
+    categories.each {|category| get_leaf_categories(leaf_categories, category)}
+    
+    matched_categories = {}
+    File.open("./doc/venue_categories").each do |line|
+      ar = line.strip.split(";")
+      matched_categories[ar[2]] = ar[1]
+    end
+    leaf_categories.each do |leaf|
+      puts "#{leaf[0]};#{leaf[1]};#{matched_categories[leaf[0]]}"
+    end
+  end
+
+  def get_leaf_categories(out_array, entry)
+    if entry['categories'] && entry['categories'].any?
+      entry['categories'].each { |category| get_leaf_categories(out_array, category) }
+    else
+      out_array.push [entry['id'], entry['name']]
+    end
+  end
+
   def notify_ben_and_conall(alert, event)
 
     subscriptions = [APN::Device.find("4fa6f2cb2c1c0f000f000013").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
@@ -139,18 +163,21 @@ module EventsHelper
 
   def self.get_localized_results(lon_lat, max_dist)
 
-    event_list = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
+#    event_list = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
+#
+#    venues = {}
+#    events = []
+#    event_list.each do |event| 
+#      if venues[event.venue_id].nil?
+#        events << event
+#        venues[event.venue_id] = event.id
+#      end
+#    end
 
-    venues = {}
+    venues = Venue.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :top_event_id.ne => nil).order_by([[:top_event_score, :desc]]).take(20)
     events = []
-    event_list.each do |event| 
-      if venues[event.venue_id].nil?
-        events << event
-        venues[event.venue_id] = event.id
-      end
-    end
-
-    return events[0..20]
+    venues.each {events << Event.find(venue.top_event_id}
+    return events
 
   end
 
