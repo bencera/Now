@@ -621,7 +621,11 @@ class Venue
 
   def reconsider_top_event
 
-    if self.events.empty?
+    if self.events.empty? || (self.events.where(:status.in => Event::TRENDED_OR_TRENDING).count == 0)
+      ### if somehow we have a top_event_id and top_event_score but no eligible events, alert and fix it
+      self.update_attribute(:top_event_id, nil)
+      self.update_attribute(:top_event_score, nil)
+      Rails.logger.error("Venue #{venue.id} had a top event but no eligible events")
       return
     end
 
@@ -631,6 +635,11 @@ class Venue
 
     top_event = Event.find(self.top_event_id)
     max_score_event = self.events.order_by([[:score, :desc]]).first
+
+    if(max_score_event.nil? || max_score_event.score == 0)
+      Rails.logger.error("Venue.rb: Highest scoring event in venue #{venue.id} has score 0")
+      return
+    end
 
     #only interested in events that could have a higher adjusted score 
     min_end_time = self.oldest_meaningful_end_time(top_event, max_score_event)
