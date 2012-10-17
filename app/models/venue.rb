@@ -625,7 +625,7 @@ class Venue
       ### if somehow we have a top_event_id and top_event_score but no eligible events, alert and fix it
       self.update_attribute(:top_event_id, nil)
       self.update_attribute(:top_event_score, nil)
-      Rails.logger.error("Venue #{venue.id} had a top event but no eligible events")
+      Rails.logger.error("Venue #{self.id} had a top event but no eligible events")
       return
     end
 
