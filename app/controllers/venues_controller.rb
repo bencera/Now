@@ -1,4 +1,4 @@
-selfclass VenuesController < ApplicationController
+class VenuesController < ApplicationController
   
   include VenuesHelper
 
@@ -259,5 +259,4 @@ selfclass VenuesController < ApplicationController
         'application'
       end
     end
-  
-end
+end 
