@@ -403,9 +403,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
   def get_adjusted_score
     
     time_past = Time.now.to_i - self.end_time
-    if TRENDING_STATUSES.include? self.status
-      time_past = 0
-    end
    
     # might want to add venue static score here
     adjusted_score = self.score * ((0.5) ** (time_past / SCORE_HALF_LIFE))
