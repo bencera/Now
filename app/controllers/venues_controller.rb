@@ -244,7 +244,7 @@ class VenuesController < ApplicationController
 
     venue = Venue.where(:_id => params[:id]).first
 
-    response_json = Venue.fetch_ig_photos_since(params[:id], :min_photos => 1, :threshold_time => 12.hours.ago.to_i)
+    response_json = Venue.fetch_ig_photos_since(params[:id])
 
     return render :json => response_json
   end
