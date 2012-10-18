@@ -1,6 +1,8 @@
 class NowCity
   include Mongoid::Document
-
+  include Mongoid::Timestamps
+  include Geocoder::Model::Mongoid
+  
   field :name
   field :state
   field :country
@@ -16,6 +18,8 @@ class NowCity
   field :main_city, :type => Boolean, :default => false
 
   has_many :venues
+  
+  reverse_geocoded_by :coordinates
 
   validates_presence_of :name
   validates_presence_of :time_zone

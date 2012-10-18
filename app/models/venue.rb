@@ -691,11 +691,18 @@ class Venue
   end
 
   def create_city
+
+    return self.now_city if self.now_city
     
     venue_data = Venue.fs_venue_data(self.fs_venue_id)
 
-    self.now_city = NowCity.where(:name => venue_data.location['city'], :state => venue_data.location['state'], 
+    if venue_data.location['city'].nil?
+      #sometimes we get bad data from foursquarei -- in that case, just find the nearest city and hope it's right
+      self.now_city = NowCity.where(:coordinates => { "$near" => [venue_data.location['lng'], venue_data.location['lat'] ] } ).first
+    else
+      self.now_city = NowCity.where(:name => venue_data.location['city'], :state => venue_data.location['state'], 
                 :country => venue_data.location['country']).first || NowCity.create_from_fs_venue_data(venue_data)
+    end
 
     self.save!
 
