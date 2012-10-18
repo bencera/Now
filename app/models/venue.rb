@@ -663,7 +663,11 @@ class Venue
     end
 
     self.top_event_score = top_event.get_adjusted_score
-    self.save!
+    begin 
+      self.save!
+    rescue
+      Rails.logger.error("Venue #{self.id} failed to save")
+    end
   end
 
 
