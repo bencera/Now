@@ -175,7 +175,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
 
     remainder = PhotoCard::MAX_PHOTOS - main_photos.count
-    main_photos.push (*(self.photos.limit(remainder).entries))
+
+    self.photos.limit(remainder).each {|photo| main_photos << photo }
 
     return main_photos
   end
