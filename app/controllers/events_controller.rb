@@ -38,7 +38,8 @@ class EventsController < ApplicationController
       end 
       
       @events = EventsHelper.get_localized_results(coordinates, max_distance)
-
+    elsif params[:venue_id]
+      @events = Venue.find(params[:venue_id]).events.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]])
     elsif params[:liked_by]
       @events = EventsHelper.get_user_liked(params[:liked_by])
     elsif params[:created_by] 
