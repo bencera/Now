@@ -52,7 +52,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
  # not using a has_many relationship because i don't think this is how the model will end up looking
  # chances are, a checkin will have description and photo_list, then an event will have a main checkin
  # which will be the creating checkin.  this is more for illustration purposes until we have a checkin model
-  field :main_photos, type: Array, default: []
   field :initial_likes, type: Integer, default: 0
   field :other_descriptions, type: Array, default: []
 
@@ -65,7 +64,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   belongs_to :venue
   belongs_to :scheduled_event
   belongs_to :facebook_user
-  has_and_belongs_to_many :photos
+  has_and_belongs_to_many :photos 
+  has_one :photo_card, :as => :cardable, :dependent => :destroy
   has_many :checkins
   
   include Geocoder::Model::Mongoid
@@ -166,8 +166,18 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def preview_photos
-    #TODO: have this get the main_photos, then fill the rest up to six
-    photos.limit(6)
+    main_photos = []
+    
+    #doing some ugly shit to get around the default scope -- didn't want to break things that relied on photo order
+
+    if self.photo_card && self.photo_card.photos.any?
+      self.photo_card.photo_ids.take(PhotoCard::MAX_PHOTOS).each { |photo_id| main_photos.push(Photo.find(photo_id)) }
+    end
+
+    remainder = PhotoCard::MAX_PHOTOS - main_photos.count
+    main_photos.push (self.photos.limit(remainder))
+
+    return main_photos
   end
 
   def previous_events

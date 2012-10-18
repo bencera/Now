@@ -47,10 +47,12 @@ class AddPeopleEvent
       event.shortid = params[:shortid]
       event.start_time = Time.now.to_i
       event.end_time = event.start_time
+      event.photo_card = PhotoCard.create
+      event.save!  
 
       # when we make a checkin model, i think we'll probably replace this line with the creation of the event's first checkin
-      photos[0..5].each { |photo| event.main_photos.push photo.id.to_s }  
-      event.save  
+      photos[0..5].each { |photo| event.photo_card.photos.push photo }  
+      event.photo_card.save
 
 
       Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")

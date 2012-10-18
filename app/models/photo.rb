@@ -47,7 +47,9 @@ class Photo
   embeds_many :comments
   has_and_belongs_to_many :events
   has_and_belongs_to_many :checkins
-  
+
+  has_and_belongs_to_many :photo_cards
+
   index(
     [
       [ :city, Mongo::ASCENDING ],
