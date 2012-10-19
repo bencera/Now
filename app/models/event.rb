@@ -129,8 +129,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_params.delete('nowtoken')
       event_params.delete('action')
 
-      errors += "no photos given\n" if event_params[:photo_ig_list].nil?
-      errors += "no illustration given\n" if event_params[:illustration].nil? 
+      errors += "no photos given\n" if event_params[:photo_id_list].nil?
       errors += "no venue given\n" if event_params[:venue_id].nil?
       errors += "no category\n" if event_params[:category].nil?
       errors += "no description\n" if event_params[:description].nil?

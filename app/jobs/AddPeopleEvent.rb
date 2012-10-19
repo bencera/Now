@@ -4,22 +4,26 @@ class AddPeopleEvent
   def self.perform(in_params)
     #params come back with string keys -- make them labels to simplify
     params = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
+    timestamp = Time.now.to_i
 
-    Rails.logger.info("AddPeopleEvent starting #{params} #{params[:photo_ig_list]}")
-    photo_ig_ids = params[:photo_ig_list].split(",")
+    Rails.logger.info("AddPeopleEvent starting #{params} #{params[:photo_id_list]}")
+    photo_ids = params[:photo_id_list].split(",")
     photos = []
-    illustration = nil
-    photo_ig_ids.each do |photo_ig|
-      begin
-        photo = Photo.where(:ig_media_id => photo_ig).first
-        if photo.nil?
-          response = Instagram.media_item(photo_ig)
+    illustration_index = params[:illustration]
+    fb_user = FacebookUser.find(params[:facebook_user_id]) if params[:facebook_user_id]
 
-          unless response.blank?
-            photo = Photo.create_photo("ig", response, params[:venue_id]) unless response.location.id.nil?
-            illustration = photo.id if photo && params[:illustration] == photo.ig_media_id 
-          end
+    photo_ids.each do |photo_key|
+      key = photo_key.split("|")
+      photo_source = key[0]
+      photo_id = key[1] 
+      photo_ts = key[2] || timestamp
+      begin
+        photo = Photo.where(:ig_media_id => photo_id).first || Photo.where(:external_media_id => photo_id)
+        if photo.nil?
+          photo = Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
         end
+
+        illustration = photo.id if photo && params[:illustration] == photo_id
         photos << photo unless photo.nil?
       rescue Exception => e
         #log the failed attempt, add the photo_ig_id to a redis key for the RetryPhotos job
@@ -41,7 +45,7 @@ class AddPeopleEvent
 
       # Since these should have been checked by the model method, we can assume they're safe
       event.illustration = illustration if illustration
-      event.facebook_user = FacebookUser.find(params[:facebook_user_id]) if params[:facebook_user_id]
+      event.facebook_user = fb_user 
       event.description = params[:description]
       event.category = params[:category]
       event.shortid = params[:shortid]

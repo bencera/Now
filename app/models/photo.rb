@@ -13,7 +13,7 @@ class Photo
   #external media key is just source|id -- but i didn't want to do a double field index
   field :external_media_key
   #commented out until we're ready to start using this
-#  index :external_media_key, background: true, unique: true
+  index :external_media_key, background: true, unique: true
 
 #these will phase out the url array
   field :low_resolution_url
@@ -74,6 +74,58 @@ class Photo
   validates_uniqueness_of :ig_media_id
 
 ####Conall added
+  
+  def self.create_general_photo(photo_src, photo_id, photo_ts, fs_venue_id, fb_user)
+    venue = Venue.where(:_id => fs_venue_id).first
+    if venue.nil?
+      venue = Venue.create_venue(fs_venue_id)
+    end
+
+    photo = venue.photos.new
+    photo.coordinates = venue.coordinates
+    photo.ig_media_id = photo_id if photo_src == "ig"
+
+    if(photo_src == "ig")
+      
+      media = Instagram.media_item(photo_ig)
+      photo.external_media_id = media.id.to_s
+      photo.external_media_source = photo_src
+      photo.external_media_key = get_media_key(photo_src, media.id.to_s)
+
+      photo.low_resolution_url = media.images.low_resolution.url
+      photo.high_resolution_url = media.images.standard_resolution.url
+      photo.thumbnail_url = media.images.thumbnail.url
+
+      photo.caption = media.caption.text unless media.caption.nil?
+      photo.time_taken = media.created_time.to_i 
+
+      user = User.where(:ig_id => username_id.to_s).first || User.new(:ig_id => username_id.to_s)
+      user.update_if_new(username_id.to_s, media.user.username, media.user.full_name, 
+                media.user.profile_picture, media.user.bio, media.user.website)
+
+      photo.user = user
+
+    elsif(photo_src == "nw")
+      photo.external_media_id = photo_id
+      photo.external_media_source = photo_src
+      photo.external_media_key = get_media_key(photo_src.to_s, photo_id.to_s)
+      photo.thumbnail_url =  = self.get_thumb(photo_id)
+      photo.low_resolution_url =  = self.get_stand(photo_id)
+      photo.high_resolution_url  = self.get_high(photo_id)
+
+      photo.time_taken = photo_ts
+
+      user_id =  self.now_to_ig_user_id(fb_user.facebook_id)
+      user = User.where(:ig_id =>user_id).first || User.new(:ig_id => user_id)
+      user.update_if_new(user_id, fb_user.username, fb_user.fb_details["name"], fb_user.get_fb_profile_photo, "", "")
+      
+      photo.user = user
+    end 
+
+    photo.url = [media.images.low_resolution.url, media.images.standard_resolution.url, media.images.thumbnail.url]
+    photo.save
+
+  end
 
 #this only works for IG media, not internal now photos
   def self.create_photo(media_source, media, fs_venue_id)
@@ -134,6 +186,23 @@ class Photo
 
   def self.get_media_key(source, external_id)
     source.to_s + "|" + external_id.to_s
+  end
+
+  def self.get_thumb(nw_id)
+    return nw_id + "_1" 
+  end
+  
+  def self.get_stand(nw_id)
+    return nw_id + "_2" 
+  end
+  
+  def self.get_high(nw_id)
+    return nw_id + "_3" 
+  end
+
+  #photos in our system require an ig_id -- which is a pain but we'll fix that later, and make a fake ig_id
+  def self.now_to_ig_user_id(user_id)
+    return "nw"
   end
 
   ######Conall end

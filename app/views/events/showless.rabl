@@ -20,5 +20,5 @@ node(:facebook_id) do |u|
 end
 
 node(:fb_photo) do |u|
-  "https://graph.facebook.com/#{u.facebook_user.fb_details['username']}/picture" unless  u.anonymous || u.facebook_user.nil? || u.facebook_user.fb_details.nil?
+ u.facebook_user.get_fb_profile_photo unless  u.anonymous || u.facebook_user.nil?
 end
