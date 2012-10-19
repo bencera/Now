@@ -18,13 +18,13 @@ attributes :description, :end_time, :category
 end
 
 node(:facebook_name) do |u|
-  u.facebook_user.fb_details['name'] unless u.facebook_user.nil?|| u.facebook_user.fb_details.nil?
+  u.facebook_user.fb_details['name'] unless u.anonymous || u.facebook_user.nil?|| u.facebook_user.fb_details.nil?
 end
 
 node(:facebook_id) do |u|
-  u.facebook_user.facebook_id unless u.facebook_user.nil?
+  u.facebook_user.facebook_id unless  u.anonymous || u.facebook_user.nil?
 end
 
 node(:facebook_photo) do |u|
-  "https://graph.facebook.com/#{u.facebook_user.fb_details['username']}/picture" unless u.facebook_user.nil? || u.facebook_user.fb_details.nil?
+  "https://graph.facebook.com/#{u.facebook_user.fb_details['username']}/picture" unless  u.anonymous || u.facebook_user.nil? || u.facebook_user.fb_details.nil?
 end

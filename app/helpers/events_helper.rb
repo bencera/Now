@@ -155,7 +155,7 @@ module EventsHelper
   def self.get_user_created(facebook_id)
     fb_user = FacebookUser.where(:facebook_id => facebook_id).first
     if fb_user
-      return Event.where(:facebook_user_id => fb_user.id).order_by([[:end_time, :desc]])
+      return Event.where(:facebook_user_id => fb_user.id).where(:anonymous.ne => true).order_by([[:end_time, :desc]])
     else
       return nil
     end

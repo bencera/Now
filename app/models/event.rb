@@ -41,6 +41,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :keywords
   field :likes
   field :illustration
+  
+  field :anonymous, :type => Boolean, :default => false
 
   # this the static score of the event from likes, checkins, etc -- not taking into account user specific info (friends checked in etc)
   field :score, :default => 0

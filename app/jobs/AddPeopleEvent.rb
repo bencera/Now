@@ -48,6 +48,7 @@ class AddPeopleEvent
       event.start_time = Time.now.to_i
       event.end_time = event.start_time
       event.photo_card = PhotoCard.create
+      event.anonymous = params[:anonymous] && params[:anonymous] != 'false'
       event.save!  
 
       # when we make a checkin model, i think we'll probably replace this line with the creation of the event's first checkin
