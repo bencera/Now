@@ -137,7 +137,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
       venue = Venue.where(:_id => event_params[:venue_id]).first
       errors += "venue not available to trend\n" if venue && venue.cannot_trend
   
-      if(params[:photo_ig_list])
+      if(event_params[:photo_ig_list])
+        #for backwards compatibility
         photo_ig_list = params[:photo_ig_list].split(",").map {|ig_id| "ig|#{ig_id}"}.join(",")
       end
       event_params[:photo_id_list] ||= photo_ig_list
