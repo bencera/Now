@@ -181,6 +181,12 @@ module EventsHelper
 
   end
 
+  def self.get_localized_likes(lon_lat, max_dist, nowtoken)
+    facebook_id = FacebookUser.find_by_nowtoken(nowtoken).facebook_id
+    shortids = $redis.smembers("liked_events:#{facebook_id}")
+    return Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :shortid.in => shortids).order_by([[:end_time, :desc]]).take(20)
+  end
+
   def self.create_localized_venue_collection()
       ####### this map reduce function probably will never be used, but i wanted to leave the sample code for later
       #### this is not guaranteed to work

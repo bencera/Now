@@ -27,7 +27,6 @@ class EventsController < ApplicationController
 
   def index
     if params[:lon_lat]
-      ##### this does not work yet
       coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
 
       if params[:maxdistance]
@@ -35,9 +34,12 @@ class EventsController < ApplicationController
       else
         # 1 kilometer
         max_distance = 1.0 / 111
-      end 
-      
-      @events = EventsHelper.get_localized_results(coordinates, max_distance)
+      end  
+      if params[:liked_by] && params[:nowtoken]
+        @events = EventsHelper.get_localized_likes(coordinates, maxdistance, params[:nowtoken])
+      else
+        @events = EventsHelper.get_localized_results(coordinates, max_distance)
+      end
     elsif params[:venue_id]
       @events = Venue.find(params[:venue_id]).events.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]])
     elsif params[:liked_by]
