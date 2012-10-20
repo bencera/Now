@@ -177,12 +177,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     remainder = PhotoCard::MAX_PHOTOS - main_photos.count
 
-    self.photos.each do |photo| 
-      if remainder > 0 && ! (main_photos.include? photo)
-        main_photos << photo 
-        reminder -= 1
-      end
-    end
+    self.photos.limit(remainder).each {|photo| main_photos << photo }
 
     return main_photos
   end
