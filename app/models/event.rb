@@ -167,17 +167,20 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def preview_photos
-    main_photos = []
+    main_photo_ids = []
     
     #doing some ugly shit to get around the default scope -- didn't want to break things that relied on photo order
 
     if self.photo_card && self.photo_card.photos.any?
-      self.photo_card.photo_ids.take(PhotoCard::MAX_PHOTOS).each { |photo_id| main_photos.push(Photo.find(photo_id)) }
+      self.photo_card.photo_ids.take(PhotoCard::MAX_PHOTOS).each { |photo_id| main_photos.push(photo_id) }
     end
 
     remainder = PhotoCard::MAX_PHOTOS - main_photos.count
 
-    self.photos.limit(remainder).each {|photo| main_photos << photo }
+    self.photos.each {|photo| main_photos.push(photo.id) unless main_photos.include? photo.id }
+    
+    main_photos = []
+    main_photo_ids[0..5].each {|photo_id| main_photos.push(Photo.find(photo_id))}
 
     return main_photos
   end
