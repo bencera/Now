@@ -18,7 +18,9 @@ class AddPeopleEvent
       photo_id = key[1] 
       photo_ts = key[2] || timestamp
       begin
-        photo = Photo.where(:ig_media_id => photo_id).first || Photo.where(:external_media_id => photo_id).first
+        external_key =  Photo.get_media_key(photo_source, photo_id)
+        
+        photo = Photo.where(:ig_media_id => photo_id).first || Photo.where(:external_media_key => external_key ).first
         if photo.nil?
           photo = Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
         end

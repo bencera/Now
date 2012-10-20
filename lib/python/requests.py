@@ -2,8 +2,11 @@ import requests
 
 # creates an event
 url = "http://localhost:3001/event/peoplecreate"
-payload = {'venue_id': "4c22beee99282d7f17b667b0", 'description' : 'test', 'category' : 'outdoors', 'nowtoken': "7d4a72bfb4f71e98165a5b27de4c94d13c85c2bc",
-    'photo_id_list' : "nw|distilleryimage2.s3.amazonaws.com/5653b6661ac711e2a58122000a1e87bc,ig|306180097135179015_202130604,ig|306155701949554641_10967678",  'illustration' : '306180097135179015_202130604'}
+url2 = "http://now-uat.herokuapp.com/event/peoplecreate"
+
+payload = {'venue_id': "4b68c5b0f964a5201f8c2be3", 'description' : 'cheering for the aggies', 'category' : 'sport', 'nowtoken': "7d4a72bfb4f71e98165a5b27de4c94d13c85c2bc", 'photo_id_list' :"nw|distilleryimage5.s3.amazonaws.com/ad0231281ada11e2bacf1231381b7928,ig|306461983332608997_27488305,ig|306461851103923195_237819225,ig|306451406061169626_20203193,ig|306450448023415759_20203193",  'illustration' : '306461983332608997_27488305'}
+
+payload2 =  {'venue_id': "4b68c5b0f964a5201f8c2be3", 'description' : 'cheering for the aggies', 'category' : 'sport', 'nowtoken' : "b6721f53afe81a87b637aa2699ee82c3161d55d0", 'photo_id_list' :"nw|distilleryimage5.s3.amazonaws.com/ad0231281ada11e2bacf1231381b7928,ig|306461983332608997_27488305,ig|306461851103923195_237819225,ig|306451406061169626_20203193,ig|306450448023415759_20203193",  'illustration' : '306461983332608997_27488305'}
 
 
 r = requests.post(url, data=payload)
