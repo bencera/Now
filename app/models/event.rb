@@ -172,12 +172,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
     #doing some ugly shit to get around the default scope -- didn't want to break things that relied on photo order
 
     if self.photo_card && self.photo_card.photos.any?
-      self.photo_card.photo_ids.take(PhotoCard::MAX_PHOTOS).each { |photo_id| main_photos.push(photo_id) }
+      self.photo_card.photo_ids.take(PhotoCard::MAX_PHOTOS).each { |photo_id| main_photo_ids.push(photo_id) }
     end
 
     remainder = PhotoCard::MAX_PHOTOS - main_photos.count
 
-    self.photos.each {|photo| main_photos.push(photo.id) unless main_photos.include? photo.id }
+    self.photos.each {|photo| main_photo_ids.push(photo.id) unless main_photo_ids.include? photo.id }
     
     main_photos = []
     main_photo_ids[0..5].each {|photo_id| main_photos.push(Photo.find(photo_id))}
