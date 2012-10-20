@@ -13,7 +13,7 @@ class Photo
   #external media key is just source|id -- but i didn't want to do a double field index
   field :external_media_key
   #commented out until we're ready to start using this
-  index :external_media_key, background: true
+  #index :external_media_key, background: true
 
 #these will phase out the url array
   field :low_resolution_url
