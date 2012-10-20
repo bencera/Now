@@ -140,7 +140,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_params[:photo_id_list] ||= event_params[:photo_ig_list] 
       id_list = event_params[:photo_id_list].split(",")
       errors += "too many photos chosen\n" if id_list.count > 6
-      event_params[:illustration_index] = id_list.index(event_params[:illustration]) if event_params[:illustration])
+      event_params[:illustration_index] = id_list.index("ig|" + event_params[:illustration].to_s) if event_params[:illustration]
 
     rescue Exception => e
       #TODO: take out backtrace when we're done testing

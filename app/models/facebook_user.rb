@@ -71,7 +71,7 @@ class FacebookUser
   end
 
   def get_fb_profile_photo
-    return (self.fb_details.nil?) ? nil : "https://graph.facebook.com/#{self.facebook_user.fb_details['username']}/picture"
+    return (self.fb_details.nil?) ? nil : "https://graph.facebook.com/#{self.fb_details['username']}/picture"
   end
 
 #  def do_redis_checkin(event)

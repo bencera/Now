@@ -18,7 +18,7 @@ class AddPeopleEvent
       photo_id = key[1] 
       photo_ts = key[2] || timestamp
       begin
-        photo = Photo.where(:ig_media_id => photo_id).first || Photo.where(:external_media_id => photo_id)
+        photo = Photo.where(:ig_media_id => photo_id).first || Photo.where(:external_media_id => photo_id).first
         if photo.nil?
           photo = Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
         end
@@ -34,6 +34,8 @@ class AddPeopleEvent
       #TODO: add the illustration to the event
     end
 
+    Rails.logger.info(photos)
+
     #if the photos were added properly, it should have created a venue if it wasn't already there.
     venue = Venue.find(params[:venue_id])
     if venue && !venue.cannot_trend
@@ -43,7 +45,7 @@ class AddPeopleEvent
       
 
       # Since these should have been checked by the model method, we can assume they're safe
-      event.illustration = photos[illustration_index]
+      event.illustration = photos[illustration_index].id
       event.facebook_user = fb_user 
       event.description = params[:description]
       event.category = params[:category]

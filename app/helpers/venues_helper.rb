@@ -4,7 +4,7 @@ module VenuesHelper
     ig_id = Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id).first['id']
     response = Instagram.location_recent_media(ig_id)
     photo_array = []
-    response.data.each { |photo| photo_array << photo.id }
+    response.data.each { |photo| photo_array << "ig|" + photo.id }
     photo_array
   end
 

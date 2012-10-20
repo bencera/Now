@@ -88,7 +88,7 @@ class Photo
 
     if(photo_src == "ig")
       
-      media = Instagram.media_item(photo_ig)
+      media = Instagram.media_item(photo_id)
       photo.external_media_id = media.id.to_s
       photo.external_media_source = photo_src
       photo.external_media_key = get_media_key(photo_src, media.id.to_s)
@@ -100,6 +100,8 @@ class Photo
       photo.caption = media.caption.text unless media.caption.nil?
       photo.time_taken = media.created_time.to_i 
 
+      username_id = media.user.id
+
       user = User.where(:ig_id => username_id.to_s).first || User.new(:ig_id => username_id.to_s)
       user.update_if_new(username_id.to_s, media.user.username, media.user.full_name, 
                 media.user.profile_picture, media.user.bio, media.user.website)
@@ -110,21 +112,24 @@ class Photo
       photo.external_media_id = photo_id
       photo.external_media_source = photo_src
       photo.external_media_key = get_media_key(photo_src.to_s, photo_id.to_s)
-      photo.thumbnail_url =  = self.get_thumb(photo_id)
-      photo.low_resolution_url =  = self.get_stand(photo_id)
-      photo.high_resolution_url  = self.get_high(photo_id)
+      photo.thumbnail_url = self.get_thumb(photo_id)
+      photo.low_resolution_url = self.get_stand(photo_id)
+      photo.high_resolution_url = self.get_high(photo_id)
 
       photo.time_taken = photo_ts
 
-      user_id =  self.now_to_ig_user_id(fb_user.facebook_id)
+      user_id = self.now_to_ig_user_id(fb_user.facebook_id)
       user = User.where(:ig_id =>user_id).first || User.new(:ig_id => user_id)
-      user.update_if_new(user_id, fb_user.username, fb_user.fb_details["name"], fb_user.get_fb_profile_photo, "", "")
+      user.update_if_new(user_id, fb_user.fb_details["username"], fb_user.fb_details["name"], fb_user.get_fb_profile_photo, "", "")
       
       photo.user = user
     end 
 
-    photo.url = [media.images.low_resolution.url, media.images.standard_resolution.url, media.images.thumbnail.url]
+    photo.url = [photo.low_resolution_url, photo.high_resolution_url, photo.thumbnail_url]
     photo.save
+
+    Rails.logger.info("Photo.rb: created new photo #{photo.id} in venue #{photo.venue.id} by user #{photo.user.id}")
+    return photo
 
   end
 
@@ -188,17 +193,17 @@ class Photo
   def self.get_media_key(source, external_id)
     source.to_s + "|" + external_id.to_s
   end
-
+  
   def self.get_thumb(nw_id)
-    return nw_id + "_1" 
+    return "http://" + nw_id + "_5.jpg" 
   end
   
   def self.get_stand(nw_id)
-    return nw_id + "_2" 
+    return "http://" + nw_id + "_6.jpg" 
   end
   
   def self.get_high(nw_id)
-    return nw_id + "_3" 
+    return "http://" + nw_id + "_7.jpg" 
   end
 
   #photos in our system require an ig_id -- which is a pain but we'll fix that later, and make a fake ig_id

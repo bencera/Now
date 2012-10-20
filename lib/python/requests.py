@@ -2,8 +2,9 @@ import requests
 
 # creates an event
 url = "http://localhost:3001/event/peoplecreate"
-payload = {'venue_id': "4c22beee99282d7f17b667b0", 'description' : 'test', 'category' : 'outdoors', 'nowtoken': "7f71907348e2a84a157451d33a963d0809f9496c",
-    'photo_ig_list' : "304551376466017109_5136853,304565872418631112_27908594,304578840375572942_11733053", 'illustration' : '304551376466017109_5136853'}
+payload = {'venue_id': "4c22beee99282d7f17b667b0", 'description' : 'test', 'category' : 'outdoors', 'nowtoken': "7d4a72bfb4f71e98165a5b27de4c94d13c85c2bc",
+    'photo_id_list' : "nw|distilleryimage2.s3.amazonaws.com/5653b6661ac711e2a58122000a1e87bc,ig|306180097135179015_202130604,ig|306155701949554641_10967678",  'illustration' : '306180097135179015_202130604'}
+
 
 r = requests.post(url, data=payload)
 print r.text
