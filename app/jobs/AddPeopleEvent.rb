@@ -9,7 +9,7 @@ class AddPeopleEvent
     Rails.logger.info("AddPeopleEvent starting #{params} #{params[:photo_id_list]}")
     photo_ids = params[:photo_id_list].split(",")
     photos = []
-    illustration_index = params[:illustration]
+    illustration_index = params[:illustration_index] || 0
     fb_user = FacebookUser.find(params[:facebook_user_id]) if params[:facebook_user_id]
 
     photo_ids.each do |photo_key|
@@ -23,7 +23,6 @@ class AddPeopleEvent
           photo = Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
         end
 
-        illustration = photo.id if photo && params[:illustration] == photo_id
         photos << photo unless photo.nil?
       rescue Exception => e
         #log the failed attempt, add the photo_ig_id to a redis key for the RetryPhotos job
@@ -44,7 +43,7 @@ class AddPeopleEvent
       
 
       # Since these should have been checked by the model method, we can assume they're safe
-      event.illustration = illustration if illustration
+      event.illustration = photos[illustration_index]
       event.facebook_user = fb_user 
       event.description = params[:description]
       event.category = params[:category]

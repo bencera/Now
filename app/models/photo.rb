@@ -74,7 +74,8 @@ class Photo
   validates_uniqueness_of :ig_media_id
 
 ####Conall added
-  
+ 
+
   def self.create_general_photo(photo_src, photo_id, photo_ts, fs_venue_id, fb_user)
     venue = Venue.where(:_id => fs_venue_id).first
     if venue.nil?
@@ -127,7 +128,7 @@ class Photo
 
   end
 
-#this only works for IG media, not internal now photos
+#this only works for IG media, not internal now photos -- will be deprecated
   def self.create_photo(media_source, media, fs_venue_id)
 
     if(media.location.nil? || media.location.id.nil? || media.location.longitude.blank?)

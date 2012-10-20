@@ -129,7 +129,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_params.delete('nowtoken')
       event_params.delete('action')
 
-      errors += "no photos given\n" if event_params[:photo_id_list].nil?
+      errors += "no photos given\n" if event_params[:photo_id_list].nil? && event_params[:photo_ig_list].nil?
       errors += "no venue given\n" if event_params[:venue_id].nil?
       errors += "no category\n" if event_params[:category].nil?
       errors += "no description\n" if event_params[:description].nil?
@@ -137,10 +137,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
       venue = Venue.where(:_id => event_params[:venue_id]).first
       errors += "venue not available to trend\n" if venue && venue.cannot_trend
 
-
-      ig_list = event_params[:photo_ig_list].split(",")
-      errors += "illustration isn't on photo list\n" if !(ig_list.include? event_params[:illustration])
-      errors += "too many photos chosen\n" if ig_list.count > 6
+      event_params[:photo_id_list] ||= event_params[:photo_ig_list] 
+      id_list = event_params[:photo_id_list].split(",")
+      errors += "too many photos chosen\n" if id_list.count > 6
+      event_params[:illustration_index] = id_list.index(event_params[:illustration]) if event_params[:illustration])
 
     rescue Exception => e
       #TODO: take out backtrace when we're done testing

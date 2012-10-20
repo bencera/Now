@@ -35,7 +35,7 @@ class EventsController < ApplicationController
         # 1 kilometer
         max_distance = 1.0 / 111
       end  
-      if params[:liked_by] && params[:nowtoken]
+      if params[:liked] && params[:nowtoken]
         @events = EventsHelper.get_localized_likes(coordinates, maxdistance, params[:nowtoken])
       else
         @events = EventsHelper.get_localized_results(coordinates, max_distance)
