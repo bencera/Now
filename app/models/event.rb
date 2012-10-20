@@ -136,8 +136,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
       venue = Venue.where(:_id => event_params[:venue_id]).first
       errors += "venue not available to trend\n" if venue && venue.cannot_trend
-
-      event_params[:photo_id_list] ||= event_params[:photo_ig_list] 
+  
+      if(params[:photo_ig_list])
+        photo_ig_list = params[:photo_ig_list].split(",").map {|ig_id| "ig|#{ig_id}"}.join(",")
+      end
+      event_params[:photo_id_list] ||= photo_ig_list
       id_list = event_params[:photo_id_list].split(",")
       errors += "too many photos chosen\n" if id_list.count > 6
       event_params[:illustration_index] = id_list.index("ig|" + event_params[:illustration].to_s) if event_params[:illustration]
