@@ -139,7 +139,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   
       if(event_params[:photo_ig_list])
         #for backwards compatibility
-        photo_ig_list = params[:photo_ig_list].split(",").map {|ig_id| "ig|#{ig_id}"}.join(",")
+        photo_ig_list = event_params[:photo_ig_list].split(",").map {|ig_id| "ig|#{ig_id}"}.join(",")
       end
       event_params[:photo_id_list] ||= photo_ig_list
       id_list = event_params[:photo_id_list].split(",")
