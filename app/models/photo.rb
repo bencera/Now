@@ -84,7 +84,6 @@ class Photo
 
     photo = venue.photos.new
     photo.coordinates = venue.coordinates
-    photo.ig_media_id = photo_id if photo_src == "ig"
 
     if(photo_src == "ig")
       
@@ -92,6 +91,7 @@ class Photo
       photo.external_media_id = media.id.to_s
       photo.external_media_source = photo_src
       photo.external_media_key = get_media_key(photo_src, media.id.to_s)
+      photo.ig_media_id = photo_id
 
       photo.low_resolution_url = media.images.low_resolution.url
       photo.high_resolution_url = media.images.standard_resolution.url
@@ -111,7 +111,9 @@ class Photo
     elsif(photo_src == "nw")
       photo.external_media_id = photo_id
       photo.external_media_source = photo_src
-      photo.external_media_key = get_media_key(photo_src.to_s, photo_id.to_s)
+      photo.external_media_key = self.get_media_key(photo_src.to_s, photo_id.to_s)
+      photo.ig_media_id = photo.external_media_key 
+
       photo.thumbnail_url = self.get_thumb(photo_id)
       photo.low_resolution_url = self.get_stand(photo_id)
       photo.high_resolution_url = self.get_high(photo_id)
@@ -208,7 +210,7 @@ class Photo
 
   #photos in our system require an ig_id -- which is a pain but we'll fix that later, and make a fake ig_id
   def self.now_to_ig_user_id(user_id)
-    return "nw"
+    return "nw" + user_id.to_s
   end
 
   ######Conall end
