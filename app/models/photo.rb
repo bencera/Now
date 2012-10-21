@@ -12,7 +12,7 @@ class Photo
 
   #external media key is just source|id -- but i didn't want to do a double field index
   field :external_media_key
-  #commented out until we're ready to start using this
+  #commented out until we're ready to start using this -- remember this caused a MASSIVE slowdown last time it was applied!
   #index :external_media_key, background: true
 
 #these will phase out the url array

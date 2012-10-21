@@ -174,7 +174,7 @@ module EventsHelper
 #      end
 #    end
 
-    venues = Venue.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :top_event_id.ne => nil).order_by([[:top_event_score, :desc]]).take(20)
+    venues = Venue.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :top_event_id.ne => nil).order_by([[:top_event_score, :desc]]).limit(20)
     events = []
     venues.each {|venue| events << Event.find(venue.top_event_id)}
     return events

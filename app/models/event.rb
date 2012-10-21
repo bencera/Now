@@ -522,6 +522,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
   # gotten updates from one of our city subscriptions
   ##############################################################
   def fetch_and_add_photos(current_time)
+
+    #TODO: don't use self.end_time -- use the timestamp of the last ig photo 
+
     begin
       response = Instagram.location_recent_media(self.venue.ig_venue_id, :min_timestamp => self.end_time)
     rescue MultiJson::DecodeError => e
