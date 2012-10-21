@@ -550,7 +550,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     #since photos could have been added in subscription fetch or elsewhere, need to get from venue
     new_photos = self.venue.photos.where(:time_taken.gt => self.end_time).entries
 
-    self.photos.push(*new_photos)
+    new_photos.each {|new_photo| self.photos.push new_photo unless self.photo_ids.include? new_photo.id }
 
     Rails.logger.info("Event #{self.id} added #{new_photos.count} new photos")
 
