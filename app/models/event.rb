@@ -175,7 +175,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
     ts_1 = Time.now.to_i
 
     main_photo_id_list = $redis.get("photocard:#{self.shortid}")
-    main_photo_ids = main_photo_id_list.split(",") if main_photo_id_list
+    if main_photo_id_list
+      main_photo_ids = main_photo_id_list.split(",") 
+    else
+      main_photo_ids = []
+    end
     
     #doing some ugly shit to get around the default scope -- didn't want to break things that relied on photo order
     remainder = PhotoCard::MAX_PHOTOS - main_photo_ids.count
