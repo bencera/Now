@@ -161,7 +161,7 @@ module EventsHelper
     end
   end
 
-  def self.get_localized_results(lon_lat, max_dist)
+  def self.get_localized_results(lon_lat, max_dist, options={})
 
 #    event_list = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
 #
@@ -174,9 +174,15 @@ module EventsHelper
 #      end
 #    end
 
+    debug_opt = options[:debug_opt]
+
+    ts_1 = Time.now.to_i if debug_opt
     venues = Venue.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}).order_by([[:top_event_score, :desc]]).limit(20)
+    ts_2 = Time.now.to_i if debug_opt
     events = []
     venues.each {|venue| events << Event.find(venue.top_event_id) if venue.top_event_id}
+    ts_3 = Time.now.to_i if debug_opt
+    Rails.logger.info("localized results DEBUG: #{lon_lat},  #{ts_2 - ts_1} #{ts_3 - ts_2}") if debug_opt
     return events
 
   end

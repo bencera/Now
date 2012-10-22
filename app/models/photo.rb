@@ -3,6 +3,9 @@
 class Photo
   include Mongoid::Document
   include Mongoid::Timestamps
+  
+  INSTAGRAM_SOURCE = "ig"
+
   field :ig_media_id
   index :ig_media_id, background: true
 
@@ -85,7 +88,7 @@ class Photo
     photo = venue.photos.new
     photo.coordinates = venue.coordinates
 
-    if(photo_src == "ig")
+    if(photo_src == INSTAGRAM_SOURCE)
       
       media = Instagram.media_item(photo_id)
       photo.external_media_id = media.id.to_s
@@ -211,6 +214,22 @@ class Photo
   #photos in our system require an ig_id -- which is a pain but we'll fix that later, and make a fake ig_id
   def self.now_to_ig_user_id(user_id)
     return "nw" + user_id.to_s
+  end
+
+  def external_source
+    if self.version && self.version > 1
+      return self.external_media_source
+    else
+      return INSTAGRAM_SOURCE
+    end
+  end
+  
+  def external_source
+    if self.version && self.version > 1
+      return self.external_media_id
+    else
+      return self.ig_media_id
+    end
   end
 
   ######Conall end

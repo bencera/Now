@@ -171,6 +171,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def preview_photos
+    #this is for debugging
+    ts_1 = Time.now.to_i
+
     main_photo_ids = []
     
     #doing some ugly shit to get around the default scope -- didn't want to break things that relied on photo order
@@ -183,8 +186,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     self.photos.each {|photo| main_photo_ids.push(photo.id) unless main_photo_ids.include? photo.id }
     
-    main_photos = []
-    main_photo_ids[0..5].each {|photo_id| main_photos.push(Photo.find(photo_id))}
+    main_photos = Photo.find(main_photo_ids[0..5]).entries.sort {|a,b| main_photo_ids.index(a.id) <=> main_photo_ids(b.id)}
+    
+    #this is for debugging
+    ts_2 = Time.now.to_i
+
+    Rails.logger.info("preview photos debug: #{ts_2 - ts_1}")
 
     return main_photos
   end

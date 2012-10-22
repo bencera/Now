@@ -7,10 +7,10 @@ child :photos do
   end
 end
 child :venue do
-attributes :id, :name, :neighborhood, :address
-node :category do |u|
-u.categories.first["name"] unless u.categories.nil?
-end
+  attributes :id, :name, :neighborhood, :address
+  node :category do |u|
+    u.categories.first["name"] unless u.categories.nil?
+  end
 end
 node(:like) { |event| event.liked_by_user(@user_id) }
 child(:previous_events, :if => @more == "yes") do

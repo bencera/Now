@@ -1,4 +1,5 @@
 import requests
+import random
 
 # creates an event
 url = "http://localhost:3001/event/peoplecreate"
@@ -21,4 +22,6 @@ payload2 = { 'description' : 'test checkin', 'nowtoken': "7f71907348e2a84a157451
 r = requests.post(url2, data=payload2)
 print r.text
 
+
+  
 

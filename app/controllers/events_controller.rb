@@ -38,7 +38,7 @@ class EventsController < ApplicationController
       if params[:liked] && params[:nowtoken]
         @events = EventsHelper.get_localized_likes(coordinates, maxdistance, params[:nowtoken])
       else
-        @events = EventsHelper.get_localized_results(coordinates, max_distance)
+        @events = EventsHelper.get_localized_results(coordinates, max_distance, params)
       end
     elsif params[:venue_id]
       @events = Venue.find(params[:venue_id]).events.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]])
