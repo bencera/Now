@@ -129,7 +129,8 @@ class Photo
       
       photo.user = user
     end 
-
+    
+    photo.now_version = 2
     photo.url = [photo.low_resolution_url, photo.high_resolution_url, photo.thumbnail_url]
     photo.save
 
@@ -224,7 +225,7 @@ class Photo
     end
   end
   
-  def external_source
+  def external_id
     if self.now_version && self.now_version > 1
       return self.external_media_id
     else
