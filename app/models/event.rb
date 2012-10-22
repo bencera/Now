@@ -186,7 +186,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     self.photos.each {|photo| main_photo_ids.push(photo.id) unless main_photo_ids.include? photo.id }
     
-    main_photos = Photo.find(main_photo_ids[0..5]).entries.sort {|a,b| main_photo_ids.index(a.id) <=> main_photo_ids(b.id)}
+    main_photos = Photo.find(main_photo_ids[0..5]).entries.sort {|a,b| main_photo_ids.index(a.id) <=> main_photo_ids.index(b.id)}
     
     #this is for debugging
     ts_2 = Time.now.to_i
