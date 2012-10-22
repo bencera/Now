@@ -9,6 +9,8 @@ class AddPeopleEvent
     Rails.logger.info("AddPeopleEvent starting #{params} #{params[:photo_id_list]}")
     photo_ids = params[:photo_id_list].split(",")
     photos = []
+    photo_card_ids = []
+
     illustration_index = params[:illustration_index] || 0
     fb_user = FacebookUser.find(params[:facebook_user_id]) if params[:facebook_user_id]
 
@@ -24,8 +26,10 @@ class AddPeopleEvent
         if photo.nil?
           photo = Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
         end
-
-        photos << photo unless photo.nil?
+        unless photo.nil?
+          photos << photo 
+          photo_card_ids << photo.id
+        end
       rescue Exception => e
         #log the failed attempt, add the photo_ig_id to a redis key for the RetryPhotos job
         Rails.logger.info("AddPeopleEvent failed due to exception #{e.message}\n#{e.backtrace.inspect}")
@@ -56,6 +60,9 @@ class AddPeopleEvent
       event.end_time = event.start_time
       event.photo_card = PhotoCard.create
       event.anonymous = params[:anonymous] && params[:anonymous] != 'false'
+
+      #create photocard for new event -- might also make specific photocard for each user who checks in
+      $redis.set("photocard:#{event.shortid}", photo_card_ids.join(",")) if photo_card_ids.any?
       event.save!  
 
       # when we make a checkin model, i think we'll probably replace this line with the creation of the event's first checkin

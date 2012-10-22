@@ -170,18 +170,14 @@ SCORE_HALF_LIFE       = 7.day.to_f
     TRENDED_OR_TRENDING.include? event.status
   end
 
-  def preview_photos
+  def preview_photos()
     #this is for debugging
     ts_1 = Time.now.to_i
 
-    main_photo_ids = []
+    main_photo_id_list = $redist.get("photocard:#{self.shortid}")
+    main_photo_ids = main_photo_id_list.split(",") if main_photo_id_list
     
     #doing some ugly shit to get around the default scope -- didn't want to break things that relied on photo order
-
-    if self.photo_card && self.photo_card.photos.any?
-      self.photo_card.photo_ids.take(PhotoCard::MAX_PHOTOS).each { |photo_id| main_photo_ids.push(photo_id) }
-    end
-
     remainder = PhotoCard::MAX_PHOTOS - main_photo_ids.count
 
     self.photos.each {|photo| main_photo_ids.push(photo.id) unless main_photo_ids.include? photo.id }
