@@ -217,7 +217,7 @@ class Photo
   end
 
   def external_source
-    if self.version && self.version > 1
+    if self.now_version && self.now_version > 1
       return self.external_media_source
     else
       return INSTAGRAM_SOURCE
