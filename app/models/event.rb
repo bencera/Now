@@ -174,7 +174,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     #this is for debugging
     ts_1 = Time.now.to_i
 
-    main_photo_id_list = $redist.get("photocard:#{self.shortid}")
+    main_photo_id_list = $redis.get("photocard:#{self.shortid}")
     main_photo_ids = main_photo_id_list.split(",") if main_photo_id_list
     
     #doing some ugly shit to get around the default scope -- didn't want to break things that relied on photo order
