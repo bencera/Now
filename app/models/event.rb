@@ -172,8 +172,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def preview_photos()
     #this is for debugging
-    ts_1 = Time.now.to_i
-
     main_photo_id_list = $redis.get("photocard:#{self.shortid}")
     if main_photo_id_list
       main_photo_ids = main_photo_id_list.split(",") 
@@ -188,11 +186,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
     
     main_photos = Photo.find(main_photo_ids[0..5]).entries.sort {|a,b| main_photo_ids.index(a.id) <=> main_photo_ids.index(b.id)}
     
-    #this is for debugging
-    ts_2 = Time.now.to_i
-
-    Rails.logger.info("preview photos debug: #{ts_2 - ts_1}")
-
     return main_photos
   end
 
