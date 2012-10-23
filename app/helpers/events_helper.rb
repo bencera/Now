@@ -182,27 +182,28 @@ module EventsHelper
 
   def self.get_localized_results(lon_lat, max_dist, options={})
 
-#    event_list = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
+    event_list = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
+
+    venues = {}
+   events = []
+    event_list.each do |event| 
+      if venues[event.venue_id].nil?
+        events << event
+        venues[event.venue_id] = event.id
+      end
+    end
+    return events[0..19]
 #
-#    venues = {}
+#    debug_opt = options[:debug_opt]
+#
+#    ts_1 = Time.now.to_i if debug_opt
+#    venues = Venue.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}).order_by([[:top_event_score, :desc]]).limit(20)
+#    ts_2 = Time.now.to_i if debug_opt
 #    events = []
-#    event_list.each do |event| 
-#      if venues[event.venue_id].nil?
-#        events << event
-#        venues[event.venue_id] = event.id
-#      end
-#    end
-
-    debug_opt = options[:debug_opt]
-
-    ts_1 = Time.now.to_i if debug_opt
-    venues = Venue.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}).order_by([[:top_event_score, :desc]]).limit(20)
-    ts_2 = Time.now.to_i if debug_opt
-    events = []
-    venues.each {|venue| events << Event.find(venue.top_event_id) if venue.top_event_id}
-    ts_3 = Time.now.to_i if debug_opt
-    Rails.logger.info("localized results DEBUG: #{lon_lat},  #{ts_2 - ts_1} #{ts_3 - ts_2}") if debug_opt
-    return events
+#    venues.each {|venue| events << Event.find(venue.top_event_id) if venue.top_event_id}
+#    ts_3 = Time.now.to_i if debug_opt
+#    Rails.logger.info("localized results DEBUG: #{lon_lat},  #{ts_2 - ts_1} #{ts_3 - ts_2}") if debug_opt
+#    return events
 
   end
 

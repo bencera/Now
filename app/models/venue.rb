@@ -20,8 +20,11 @@ class Venue
   
   # top_event is the event with the highest score currently (includes time value)
   field :top_event_id
+
   # the time adjusted score of the top event for this venue
   field :top_event_score
+  index :top_event_score, background: true
+
 
   field :blacklist, :type => Boolean, default: false
 
