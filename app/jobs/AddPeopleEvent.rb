@@ -60,7 +60,7 @@ class AddPeopleEvent
       event.end_time = event.start_time
       event.anonymous = params[:anonymous] && params[:anonymous] != 'false'
       #create photocard for new event -- might also make specific photocard for each user who checks in
-      $redis.set("photocard:#{event.shortid}", photo_card_ids.join(",")) if photo_card_ids.any?
+      event.photo_card_list = photo_card_ids.join(",") if photo_card_ids.any?
       event.save!  
 
       # when we make a checkin model, i think we'll probably replace this line with the creation of the event's first checkin

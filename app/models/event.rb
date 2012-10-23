@@ -26,6 +26,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
 #####
 
+# this is here to allow for caching of photos on index pulls
   attr_accessor :event_card_list
     
   field :coordinates, :type => Array
@@ -59,8 +60,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :initial_likes, type: Integer, default: 0
   field :other_descriptions, type: Array, default: []
 
-  #when created in now people, this will hold string list of ig media ids until the job creates it
-  field :photo_ig_list
+  #when created in now people, this will hold string list of photo ids for the event's card
+  field :photo_card_list
   field :venue_fsq_id
 
   #field :n_people
@@ -69,7 +70,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
   belongs_to :scheduled_event
   belongs_to :facebook_user
   has_and_belongs_to_many :photos 
-  has_one :photo_card, :as => :cardable, :dependent => :destroy
   has_many :checkins
   
   include Geocoder::Model::Mongoid
@@ -176,7 +176,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   ## this gets the list of photo ids for the event card
   def get_preview_photo_ids()
     
-    main_photo_id_list = $redis.get("photocard:#{self.shortid}")
+    main_photo_id_list = self.photo_card_list
     if main_photo_id_list
       main_photo_ids = main_photo_id_list.split(",") 
     else

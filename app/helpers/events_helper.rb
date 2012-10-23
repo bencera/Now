@@ -170,7 +170,7 @@ module EventsHelper
       photo_id_hash[event.id] = photo_ids
     end
 
-     all_photos = Photo.find(photo_id_list).entries
+     all_photos = Photo.where(:_id.in => photo_id_list).entries
 
      events.each do |event|
        photo_ids = photo_id_hash[event.id]
