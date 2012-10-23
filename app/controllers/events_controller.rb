@@ -47,7 +47,7 @@ class EventsController < ApplicationController
     elsif params[:created_by] 
       @events = EventsHelper.get_user_created(params[:created_by]).entries
     elsif params[:city] == "onlyme" 
-      user = FacebookUser.find_by_nowtoken(params[:nowtoken]).entries
+      user = FacebookUser.find_by_nowtoken(params[:nowtoken])
       @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).where(:facebook_user_id => user.id).order_by([[:end_time, :desc]]).entries
     elsif params[:city] == "world"
       @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries

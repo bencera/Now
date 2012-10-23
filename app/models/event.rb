@@ -51,6 +51,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   # this the static score of the event from likes, checkins, etc -- not taking into account user specific info (friends checked in etc)
   field :score, :default => 0
+  field :adjusted_score, :default => 0
 
   #these fields are only used for places updating without subscription
   field :last_update
@@ -423,9 +424,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
     time_past = Time.now.to_i - self.end_time
    
     # might want to add venue static score here
-    adjusted_score = self.score * ((0.5) ** (time_past / SCORE_HALF_LIFE))
+    self.adjusted_score = self.score * ((0.5) ** (time_past / SCORE_HALF_LIFE))
 
-    return adjusted_score
+    return self.adjusted_score
   end
 
   def update_keywords

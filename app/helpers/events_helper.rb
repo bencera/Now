@@ -193,6 +193,8 @@ module EventsHelper
       end
     end
     return events[0..19]
+
+    #this is commented out because we're just using event end_time to rank events for now so the above code is faster
 #
 #    debug_opt = options[:debug_opt]
 #
@@ -229,26 +231,19 @@ EOS
         var ret = {doc:[]};
         var doc = {};
 
-        new_values = values.sort(function (a,b){ return b.end_time - a.end_time});
-
-        for(var x = 0; x < new_values.length; x++){
-          var status = new_values[x].status;
-          if(status == "trending" || status == "trending_people" || status == "trended"){
-            break;
-          }
-
+        new_values = values.sort(function (a,b){ return b.adjusted_score - a.adjusted_score });
+        if(new_values[0] != null) {
+          return new_values[0];
         }
-
-        return new_values[x];
       }
 
 EOS
 
-    cursor = Event.where(:status.in => Event::TRENDED_OR_TRENDING).collection.map_reduce(map, reduce, :out => "mr_test").find()
+    cursor = Event.collection.map_reduce(map, reduce, :query => { "status" => { "$in" => Event::TRENDED_OR_TRENDING } }, :out => {replace: "mr_test"}).find()
     first_events = cursor.to_a
 
     events = []
-    first_events.each {|event| events << Event.new(event["value"]["doc"])}
+    first_events.each {|event| events << Event.new(event["value"]["doc"]) if event["value"]}
 
     events
 

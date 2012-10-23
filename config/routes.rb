@@ -69,6 +69,7 @@ Ubimachine::Application.routes.draw do
   #   resources :comments  
   # end
   
+  #this is where we create facebook users
   match "/now/user" => "events#user"
   match "/now/like" => "events#like"
 
