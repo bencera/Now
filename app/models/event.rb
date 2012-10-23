@@ -26,6 +26,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
 #####
 
+  attr_accessor :event_card_list
+    
   field :coordinates, :type => Array
   field :start_time
   field :end_time
@@ -170,23 +172,28 @@ SCORE_HALF_LIFE       = 7.day.to_f
     TRENDED_OR_TRENDING.include? event.status
   end
 
-  def preview_photos()
-    #this is for debugging
+
+  ## this gets the list of photo ids for the event card
+  def get_preview_photo_ids()
+    
     main_photo_id_list = $redis.get("photocard:#{self.shortid}")
     if main_photo_id_list
       main_photo_ids = main_photo_id_list.split(",") 
     else
       main_photo_ids = []
     end
-    
-    #doing some ugly shit to get around the default scope -- didn't want to break things that relied on photo order
-    remainder = PhotoCard::MAX_PHOTOS - main_photo_ids.count
 
-    self.photos.each {|photo| main_photo_ids.push(photo.id) unless main_photo_ids.include? photo.id }
-    
-    main_photos = Photo.find(main_photo_ids[0..5]).entries.sort {|a,b| main_photo_ids.index(a.id) <=> main_photo_ids.index(b.id)}
-    
-    return main_photos
+    remainder = PhotoCard::MAX_PHOTOS - main_photo_ids.count
+      
+    other_photos = self.photo_ids.map {|photo_id| photo_id.to_s } - main_photo_ids
+    main_photo_ids.push(*other_photos[0..(remainder - 1)])
+
+    return main_photo_ids
+  end
+
+
+  def preview_photos()
+    return event_card_list
   end
 
   def previous_events

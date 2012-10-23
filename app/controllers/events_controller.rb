@@ -36,28 +36,28 @@ class EventsController < ApplicationController
         max_distance = 1.0 / 111
       end  
       if params[:liked] && params[:nowtoken]
-        @events = EventsHelper.get_localized_likes(coordinates, maxdistance, params[:nowtoken])
+        @events = EventsHelper.get_localized_likes(coordinates, maxdistance, params[:nowtoken]).entries
       else
-        @events = EventsHelper.get_localized_results(coordinates, max_distance, params)
+        @events = EventsHelper.get_localized_results(coordinates, max_distance, params).entries
       end
     elsif params[:venue_id]
-      @events = Venue.find(params[:venue_id]).events.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]])
+      @events = Venue.find(params[:venue_id]).events.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
     elsif params[:liked_by]
-      @events = EventsHelper.get_user_liked(params[:liked_by])
+      @events = EventsHelper.get_user_liked(params[:liked_by]).entries
     elsif params[:created_by] 
-      @events = EventsHelper.get_user_created(params[:created_by])
+      @events = EventsHelper.get_user_created(params[:created_by]).entries
     elsif params[:city] == "onlyme" 
-      user = FacebookUser.find_by_nowtoken(params[:nowtoken])
-      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).where(:facebook_user_id => user.id).order_by([[:end_time, :desc]])
+      user = FacebookUser.find_by_nowtoken(params[:nowtoken]).entries
+      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).where(:facebook_user_id => user.id).order_by([[:end_time, :desc]]).entries
     elsif params[:city] == "world"
-      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]])
+      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
     else
       #leavin just "trended"/"trending" for these because they're endpoints the old app uses
-      events = Event.where(:city => params[:city]).where(:end_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]])
+      events = Event.where(:city => params[:city]).where(:end_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).entries
       if events.count >= 10
         @events = events
       else
-        @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).take(10)
+        @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).limit(10).entries
       end
     end
     begin
@@ -66,6 +66,9 @@ class EventsController < ApplicationController
       end
     rescue
     end
+
+    EventsHelper.get_event_cards(@events)
+    return @events
   end
 
   def events_trending

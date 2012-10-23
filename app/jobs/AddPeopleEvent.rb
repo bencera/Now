@@ -58,17 +58,12 @@ class AddPeopleEvent
       event.shortid = params[:shortid]
       event.start_time = Time.now.to_i
       event.end_time = event.start_time
-      event.photo_card = PhotoCard.create
       event.anonymous = params[:anonymous] && params[:anonymous] != 'false'
-
       #create photocard for new event -- might also make specific photocard for each user who checks in
       $redis.set("photocard:#{event.shortid}", photo_card_ids.join(",")) if photo_card_ids.any?
       event.save!  
 
       # when we make a checkin model, i think we'll probably replace this line with the creation of the event's first checkin
-      photos[0..5].each { |photo| event.photo_card.photos.push photo }  
-      event.photo_card.save
-
 
       Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")
     #elsif venue.last_event.status == "trending_people"

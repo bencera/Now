@@ -161,6 +161,25 @@ module EventsHelper
     end
   end
 
+  def self.get_event_cards(events)
+    photo_id_list = []
+    photo_id_hash = {}
+    events.each do |event|
+      photo_ids = event.get_preview_photo_ids
+      photo_id_list.push(*photo_ids)
+      photo_id_hash[event.id] = photo_ids
+    end
+
+     all_photos = Photo.find(photo_id_list).entries
+
+     events.each do |event|
+       photo_ids = photo_id_hash[event.id]
+       event.event_card_list = all_photos.find_all {|photo| photo_ids.include? photo._id.to_s}.
+         sort {|a,b| photo_ids.index(a._id.to_s) <=> photo_ids.index(b.id.to_s)} 
+     end
+
+  end
+
   def self.get_localized_results(lon_lat, max_dist, options={})
 
 #    event_list = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
