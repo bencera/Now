@@ -21,6 +21,8 @@ TRENDED_STATUSES      = [TRENDED, TRENDED_PEOPLE]
 MAX_DESCRIPTION       = 45
 MIN_DESCRIPTION       = 5
 
+PHOTO_CARD_PHOTOS     = 6
+
 #makes sense for events to decay 1/2 every week i think
 SCORE_HALF_LIFE       = 7.day.to_f
 
@@ -184,7 +186,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       main_photo_ids = []
     end
 
-    remainder = PhotoCard::MAX_PHOTOS - main_photo_ids.count
+    remainder = PHOTO_CARD_PHOTOS- main_photo_ids.count
       
     other_photos = self.photo_ids.map {|photo_id| photo_id.to_s } - main_photo_ids
     main_photo_ids.push(*other_photos[0..(remainder - 1)])
