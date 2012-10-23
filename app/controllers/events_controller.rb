@@ -41,16 +41,16 @@ class EventsController < ApplicationController
         @events = EventsHelper.get_localized_results(coordinates, max_distance, params).entries
       end
     elsif params[:venue_id]
-      @events = Venue.find(params[:venue_id]).events.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
+      @events = Venue.find(params[:venue_id]).events.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).limit(20).entries
     elsif params[:liked_by]
-      @events = EventsHelper.get_user_liked(params[:liked_by]).entries
+      @events = EventsHelper.get_user_liked(params[:liked_by])
     elsif params[:created_by] 
-      @events = EventsHelper.get_user_created(params[:created_by]).entries
+      @events = EventsHelper.get_user_created(params[:created_by])
     elsif params[:city] == "onlyme" 
       user = FacebookUser.find_by_nowtoken(params[:nowtoken])
-      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).where(:facebook_user_id => user.id).order_by([[:end_time, :desc]]).entries
+      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).where(:facebook_user_id => user.id).order_by([[:end_time, :desc]]).limit(20).entries
     elsif params[:city] == "world"
-      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
+      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).limit(20).entries
     else
       #leavin just "trended"/"trending" for these because they're endpoints the old app uses
       events = Event.where(:city => params[:city]).where(:end_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).entries

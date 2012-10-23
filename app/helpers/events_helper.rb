@@ -149,15 +149,15 @@ module EventsHelper
 
   def self.get_user_liked(facebook_id)
     shortids = $redis.smembers("liked_events:#{facebook_id}")
-    return Event.where(:shortid.in => shortids)
+    return Event.where(:shortid.in => shortids).order_by([[:end_time, :desc]]).limit(20).entries
   end
 
   def self.get_user_created(facebook_id)
     fb_user = FacebookUser.where(:facebook_id => facebook_id).first
     if fb_user
-      return Event.where(:facebook_user_id => fb_user.id).where(:anonymous.ne => true).order_by([[:end_time, :desc]])
+      return Event.where(:facebook_user_id => fb_user.id).where(:anonymous.ne => true).order_by([[:end_time, :desc]]).limit(20).entries
     else
-      return nil
+      return []
     end
   end
 
