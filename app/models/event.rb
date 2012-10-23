@@ -61,6 +61,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :other_descriptions, type: Array, default: []
 
   #when created in now people, this will hold string list of photo ids for the event's card
+  #this is being done this way for speed.  we will have to update this when photos are deleted (particularly with dups)
   field :photo_card_list
   field :venue_fsq_id
 
