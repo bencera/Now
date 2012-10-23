@@ -283,6 +283,9 @@ class EventsController < ApplicationController
       elsif params[:cmd] == "facebook"
         if params[:fb_accesstoken]
           user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken])
+          #if user.nil?
+          #  return render :text => "BAD FB TOKEN", :status => :error
+          #end
           unless user.devices.include?(d)
             user.devices << d
           end

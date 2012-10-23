@@ -22,6 +22,10 @@ class FacebookClient
   	user_info['email']
   end
 
+  def get_errors
+    user_info['error']
+  end
+
  private
   def get_user_info
 		HTTParty.get("https://graph.facebook.com/me?access_token=#{self.token}")
