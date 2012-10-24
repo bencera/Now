@@ -8,8 +8,7 @@ module VenuesHelper
     photo_array
   end
 
-  def self.refill_venue_photos(fs_id)
-    venue = Venue.find(fs_id)
+  def self.refill_venue_photos(venue)
     ig_id = venue.ig_venue_id
 
     response = Instagram.location_recent_media(ig_id)
@@ -22,7 +21,6 @@ module VenuesHelper
         end
       end
     end
- 
   end
 
 end
