@@ -126,7 +126,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     begin
       event_params[:city] = "world" if event_params[:city].nil?
-      event_params[:broadcast] = "public" if event_params[:broadcast].nil?
+      event_params[:broadcast] = "public" if event_params[:broadcast]
 
       #we want to require the nowtoken later
       errors += "nowtoken missing\n" if event_params[:nowtoken].nil? 
