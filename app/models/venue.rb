@@ -448,6 +448,12 @@ class Venue
     end
   end
 
+  def get_live_event()
+    event = self.last_event
+    return event if Event::LIVE_STATUSES.include? event.status
+    return nil
+  end
+
 
   ##############################################################
   # trends a new event given a list of photos to put in the new event 

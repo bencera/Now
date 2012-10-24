@@ -2,13 +2,17 @@ class Checkin
   include Mongoid::Document
   include Mongoid::Timestamps
 
+
+  BROADCAST_PUBLIC = "public"
+
   field :description
   field :broadcast #for now either public or private -- maybe eventually will allow for friends, twitter, facebook, etc
+  field :category
+  field :photo_card, :type => Array, :default => []
 
   #rather than destroy checkins, we'll just set this to false -- if user re-checks in, then we can flip the boolean
   field :alive,  :type => Boolean, default: true
 
-  has_and_belongs_to_many :photos
   belongs_to :facebook_user
   belongs_to :event
   belongs_to :venue
@@ -71,5 +75,19 @@ class Checkin
       return {errors: errors}
     end
 
+  end
+
+  ###### This method is intended to convert an event into a checkin when two events
+  ###### are trending at the same venue at the same time accidentally
+  
+  def self.new_from_event(event, main_event)
+    checkin = main_event.checkins.new()
+    checkin.facebook_user = event.facebook_user
+    checkin.photo_card = event.photo_card
+    checkin.description = event.description
+    checkin.category = event.category
+    checkin.venue = event.venue
+    checkin.broadcast = BROADCAST_PUBLIC
+    return checkin
   end
 end

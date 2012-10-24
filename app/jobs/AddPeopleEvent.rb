@@ -44,23 +44,54 @@ class AddPeopleEvent
 
     #if the photos were added properly, it should have created a venue if it wasn't already there.
     venue = Venue.find(params[:venue_id])
-    if venue && !venue.cannot_trend
+    
+    if(!venue)
+      Rails.logger.info("AddPeopleEvent failed due to no venue: #{params[:venue_id]}")
+      return
+    end
+
+    live_event = venue.get_live_event
+
+    if live_event
+      Rails.logger.info("AddPeopleEvent: reposting event #{live_event.id}")
+      checkin = live_event.checkins.new
+      checkin.description = params[:description] || live_event.description || " "
+      checkin.category = params[:category] || live_event.category
+      checkin.photo_card = photo_card_ids
+      checkin.facebook_user = fb_user 
+      #we're not using this yet
+      checkin.broadcast = params[:broadcast] ||  "public"
+
+      live_event.status = Event::TRENDING_PEOPLE if Event::WAITING_STATUSES.include? live_event.status
+      live_event.photo_card = photo_card_ids if !live_event.photo_card || live_event.photo_card.empty?
+      live_event.facebook_user = fb_user if !live_event.facebook_user
+
+      live_event.insert_photos_safe(photos)
+
+      Rails.logger.info("AddPeopleEvent: saving checkin #{checkin.id}")
+      checkin.save!
+      Rails.logger.info("AddPeopleEvent: saving live_event #{live_event.id}")
+      live_event.save!
+      Rails.logger.info("AddPeopleEvent: created new checkin for live_event at venue #{venue.id}")
+
+      #just want to make sure i clean up any mistakes
+      Resque.enqueue_in(3.seconds, RepairSimultaneousEvents, venue.id.to_s)
+    else
       Rails.logger.info("AddPeopleEvent: creating new event")
       event = venue.get_new_event("trending_people", photos, params[:id])
       Rails.logger.info("AddPeopleEvent: created new event #{event.id}" )
-      
 
       # Since these should have been checked by the model method, we can assume they're safe
       event.illustration = photos[illustration_index].id
       event.facebook_user = fb_user 
-      event.description = params[:description]
+      event.description = params[:description] || " "
       event.category = params[:category]
       event.shortid = params[:shortid]
       event.start_time = Time.now.to_i
       event.end_time = event.start_time
       event.anonymous = params[:anonymous] && params[:anonymous] != 'false'
       #create photocard for new event -- might also make specific photocard for each user who checks in
-      event.photo_card_list = photo_card_ids.join(",") if photo_card_ids.any?
+      event.photo_card = photo_card_ids if photo_card_ids.any?
       event.save!  
 
       # when we make a checkin model, i think we'll probably replace this line with the creation of the event's first checkin

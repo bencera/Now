@@ -7,7 +7,7 @@ class Event
 
 TRENDING              = "trending"
 TRENDED               = "trended"
-WAITNG                = "waiting"
+WAITING                = "waiting"
 NOT_TRENDING          = "not_trending"
 TRENDING_PEOPLE       = "trending_people"
 TRENDED_PEOPLE        = "trended_people"
@@ -17,6 +17,8 @@ WAITING_SCHEUDLED     = "waiting_scheduled"
 TRENDED_OR_TRENDING   = [TRENDING, TRENDING_PEOPLE, TRENDED, TRENDED_PEOPLE]
 TRENDING_STATUSES     = [TRENDING, TRENDING_PEOPLE]
 TRENDED_STATUSES      = [TRENDED, TRENDED_PEOPLE]
+LIVE_STATUSES         = [TRENDING, TRENDING_PEOPLE, WAITING, WAITING_SCHEUDLED, WAITING_CONFIRMATION]
+WAITING_STATUSES      = [WAITING, WAITING_CONFIRMATION, WAITING_SCHEUDLED]
 
 MAX_DESCRIPTION       = 45
 MIN_DESCRIPTION       = 5
@@ -66,6 +68,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   #when created in now people, this will hold string list of photo ids for the event's card
   #this is being done this way for speed.  we will have to update this when photos are deleted (particularly with dups)
   field :photo_card_list
+  field :photo_card, :type => Array, :default => []
   field :venue_fsq_id
 
   #field :n_people
@@ -123,10 +126,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     begin
       event_params[:city] = "world" if event_params[:city].nil?
+      event_params[:broadcast] = "public" if event_params[:broadcast].nil?
 
       #we want to require the nowtoken later
       errors += "nowtoken missing\n" if event_params[:nowtoken].nil? 
       event_params[:facebook_user_id] = FacebookUser.find_by_nowtoken(event_params[:nowtoken]).id.to_s
+
 
       errors += "nowtoken invalid\n" if event_params[:facebook_user_id].nil?
 
@@ -141,7 +146,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       errors += "no description\n" if event_params[:description].nil?
 
       venue = Venue.where(:_id => event_params[:venue_id]).first
-      errors += "venue not available to trend\n" if venue && venue.cannot_trend
+      event = venue.get_live_event if venue
   
       if(event_params[:photo_ig_list])
         #for backwards compatibility
@@ -161,11 +166,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
       return {errors: errors}
     end
     if errors.blank?
-      event_params[:id] = Event.new.id.to_s
+      event_params[:shortid] = event ? event.shortid : Event.get_new_shortid
+      event_params[:id] = event ? event.id.to_s : Event.new.id.to_s
       # technically this isn't safe, since we could end up with duplicate shortids created
       # chances of this are x in 62^6 where x is the number of events being created in the
       # time between this call and the AddPeopleEvent job being called -- that's very low
-      event_params[:shortid] = Event.get_new_shortid
       return event_params
     else
       return {errors: errors}
@@ -180,7 +185,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
   ## this gets the list of photo ids for the event card
   def get_preview_photo_ids()
     
-    main_photo_id_list = self.photo_card_list
+    return self.photo_card if self.photo_card
+
+    #this is deprecated but leaving it in temporarily
+    main_photo_ids = self.photo_card_list
     if main_photo_id_list
       main_photo_ids = main_photo_id_list.split(",") 
     else
@@ -561,8 +569,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
     #since photos could have been added in subscription fetch or elsewhere, need to get from venue
     new_photos = self.venue.photos.where(:time_taken.gt => self.end_time).entries
 
-    new_photos.each {|new_photo| self.photos.push new_photo unless self.photo_ids.include? new_photo.id }
-
+    insert_photos_safe(new_photos)
+    
     Rails.logger.info("Event #{self.id} added #{new_photos.count} new photos")
 
     #debug
@@ -576,6 +584,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.last_update = current_time.to_i
     self.next_update = current_time.to_i + self.update_interval
     self.save!
+  end
+
+  def insert_photos_safe(new_photos)
+    new_photos.each {|new_photo| self.photos.push new_photo unless self.photo_ids.include? new_photo.id }
   end
 
   ##############################################################

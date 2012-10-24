@@ -1,6 +1,7 @@
 class DoCheckin
   @queue = :checkin_queue
 
+  # deprecated
   def self.perform(in_params)
     #params come back with string keys -- make them labels to simplify
     params = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
@@ -40,7 +41,7 @@ class DoCheckin
     checkin.facebook_user = FacebookUser.find(params[:facebook_user_id])
     checkin.broadcast = params[:broadcast]
 
-    checkin.photos.push(*photos)
+    #checkin.photos.push(*photos)
 
     event.photos.push(*photos)
 
