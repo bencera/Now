@@ -450,7 +450,7 @@ class Venue
 
   def get_live_event()
     event = self.last_event
-    return event if Event::LIVE_STATUSES.include? event.status
+    return event if event? && Event::LIVE_STATUSES.include? event.status
     return nil
   end
 
