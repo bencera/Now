@@ -152,10 +152,18 @@ module EventsHelper
     return Event.where(:shortid.in => shortids).order_by([[:end_time, :desc]]).limit(20).entries
   end
 
-  def self.get_user_created(facebook_id)
-    fb_user = FacebookUser.where(:facebook_id => facebook_id).first
+  def self.get_user_created_or_reposted(fb_user, options = {})
+    show_anonymous = options[:show_anonymous]
+
+    checked_in_event_ids = fb_user.checkins.distinct(:event_id)
+
+
     if fb_user
-      return Event.where(:facebook_user_id => fb_user.id).where(:anonymous.ne => true).order_by([[:end_time, :desc]]).limit(20).entries
+      return Event.where('$or' => [{:id.in => checked_in_event_ids}, {:facebook_user_id => fb_user.id, :status.in => Event::TRENDED_OR_TRENDING}]
+                        ).order_by([[:end_time, :desc]]).limit(20).entries if show_anonymous
+
+      return Event.where('$or' => [{:id.in => checked_in_event_ids}, {:facebook_user_id => fb_user.id, :status.in => Event::TRENDED_OR_TRENDING, 
+                         :anonymous.in => [false, nil]}]).order_by([[:end_time, :desc]]).limit(20).entries 
     else
       return []
     end

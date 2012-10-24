@@ -45,10 +45,9 @@ class EventsController < ApplicationController
     elsif params[:liked_by]
       @events = EventsHelper.get_user_liked(params[:liked_by])
     elsif params[:created_by] 
-      @events = EventsHelper.get_user_created(params[:created_by])
+      @events = EventsHelper.get_user_created_or_reposted(FacebookUser.where(:facebook_id => facebook_id).first)
     elsif params[:city] == "onlyme" 
-      user = FacebookUser.find_by_nowtoken(params[:nowtoken])
-      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).where(:facebook_user_id => user.id).order_by([[:end_time, :desc]]).limit(20).entries
+      @events = EventsHelper.get_user_created_or_reposted(FacebookUser.find_by_nowtoken(params[:nowtoken]), :show_anonymous => true)
     elsif params[:city] == "world"
       @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).limit(20).entries
     else
