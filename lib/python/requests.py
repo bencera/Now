@@ -14,9 +14,9 @@ payload2 =  {'venue_id': "4b68c5b0f964a5201f8c2be3", 'description' : 'test', 'ca
 
 payload3 = {'venue_id': '4c1c2e25b9f876b07e977b46', 'photo_id_list' :"ig|310719761157998786_214535273,ig|310718932497746107_214535273,ig|310703504734939857_10278193,ig|310698685090726270_20260223,ig|310666498599396457_36682152,ig|310614476066817381_173930928",   'illustration' : '310719761157998786_214535273'}
 
-payload3['nowtoken'] = local_token
+payload3['nowtoken'] = production_token 
 
-r = requests.post(url, data=payload3)
+r = requests.post(url2, data=payload3)
 print r.text
 event_id = r.text.split("|")[0]
 

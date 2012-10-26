@@ -187,7 +187,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   ## this gets the list of photo ids for the event card
   def get_preview_photo_ids()
     
-    return self.photo_card if self.photo_card
+    return self.photo_card if self.photo_card && self.photo_card.count > PHOTO_CARD_PHOTOS
 
     #this is deprecated but leaving it in temporarily
     main_photo_ids = self.photo_card_list
