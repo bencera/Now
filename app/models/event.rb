@@ -200,7 +200,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     remainder = PHOTO_CARD_PHOTOS- main_photo_ids.count
       
-    other_photos = self.photo_ids.map {|photo_id| photo_id.to_s } - main_photo_ids
+    other_photos = self.photo_ids.map {|photo_id| photo_id } - main_photo_ids
     main_photo_ids.push(*other_photos[0..(remainder - 1)])
 
     return main_photo_ids
