@@ -159,11 +159,11 @@ module EventsHelper
 
 
     if fb_user
-      return Event.where('$or' => [{:id => {'$in' => checked_in_event_ids}}, {:facebook_user_id => fb_user.id, :status.in => Event::TRENDED_OR_TRENDING}]
-                        ).order_by([[:end_time, :desc]]).limit(20).entries if show_anonymous
+      return Event.where('$or' => [{:id => {'$in' => checked_in_event_ids}}, {:facebook_user_id => fb_user.id, :status => 
+                        {'$in' => Event::TRENDED_OR_TRENDING}].order_by([[:end_time, :desc]]).limit(20).entries if show_anonymous
 
-      return Event.where('$or' => [{:id => {'$in' => checked_in_event_ids}}, {:facebook_user_id => fb_user.id, :status.in => Event::TRENDED_OR_TRENDING, 
-                         :anonymous.in => [false, nil]}]).order_by([[:end_time, :desc]]).limit(20).entries 
+      return Event.where('$or' => [{:id => {'$in' => checked_in_event_ids}}, {:facebook_user_id => fb_user.id, :status => 
+                        {'$in' => Event::TRENDED_OR_TRENDING}, :anonymous => {'$in' => [false, nil]}}]).order_by([[:end_time, :desc]]).limit(20).entries 
     else
       return []
     end
