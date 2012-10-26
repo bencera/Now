@@ -155,18 +155,41 @@ module EventsHelper
   def self.get_user_created_or_reposted(fb_user, options = {})
     show_anonymous = options[:show_anonymous]
 
-    checked_in_event_ids = fb_user.checkins.distinct(:event_id)
+    checkins = fb_user.checkins.entries
 
 
     if fb_user
-      return Event.where('$or' => [{:id => {'$in' => checked_in_event_ids}}, {:facebook_user_id => fb_user.id, :status => 
-                        {'$in' => Event::TRENDED_OR_TRENDING}}]).order_by([[:end_time, :desc]]).limit(20).entries if show_anonymous
-
-      return Event.where('$or' => [{:id => {'$in' => checked_in_event_ids}}, {:facebook_user_id => fb_user.id, :status => 
-                        {'$in' => Event::TRENDED_OR_TRENDING}, :anonymous => {'$in' => [false, nil]}}]).order_by([[:end_time, :desc]]).limit(20).entries 
-    else
-      return []
+      if show_anonymous
+        #not using :_id.nin => checked_in_events because that's a very inefficient request
+        events = fb_user.events.order_by([[:created_at, :desc]]).limit(20).entries
+      else
+        events = fb_user.events.where(:anonymous.in => [false, nil]).order_by([[:created_at, :desc]]).limit(20).entries 
+      end
     end
+
+    #put the lists together and order by created_at
+    events.push(*checkins)
+    events.sort!{|a,b| b.created_at <=> a.created_at}
+
+    #now turn the checkins into the events they point to
+    events.map!{ |a| (a.class.to_s == "Checkin") ? a.event : a }
+
+    #now remove duplicates
+    events.uniq!{ |a| a._id.to_s }
+
+    return events.take(20)
+    
+    # in case the uniq! doesn't maintain order (it looks like it does)
+    #events_seen = {}
+    #top_events = []
+    #events.each do |event|
+    #  if events_seen[event._id].nil?
+    #    top_events << event
+    #    events_seen[event._id] = true
+    #  end
+    #end
+    #return top_events.take(20) 
+
   end
 
   def self.get_event_cards(events)
