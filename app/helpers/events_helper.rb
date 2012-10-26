@@ -182,8 +182,8 @@ module EventsHelper
 
      events.each do |event|
        photo_ids = photo_id_hash[event.id]
-       event.event_card_list = all_photos.find_all {|photo| photo_ids.include? photo._id.to_s}.
-         sort {|a,b| photo_ids.index(a._id.to_s) <=> photo_ids.index(b.id.to_s)} 
+       event.event_card_list = all_photos.find_all {|photo| photo_ids.include? photo._id}.
+         sort {|a,b| photo_ids.index(a._id) <=> photo_ids.index(b.id)} 
      end
 
   end
