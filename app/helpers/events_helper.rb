@@ -169,7 +169,21 @@ module EventsHelper
 
     #put the lists together and order by created_at
     events.push(*checkins)
-    events.sort!{|a,b| b.created_at <=> a.created_at}
+    events = events.sort do |a,b| 
+      if a.created_at.nil?
+        if(b.created_at.nil?)
+          b.end_time <=> a.end_time
+        else
+          b.created_at.to_i <=> a.end_time
+        end
+      else
+        if(b.created_at.nil?)
+          b.end_time <=> a.created_at.to_i
+        else
+          b.created_at <=> a.created_at
+        end
+      end
+    end
 
     #now turn the checkins into the events they point to
     events.map!{ |a| (a.class.to_s == "Checkin") ? a.event : a }
