@@ -48,7 +48,7 @@ class AddPeopleEvent
 
     
     if params[:event_id]
-      check_in_event = Event.where(:_id => params[:event_id])
+      check_in_event = Event.where(:_id => params[:event_id]).first
     else
       check_in_event = venue.get_live_event
     end

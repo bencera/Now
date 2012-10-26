@@ -147,7 +147,13 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_params[:category] = "Misc" if event_params[:category].nil?
 
       venue = Venue.where(:_id => event_params[:venue_id]).first
-      event = venue.get_live_event if venue
+
+      if(event_params[:event_id])
+        event = Event.where(:_id => event_params[:event_id]).first
+        errors += "invalid event id" if event.nil?
+      elsif venue
+        event = venue.get_live_event
+      end
   
       if(event_params[:photo_ig_list])
         #for backwards compatibility
