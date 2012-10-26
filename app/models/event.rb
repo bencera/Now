@@ -67,7 +67,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   #when created in now people, this will hold string list of photo ids for the event's card
   #this is being done this way for speed.  we will have to update this when photos are deleted (particularly with dups)
-  field :photo_card_list
   field :photo_card, :type => Array, :default => []
   field :venue_fsq_id
 
@@ -189,14 +188,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     
     return self.photo_card if self.photo_card && self.photo_card.count == PHOTO_CARD_PHOTOS
 
-    #this is deprecated but leaving it in temporarily
-    main_photo_id_list = self.photo_card_list
-    
-    if main_photo_id_list
-      main_photo_ids = main_photo_id_list.split(",") 
-    else
-      main_photo_ids = []
-    end
+    main_photo_ids = self.photo_card
 
     remainder = PHOTO_CARD_PHOTOS- main_photo_ids.count
       

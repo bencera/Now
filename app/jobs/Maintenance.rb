@@ -51,7 +51,7 @@ class Maintenance
         
         photo_list = []
         bad_photo_list = []
-        #TODO: update event photo_card_list if photo is a dup -- use a dict instead of array for photo_list
+        #TODO: update event photo_card if photo is a dup -- use a dict instead of array for photo_list
 
         event.photos.each do |photo|
           if photo_list.include? photo.ig_media_id
