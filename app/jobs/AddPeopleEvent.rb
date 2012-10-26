@@ -46,30 +46,34 @@ class AddPeopleEvent
 
     #if the photos were added properly, it should have created a venue if it wasn't already there.
 
+    
+    if params[:event_id]
+      check_in_event = Event.where(:_id => params[:event_id])
+    else
+      check_in_event = venue.get_live_event
+    end
 
-    live_event = venue.get_live_event
-
-    if live_event
-      Rails.logger.info("AddPeopleEvent: reposting event #{live_event.id}")
-      checkin = live_event.checkins.new
-      checkin.description = params[:description] || live_event.description || " "
-      checkin.category = params[:category] || live_event.category
+    if check_in_event
+      Rails.logger.info("AddPeopleEvent: reposting event #{check_in_event.id}")
+      checkin = check_in_event.checkins.new
+      checkin.description = params[:description] || check_in_event.description || " "
+      checkin.category = params[:category] || check_in_event.category
       checkin.photo_card = photo_card_ids
       checkin.facebook_user = fb_user 
       #we're not using this yet
       checkin.broadcast = params[:broadcast] ||  "public"
 
-      live_event.status = Event::TRENDING_PEOPLE if Event::WAITING_STATUSES.include? live_event.status
-      live_event.photo_card = photo_card_ids if !live_event.photo_card || live_event.photo_card.empty?
-      live_event.facebook_user = fb_user if !live_event.facebook_user
+      check_in_event.status = Event::TRENDING_PEOPLE if Event::WAITING_STATUSES.include? check_in_event.status
+      check_in_event.photo_card = photo_card_ids if !check_in_event.photo_card || check_in_event.photo_card.empty?
+      check_in_event.facebook_user = fb_user if !check_in_event.facebook_user
 
-      live_event.insert_photos_safe(photos)
+      check_in_event.insert_photos_safe(photos)
 
       Rails.logger.info("AddPeopleEvent: saving checkin #{checkin.id}")
       checkin.save!
-      Rails.logger.info("AddPeopleEvent: saving live_event #{live_event.id}")
-      live_event.save!
-      Rails.logger.info("AddPeopleEvent: created new checkin for live_event at venue #{venue.id}")
+      Rails.logger.info("AddPeopleEvent: saving check_in_event #{check_in_event.id}")
+      check_in_event.save!
+      Rails.logger.info("AddPeopleEvent: created new checkin for check_in_event at venue #{venue.id}")
 
       #just want to make sure i clean up any mistakes
       Resque.enqueue_in(3.seconds, RepairSimultaneousEvents, venue.id.to_s)
