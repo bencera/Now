@@ -17,7 +17,8 @@ class Checkin
   belongs_to :event
   belongs_to :venue
 
-  validates_presence_of :description, :broadcast #, facebook_user, event
+  validates_presence_of :broadcast #, facebook_user, event
+  validate :custom_validations
   #should it validate the number of photos given?
 
   before_save do |checkin|
@@ -90,4 +91,10 @@ class Checkin
     checkin.broadcast = BROADCAST_PUBLIC
     return checkin
   end
+
+  private
+
+    def custom_validations
+      errors.add(:description, "needs description") if self.description.nil?
+    end
 end

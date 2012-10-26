@@ -13,6 +13,8 @@ class AddPeopleEvent
 
     illustration_index = params[:illustration_index] || 0
     fb_user = FacebookUser.find(params[:facebook_user_id]) if params[:facebook_user_id]
+    
+    venue = Venue.where(:_id => params[:venue_id]).first || Venue.create_venue(params[:venue_id])
 
     photo_ids.each do |photo_key|
       key = photo_key.split("|")
@@ -43,12 +45,7 @@ class AddPeopleEvent
     Rails.logger.info(photos)
 
     #if the photos were added properly, it should have created a venue if it wasn't already there.
-    venue = Venue.find(params[:venue_id])
-    
-    if(!venue)
-      Rails.logger.info("AddPeopleEvent failed due to no venue: #{params[:venue_id]}")
-      return
-    end
+
 
     live_event = venue.get_live_event
 
