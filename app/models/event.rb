@@ -190,7 +190,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
     return self.photo_card if self.photo_card && self.photo_card.count == PHOTO_CARD_PHOTOS
 
     #this is deprecated but leaving it in temporarily
-    main_photo_ids = self.photo_card_list
+    main_photo_id_list = self.photo_card_list
+    
     if main_photo_id_list
       main_photo_ids = main_photo_id_list.split(",") 
     else
