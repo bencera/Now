@@ -77,7 +77,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   belongs_to :scheduled_event
   belongs_to :facebook_user
   has_and_belongs_to_many :photos 
-  has_many :checkins
+  has_many :checkins, :dependent => :destroy
   
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates
@@ -130,10 +130,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
       #we want to require the nowtoken later
       errors += "nowtoken missing\n" if event_params[:nowtoken].nil? 
-      event_params[:facebook_user_id] = FacebookUser.find_by_nowtoken(event_params[:nowtoken]).id.to_s
-
-
-      errors += "nowtoken invalid\n" if event_params[:facebook_user_id].nil?
+      fb_user = FacebookUser.find_by_nowtoken(event_params[:nowtoken])
+      if fb_user.nil?
+        errors += "bad nowtoken"
+      else
+        event_params[:facebook_user_id] = fb_user.id.to_s
+      end
 
       event_params.delete('controller')
       event_params.delete('format')
@@ -142,8 +144,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
       errors += "no photos given\n" if event_params[:photo_id_list].nil? && event_params[:photo_ig_list].nil?
       errors += "no venue given\n" if event_params[:venue_id].nil?
-      errors += "no category\n" if event_params[:category].nil?
-      errors += "no description\n" if event_params[:description].nil?
+      event_params[:description] = " " if event_params[:description].nil?
+      event_params[:category] = "Misc" if event_params[:category].nil?
 
       venue = Venue.where(:_id => event_params[:venue_id]).first
       event = venue.get_live_event if venue
@@ -573,7 +575,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
     
     Rails.logger.info("Event #{self.id} added #{new_photos.count} new photos")
 
-    #debug
     if(new_photos.any?)
       Resque.enqueue(VerifyURL2, self.id, last_update, true) 
       Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
@@ -583,11 +584,23 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     self.last_update = current_time.to_i
     self.next_update = current_time.to_i + self.update_interval
-    self.save!
+    begin
+      self.save!
+    rescue
+      repair_photo_list
+      raise
+    end
   end
 
   def insert_photos_safe(new_photos)
     new_photos.each {|new_photo| self.photos.push new_photo unless self.photo_ids.include? new_photo.id }
+  end
+
+  def repair_photo_list
+    photo_id_list = []
+    event.photos.each {|photo| photo_id_list.push photo.id unless photo_id_list.include? photo.id }
+    event.photo_ids = photo_id_list
+    event.save
   end
 
   ##############################################################
@@ -605,7 +618,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     def check_dependent_fields
       if( Event.visible_in_app?(self))
-        errors.add(:description, "needs description") if self.description.blank?
+        errors.add(:description, "needs description") if self.description.nil?
 
         #### until we make these user friendly in the app we shouldn't enforce these
         #errors.add(:description, "description too long") if self.description.length > MAX_DESCRIPTION

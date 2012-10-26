@@ -150,12 +150,8 @@ class EventsController < ApplicationController
       Rails.logger.info("create_people errors: #{converted_params[:errors]}") 
       return render :text => converted_params[:errors], :status => :error
     end
-    if Rails.env == "development"
-      Rails.logger.info("create_people params: #{converted_params}")
-      AddPeopleEvent.perform(converted_params)
-    else
-      Resque.enqueue(AddPeopleEvent, converted_params)
-    end
+    
+    Resque.enqueue(AddPeopleEvent, converted_params)
      
     return render :text => "#{converted_params[:id]}|#{converted_params[:shortid]}", :status => :ok
 

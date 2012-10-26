@@ -4,7 +4,7 @@ class RepairSimultaneousEvents
   def self.perform(venue_id)
 
     venue = Venue.find(venue_id)
-    events = venue.events.where(:status.in => Event::TRENDING_STATUSES).order_by([[:created_at, :asc]]).entries()
+    events = venue.events.where(:status.in => Event::TRENDING_STATUSES).order_by([[:created_at, :desc]]).entries()
 
     main_event = events.pop
 
