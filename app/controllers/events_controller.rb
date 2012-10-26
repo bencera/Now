@@ -45,7 +45,7 @@ class EventsController < ApplicationController
     elsif params[:liked_by]
       @events = EventsHelper.get_user_liked(params[:liked_by])
     elsif params[:created_by] 
-      @events = EventsHelper.get_user_created_or_reposted(FacebookUser.where(:facebook_id => facebook_id).first)
+      @events = EventsHelper.get_user_created_or_reposted(FacebookUser.where(:facebook_id => params[:created_by]).first)
     elsif params[:city] == "onlyme" 
       @events = EventsHelper.get_user_created_or_reposted(FacebookUser.find_by_nowtoken(params[:nowtoken]), :show_anonymous => true)
     elsif params[:city] == "world"
