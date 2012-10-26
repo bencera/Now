@@ -32,13 +32,13 @@ class FacebookUser
     def find_or_create_by_facebook_token(token)
       facebook_client = FacebookClient.new(token: token)
 
-      if facebook_client.get_errors.any?
-        return nil
-      end
+      
+      
 
       if user = FacebookUser.find_by_facebook_id(facebook_client.user_id)
       	user.fb_accesstoken = token
       else
+        return nil if facebook_client.get_errors
         user = FacebookUser.new
         user.fb_accesstoken = token
         user.facebook_id = facebook_client.user_id
