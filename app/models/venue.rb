@@ -523,9 +523,14 @@ class Venue
     if venue
       venue_ig_id = venue.ig_venue_id
     else
-      venue_ig_id = Rails.cache.fetch "#{fs_id}:instagram:venue", :compress => true do
-        Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id).first['id']
-      end      
+      begin 
+        venue_ig_id = Rails.cache.fetch "#{fs_id}:instagram:venue", :compress => true do
+          Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id).first['id']
+        end      
+      rescue
+        #if the fetch failed, there's never been a 
+        return []
+      end
     end
 
     Rails.logger.info("asking ig for #{venue_ig_id} media")
