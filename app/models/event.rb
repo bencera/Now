@@ -146,6 +146,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_params[:description] = " " if event_params[:description].nil?
       event_params[:category] = "Misc" if event_params[:category].nil?
 
+
+      #TODO: put in tag repost = true for reposts -- otherwise it will create a new event
       venue = Venue.where(:_id => event_params[:venue_id]).first
 
       if(event_params[:event_id])
@@ -153,6 +155,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
         errors += "invalid event id" if event.nil?
       elsif venue
         event = venue.get_live_event
+      else 
+        errors += "no venue id or event id"
       end
   
       if(event_params[:photo_ig_list])
@@ -328,7 +332,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     event_start_day = ( event_start_time.wday - ( event_start_time.hour < 4 ? 1 : 0 ) ) % 7
 
     # using >= because for events starting between 3 and 6, current day < event_start_day
-    event_start_day >= current_day
+    event_start_day != current_day
   end
 
   #note, this is the same as 
