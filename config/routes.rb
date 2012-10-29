@@ -62,6 +62,8 @@ Ubimachine::Application.routes.draw do
 
   resources :checkins, :only => [:index, :show, :create, :destroy]
 
+  resources :now_users, :only => [:show, :update]
+
   #
   
   #:venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls, :dones,

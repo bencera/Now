@@ -22,6 +22,8 @@ class FacebookUser
   has_many :events
   has_many :checkins
 
+  embeds_one :now_profile
+
   validates_numericality_of :score
 
   class << self
@@ -75,7 +77,37 @@ class FacebookUser
   end
 
   def get_fb_profile_photo
-    return (self.fb_details.nil?) ? nil : "https://graph.facebook.com/#{self.fb_details['username']}/picture"
+    return self.now_profile.profile_photo_url || ( (self.fb_details.nil?) ? nil : "https://graph.facebook.com/#{self.fb_details['username']}/picture" )
+  end
+
+  def update_now_profile(params)
+
+    #we don't want to set any values to the NowProfile unless the user explicity puts them there, that way if we periodically pull from fb, we'll
+    #have more up to date info
+
+    self.now_profile ||= NowProfile.new
+
+    self.now_profile.update_attributes(params)
+    
+  end
+
+  def get_now_profile(requested_by)
+    profile = {}
+
+    fb_details_valid = !self.fb_details.nil?
+    profile[:name] = self.now_profile.name || ( fb_details_valid ? nil : self.fb_details['name'] )
+    profile[:bio] = self.now_profile.bio ||  ( fb_details_valid ? nil : self.fb_details['bio'] )
+    profile[:photo] =  self.now_profile.profile_photo_url ||  ( fb_details_valid ? nil : "https://graph.facebook.com/#{self.fb_details['username']}/picture" )
+    profile[:email] = self.now_profile.email || self.email
+    
+    if self == requested_by
+      profile[:notify_like] = self.now_profile.notify_like
+      profile[:notify_repost] = self.now_profile.notify_repost
+      profile[:notify_photos] = self.now_profile.notify_photos
+      profile[:notify_local] = self.now_profile.notify_local
+    end
+
+
   end
 
 #  def do_redis_checkin(event)
