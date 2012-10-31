@@ -201,7 +201,7 @@ class Photo
   end
   
   def self.get_thumb(nw_id)
-    return "http://" + nw_id + "_6.jpg" 
+    return "http://" + nw_id + "_5.jpg" 
   end
   
   def self.get_stand(nw_id)
