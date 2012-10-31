@@ -5,6 +5,9 @@ class Photo
   include Mongoid::Timestamps
   
   INSTAGRAM_SOURCE = "ig"
+  NOW_SOURCE = "nw"
+
+  VALID_SOURCES = [INSTAGRAM_SOURCE, NOW_SOURCE]
 
   field :ig_media_id
   index :ig_media_id, background: true
@@ -129,7 +132,7 @@ class Photo
     
     photo.now_version = 2
     photo.url = [photo.low_resolution_url, photo.high_resolution_url, photo.thumbnail_url]
-    photo.save
+    photo.save!
 
     Rails.logger.info("Photo.rb: created new photo #{photo.id} in venue #{photo.venue.id} by user #{photo.user.id}")
     return photo
@@ -198,7 +201,7 @@ class Photo
   end
   
   def self.get_thumb(nw_id)
-    return "http://" + nw_id + "_5.jpg" 
+    return "http://" + nw_id + "_6.jpg" 
   end
   
   def self.get_stand(nw_id)

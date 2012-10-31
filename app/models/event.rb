@@ -170,7 +170,14 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_params[:photo_id_list] ||= photo_ig_list
       id_list = event_params[:photo_id_list].split(",")
       errors += "too many photos chosen\n" if id_list.count > 6
-      event_params[:illustration_index] = id_list.index("ig|" + event_params[:illustration].to_s) if event_params[:illustration]
+      id_list.each do |photo_id|
+        pair = photo_id.split("|")
+        errors += "invalid photo source #{pair[0]}" if !Photo::VALID_SOURCES.include? pair[0]
+        #make this validation more sophisticated -- knowing the source, we can tell if an id looks valid
+        errors += "invalid id #{pair[1]}" if pair[1].blank?
+      end
+
+      event_params[:illustration_index] = 0
 
     rescue Exception => e
       #TODO: take out backtrace when we're done testing
