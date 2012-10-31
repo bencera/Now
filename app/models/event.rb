@@ -30,7 +30,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
 #####
 
-# this is here to allow for caching of photos on index pulls
+# this is here to allow for caching of photos on index pulls -- only use overriding repost in the index view!
   attr_accessor :event_card_list, :overriding_repost
     
   field :coordinates, :type => Array
@@ -194,9 +194,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
 
   ## this gets the list of photo ids for the event card
-  def get_preview_photo_ids()
-
-    main_photo_ids = self.overriding_repost ? self.overriding_repost.photo_card : self.photo_card
+  def get_preview_photo_ids(options={})
+    if options[:repost]
+      main_photo_ids = options[:repost]  
+    else
+      main_photo_ids = self.overriding_repost ? self.overriding_repost.photo_card : self.photo_card
+    end
 
     remainder = PHOTO_CARD_PHOTOS- main_photo_ids.count
       

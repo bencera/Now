@@ -232,6 +232,35 @@ module EventsHelper
 
   end
 
+  # builds a 
+  def self.build_photo_list(event, checkins)
+    photos = event.photos.entries
+    seen_photos_hash = {}
+
+    #make fast lookup
+    photo_hash = Hash[photos.map {|photo| [photo.id, photo] }]
+    
+    checkins.each do |checkin| 
+      checkin_card_ids = checkin.get_preview_photo_ids
+      checkin.checkin_card_list = []
+      checkin_card_ids.each do |photo_id| 
+        seen_photos_hash[photo_id] = true
+        checkin.checkin_card_list.push photo_hash[photo_id]
+      end
+    end
+
+    event.get_preview_photo_ids.each do |photo_id|
+      seen_photos_hash[photo_id] = true
+    end
+
+    #make the list of photos we didn't see in a card yet
+    other_photos = []
+    photos.each do |photo|
+      other_photos.push photo unless seen_photos_hash[photo.id]
+    end
+    return other_photos
+  end
+
   def self.get_localized_results(lon_lat, max_dist, options={})
 
     event_list = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries

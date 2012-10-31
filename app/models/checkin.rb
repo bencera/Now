@@ -5,6 +5,8 @@ class Checkin
 
   BROADCAST_PUBLIC = "public"
 
+  attr_accessor :checkin_card_list
+
   field :description
   field :broadcast #for now either public or private -- maybe eventually will allow for friends, twitter, facebook, etc
   field :category
@@ -19,6 +21,9 @@ class Checkin
 
   validates_presence_of :broadcast #, facebook_user, event
   validate :custom_validations
+  validates_associated :facebook_user
+  validates_associated :event
+
   #should it validate the number of photos given?
 
   before_save do |checkin|
@@ -90,6 +95,31 @@ class Checkin
     checkin.venue = event.venue
     checkin.broadcast = BROADCAST_PUBLIC
     return checkin
+  end
+
+  def get_preview_photo_ids
+    self.event.get_preview_photo_ids(:repost => self.photo_card)
+  end
+
+  def preview_photos()
+    return checkin_card_list
+  end
+
+  ################################################################################
+  # these fb things should be combined with the same methods in event and moved to 
+  # facebook user -- it would be more efficient and clean
+  ################################################################################
+  
+  def get_fb_user_name
+    self.facebook_user.fb_details['name'] unless self.facebook_user.nil? || self.facebook_user.fb_details.nil?
+  end
+
+  def get_fb_user_photo
+    self.facebook_user.get_fb_profile_photo unless self.facebook_user.nil? 
+  end
+
+  def get_fb_user_id
+    self.facebook_user.facebook_id unless self.facebook_user.nil? || self.facebook_user.fb_details.nil?
   end
 
   private
