@@ -95,6 +95,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
       #don't want to do the same with start time since people created events won't line up with first photo
     end
 
+    if self.photo_card.count > PHOTO_CARD_PHOTOS
+      self.photo_card = self.photo_card[0..(PHOTO_CARD_PHOTOS -1)]
+    end
+
     self.calculate_score
 
     return true
@@ -202,11 +206,14 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
 
     remainder = PHOTO_CARD_PHOTOS- main_photo_ids.count
-      
-    other_photos = self.photo_ids.map {|photo_id| photo_id } - main_photo_ids
-    main_photo_ids.push(*other_photos[0..(remainder - 1)])
 
-    return main_photo_ids
+    if remainder > 0
+      other_photos = self.photo_ids.map {|photo_id| photo_id } - main_photo_ids
+      main_photo_ids.push(*other_photos[0..(remainder - 1)])
+    end
+
+      
+    return main_photo_ids[0..6]
   end
 
   def get_fb_user_name
