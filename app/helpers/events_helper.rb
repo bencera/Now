@@ -186,7 +186,14 @@ module EventsHelper
     end
 
     #now turn the checkins into the events they point to
-    events.map!{ |a| (a.class.to_s == "Checkin") ? a.event : a }
+    events.map! do |a| 
+      if a.class.to_s == "Checkin"
+        a.event.overriding_repost = a
+        a.event
+      else 
+        a 
+      end
+    end
 
     #now remove duplicates
     events.uniq!{ |a| a._id.to_s }

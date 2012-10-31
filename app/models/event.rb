@@ -31,7 +31,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 #####
 
 # this is here to allow for caching of photos on index pulls
-  attr_accessor :event_card_list
+  attr_accessor :event_card_list, :overriding_repost
     
   field :coordinates, :type => Array
   field :start_time
@@ -195,10 +195,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   ## this gets the list of photo ids for the event card
   def get_preview_photo_ids()
-    
-    return self.photo_card if self.photo_card && self.photo_card.count == PHOTO_CARD_PHOTOS
 
-    main_photo_ids = self.photo_card
+    main_photo_ids = self.overriding_repost ? self.overriding_repost.photo_card : self.photo_card
 
     remainder = PHOTO_CARD_PHOTOS- main_photo_ids.count
       
@@ -208,6 +206,35 @@ SCORE_HALF_LIFE       = 7.day.to_f
     return main_photo_ids
   end
 
+  def get_fb_user_name
+    if self.overriding_repost.nil? && self.anonymous
+      fb_user = nil
+    else
+      fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
+    end
+
+    fb_user.fb_details['name'] unless fb_user.nil? || fb_user.fb_details.nil?
+  end
+
+  def get_fb_user_photo
+    if self.overriding_repost.nil? && self.anonymous
+      fb_user = nil
+    else
+      fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
+    end
+
+    fb_user.get_fb_profile_photo unless fb_user.nil? 
+  end
+
+  def get_fb_user_id
+    if self.overriding_repost.nil? && self.anonymous
+      fb_user = nil
+    else
+      fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
+    end
+
+    fb_user.facebook_id unless fb_user.nil? || fb_user.fb_details.nil?
+  end
 
   def preview_photos()
     return event_card_list
