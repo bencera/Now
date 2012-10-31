@@ -376,7 +376,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     event_start_day = ( event_start_time.wday - ( event_start_time.hour < 4 ? 1 : 0 ) ) % 7
 
     # using >= because for events starting between 3 and 6, current day < event_start_day
-    event_start_day != current_day
+    event_start_day == current_day
   end
 
   #note, this is the same as 
