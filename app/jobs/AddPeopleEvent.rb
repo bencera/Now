@@ -54,7 +54,7 @@ class AddPeopleEvent
     end
       
     #if an event was waiting, just destroy it and let the user's new event wipe it out
-    if check_in_event && Event::WAITING_STATUSES.include? check_in_event.status
+    if check_in_event && Event::WAITING_STATUSES.include?(check_in_event.status)
       check_in_event.destroy
       check_in_event = nil
     end
