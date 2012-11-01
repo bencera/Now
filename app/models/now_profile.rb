@@ -24,4 +24,6 @@ class NowProfile
   #field :twitter
   #field :foursquare
   
+  embedded_in :facebook_user
+  
 end

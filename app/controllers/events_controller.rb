@@ -17,6 +17,8 @@ class EventsController < ApplicationController
     if params[:more] == "yes"
       @more = "yes"
     end
+
+    @event.add_view
   end
   
   def showless
@@ -105,6 +107,8 @@ class EventsController < ApplicationController
     when "prague"
       @city = "Prague"
     end
+
+    @event.add_view
   end
   
   def cities

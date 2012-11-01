@@ -1,8 +1,9 @@
 class NowUsersController < ApplicationController
+  
   def show
     profile_user = FacebookUser.find(params[:id])
     fb_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
-    @now_profile = profile_user.get_now_profile(fb_user)
+    @now_profile = OpenStruct.new(profile_user.get_now_profile(profile_user))
   end
 
   def update

@@ -77,6 +77,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   belongs_to :facebook_user
   has_and_belongs_to_many :photos 
   has_many :checkins, :dependent => :destroy
+
+  has_many :reactions
   
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates
@@ -658,6 +660,21 @@ SCORE_HALF_LIFE       = 7.day.to_f
   def update_interval
     # for now just give a random number between 2 and 8 to load balance
     return [*2..8].sample.minutes.to_i
+  end
+
+  # send the creator a message about his event (reaction)
+  def notify_creator(message)
+    #debug
+    Rails.loggger.info("Notifying #{self.facebook_user.id}: #{message}")
+  end
+
+  # every view of an event, increment a counter.  if the counter is high enough, enqueue a reaction
+  
+  def add_view
+    n_views = $redis.incr("VIEW_COUNT:#{self.short_id}")
+    if Reaction::VIEW_MILESTONES.include? n_views
+      Resque.enqueue(ViewReaction, self.id, n_views)
+    end
   end
 
   private

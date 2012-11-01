@@ -17,12 +17,16 @@ class FacebookUser
 
   before_create :generate_now_token
 
+  before_save :set_profile
+
   has_many :devices, class_name: "APN::Device"
   has_many :scheduled_events
   has_many :events
   has_many :checkins
 
   embeds_one :now_profile
+
+  has_many :reactions
 
   validates_numericality_of :score
 
@@ -33,9 +37,6 @@ class FacebookUser
 
     def find_or_create_by_facebook_token(token)
       facebook_client = FacebookClient.new(token: token)
-
-      
-      
 
       if user = FacebookUser.find_by_facebook_id(facebook_client.user_id)
       	user.fb_accesstoken = token
@@ -63,13 +64,13 @@ class FacebookUser
   def like_event(event_shortid, access_token)
   	$redis.sadd("event_likes:#{event_shortid}", facebook_id)
     $redis.sadd("liked_events:#{facebook_id}", event_shortid)
-  	Resque.enqueue(Facebooklike, access_token, event_shortid, facebook_id)
+  	Resque.enqueue(Facebooklike, access_token, event_shortid, self.id.to_s)
   end
 
   def unlike_event(event_shortid, access_token)
     $redis.srem("event_likes:#{event_shortid}", facebook_id)
     $redis.srem("liked_events:#{facebook_id}",event_shortid)
-    Resque.enqueue(Facebookunlike, access_token, event_shortid, facebook_id)
+    Resque.enqueue(Facebookunlike, access_token, event_shortid, self.id.to_s)
   end
 
   def is_white_listed
@@ -91,14 +92,24 @@ class FacebookUser
     
   end
 
+  def set_profile
+    self.now_profile ||= NowProfile.new
+    self.now_profile.name ||= ( fb_details_valid ? self.fb_details['name'] : nil )
+    self.now_profile.profile_photo_url ||=  ( fb_details_valid ? "https://graph.facebook.com/#{self.fb_details['username']}/picture" : nil )
+  end
+
   def get_now_profile(requested_by)
     profile = {}
-
     fb_details_valid = !self.fb_details.nil?
-    profile[:name] = self.now_profile.name || ( fb_details_valid ? nil : self.fb_details['name'] )
-    profile[:bio] = self.now_profile.bio ||  ( fb_details_valid ? nil : self.fb_details['bio'] )
-    profile[:photo] =  self.now_profile.profile_photo_url ||  ( fb_details_valid ? nil : "https://graph.facebook.com/#{self.fb_details['username']}/picture" )
-    profile[:email] = self.now_profile.email || self.email
+
+    self.set_profile if self.now_profile.nil?
+    
+    profile[:name] = self.now_profile.name
+    profile[:bio] = self.now_profile.bio
+    profile[:photo] = self.now_profile.profile_photo_url
+
+    profile[:likes] =  $redis.scard("liked_events:#{self.facebook_id}")
+    profile[:reactions] = self.reactions.count
     
     if self == requested_by
       profile[:notify_like] = self.now_profile.notify_like
@@ -106,7 +117,8 @@ class FacebookUser
       profile[:notify_photos] = self.now_profile.notify_photos
       profile[:notify_local] = self.now_profile.notify_local
     end
-
+    
+    return profile
 
   end
 

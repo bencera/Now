@@ -35,6 +35,8 @@ class Checkin
     return true
   end
 
+  after_save => :create_reaction
+
 # this convert params really shouldn't exist -- iphone app should be sending a json with the necessary params
 # otherwise, at least we could come up with a generalized way to convert params.  maybe something using the 
 # model callbacks (before_validation after_save etc)
@@ -122,9 +124,26 @@ class Checkin
     self.facebook_user.facebook_id unless self.facebook_user.nil? || self.facebook_user.fb_details.nil?
   end
 
+  ################################################################################
+  # these will need to be in every reactable model -- i'm sure there's an OO way
+  # of doing this but for now, we'll just make it work, clean it up later
+  ################################################################################
+  
+  def generate_reaction_text
+    return "#{self.facebook_user.get_fb_user_name} reposted your event"
+  end
+
+  def generate_milestone_text(num)
+    return "Your event has reached #{num} reposts!"
+  end
+
   private
 
     def custom_validations
       errors.add(:description, "needs description") if self.description.nil?
+    end
+
+    def create_reaction
+      Resque.enqueue(CreateRepostReaction, self.id)
     end
 end
