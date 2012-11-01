@@ -87,7 +87,7 @@ class EventsController < ApplicationController
 
   def showweb
     @event = Event.where(:shortid => params[:shortid]).first
-    @venue = @event.venue
+    @venue = @event.venue 
     @photos = @event.photos
     case @photos.first.city
     when "newyork"

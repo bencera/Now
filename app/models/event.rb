@@ -148,8 +148,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_params.delete('action')
 
       errors += "no photos given\n" if event_params[:photo_id_list].nil? && event_params[:photo_ig_list].nil?
-      event_params[:description] = " " if event_params[:description].nil?
-      event_params[:category] = "Misc" if event_params[:category].nil?
+      event_params[:description] = " " if event_params[:description].blank?
+      event_params[:category] = "Misc" if event_params[:category].blank?
 
 
       #TODO: put in tag repost = true for reposts -- otherwise it will create a new event
