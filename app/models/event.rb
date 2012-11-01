@@ -232,7 +232,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
     end
 
-    fb_user.fb_details['name'] unless fb_user.nil? || fb_user.fb_details.nil?
+    fb_user.now_profile.name
   end
 
   def get_fb_user_photo
@@ -242,7 +242,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
     end
 
-    fb_user.get_fb_profile_photo unless fb_user.nil? 
+    fb_user.now_profile.profile_photo_url
   end
 
   def get_fb_user_id
@@ -252,7 +252,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
     end
 
-    fb_user.facebook_id unless fb_user.nil? || fb_user.fb_details.nil?
+    fb_user.facebook_id unless fb_user.nil? 
   end
 
   def preview_photos()
