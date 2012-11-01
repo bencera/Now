@@ -29,8 +29,8 @@ r = requests.post(url2, data=payload2)
 print r.text
 
 
-url_like = "http://localhost:3001/now/like"
-like_payload = {"shortid" : "kIMf1l", "nowtoken" : local_token, 'cmd' : 'like', 'like' : 'like'}
+url_like = "http://now-uat.herokuapp.com/now/like"
+like_payload = {"shortid" : "hPEJe0", "nowtoken" : production_token, 'cmd' : 'like', 'like' : 'like'}
 
 r = requests.get(url_like, data=like_payload)
 print r.text
