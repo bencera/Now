@@ -52,6 +52,12 @@ class AddPeopleEvent
     else
       check_in_event = venue.get_live_event
     end
+      
+    #if an event was waiting, just destroy it and let the user's new event wipe it out
+    if Event::WAITING_STATUSES.include? check_in_event.status
+      check_in_event.destroy
+      check_in_event = nil
+    end
 
     if check_in_event
       Rails.logger.info("AddPeopleEvent: reposting event #{check_in_event.id}")
@@ -63,12 +69,7 @@ class AddPeopleEvent
       #we're not using this yet
       checkin.broadcast = params[:broadcast] ||  "public"
 
-      check_in_event.status = Event::TRENDING_PEOPLE if Event::WAITING_STATUSES.include? check_in_event.status
-      check_in_event.photo_card = photo_card_ids if !check_in_event.photo_card || check_in_event.photo_card.empty?
-      check_in_event.facebook_user = fb_user if !check_in_event.facebook_user
-
       check_in_event.insert_photos_safe(photos)
-
       Rails.logger.info("AddPeopleEvent: saving checkin #{checkin.id}")
       checkin.save!
       Rails.logger.info("AddPeopleEvent: saving check_in_event #{check_in_event.id}")

@@ -139,6 +139,10 @@ class Checkin
     return "Your event has reached #{num} reposts!"
   end
 
+  def get_image_url
+    return self.facebook_user.now_profile.profile_photo_url
+  end
+
   private
 
     def custom_validations
@@ -146,6 +150,6 @@ class Checkin
     end
 
     def create_reaction
-      Resque.enqueue(CreateRepostReaction, self.id)
+      Resque.enqueue(CreateReplyReaction, self.id)
     end
 end

@@ -77,10 +77,6 @@ class FacebookUser
     ["571905313", "1101625"].include?(self.facebook_id)
   end
 
-  def get_fb_profile_photo
-    return self.now_profile.profile_photo_url || ( (self.fb_details.nil?) ? nil : "https://graph.facebook.com/#{self.fb_details['username']}/picture" )
-  end
-
   def update_now_profile(params)
 
     #we don't want to set any values to the NowProfile unless the user explicity puts them there, that way if we periodically pull from fb, we'll
