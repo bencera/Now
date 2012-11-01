@@ -148,7 +148,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_params.delete('action')
 
       errors += "no photos given\n" if event_params[:photo_id_list].nil? && event_params[:photo_ig_list].nil?
-      errors += "no venue given\n" if event_params[:venue_id].nil?
       event_params[:description] = " " if event_params[:description].nil?
       event_params[:category] = "Misc" if event_params[:category].nil?
 
@@ -159,6 +158,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       if(event_params[:event_id])
         event = Event.where(:_id => event_params[:event_id]).first
         errors += "invalid event id" if event.nil?
+        event_params[:venue_id] = event.venue.id.to_s
       elsif venue
         event = venue.get_live_event
       else 
@@ -665,7 +665,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   # send the creator a message about his event (reaction)
   def notify_creator(message)
     #debug
-    Rails.loggger.info("Notifying #{self.facebook_user.id}: #{message}")
+    Rails.logger.info("Notifying #{self.facebook_user.id}: #{message}")
   end
 
   # every view of an event, increment a counter.  if the counter is high enough, enqueue a reaction

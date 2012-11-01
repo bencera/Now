@@ -24,7 +24,7 @@ class Facebooklike
       #It might be worthwhile to ignore likes if one user keeps liking and unliking, but the event creator will only receive a max of 10 or so messages
       message = "#{fb_user.get_name} liked your event"
       event.notify_creator(message)
-    elsif Reaction::LIKE_MILESTONES.inlude? n_likes
+    elsif Reaction::LIKE_MILESTONES.include? n_likes
       like = Repost.find(like_id)
       message = "Your event has received #{n_likes} likes!"
       event.notify_creator(message)
