@@ -113,15 +113,15 @@ class Checkin
   ################################################################################
   
   def get_fb_user_name
-    self.facebook_user.fb_details['name'] unless self.facebook_user.nil? || self.facebook_user.fb_details.nil?
+    self.facebook_user.now_profile.name unless self.facebook_user.nil? || self.facebook_user.now_profile.nil?
   end
 
   def get_fb_user_photo
-    self.facebook_user.get_fb_profile_photo unless self.facebook_user.nil? 
+    self.facebook_user.now_profile.profile_photo_url unless self.facebook_user.nil? || self.facebook_user.now_profile.nil? 
   end
 
   def get_fb_user_id
-    self.facebook_user.facebook_id unless self.facebook_user.nil? || self.facebook_user.fb_details.nil?
+    self.facebook_user.facebook_id unless self.facebook_user.nil? 
   end
 
   ################################################################################
