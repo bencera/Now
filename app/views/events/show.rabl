@@ -1,5 +1,5 @@
 object @event
-attributes :id, :coordinates, :end_time, :description, :category, :shortid, :like_count, :venue_category, :n_photos, :start_time, :keywords, :city_fullname, :main_photos, :status
+attributes :id, :coordinates, :end_time, :description, :category, :shortid, :like_count, :venue_category, :n_photos, :start_time, :keywords, :city_fullname, :main_photos, :status, :n_reactions
 
 child @checkins =>:reposts do
  extends "checkins/show"
@@ -32,4 +32,8 @@ end
 
 node(:facebook_photo) do |u|
   "https://graph.facebook.com/#{u.facebook_user.fb_details['username']}/picture" unless  u.anonymous || u.facebook_user.nil? || u.facebook_user.fb_details.nil?
+end
+
+node(:reaction_count) do |u|
+  u.reaction_ids.count
 end

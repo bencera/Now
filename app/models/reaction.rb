@@ -55,6 +55,9 @@ class Reaction
     end
 
     reaction.save!
+    
+    reaction.event.update_reaction_count
+    reaction.event.save!
 
     event.notify_creator(reaction.generate_message)
   end

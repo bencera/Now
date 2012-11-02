@@ -188,8 +188,10 @@ module EventsHelper
     #now turn the checkins into the events they point to
     events.map! do |a| 
       if a.class.to_s == "Checkin"
-        a.event.overriding_repost = a
-        a.event
+        event = a.event
+        event.overriding_repost = a
+        event.overriding_description = a.description unless event.facebook_user_id == fb_user.id
+        event
       else 
         a 
       end

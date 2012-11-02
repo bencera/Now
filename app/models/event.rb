@@ -31,7 +31,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 #####
 
 # this is here to allow for caching of photos on index pulls -- only use overriding repost in the index view!
-  attr_accessor :event_card_list, :overriding_repost
+  attr_accessor :event_card_list, :overriding_repost, :overriding_description
     
   field :coordinates, :type => Array
   field :start_time
@@ -71,6 +71,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :venue_fsq_id
 
   #field :n_people
+
+  field :n_reactions
   
   belongs_to :venue
   belongs_to :scheduled_event
@@ -257,6 +259,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def preview_photos()
     return event_card_list
+  end
+
+  def get_description
+    return overriding_description || self.description
   end
 
   def previous_events
@@ -677,6 +683,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
   end
 
+  def update_reaction_count
+    self.n_reactions = self.reactions.count
+  end
   private
 
 
