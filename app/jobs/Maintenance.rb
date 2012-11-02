@@ -49,15 +49,17 @@ class Maintenance
         venue_list << event.venue_id
         #remove dupilicate photos
         
-        photo_list = []
+        photo_list = {}
         bad_photo_list = []
+        repair_photos = []
         #TODO: update event photo_card if photo is a dup -- use a dict instead of array for photo_list
 
         event.photos.each do |photo|
-          if photo_list.include? photo.ig_media_id
+          if photo_list[photo.ig_media_id]
             bad_photo_list << photo.id
+            repair_photos << [photo.id, photo_list[photo.ig_media_id]]
           else
-            photo_list << photo.ig_media_id
+            photo_list[photo.ig_media_id] = photo.id
           end
         end
 
@@ -68,7 +70,7 @@ class Maintenance
           $redis.incr("MAINT_dup_photos")unless Rails.env == "development"
         end
         if bad_photo_list.count > 0
-          event.update_attribute(:n_photos, event.photos.count)
+          event.repair_photo_cards(repair_photos)
           Rails.logger.info("Maintenance: removed #{bad_photo_list.count} duplicate photos from event #{event.id} -- #{bad_photo_list.join("\t")}")
         end
       end

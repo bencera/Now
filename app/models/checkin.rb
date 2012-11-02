@@ -20,7 +20,7 @@ class Checkin
   # if the Checkin/Reply was created through the posting mechanism, the user thinks he created the event and it should recognize that
   field :posted, :type => Boolean, :default => false
 
-  #rather than destroy checkins, we'll just set this to false -- if user re-checks in, then we can flip the boolean
+  # in cae we ever decide to not delete these. not likely
   field :alive,  :type => Boolean, default: true
 
   belongs_to :facebook_user
@@ -43,7 +43,7 @@ class Checkin
     return true
   end
 
-  after_save :create_reaction
+  after_create :create_reaction
 
 # this convert params really shouldn't exist -- iphone app should be sending a json with the necessary params
 # otherwise, at least we could come up with a generalized way to convert params.  maybe something using the 

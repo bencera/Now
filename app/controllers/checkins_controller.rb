@@ -30,6 +30,19 @@ class CheckinsController < ApplicationController
   end
 
   def destroy
+
+    checkin = Checkin.where(:_id => params[:id]).first
+    if checkin.nil?
+      event = Event.where(:_id => params[:id]).first
+      if event.nil?
+        return render :text => "invalid id", :status => :error
+      end
+      event.destroy_reply(nil)
+    else
+      checkin.event.destroy_reply(checkin)
+    end
+    
+    return render :text => "OK", :status => :ok
   end
 
 

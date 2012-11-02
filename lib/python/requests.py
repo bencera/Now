@@ -10,7 +10,7 @@ production_token = "b6721f53afe81a87b637aa2699ee82c3161d55d0"
 
 payload = {'venue_id': "4b68c5b0f964a5201f8c2be3", 'description' : 'cheering for the aggies', 'category' : 'sport', 'nowtoken': "7f71907348e2a84a157451d33a963d0809f9496c", 'photo_id_list' :"nw|distilleryimage5.s3.amazonaws.com/ad0231281ada11e2bacf1231381b7928,ig|306461983332608997_27488305,ig|306461851103923195_237819225,ig|306451406061169626_20203193,ig|306450448023415759_20203193",  'illustration' : '306461983332608997_27488305'}
 
-payload2 =  {'event_id' : "50917820a5bfb809f4000001", 'description' : 'test', 'category' : 'sport', 'nowtoken' : "b6721f53afe81a87b637aa2699ee82c3161d55d0", 'photo_id_list' :"nw|distilleryimage5.s3.amazonaws.com/ad0231281ada11e2bacf1231381b7928,ig|306461983332608997_27488305,ig|306461851103923195_237819225,ig|306451406061169626_20203193,ig|306450448023415759_20203193",  'illustration' : '306461983332608997_27488305'}
+payload2 =  {'event_id' : "50917820a5bfb809f4000001", 'description' : 'some event 2', 'category' : 'sport', 'nowtoken' : "b6721f53afe81a87b637aa2699ee82c3161d55d0", 'photo_id_list' :"nw|distilleryimage5.s3.amazonaws.com/ad0231281ada11e2bacf1231381b7928,ig|306461983332608997_27488305,ig|306461851103923195_237819225,ig|306451406061169626_20203193,ig|306450448023415759_20203193",  'illustration' : '306461983332608997_27488305'}
 
 payload3 = {'venue_id': '4bdad4aaa8d976b0738e0cb5', 'photo_id_list' :"ig|310803394524631432_10407067,ig|310346550729595013_25350085,ig|310336125522808138_236114226,ig|310333451015258869_1918039,ig|310330096152627868_16029753,ig|310323538786327827_6704934",   'illustration' : '310803394524631432_10407067', 'category': 'Sport', 'description': 'Jeremy Lin comes to town'}
 
@@ -36,5 +36,6 @@ r = requests.get(url_like, data=like_payload)
 print r.text
 
 
-  
-
+del_url = "http://localhost:3001/checkins/509445e8a5bfb84a31000002" 
+r = requests.delete(del_url)
+print r.text

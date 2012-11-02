@@ -95,7 +95,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if self.photos.any?
       self.n_photos = self.photos.count
       last_photo_time = self.photos.first.time_taken
-      self.end_time = (self.end_time && self.end_time > last_photo_time) ? self.end_time : last_photo_time
+      self.end_time = (self.end_time && self.end_time > last_photo_time) ? self.end_time : last_photo_time if TRENDING_STATUSES.include? self.status
       #don't want to do the same with start time since people created events won't line up with first photo
     end
 
@@ -218,13 +218,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
       main_photo_ids = self.overriding_repost ? self.overriding_repost.photo_card : self.photo_card
     end
 
-    remainder = PHOTO_CARD_PHOTOS- main_photo_ids.count
-
-    if remainder > 0
-      other_photos = self.photo_ids.map {|photo_id| photo_id } - main_photo_ids
-      main_photo_ids.push(*other_photos[0..(remainder - 1)])
+    if main_photo_ids.empty?
+      #fixed a weird line -- make sure event detail and index still work...
+      main_photo_ids = self.photo_ids[0..(PHOTO_CARD_PHOTOS - 1)] 
     end
-
       
     return main_photo_ids[0..6]
   end
@@ -707,6 +704,83 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     return fake_reply
   end
+
+  def destroy_reply(reply=nil)
+    if reply
+      #we can destroy it but we should see if any photos were created -- we will have to check other replies in case the photo is there
+
+      photos_to_destroy = reply.photo_card
+
+      reply.destroy
+    else
+      #they want to delete the first photo card
+
+      first_reply = self.checkins.where(:new_photos.in => [true, nil]).order_by([[:created_at, :asc]]).first
+
+      if first_reply.nil?
+        #we'll actually destroy it rather than change status -- for user privacy etc
+
+        self.photos.where(:external_media_source => "nw").each {|photo| photo.destroy }
+        self.destroy
+        return
+      else
+        self.facebook_user = first_reply.facebook_user
+        self.description = first_reply.description
+        self.category = first_reply.category
+        
+        photos_to_destroy = self.photo_card
+
+        self.photo_card = first_reply.photo_card
+
+        self.save!
+        first_reply.destroy
+      end
+    end
+    
+    repair_photos = []
+    self.photos.where(:_id.in => photos_to_destroy, :external_media_source => "nw").each do  |photo| 
+      repair_photos << photo.id
+      photo.destroy 
+    end
+
+    Resque.enqueue(RepairPhotoCards, self.id, repair_photos)
+
+  end
+
+  ################################################################################
+  # photo_replacements is an array of 2-entry arrays, [[old_id,new_id],[old_id,new_id],...]
+  # where photo with old_id should be replaced with new_id.  if new_id is nil, then
+  # photo is just removed from all cards
+  ################################################################################
+  def repair_photo_cards(photo_replacements)
+    photo_replacements.each do |id_pair|
+      if id_pair[1].nil?
+        self.photo_card.delete(id_pair[0])
+      else
+        index = self.photo_card.find_index(id_pair[0])
+        if index
+          self.photo_card[index] = id_pair[1]
+        end
+      end
+    end
+    self.save
+
+    self.checkins.each do |checkin|
+      photo_replacements.each do |id_pair|
+        if id_pair[1].nil?
+          checkin.photo_card.delete(id_pair[0])
+        else
+          index = checkin.photo_card.find_index(id_pair[0])
+          if index
+            checkin.photo_card[index] = id_pair[1]
+          end
+        end
+      end
+
+      checkin.save
+    end
+  end
+
   private
 
 
