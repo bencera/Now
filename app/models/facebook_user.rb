@@ -104,8 +104,7 @@ class FacebookUser
     profile[:name] = self.now_profile.name
     profile[:bio] = self.now_profile.bio
     profile[:photo] = self.now_profile.profile_photo_url
-
-    profile[:likes] =  $redis.scard("liked_events:#{self.facebook_id}")
+    profile[:experiences] = self.events.count
     profile[:reactions] = self.reactions.count
     
     if self == requested_by
