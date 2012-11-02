@@ -39,7 +39,7 @@ class Reaction
 
   def self.create_reaction_and_notify(type, event, fb_reactor, count)
 
-    return if type == TYPE_LIKE && event.reactions.where(:reactor_name => fb_reactor.now_profile.name).any?
+    return if type == TYPE_LIKE && event.reactions.where(:reactor_name => fb_reactor.now_profile.name, :reaction_type => type).any?
 
     reaction = event.reactions.new
     reaction.venue_name = event.venue.name
