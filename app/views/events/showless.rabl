@@ -1,5 +1,9 @@
 object @event
-attributes :id, :coordinates, :end_time, :description, :category, :shortid, :like_count, :main_photos, :status, :n_reactions
+attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :main_photos, :status, :n_reactions
+
+node(:description) do |u|
+  u.get_description 
+end
 
 child :preview_photos do
   attributes :url, :external_source, :external_id
