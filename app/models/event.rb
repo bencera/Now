@@ -72,7 +72,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   #field :n_people
 
-  field :n_reactions
+  field :n_reactions, type: Integer, default: 0
   
   belongs_to :venue
   belongs_to :scheduled_event

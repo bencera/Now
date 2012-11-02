@@ -1,5 +1,9 @@
 object @event
-attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :venue_category, :n_photos, :start_time, :keywords, :city_fullname, :main_photos, :status, :n_reactions
+attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :venue_category, :n_photos, :start_time, :keywords, :city_fullname, :main_photos, :status
+
+node(:n_reactions) do |u|
+  u.n_reactions || 0
+end
 
 node(:description) do |u|
   u.get_description 
