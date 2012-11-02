@@ -153,6 +153,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_params[:description] = " " if event_params[:description].blank?
       event_params[:category] = "Misc" if event_params[:category].blank?
 
+      event_params[:new_photos] = true unless event_params[:new_photos] == false || event_params[:new_photos] == "false"
 
       #TODO: put in tag repost = true for reposts -- otherwise it will create a new event
       venue = Venue.where(:_id => event_params[:venue_id]).first
@@ -162,6 +163,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
         errors += "invalid event id" if event.nil?
         event_params[:venue_id] = event.venue.id.to_s
       elsif venue
+        event_params[:new_post] = true
         event = venue.get_live_event
       else 
         errors += "no venue id or event id"
@@ -685,6 +687,25 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def update_reaction_count
     self.n_reactions = self.reactions.count
+  end
+
+  def make_fake_reply
+    fake_reply = {}
+    fake_reply[:id] = self.id
+    fake_reply[:created_at] = self.created_at
+    fake_reply[:description] = self.description
+    fake_reply[:category] = self.category
+    fake_reply[:new_photos] = true
+    fake_reply[:get_fb_user_name] = self.facebook_user.nil? ? " " : self.facebook_user.now_profile.name 
+    fake_reply[:get_fb_user_id] = self.facebook_user.nil? ? nil : self.facebook_user.facebook_id
+    fake_reply[:get_fb_user_photo] = self.facebook_user.nil? ? nil : self.facebook_user.now_profile.profile_photo_url
+    fake_reply[:new_photos] = true
+    fake_reply[:get_preview_photo_ids] = self.get_preview_photo_ids
+    fake_reply[:checkin_card_list] = []
+
+    fake_reply[:fake] = true
+
+    return fake_reply
   end
   private
 

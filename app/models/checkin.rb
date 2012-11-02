@@ -12,6 +12,14 @@ class Checkin
   field :category
   field :photo_card, :type => Array, :default => []
 
+#  field :fake, :type => Boolean, :default => false
+
+  # this tells us if the user customized photos so we can decide whether or not to display them on the event detail
+  field :new_photos, :type => Boolean, :default => true
+
+  # if the Checkin/Reply was created through the posting mechanism, the user thinks he created the event and it should recognize that
+  field :posted, :type => Boolean, :default => false
+
   #rather than destroy checkins, we'll just set this to false -- if user re-checks in, then we can flip the boolean
   field :alive,  :type => Boolean, default: true
 

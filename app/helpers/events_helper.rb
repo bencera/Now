@@ -235,9 +235,10 @@ module EventsHelper
   end
 
   # builds a 
-  def self.build_photo_list(event, checkins)
+  def self.build_photo_list(event, checkins, options={})
     photos = event.photos.entries
     seen_photos_hash = {}
+    version = options[:version]
 
     #make fast lookup
     photo_hash = Hash[photos.map {|photo| [photo.id, photo] }]
@@ -256,10 +257,16 @@ module EventsHelper
     end
 
     #make the list of photos we didn't see in a card yet
-    other_photos = []
-    photos.each do |photo|
-      other_photos.push photo unless seen_photos_hash[photo.id]
+
+    if(version < 2)
+      other_photos = photos
+    else
+      other_photos = []
+      photos.each do |photo|
+        other_photos.push photo unless seen_photos_hash[photo.id]
+      end
     end
+
     return other_photos
   end
 

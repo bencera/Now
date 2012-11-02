@@ -69,6 +69,8 @@ class AddPeopleEvent
       checkin = check_in_event.checkins.new
       checkin.description = params[:description] || check_in_event.description || " "
       checkin.category = params[:category] || check_in_event.category
+      checkin.new_photos = params[:new_photos]
+      checkin.post = params[:new_post]
       checkin.photo_card = photo_card_ids
       checkin.facebook_user = fb_user 
       #we're not using this yet

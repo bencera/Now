@@ -13,6 +13,8 @@ node(:fb_photo) do |u|
   u.get_fb_user_photo
 end
 
-child :preview_photos do
-  attributes :url, :external_source, :external_id
+node(:preview_photos) do |u|
+  if u.new_photos
+    partial("photos/showless", :object => u.checkin_card_list)
+  end
 end

@@ -6,8 +6,13 @@ class EventsController < ApplicationController
   
   def show
     @event = Event.find(params[:id])
-    @checkins = @event.checkins.entries
-    @other_photos = EventsHelper.build_photo_list(@event, @checkins)
+    @checkins = @event.checkins.order_by([[:created_at, :asc]]).entries
+    @checkins.unshift OpenStruct.new(@event.make_fake_reply)
+
+    version = params[:version].to_i
+    @other_photos = EventsHelper.build_photo_list(@event, @checkins, :version => version)
+
+    #this is to put the event's photo card at creation at the top
     begin
     if params[:nowtoken]
       @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
