@@ -4,6 +4,7 @@ attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :main
 node(:n_reactions) do |u|
   u.n_reactions || 0
 end
+
 node(:description) do |u|
   u.get_description 
 end
