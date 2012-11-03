@@ -173,6 +173,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       end
 
       Rails.logger.info("Photo ids given by user: photo_ig_list: #{event_params[:photo_ig_list]}, photo_id_list #{event_params[:photo_id_list]}")
+      Rails.logger.info("Lets just debug the whole param set: #{event_params}")
   
       if(event_params[:photo_ig_list])
         #for backwards compatibility
