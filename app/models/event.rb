@@ -172,7 +172,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
         errors += "no venue id or event id"
       end
 
-      Rails.logger.info("Photo ids given by user: photo_ig_list: #{event_params[:photo_ig_list]}, photo_id_list #{event_params[:photo_id_list]}"
+      Rails.logger.info("Photo ids given by user: photo_ig_list: #{event_params[:photo_ig_list]}, photo_id_list #{event_params[:photo_id_list]}")
   
       if(event_params[:photo_ig_list])
         #for backwards compatibility
