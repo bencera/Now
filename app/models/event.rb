@@ -59,6 +59,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :last_update
   field :next_update
 
+  #this is used to keep verifying live photos for events that are getting viewed
+  field :last_verify
+
  # not using a has_many relationship because i don't think this is how the model will end up looking
  # chances are, a checkin will have description and photo_list, then an event will have a main checkin
  # which will be the creating checkin.  this is more for illustration purposes until we have a checkin model
@@ -168,6 +171,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
       else 
         errors += "no venue id or event id"
       end
+
+      Rails.logger.info("Photo ids given by user: photo_ig_list: #{event_params[:photo_ig_list]}, photo_id_list #{event_params[:photo_id_list]}"
   
       if(event_params[:photo_ig_list])
         #for backwards compatibility

@@ -67,7 +67,7 @@ class Reaction
     event_name = "your experience at #{self.venue_name}"
     reaction_verb = VERB_HASH[self.reaction_type]
     if MILESTONE_TYPES.include? self.reaction_type
-      message = "#{self.counter} people #{reaction_verb} #{event_name}"
+      message = "#{event_name} was #{reaction_verb} #{self.counter}"
     else
       message = "#{self.reactor_name} #{reaction_verb} #{event_name}"
     end
