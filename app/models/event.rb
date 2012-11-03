@@ -156,7 +156,14 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_params[:description] = " " if event_params[:description].blank?
       event_params[:category] = "Misc" if event_params[:category].blank?
 
-      event_params[:new_photos] = true unless event_params[:new_photos] == false || event_params[:new_photos] == "false"
+
+      if !(event_params[:new_photos] == false || event_params[:new_photos] == "false")
+        event_params[:new_photos] = true
+      else
+        event_params[:new_photos] = false
+      end
+
+      errors += "must give new photos if no event selected\n" if event_params[:new_photos] == false && event_params[:event_id].nil?
 
       #TODO: put in tag repost = true for reposts -- otherwise it will create a new event
       venue = Venue.where(:_id => event_params[:venue_id]).first
