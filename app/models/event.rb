@@ -683,7 +683,17 @@ SCORE_HALF_LIFE       = 7.day.to_f
   # send the creator a message about his event (reaction)
   def notify_creator(message)
     #debug
-    Rails.logger.info("Notifying #{self.facebook_user.id}: #{message}") unless self.facebook_user.nil?
+    #Rails.logger.info("Notifying #{self.facebook_user.id}: #{message}") unless self.facebook_user.nil?
+
+    self.facebook_user.devices.each do |device|
+      device.subscriptions.each do |subscription|
+        n = APN::Notification.new
+        n.subscription = s
+        n.alert = message
+        n.event = self.id
+        n.deliver
+      end
+    end
   end
 
   # every view of an event, increment a counter.  if the counter is high enough, enqueue a reaction

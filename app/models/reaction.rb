@@ -59,17 +59,27 @@ class Reaction
     reaction.event.update_reaction_count
     reaction.event.save!
 
-    event.notify_creator(reaction.generate_message)
+    message = reaction.generate_message(event.facebook_user.facebook_id, false)
+
+    begin
+      event.notify_creator(message)
+    rescue
+      Rails.error.info("Reaction: failed to send message #{message} to event to event #{event.id} creator")
+    end
+    Rails.logger.info("Reaction: sent message: #{message} to event #{event.id} creator")
   end
 
-  def generate_message()
+  def generate_message(viewer_fb_id, event_perspective)
+  
+    reactor_name_appear = (viewer_fb_id == self.reactor_id) ? "You" : self.reactor_name.split(" ").first
+    owner_name = (viewer_fb_id == self.facebook_user.facebook_id) ? "your" : self.facebook_user.now_profile.name.split(" ").first + "'s"
     
-    event_name = "your experience at #{self.venue_name}"
+    event_name = event_perspective ? "this experience" : "#{owner_name} experience at #{self.venue_name}"
     reaction_verb = VERB_HASH[self.reaction_type]
     if MILESTONE_TYPES.include? self.reaction_type
-      message = "#{event_name} was #{reaction_verb} #{self.counter}"
+      message = "#{event_name.capitalize} was #{reaction_verb} #{self.counter}"
     else
-      message = "#{self.reactor_name} #{reaction_verb} #{event_name}"
+      message = "#{reactor_name_appear} #{reaction_verb} #{event_name}"
     end
 
     return message
