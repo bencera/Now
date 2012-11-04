@@ -665,9 +665,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def repair_photo_list
     photo_id_list = []
-    event.photos.each {|photo| photo_id_list.push photo.id unless photo_id_list.include? photo.id }
-    event.photo_ids = photo_id_list
-    event.save
+    self.photos.each {|photo| photo_id_list.push photo.id unless photo_id_list.include? photo.id }
+    self.photo_ids = photo_id_list
+    self.save
   end
 
   ##############################################################

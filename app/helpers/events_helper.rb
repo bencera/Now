@@ -305,6 +305,16 @@ module EventsHelper
     return Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :shortid.in => shortids).order_by([[:end_time, :desc]]).take(20)
   end
 
+  def self.repair_event_v2_photos(event)
+    photos = event.photos.entries
+    photos.each do |photo| 
+      if photo.now_version > 1
+        photo.user_details = [photo.user.ig_username, photo.user.ig_details[1], photo.user.ig_details[0]]
+        photo.save
+      end
+    end
+  end
+
   def self.create_localized_venue_collection()
       ####### this map reduce function probably will never be used, but i wanted to leave the sample code for later
       #### this is not guaranteed to work
