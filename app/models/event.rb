@@ -688,7 +688,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.facebook_user.devices.each do |device|
       device.subscriptions.each do |subscription|
         n = APN::Notification.new
-        n.subscription = s
+        n.subscription = subscription
         n.alert = message
         n.event = self.id
         n.deliver
