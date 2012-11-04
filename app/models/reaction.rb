@@ -70,14 +70,16 @@ class Reaction
   end
 
   def generate_message(viewer_fb_id, event_perspective)
+
+    milestone = MILESTONE_TYPES.include? self.reaction_type
   
-    reactor_name_appear = (viewer_fb_id == self.reactor_id) ? "You" : self.reactor_name.split(" ").first
+    reactor_name_appear = (viewer_fb_id == self.reactor_id) ? "You" : self.reactor_name.split(" ").first unless self.reactor_name.nil?
     owner_name = (viewer_fb_id == self.facebook_user.facebook_id) ? "your" : self.facebook_user.now_profile.name.split(" ").first + "'s"
     
-    event_name = event_perspective ? "this experience" : "#{owner_name} experience at #{self.venue_name}"
+    event_name = event_perspective ? "this experience" : "#{milestone ? owner_name.capitalize : owner_name} experience at #{self.venue_name}"
     reaction_verb = VERB_HASH[self.reaction_type]
-    if MILESTONE_TYPES.include? self.reaction_type
-      message = "#{event_name.capitalize} was #{reaction_verb} #{self.counter}"
+    if milestone
+      message = "#{event_name} was #{reaction_verb} #{self.counter} times"
     else
       message = "#{reactor_name_appear} #{reaction_verb} #{event_name}"
     end
