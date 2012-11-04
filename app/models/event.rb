@@ -684,6 +684,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
   def notify_creator(message)
     #debug
     #Rails.logger.info("Notifying #{self.facebook_user.id}: #{message}") unless self.facebook_user.nil?
+    
+    return if self.facebook_user.nil?
+
 
     self.facebook_user.devices.each do |device|
       device.subscriptions.each do |subscription|
