@@ -77,6 +77,10 @@ Ubimachine::Application.routes.draw do
   match "/now/user" => "events#user"
   match "/now/like" => "events#like"
 
+  #getting foursquare token
+
+  match "/fs_callback" => "checkins#fs_token"
+
   match "/now/user/signup" => "sessions#now_signup"
   
   match "/now/cities" => "events#cities"

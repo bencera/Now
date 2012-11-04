@@ -49,5 +49,9 @@ class CheckinsController < ApplicationController
     return render :text => "OK", :status => :ok
   end
 
-
+  
+  def fs_token
+    Rails.logger.info(params)
+    return render :text => "OK", :status => :ok
+  end
 end
