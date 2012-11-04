@@ -4,7 +4,7 @@ class Facebooklike
     event = Event.where(:shortid => event_shortid).first
     event.inc(:likes,1)
 
-    fb_user = FacebookUser.find_by_facebook_id(fb_user_id)
+    fb_user = FacebookUser.find(fb_user_id)
     user_id = fb_user.facebook_id
 
     unless Rails.env == "development"
