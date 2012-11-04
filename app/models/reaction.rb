@@ -59,18 +59,21 @@ class Reaction
     reaction.event.update_reaction_count
     reaction.event.save!
 
-    message = reaction.generate_message(event.facebook_user.facebook_id, false) 
+    if(event.facebook_user)
 
-    if options[:additional_message]
-      message += ": #{options[:additional_message]}"
+      message = reaction.generate_message(event.facebook_user.facebook_id, false) 
+  
+      if options[:additional_message]
+        message += ": #{options[:additional_message]}"
+      end
+  
+      begin
+        event.notify_creator(message)
+      rescue
+        Rails.error.info("Reaction: failed to send message '#{message}' to event #{event.id} creator")
+      end
+      Rails.logger.info("Reaction: sent message: '#{message}' to event #{event.id} creator")
     end
-
-    begin
-      event.notify_creator(message)
-    rescue
-      Rails.error.info("Reaction: failed to send message '#{message}' to event #{event.id} creator")
-    end
-    Rails.logger.info("Reaction: sent message: '#{message}' to event #{event.id} creator")
   end
 
   def generate_message(viewer_fb_id, event_perspective)
