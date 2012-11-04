@@ -88,10 +88,10 @@ class Maintenance
     Rails.logger.info("Maintenance: found #{scheduled_events_needing_update.count} events needing next_time updates -- #{still_broken_se_count} remaining")
 
     
-    Rails.logger.info("Maintenance: doing the venue top event calculation")
+    #Rails.logger.info("Maintenance: doing the venue top event calculation")
     # this is a very inefficient way to do this, but with the current number of venues we're working with, it's fast enough -- 20-30 seconds
-    Venue.where(:top_event_id.ne => nil).each {|venue| venue.reconsider_top_event}
-    Rails.logger.info("Maintenance: completed venue top event calculation")
+    #Venue.where(:has_top_event => true).each {|venue| venue.reconsider_top_event}
+    #Rails.logger.info("Maintenance: completed venue top event calculation")
 
   end
 
