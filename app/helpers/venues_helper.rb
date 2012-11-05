@@ -61,7 +61,7 @@ module VenuesHelper
       return :errors => errors.join("\n")
     end
 
-    Rails.info.log(params)
+    Rails.logger.info(options)
 
     if for_new_event
       venue = Venue.where(:_id => fs_id).first
