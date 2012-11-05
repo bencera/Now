@@ -14,6 +14,9 @@ payload2 =  {'event_id' : "50917820a5bfb809f4000001", 'description' : 'some even
 
 payload3 = {'venue_id': '4bdad4aaa8d976b0738e0cb5', 'photo_id_list' :"ig|310803394524631432_10407067,ig|310346550729595013_25350085,ig|310336125522808138_236114226,ig|310333451015258869_1918039,ig|310330096152627868_16029753,ig|310323538786327827_6704934",   'illustration' : '310803394524631432_10407067', 'category': 'Sport', 'description': 'Jeremy Lin comes to town'}
 
+#pdc inn -- share on foursquare
+payload4 = {'venue_id': "508e154be4b0772b59d1eb0c", 'fs_token': 'IWUTXRTAEUJTSYVKNZEBVJSSZRMLPGF0T3GJIPK35B2QT0CW', 'description': 'hanging out at home', 'category': 'Party', 'photo_id_list': "ig|316117123969739095_146227201"}
+
 payload2['nowtoken'] = local_token 
 
 r = requests.post(url, data=payload2)

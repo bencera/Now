@@ -692,7 +692,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def notify_chatroom(message, options={})
 
-    facebook_users = self.checkins.distinct(:facebook_user_id
+    facebook_users = self.checkins.distinct(:facebook_user_id)
     
     facebook_users = facebook_users - options[:except_ids] if options[:except_ids]
 
