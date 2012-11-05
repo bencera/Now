@@ -682,19 +682,21 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   # send the creator a message about his event (reaction)
   def notify_creator(message)
-    #debug
-    #Rails.logger.info("Notifying #{self.facebook_user.id}: #{message}") unless self.facebook_user.nil?
-    
-    return if self.facebook_user.nil?
+    if self.facebook_user.nil?
+      Rails.logger.error("No event creator to notify! event #{self.id} message #{message}")
+      return
+    end
 
+    self.facebook_user.send_notification(message, self.id) 
+  end
 
-    self.facebook_user.devices.each do |device|
-      device.subscriptions.each do |subscription|
-        n = APN::Notification.new
-        n.subscription = subscription
-        n.alert = message
-        n.event = self.id
-        n.deliver
+  def notify_chatroom(message, options={})
+    except = options[:except_ids]
+
+    facebook_users = self.checkins.distinct(:facebook_user_id) - except
+    if facebook_users.any?
+      FacebookUser.where(:_id.in => facebook_users).entries.each do |fb_user| 
+        fb_user.send_notification(message, self.id)
       end
     end
   end

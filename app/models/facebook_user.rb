@@ -118,6 +118,18 @@ class FacebookUser
 
   end
 
+  def send_notification(message, event_id)
+    self.devices.each do |device|
+      device.subscriptions.each do |subscription|
+        n = APN::Notification.new
+        n.subscription = subscription
+        n.alert = message
+        n.event =  event_id 
+        n.deliver
+      end
+    end
+  end
+
 #  def do_redis_checkin(event)
 #    $redis.sadd("checked_in_event_pending#{event.shortid}", self.facebook_id)
 #    $redis.sadd("checked_in_user_pending#{self.facebook_id}", event.shortid)

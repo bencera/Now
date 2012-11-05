@@ -29,6 +29,8 @@ class Reaction
 
   field :counter # only for milestone reactions (100 views etc)
 
+  field :additional_message
+
   #change event to a polymorphic reactable type so we can have reactions to replies as well
   belongs_to :event
   belongs_to :facebook_user
@@ -54,6 +56,8 @@ class Reaction
       reaction.reactor_photo_url = fb_reactor.now_profile.profile_photo_url
     end
 
+    reaction.additional_message = options[:additional_message]
+
     reaction.save!
     
     reaction.event.update_reaction_count
@@ -69,10 +73,15 @@ class Reaction
   
       begin
         event.notify_creator(message)
+
       rescue
         Rails.error.info("Reaction: failed to send message '#{message}' to event #{event.id} creator")
       end
       Rails.logger.info("Reaction: sent message: '#{message}' to event #{event.id} creator")
+    end
+       
+    if(reaction.reaction_type == TYPE_REPLY)
+      event.notify_chatroom(reaction.generate_reply_notification(), :except_ids => [reactor_id, reaction.facebook_user_id])
     end
   end
 
@@ -92,6 +101,10 @@ class Reaction
     end
 
     return message
+  end
+
+  def generate_reply_notification()
+    return self.reactor_name.split(" ").first.capitalize + ' replied, "' + self.additional_message + '"'
   end
 
 end
