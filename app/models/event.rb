@@ -694,11 +694,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     facebook_users = self.checkins.distinct(:facebook_user_id)
     
-    facebook_users = facebook_users - options[:except_ids] if options[:except_ids]
+    except_ids = options[:except_ids] || []
 
     if facebook_users.any?
       FacebookUser.where(:_id.in => facebook_users).entries.each do |fb_user| 
-        fb_user.send_notification(message, self.id)
+        fb_user.send_notification(message, self.id) unless except_ids.include? fb_user.facebook_id
       end
     end
   end
