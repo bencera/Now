@@ -43,7 +43,7 @@ module VenuesHelper
 
     for_new_event = options[:new_event] || false
     user_lon_lat = options[:user_lon_lat]
-    venue_lon_loat = options[:venue_lon_lat]
+    venue_lon_lat = options[:venue_lon_lat]
 
     errors.push "need a venue_id" if fs_id.nil?
     errors.push "need a user_lon_lat" if user_lon_lat.nil?
