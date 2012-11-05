@@ -242,11 +242,11 @@ class VenuesController < ApplicationController
 # has_activity looks at the last 12 hours to see if there's 1 photo.  if so, returns photos in last 12 hours, otherwise empty set
   def has_activity
 
-    venue = Venue.where(:_id => params[:id]).first
+    results = VenuesHelper.pull_recent_photos(params)
 
-    response_json = Venue.fetch_ig_photos_since(params[:id])
+    return render(:text => results[:errors], :status => :error) if results[:errors]
 
-    return render :json => response_json
+    return render(:json => results[:data])
   end
   
   private
