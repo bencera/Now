@@ -172,9 +172,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
         event = Event.where(:_id => event_params[:event_id]).first
         errors += "invalid event id" if event.nil?
         event_params[:venue_id] = event.venue.id.to_s
-      elsif venue
+      elsif  event_params[:venue_id]
         event_params[:new_post] = true
-        event = venue.get_live_event
+        event = venue.get_live_event if venue
       else 
         errors += "no venue id or event id"
       end
