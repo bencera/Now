@@ -41,7 +41,7 @@ module VenuesHelper
     min_photo_time = options[:min_photo_time] || 0
     min_photos = options[:min_photos] || 0
 
-    for_new_event = options[:new_event] || false
+    for_new_event = options[:new_event] == "true"
     user_lon_lat = options[:user_lon_lat]
     venue_lon_lat = options[:venue_lon_lat]
 
@@ -62,6 +62,7 @@ module VenuesHelper
     end
 
     Rails.logger.info(options)
+    Rails.logger.info("more info new_event: #{for_new_event == false} xx#{for_new_event}xx  test #{fs_id} #{user_lon_lat}")
 
     if for_new_event
       venue = Venue.where(:_id => fs_id).first
@@ -87,7 +88,7 @@ module VenuesHelper
 
     Rails.logger.info("searching within 50 meters of location #{search_loc}")
 
-    response = Instagram.media_search(search_loc[1], search_loc[0], :distance => 50, :min_timestamp => min_photo_time)
+    response = Instagram.media_search(search_loc[1], search_loc[0], :distance => 50)
     
     return :data => response.data 
 
