@@ -59,7 +59,7 @@ class Reaction
     reaction.event.update_reaction_count
     reaction.event.save!
 
-    if(event.facebook_user)
+    if(event.facebook_user && event.facebook_user != fb_reactor)
 
       message = reaction.generate_message(event.facebook_user.facebook_id, false) 
   
