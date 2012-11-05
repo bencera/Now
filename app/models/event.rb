@@ -691,9 +691,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def notify_chatroom(message, options={})
-    except = options[:except_ids]
 
-    facebook_users = self.checkins.distinct(:facebook_user_id) - except
+    facebook_users = self.checkins.distinct(:facebook_user_id
+    
+    facebook_users -= options[:except_ids] if options[:except_ids]
+
     if facebook_users.any?
       FacebookUser.where(:_id.in => facebook_users).entries.each do |fb_user| 
         fb_user.send_notification(message, self.id)
