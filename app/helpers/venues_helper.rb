@@ -61,6 +61,8 @@ module VenuesHelper
       return :errors => errors.join("\n")
     end
 
+    Rails.info.log(params)
+
     if for_new_event
       venue = Venue.where(:_id => fs_id).first
       if venue
@@ -74,9 +76,11 @@ module VenuesHelper
           do_nearby = true
         end
       end
-      Rails.logger.info("asking ig for #{venue_ig_id} media")
-      response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
-      return :data => response.data if response.data && response.data.count >= 6
+      if !do_nearby
+        Rails.logger.info("asking ig for #{venue_ig_id} media")
+        response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
+        return :data => response.data if response.data && response.data.count >= 6
+      end
     end
 
     search_loc = (Geocoder::Calculations.distance_between(user_loc, venue_loc) > 1) ? user_loc : venue_loc
