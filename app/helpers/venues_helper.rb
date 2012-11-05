@@ -95,7 +95,7 @@ module VenuesHelper
 
     Rails.logger.info("searching within 50 meters of location #{search_loc}")
 
-    response = Instagram.media_search(search_loc[1], search_loc[0], :distance => 50) 
+    response = Instagram.media_search(search_loc[1], search_loc[0], :distance => 20) 
     
     return :data => response.data 
 
