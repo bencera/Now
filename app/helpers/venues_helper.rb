@@ -51,8 +51,8 @@ module VenuesHelper
 
 
     begin
-      user_loc = user_lon_lat.split(",").map {|a| a.to_f } unless lon_lat.nil?
-      venue_loc = venue_lon_loat.split(",").map {|a| a.to_f } unless lon_lat.nil?
+      user_loc = user_lon_lat.split(",").map {|a| a.to_f } unless user_lon_lat.nil?
+      venue_loc = venue_lon_lat.split(",").map {|a| a.to_f } unless venue_lon_lat.nil?
     rescue
       errors.push "invalid format for lon_lat"
     end
