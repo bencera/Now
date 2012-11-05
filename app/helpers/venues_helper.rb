@@ -41,20 +41,21 @@ module VenuesHelper
     min_photo_time = options[:min_photo_time] || 0
     min_photos = options[:min_photos] || 0
 
-    for_new_event = options[:new_event] == "true"
+    for_new_event = options[:new_event].nil? || options[:new_event] == "true"
     user_lon_lat = options[:user_lon_lat]
     venue_lon_lat = options[:venue_lon_lat]
 
     errors.push "need a venue_id" if fs_id.nil?
-    errors.push "need a user_lon_lat" if user_lon_lat.nil?
-    errors.push "need a venue_lon_lat" if venue_lon_lat.nil?
+#    errors.push "need a user_lon_lat" if user_lon_lat.nil?
+#    errors.push "need a venue_lon_lat" if venue_lon_lat.nil?
 
 
     begin
-      user_loc = user_lon_lat.split(",").map {|a| a.to_f } unless user_lon_lat.nil?
       venue_loc = venue_lon_lat.split(",").map {|a| a.to_f } unless venue_lon_lat.nil?
+      user_loc = user_lon_lat.split(",").map {|a| a.to_f } unless user_lon_lat.nil?
     rescue
-      errors.push "invalid format for lon_lat"
+#      errors.push "invalid format for lon_lat"
+      for_new_event = true
     end
     
     if errors.any?
@@ -84,11 +85,17 @@ module VenuesHelper
       end
     end
 
+    if venue_loc.nil? 
+      return []
+    elsif user_loc.nil?
+      user_loc = venue_loc
+    end
+
     search_loc = (Geocoder::Calculations.distance_between(user_loc, venue_loc) > 1) ? user_loc : venue_loc
 
     Rails.logger.info("searching within 50 meters of location #{search_loc}")
 
-    response = Instagram.media_search(search_loc[1], search_loc[0], :distance => 50)
+    response = Instagram.media_search(search_loc[1], search_loc[0], :distance => 50) 
     
     return :data => response.data 
 
