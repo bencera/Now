@@ -111,6 +111,8 @@ class AddPeopleEvent
       event.anonymous = params[:anonymous] && params[:anonymous] != 'false'
       #create photocard for new event -- might also make specific photocard for each user who checks in
       event.photo_card = photo_card_ids if photo_card_ids.any?
+     
+      # sometimes photos is invalid and i don't know why -- destroying and re-creating the photos seems to work...
       event.save!  
 
       FoursquareShare.perform(event.id, nil, params[:fs_token]) if params[:fs_token]      

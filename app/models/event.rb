@@ -193,7 +193,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
         pair = photo_id.split("|")
         errors += "invalid photo source #{pair[0]}" if !Photo::VALID_SOURCES.include? pair[0]
         #make this validation more sophisticated -- knowing the source, we can tell if an id looks valid
-        errors += "invalid id #{pair[1]}" if pair[1].blank?
+        errors += "no/invalid photo id #{pair[1]}" if pair[1].blank?
       end
 
       event_params[:illustration_index] = 0
