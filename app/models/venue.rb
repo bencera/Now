@@ -496,7 +496,7 @@ class Venue
       e.id = optional_id if optional_id
     end
 
-    new_event.photos.push(*new_photos)
+    new_event.insert_photos_safe(*new_photos)
 
     new_event.update_keywords
 
