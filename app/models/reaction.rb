@@ -81,7 +81,7 @@ class Reaction
     end
        
     if(reaction.reaction_type == TYPE_REPLY)
-      event.notify_chatroom(reaction.generate_reply_notification(), :except_ids => [reaction.reactor_id, reaction.facebook_user_id])
+      event.notify_chatroom(reaction.generate_reply_notification(), :except_ids => [reaction.reactor_id, reaction.facebook_user.id])
     end
   end
 

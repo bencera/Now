@@ -253,7 +253,7 @@ class EventsController < ApplicationController
 
   def user
 
-    Rails.logger.info("params: #{params}")
+    #Rails.logger.info("params: #{params}")
 
     if params[:cmd] == "userToken"
     #do nothing
