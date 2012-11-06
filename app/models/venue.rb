@@ -17,6 +17,11 @@ class Venue
   field :threshold, :type => Array #[number of people, in number of hours, before time]
   field :autocategory
   field :autoillustrations, :type => Array
+
+  #we want to fill these in someday
+  field :website
+  field :street_address
+  field :phone_number
   
   # top_event is the event with the highest score currently (includes time value)
   field :top_event_id
@@ -453,6 +458,27 @@ class Venue
     event = self.last_event
     return event if event && (Event::LIVE_STATUSES.include? event.status)
     return nil
+  end
+
+  def get_profile()
+    profile = {}
+    profile[:venue_name] = self.name
+    profile[:experiences] = self.events.count
+    likes = 0
+    reactions = 0
+    
+    self.events.each do |event| 
+      likes += event.likes || 0
+      reactions += event.reactions.count
+    end
+
+    profile[:likes] = likes 
+    profile[:reactions] = reactions
+    profile[:address] = (self.address && self.address["address"]) ? self.address["address"] : "No Address Info"
+    profile[:phone_number] = self.phone_number
+    profile[:website] = self.website
+  
+    return profile
   end
 
 

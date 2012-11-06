@@ -2,6 +2,11 @@ class VenuesController < ApplicationController
   
   include VenuesHelper
 
+  def show_profile
+    venue = Venue.find(params[:id])
+    @venue_profile =  OpenStruct.new(venue.get_profile) 
+  end
+
   def show
     if params[:page].nil?
       n = 1

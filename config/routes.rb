@@ -14,6 +14,8 @@ Ubimachine::Application.routes.draw do
 
   match "/venue/has_activity" => "venues#has_activity"
 
+  match "/venue/:id/profile" => "venues#show_profile"
+
 #### Conall end
 
   match "/mu-34dfab81-28f6d162-ec82daa2-3f6b93cd" => "home#blitz"
