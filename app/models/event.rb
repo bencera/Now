@@ -740,7 +740,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if reply
       #we can destroy it but we should see if any photos were created -- we will have to check other replies in case the photo is there
 
-      photos_to_destroy = reply.photo_card
+      photos_to_destroy = reply.new_photos ? reply.photo_card : []
 
       reply.destroy
     else

@@ -42,8 +42,10 @@ class CheckinsController < ApplicationController
       return render :text => "Not Authorized", :status => :error if fb_user.id != event.facebook_user_id
       event.destroy_reply(nil)
     else
-      return render :text => "Not Authorized", :status => :error if fb_user.id != checkin.facebook_user_id
-      checkin.event.destroy_reply(checkin)
+      event = checkin.event
+      return render :text => "Not Authorized", :status => :error if fb_user.id != checkin.facebook_user_id && fb_user.id != event.facebook_user_id
+      
+      event.destroy_reply(checkin)
     end
     
     return render :text => "OK", :status => :ok

@@ -26,7 +26,7 @@ class FoursquareShare
 
       Rails.logger.info("Created foursquare checkin #{checkin_id}")
     rescue
-      Rails.logger.info("Failed to create fs checkin")  #retry?
+      Rails.logger.info("Failed to create fs checkin")  #retry? probably a bad fs token
       raise
     end
 
