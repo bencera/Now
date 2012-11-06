@@ -21,9 +21,14 @@ class FoursquareShare
    
     options = {:query => {venueId: venue_id, shout: shout, oauth_token: fs_token, broadcast: 'public'}}
     response = HTTParty.post("https://api.foursquare.com/v2/checkins/add", options)
-    checkin_id = response['response']['checkin']['id']
+    begin
+      checkin_id = response['response']['checkin']['id']
 
-    Rails.logger.info("Created foursquare checkin #{checkin_id}")
+      Rails.logger.info("Created foursquare checkin #{checkin_id}")
+    rescue
+      Rails.logger.info("Failed to create fs checkin")  #retry?
+      raise
+    end
 
     #try photo upload next
     

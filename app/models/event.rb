@@ -7,9 +7,10 @@ class Event
 
 TRENDING              = "trending"
 TRENDED               = "trended"
-WAITING                = "waiting"
+WAITING               = "waiting"
 NOT_TRENDING          = "not_trending"
 TRENDING_PEOPLE       = "trending_people"
+TRENDING_INTERNAL     = "trending_internal"
 TRENDED_PEOPLE        = "trended_people"
 WAITING_CONFIRMATION  = "waiting_confirmation"
 WAITING_SCHEUDLED     = "waiting_scheduled"
