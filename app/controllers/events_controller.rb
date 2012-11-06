@@ -253,10 +253,13 @@ class EventsController < ApplicationController
 
   def user
 
+    Rails.logger.info("params: #{params}")
+
     if params[:cmd] == "userToken"
     #do nothing
 
     else
+
 
       if APN::Device.where(:udid => params[:deviceid]).first
         d = APN::Device.where(:udid => params[:deviceid]).first
