@@ -19,8 +19,10 @@ class NowUsersController < ApplicationController
   end
 
   def index
+
+    response_text = params[:in]
     x = [10084].pack('U')
-    @test = OpenStruct.new({:text => "abcd\u00e9#{x}"})
+    @test = OpenStruct.new({:text => "abcd\u00e9#{x} : #{response_text} "})
   end
 
 end
