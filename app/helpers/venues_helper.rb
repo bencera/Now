@@ -30,10 +30,13 @@ module VenuesHelper
 
 # returns the instagram json
 
-  def self.pull_recent_photos(options = {})
+  def self.pull_recent_photos(in_params = {})
+
+    options = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
 
     #event creation: if 0 come back from location search, do nearby
     #event reply: do nearby within 50 meters (?)
+    #
 
     errors = []
     fs_id = options[:id]
@@ -91,7 +94,7 @@ module VenuesHelper
       user_loc = venue_loc
     end
 
-    search_loc = (Geocoder::Calculations.distance_between(user_loc, venue_loc) > 1) ? user_loc : venue_loc
+    search_loc = (Geocoder::Calculations.distance_between(user_loc, venue_loc) > 1) ? venue_loc : user_loc
 
     Rails.logger.info("searching within 50 meters of location #{search_loc}")
 
