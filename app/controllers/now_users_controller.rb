@@ -18,4 +18,9 @@ class NowUsersController < ApplicationController
 
   end
 
+  def index
+    x = [10084].pack('U')
+    @test = OpenStruct.new({:text => "abcd\u00e9#{x}"})
+  end
+
 end

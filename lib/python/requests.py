@@ -42,3 +42,5 @@ print r.text
 del_url = "http://localhost:3001/checkins/509445e8a5bfb84a31000002" 
 r = requests.delete(del_url)
 print r.text
+
+fs_token = "IWUTXRTAEUJTSYVKNZEBVJSSZRMLPGF0T3GJIPK35B2QT0CW"

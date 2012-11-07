@@ -64,7 +64,7 @@ Ubimachine::Application.routes.draw do
 
   resources :checkins, :only => [:index, :show, :create, :destroy]
 
-  resources :now_users, :only => [:show, :update]
+  resources :now_users, :only => [:show, :update, :index]
 
   resources :reactions, :only => [:index]
 
