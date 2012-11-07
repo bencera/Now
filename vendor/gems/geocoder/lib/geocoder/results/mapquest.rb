@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'geocoder/results/base'
 require 'geocoder/results/nominatim'
 

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Facebooklike
   @queue = :facebooklike_queue
   def self.perform(access_token, event_shortid, fb_user_id)

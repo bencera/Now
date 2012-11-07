@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Instagram
   # Custom error class for rescuing from all Instagram errors
   class Error < StandardError; end

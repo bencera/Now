@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module ActiveSupport::JSON::Encoding
   class << self
     def escape(string)

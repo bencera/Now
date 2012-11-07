@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Checkin
   include Mongoid::Document
   include Mongoid::Timestamps

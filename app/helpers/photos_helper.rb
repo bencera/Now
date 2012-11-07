@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module PhotosHelper
   
   def timeago_small(time)

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Categories
   @queue = :categories_queue
 

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Checkanswer
   @queue = :checkanswers_queue
   def self.perform(ig_media_id, media_comment_count, photo_user_id, access_token)

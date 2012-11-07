@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class WaitingNotification
 
   @queue = :waiting_notification_queue

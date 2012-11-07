@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Foursquare
   class Photo
     def initialize(foursquare, json)

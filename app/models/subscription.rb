@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Subscription
   include Mongoid::Document
   field :name

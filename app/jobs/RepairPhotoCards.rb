@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class RepairPhotoCards
   @queue = :repair_photo_queue
 

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Suggestfollow
   @queue = :follow_queue
 

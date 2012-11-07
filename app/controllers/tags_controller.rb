@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class TagsController < ApplicationController
   http_basic_authenticate_with :name => "ben_cera", :password => "London123"
   

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module ApplicationHelper
   
   def pageless(total_pages, url=nil, container=nil)

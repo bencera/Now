@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class FacebookUser
   include Mongoid::Document
   include Mongoid::Timestamps

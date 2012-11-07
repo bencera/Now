@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'geocoder/models/base'
 
 module Geocoder

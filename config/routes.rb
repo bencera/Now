@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 Ubimachine::Application.routes.draw do
 
   require 'resque_scheduler'

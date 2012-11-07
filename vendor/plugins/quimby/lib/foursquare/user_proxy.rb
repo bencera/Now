@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Foursquare
   class UserProxy
     def initialize(foursquare)

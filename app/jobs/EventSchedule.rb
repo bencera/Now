@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class EventSchedule
 
   #TODO: intitially, because i'm worried about trending stepping on this, we should actually call

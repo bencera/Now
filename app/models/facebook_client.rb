@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class FacebookClient
 	include Mongoid::Document
 	field :token

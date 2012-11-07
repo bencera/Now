@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddPeopleEvent
   @queue = :add_people_event_queue
 

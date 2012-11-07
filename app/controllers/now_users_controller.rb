@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class NowUsersController < ApplicationController
   
   def show

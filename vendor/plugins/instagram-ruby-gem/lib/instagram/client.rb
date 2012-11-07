@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Instagram
   # Wrapper for the Instagram REST API
   #

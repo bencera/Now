@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # Here's how I want this to work:
 #
 #   users, venues = foursquare.multi do |request|

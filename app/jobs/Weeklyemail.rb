@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Weeklyemail
   @queue = :weeklyemail_queue
   def self.perform()

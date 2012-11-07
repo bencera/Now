@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Completeiginfo
   @queue = :completeinfo_queue
   def self.perform(user_id)

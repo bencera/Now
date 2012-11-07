@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Fetchvenuephotos
   @queue = :fetchvenuephotos_queue
   def self.perform(subscription)

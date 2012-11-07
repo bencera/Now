@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class ScheduledEvent
   include Mongoid::Document
   include Mongoid::Timestamps

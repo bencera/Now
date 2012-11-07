@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Facebookunlike
   @queue = :facebookunlike_queue
   def self.perform(access_token, event_shortid, user_id)

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class ReactionsController < ApplicationController
   def index
     if params[:event_id]

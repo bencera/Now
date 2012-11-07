@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module VenuesHelper
 
   def self.get_recent_photo_ig_ids(fs_id)

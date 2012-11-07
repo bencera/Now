@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require File.dirname(__FILE__) + '/lib/mobile_fu_helper.rb'
 require File.dirname(__FILE__) + '/lib/mobilized_styles'
 require File.dirname(__FILE__) + '/lib/mobile_fu'

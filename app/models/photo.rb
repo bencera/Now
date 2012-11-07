@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 #do before save for photos as well
 
 class Photo

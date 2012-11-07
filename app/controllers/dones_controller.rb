@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class DonesController < ApplicationController
   
   def create

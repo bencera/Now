@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Request
   include Mongoid::Document
   field :type

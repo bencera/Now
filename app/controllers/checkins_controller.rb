@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CheckinsController < ApplicationController
   respond_to :json, :xml
 

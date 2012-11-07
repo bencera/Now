@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class EventsController < ApplicationController
    layout :choose_layout
   respond_to :json, :xml
