@@ -22,7 +22,7 @@ class NowUsersController < ApplicationController
 
     response_text = params[:in]
     x = [10084].pack('U')
-    text = "abcd#{x} : #{response_text} " 
+    text = "abcd\u00e9#{x} : #{response_text} " 
     @test = OpenStruct.new({:text => text})
 
     conall = FacebookUser.last
