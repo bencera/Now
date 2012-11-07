@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 class FoursquareShare
   @queue = :foursquareshare_queue
 
@@ -30,6 +29,13 @@ class FoursquareShare
       Rails.logger.info("Failed to create fs checkin")  #retry? probably a bad fs token
       raise
     end
+
+    #photo upload
+#    require 'net/http/post/multipart'
+
+#    url = URI.parse "https://api.foursquare.com/v2/photos/add?oauth_token=IWUTXRTAEUJTSYVKNZEBVJSSZRMLPGF0T3GJIPK35B2QT0CW"
+
+    
 
     #try photo upload next
     
