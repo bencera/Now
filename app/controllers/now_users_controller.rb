@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 class NowUsersController < ApplicationController
   
   def show
@@ -16,21 +15,5 @@ class NowUsersController < ApplicationController
     else
       render :text => "access denied", :status => :error
     end
-
   end
-
-  def index
-
-    response_text = params[:in]
-    x = [10084].pack('U')
-    text = "abcd\u00e9#{x} : #{response_text} " 
-    @test = OpenStruct.new({:text => text})
-
-    conall = FacebookUser.last
-    conall = FacebookUser.find("503e79f097b4800009000003") if Rails.env == "production"
-    
-    conall.send_notification(text, nil)
-
-  end
-
 end
