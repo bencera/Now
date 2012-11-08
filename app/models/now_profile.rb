@@ -9,6 +9,8 @@ class NowProfile
   #                            :notify_repost, :notify_views, :notify_photos, :notify_local]
 
   field :name
+  field :first_name
+  field :last_name
   field :bio
   field :email
   field :profile_photo_url
