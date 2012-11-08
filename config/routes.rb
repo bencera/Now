@@ -19,6 +19,7 @@ Ubimachine::Application.routes.draw do
 
   match "/now_users/:id" => "now_users#show"
   match "/now_users/update" => "now_users#update"
+  match "/now_users/login" => "now_users#login"
 
 #### Conall end
 
