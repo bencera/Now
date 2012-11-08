@@ -1,6 +1,8 @@
 # -*- encoding : utf-8 -*-
 require 'rack/oauth2'
 
+
+###### See if this is still needed.  We need to prune dead code
 class SessionsController < ApplicationController
   
   def callback
