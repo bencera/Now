@@ -249,7 +249,7 @@ module EventsHelper
       checkin.checkin_card_list = []
       checkin_card_ids.each do |photo_id| 
         seen_photos_hash[photo_id] = true
-        checkin.checkin_card_list.push photo_hash[photo_id]
+        checkin.checkin_card_list.push photo_hash[photo_id] unless photo_hash[photo_id].nil?
       end
     end
 
