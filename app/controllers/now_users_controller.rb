@@ -10,7 +10,14 @@ class NowUsersController < ApplicationController
   def update
     @now_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
     if @now_user
-      @now_user.update_now_attributes(params)
+      new_values = {}
+      new_values[:first_name] = params[:first_name]
+      new_values[:last_name] = params[:last_name]
+      new_values[:bio] = params[:bio]
+      new_values[:email] = params[:email]
+      new_values[:profile_photo_url] = params[:profile_photo_url]
+
+      @now_user.update_now_attributes(new_values)
     else
       return render :text => "error", :status => :error
     end
