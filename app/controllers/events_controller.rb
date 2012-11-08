@@ -11,10 +11,11 @@ class EventsController < ApplicationController
     if params[:version] > 1
       @checkins = @event.checkins.order_by([[:created_at, :asc]]).entries
       @checkins.unshift OpenStruct.new(@event.make_fake_reply)
+
+      @other_photos = EventsHelper.build_photo_list(@event, @checkins, :version => params[:version])
     end
 
-    version = params[:version].to_i
-    @other_photos = EventsHelper.build_photo_list(@event, @checkins, :version => version)
+    @other_photos ||= @event.photos
 
     #this is to put the event's photo card at creation at the top
     begin
