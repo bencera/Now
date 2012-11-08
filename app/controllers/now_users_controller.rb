@@ -17,7 +17,7 @@ class NowUsersController < ApplicationController
       new_values[:email] = params[:email]
       new_values[:profile_photo_url] = params[:profile_photo_url]
 
-      @now_user.update_now_attributes(new_values)
+      @now_user.update_now_profile(new_values)
     else
       return render :text => "error", :status => :error
     end
