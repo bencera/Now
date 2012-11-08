@@ -17,6 +17,9 @@ Ubimachine::Application.routes.draw do
 
   match "/venue/:id/profile" => "venues#show_profile"
 
+  match "/now_users/:id" => "now_users#show"
+  match "/now_users/update" => "now_users#update"
+
 #### Conall end
 
   match "/mu-34dfab81-28f6d162-ec82daa2-3f6b93cd" => "home#blitz"
@@ -64,8 +67,6 @@ Ubimachine::Application.routes.draw do
   resources :scheduled_events, :only => [:index, :show, :create, :update, :destroy]
 
   resources :checkins, :only => [:index, :show, :create, :destroy]
-
-  resources :now_users, :only => [:show, :update, :index]
 
   resources :reactions, :only => [:index]
 
