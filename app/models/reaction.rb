@@ -76,17 +76,11 @@ class Reaction
     reaction.event.update_reaction_count
     reaction.event.save!
 
-    if(event.facebook_user && event.facebook_user != fb_reactor)
+    message = reaction.generate_message(event.facebook_user.facebook_id, false) 
 
-      message = reaction.generate_message(event.facebook_user.facebook_id, false) 
-  
-      if options[:additional_message]
-        message += ": #{options[:additional_message]}"
-      end
-  
+    if(event.facebook_user && event.facebook_user != fb_reactor)
       begin
         event.notify_creator(message)
-
       rescue
         Rails.error.info("Reaction: failed to send message '#{message}' to event #{event.id} creator")
       end
@@ -94,7 +88,7 @@ class Reaction
     end
        
     if(reaction.reaction_type == TYPE_REPLY)
-      event.notify_chatroom(reaction.generate_reply_notification(), :except_ids => [reaction.reactor_id, reaction.facebook_user.facebook_id])
+      event.notify_chatroom(message, :except_ids => [reaction.reactor_id, reaction.facebook_user.facebook_id])
     end
   end
 
@@ -122,8 +116,7 @@ class Reaction
     return emoji + " " + message
   end
 
-  def generate_reply_notification()
-    return self.reactor_name.split(" ").first.capitalize + ' replied, "' + self.additional_message + '"'
+  def generate_reply_message
+    return self.generate_message(nil, false)
   end
-
 end
