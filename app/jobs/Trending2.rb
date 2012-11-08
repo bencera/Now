@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Trending2
   @queue = :trending2_queue
 

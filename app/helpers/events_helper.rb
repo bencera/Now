@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module EventsHelper
 
 
@@ -188,8 +189,10 @@ module EventsHelper
     #now turn the checkins into the events they point to
     events.map! do |a| 
       if a.class.to_s == "Checkin"
-        a.event.overriding_repost = a
-        a.event
+        event = a.event
+        event.overriding_repost = a
+        event.overriding_description = a.description unless event.facebook_user_id == fb_user.id
+        event
       else 
         a 
       end
@@ -233,9 +236,10 @@ module EventsHelper
   end
 
   # builds a 
-  def self.build_photo_list(event, checkins)
+  def self.build_photo_list(event, checkins, options={})
     photos = event.photos.entries
     seen_photos_hash = {}
+    version = options[:version] || 0
 
     #make fast lookup
     photo_hash = Hash[photos.map {|photo| [photo.id, photo] }]
@@ -245,7 +249,7 @@ module EventsHelper
       checkin.checkin_card_list = []
       checkin_card_ids.each do |photo_id| 
         seen_photos_hash[photo_id] = true
-        checkin.checkin_card_list.push photo_hash[photo_id]
+        checkin.checkin_card_list.push photo_hash[photo_id] unless photo_hash[photo_id].nil?
       end
     end
 
@@ -254,19 +258,29 @@ module EventsHelper
     end
 
     #make the list of photos we didn't see in a card yet
-    other_photos = []
-    photos.each do |photo|
-      other_photos.push photo unless seen_photos_hash[photo.id]
+
+    if(version < 2)
+      other_photos = photos
+    else
+      other_photos = []
+      photos.each do |photo|
+        other_photos.push photo unless seen_photos_hash[photo.id]
+      end
     end
+
     return other_photos
   end
 
   def self.get_localized_results(lon_lat, max_dist, options={})
 
-    event_list = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
+    event_query = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => Event::TRENDED_OR_TRENDING)
+    if options[:category]
+      event_query = event_query.where(:category => options[:category])
+    end
+    event_list = event_query.order_by([[:end_time, :desc]]).entries
 
     venues = {}
-   events = []
+    events = []
     event_list.each do |event| 
       if venues[event.venue_id].nil?
         events << event
@@ -294,6 +308,16 @@ module EventsHelper
     facebook_id = FacebookUser.find_by_nowtoken(nowtoken).facebook_id
     shortids = $redis.smembers("liked_events:#{facebook_id}")
     return Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :shortid.in => shortids).order_by([[:end_time, :desc]]).take(20)
+  end
+
+  def self.repair_event_v2_photos(event)
+    photos = event.photos.entries
+    photos.each do |photo| 
+      if photo.now_version > 1
+        photo.user_details = [photo.user.ig_username, photo.user.ig_details[1], photo.user.ig_details[0]]
+        photo.save
+      end
+    end
   end
 
   def self.create_localized_venue_collection()

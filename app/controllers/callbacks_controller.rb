@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 #to do : utiliser process_subscription avec signature X hub
 # =>     corriger pour user updates (after)
 

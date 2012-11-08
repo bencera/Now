@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Sendcomments
   @queue = :sendcomments_queue
   def self.perform(event_id, question1, question2, question3)

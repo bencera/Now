@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Geocoder
   module Result
     class Base

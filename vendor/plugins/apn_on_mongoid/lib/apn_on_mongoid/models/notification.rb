@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module APN
   class Notification
     
@@ -85,12 +86,26 @@ module APN
       json = self.to_apple_json
       raise APN::Errors::ExceededMessageSizeError.new(json) if json.size.to_i > APN::Errors::ExceededMessageSizeError::MAX_BYTES
 
-      "\0\0 #{self.subscription.to_hexa}\0#{(json.length).chr}#{json}"
+#this is taken from APNS gem (gem apns)
+      pt = [self.subscription.token.gsub(/[\s|<|>]/,'')].pack('H*')
+      pm = self.packaged_message
+
+      [0, 0, 32, pt, 0, pm.bytesize, pm].pack("ccca*cca*")
     end
     
     # Deliver the current notification
     def deliver
       APN::Notifications.deliver([self])
+    end
+
+#this is taken from APNS gem (gem apns)
+    def packaged_message()
+      aps = {'aps'=> {} }
+      aps['aps']['alert'] = self.alert if self.alert
+      aps['aps']['badge'] = self.badge if self.badge
+      aps['aps']['sound'] = self.sound if self.sound
+      aps.merge!(self.payload) if self.payload
+      aps.to_json
     end
 
     private

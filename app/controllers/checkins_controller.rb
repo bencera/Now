@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CheckinsController < ApplicationController
   respond_to :json, :xml
 
@@ -30,7 +31,30 @@ class CheckinsController < ApplicationController
   end
 
   def destroy
+
+    fb_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+
+    checkin = Checkin.where(:_id => params[:id]).first
+    if checkin.nil?
+      event = Event.where(:_id => params[:id]).first
+      if event.nil?
+        return render :text => "invalid id", :status => :error
+      end
+      return render :text => "Not Authorized", :status => :error if fb_user.id != event.facebook_user_id
+      event.destroy_reply(nil)
+    else
+      event = checkin.event
+      return render :text => "Not Authorized", :status => :error if fb_user.id != checkin.facebook_user_id && fb_user.id != event.facebook_user_id
+      
+      event.destroy_reply(checkin)
+    end
+    
+    return render :text => "OK", :status => :ok
   end
 
-
+  
+  def fs_token
+    Rails.logger.info(params)
+    return render :text => "OK", :status => :ok
+  end
 end

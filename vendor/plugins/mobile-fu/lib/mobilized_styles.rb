@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # Copyright (c) 2008 Brendan G. Lim (brendan@intridea.com)
 # 
 # Permission is hereby granted, free of charge, to any person obtaining

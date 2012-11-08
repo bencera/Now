@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Event
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -7,9 +8,10 @@ class Event
 
 TRENDING              = "trending"
 TRENDED               = "trended"
-WAITING                = "waiting"
+WAITING               = "waiting"
 NOT_TRENDING          = "not_trending"
 TRENDING_PEOPLE       = "trending_people"
+TRENDING_INTERNAL     = "trending_internal"
 TRENDED_PEOPLE        = "trended_people"
 WAITING_CONFIRMATION  = "waiting_confirmation"
 WAITING_SCHEUDLED     = "waiting_scheduled"
@@ -31,7 +33,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 #####
 
 # this is here to allow for caching of photos on index pulls -- only use overriding repost in the index view!
-  attr_accessor :event_card_list, :overriding_repost
+  attr_accessor :event_card_list, :overriding_repost, :overriding_description
     
   field :coordinates, :type => Array
   field :start_time
@@ -59,6 +61,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :last_update
   field :next_update
 
+  #this is used to keep verifying live photos for events that are getting viewed
+  field :last_verify
+
  # not using a has_many relationship because i don't think this is how the model will end up looking
  # chances are, a checkin will have description and photo_list, then an event will have a main checkin
  # which will be the creating checkin.  this is more for illustration purposes until we have a checkin model
@@ -71,12 +76,16 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :venue_fsq_id
 
   #field :n_people
+
+  field :n_reactions, type: Integer, default: 0
   
   belongs_to :venue
   belongs_to :scheduled_event
   belongs_to :facebook_user
   has_and_belongs_to_many :photos 
   has_many :checkins, :dependent => :destroy
+
+  has_many :reactions
   
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates
@@ -91,7 +100,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if self.photos.any?
       self.n_photos = self.photos.count
       last_photo_time = self.photos.first.time_taken
-      self.end_time = (self.end_time && self.end_time > last_photo_time) ? self.end_time : last_photo_time
+      self.end_time = (self.end_time && self.end_time > last_photo_time) ? self.end_time : last_photo_time if TRENDING_STATUSES.include? self.status
       #don't want to do the same with start time since people created events won't line up with first photo
     end
 
@@ -146,10 +155,17 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_params.delete('action')
 
       errors += "no photos given\n" if event_params[:photo_id_list].nil? && event_params[:photo_ig_list].nil?
-      errors += "no venue given\n" if event_params[:venue_id].nil?
-      event_params[:description] = " " if event_params[:description].nil?
-      event_params[:category] = "Misc" if event_params[:category].nil?
+      event_params[:description] = " " if event_params[:description].blank?
+      event_params[:category] = "Misc" if event_params[:category].blank?
 
+
+      if !(event_params[:new_photos] == false || event_params[:new_photos] == "false")
+        event_params[:new_photos] = true
+      else
+        event_params[:new_photos] = false
+      end
+
+      errors += "must give new photos if no event selected\n" if event_params[:new_photos] == false && event_params[:event_id].nil?
 
       #TODO: put in tag repost = true for reposts -- otherwise it will create a new event
       venue = Venue.where(:_id => event_params[:venue_id]).first
@@ -157,11 +173,16 @@ SCORE_HALF_LIFE       = 7.day.to_f
       if(event_params[:event_id])
         event = Event.where(:_id => event_params[:event_id]).first
         errors += "invalid event id" if event.nil?
-      elsif venue
-        event = venue.get_live_event
+        event_params[:venue_id] = event.venue.id.to_s
+      elsif  event_params[:venue_id]
+        event_params[:new_post] = true
+        event = venue.get_live_event if venue
       else 
         errors += "no venue id or event id"
       end
+
+      Rails.logger.info("Photo ids given by user: photo_ig_list: #{event_params[:photo_ig_list]}, photo_id_list #{event_params[:photo_id_list]}")
+      Rails.logger.info("Lets just debug the whole param set: #{event_params}")
   
       if(event_params[:photo_ig_list])
         #for backwards compatibility
@@ -174,7 +195,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
         pair = photo_id.split("|")
         errors += "invalid photo source #{pair[0]}" if !Photo::VALID_SOURCES.include? pair[0]
         #make this validation more sophisticated -- knowing the source, we can tell if an id looks valid
-        errors += "invalid id #{pair[1]}" if pair[1].blank?
+        errors += "no/invalid photo id #{pair[1]}" if pair[1].blank?
       end
 
       event_params[:illustration_index] = 0
@@ -190,6 +211,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if errors.blank?
       event_params[:shortid] = event ? event.shortid : Event.get_new_shortid
       event_params[:id] = event ? event.id.to_s : Event.new.id.to_s
+      event_params[:reply_id] = event ? Checkin.new.id.to_s : nil
       # technically this isn't safe, since we could end up with duplicate shortids created
       # chances of this are x in 62^6 where x is the number of events being created in the
       # time between this call and the AddPeopleEvent job being called -- that's very low
@@ -212,13 +234,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
       main_photo_ids = self.overriding_repost ? self.overriding_repost.photo_card : self.photo_card
     end
 
-    remainder = PHOTO_CARD_PHOTOS- main_photo_ids.count
-
-    if remainder > 0
-      other_photos = self.photo_ids.map {|photo_id| photo_id } - main_photo_ids
-      main_photo_ids.push(*other_photos[0..(remainder - 1)])
+    if main_photo_ids.empty?
+      #fixed a weird line -- make sure event detail and index still work...
+      main_photo_ids = self.photo_ids[0..(PHOTO_CARD_PHOTOS - 1)] 
     end
-
       
     return main_photo_ids[0..6]
   end
@@ -230,7 +249,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
     end
 
-    fb_user.fb_details['name'] unless fb_user.nil? || fb_user.fb_details.nil?
+    fb_user.now_profile.name unless fb_user.nil?
   end
 
   def get_fb_user_photo
@@ -240,7 +259,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
     end
 
-    fb_user.get_fb_profile_photo unless fb_user.nil? 
+    fb_user.now_profile.profile_photo_url unless fb_user.nil?
   end
 
   def get_fb_user_id
@@ -250,11 +269,15 @@ SCORE_HALF_LIFE       = 7.day.to_f
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
     end
 
-    fb_user.facebook_id unless fb_user.nil? || fb_user.fb_details.nil?
+    fb_user.facebook_id unless fb_user.nil? 
   end
 
   def preview_photos()
     return event_card_list
+  end
+
+  def get_description
+    return overriding_description || self.description
   end
 
   def previous_events
@@ -645,9 +668,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def repair_photo_list
     photo_id_list = []
-    event.photos.each {|photo| photo_id_list.push photo.id unless photo_id_list.include? photo.id }
-    event.photo_ids = photo_id_list
-    event.save
+    self.photos.each {|photo| photo_id_list.push photo.id unless photo_id_list.include? photo.id }
+    self.photo_ids = photo_id_list
+    self.save
   end
 
   ##############################################################
@@ -658,6 +681,137 @@ SCORE_HALF_LIFE       = 7.day.to_f
   def update_interval
     # for now just give a random number between 2 and 8 to load balance
     return [*2..8].sample.minutes.to_i
+  end
+
+  # send the creator a message about his event (reaction)
+  def notify_creator(message)
+    if self.facebook_user.nil?
+      Rails.logger.error("No event creator to notify! event #{self.id} message #{message}")
+      return
+    end
+
+    self.facebook_user.send_notification(message, self.id) 
+  end
+
+  def notify_chatroom(message, options={})
+
+    facebook_users = self.checkins.distinct(:facebook_user_id)
+    
+    except_ids = options[:except_ids] || []
+
+    if facebook_users.any?
+      FacebookUser.where(:_id.in => facebook_users).entries.each do |fb_user| 
+        fb_user.send_notification(message, self.id) unless except_ids.include? fb_user.facebook_id
+      end
+    end
+  end
+
+  # every view of an event, increment a counter.  if the counter is high enough, enqueue a reaction
+  
+  def add_view
+    n_views = $redis.incr("VIEW_COUNT:#{self.shortid}")
+    if Reaction::VIEW_MILESTONES.include? n_views.to_i
+      Resque.enqueue(ViewReaction, self.id, n_views)
+    end
+  end
+
+  def update_reaction_count
+    self.n_reactions = self.reactions.count
+  end
+
+  def make_fake_reply
+    fake_reply = {}
+    fake_reply[:id] = self.id
+    fake_reply[:created_at] = self.created_at
+    fake_reply[:description] = self.description
+    fake_reply[:category] = self.category
+    fake_reply[:new_photos] = true
+    fake_reply[:get_fb_user_name] = self.facebook_user.nil? ? " " : self.facebook_user.now_profile.name 
+    fake_reply[:get_fb_user_id] = self.facebook_user.nil? ? nil : self.facebook_user.facebook_id
+    fake_reply[:get_fb_user_photo] = self.facebook_user.nil? ? nil : self.facebook_user.now_profile.profile_photo_url
+    fake_reply[:new_photos] = true
+    fake_reply[:get_preview_photo_ids] = self.get_preview_photo_ids
+    fake_reply[:checkin_card_list] = []
+
+    fake_reply[:fake] = true
+
+    return fake_reply
+  end
+
+  def destroy_reply(reply=nil)
+    if reply
+      #we can destroy it but we should see if any photos were created -- we will have to check other replies in case the photo is there
+
+      photos_to_destroy = reply.new_photos ? reply.photo_card : []
+
+      reply.destroy
+    else
+      #they want to delete the first photo card
+
+      first_reply = self.checkins.where(:new_photos.in => [true, nil]).order_by([[:created_at, :asc]]).first
+
+      if first_reply.nil?
+        #we'll actually destroy it rather than change status -- for user privacy etc
+
+        self.photos.where(:external_media_source => "nw").each {|photo| photo.destroy }
+        self.destroy
+        return
+      else
+        self.facebook_user = first_reply.facebook_user
+        self.description = first_reply.description
+        self.category = first_reply.category
+        
+        photos_to_destroy = self.photo_card
+
+        self.photo_card = first_reply.photo_card
+
+        self.save!
+        first_reply.destroy
+      end
+    end
+    
+    repair_photos = []
+    self.photos.where(:_id.in => photos_to_destroy, :external_media_source => "nw").each do  |photo| 
+      repair_photos << photo.id
+      photo.destroy 
+    end
+
+    Resque.enqueue(RepairPhotoCards, self.id, repair_photos)
+
+  end
+
+  ################################################################################
+  # photo_replacements is an array of 2-entry arrays, [[old_id,new_id],[old_id,new_id],...]
+  # where photo with old_id should be replaced with new_id.  if new_id is nil, then
+  # photo is just removed from all cards
+  ################################################################################
+  def repair_photo_cards(photo_replacements)
+    photo_replacements.each do |id_pair|
+      if id_pair[1].nil?
+        self.photo_card.delete(id_pair[0])
+      else
+        index = self.photo_card.find_index(id_pair[0])
+        if index
+          self.photo_card[index] = id_pair[1]
+        end
+      end
+    end
+    self.save
+
+    self.checkins.each do |checkin|
+      photo_replacements.each do |id_pair|
+        if id_pair[1].nil?
+          checkin.photo_card.delete(id_pair[0])
+        else
+          index = checkin.photo_card.find_index(id_pair[0])
+          if index
+            checkin.photo_card[index] = id_pair[1]
+          end
+        end
+      end
+
+      checkin.save
+    end
   end
 
   private

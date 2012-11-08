@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module ActionController
   module MobileFu
     # These are various strings that can be found in mobile devices.  Please feel free

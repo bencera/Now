@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class FollowsController < ApplicationController
   def index
     require 'will_paginate/array'

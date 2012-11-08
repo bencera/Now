@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 #do before save for photos as well
 
 class Photo
@@ -109,6 +110,7 @@ class Photo
       user.update_if_new(username_id.to_s, media.user.username, media.user.full_name, 
                 media.user.profile_picture, media.user.bio, media.user.website)
 
+
       photo.user = user
 
     elsif(photo_src == "nw")
@@ -125,11 +127,12 @@ class Photo
 
       user_id = self.now_to_ig_user_id(fb_user.facebook_id)
       user = User.where(:ig_id =>user_id).first || User.new(:ig_id => user_id)
-      user.update_if_new(user_id, fb_user.fb_details["username"], fb_user.fb_details["name"], fb_user.get_fb_profile_photo, "", "")
+      user.update_if_new(user_id, fb_user.fb_details["username"], fb_user.now_profile.name, fb_user.now_profile.profile_photo_url, "", "")
       
       photo.user = user
     end 
     
+    photo.user_details = [photo.user.ig_username, photo.user.ig_details[1], photo.user.ig_details[0]]
     photo.now_version = 2
     photo.url = [photo.low_resolution_url, photo.high_resolution_url, photo.thumbnail_url]
     photo.save!

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class RetryPhotos
   @queue = :retry_photos_queue
 

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Geocoder
   class Query
     attr_accessor :text, :options

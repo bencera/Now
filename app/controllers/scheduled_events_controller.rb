@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class ScheduledEventsController < ApplicationController
   respond_to :json, :xml
 

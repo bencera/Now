@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class FacebookUser
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -17,10 +18,16 @@ class FacebookUser
 
   before_create :generate_now_token
 
+  before_save :set_profile
+
   has_many :devices, class_name: "APN::Device"
   has_many :scheduled_events
   has_many :events
   has_many :checkins
+
+  embeds_one :now_profile
+
+  has_many :reactions
 
   validates_numericality_of :score
 
@@ -31,9 +38,6 @@ class FacebookUser
 
     def find_or_create_by_facebook_token(token)
       facebook_client = FacebookClient.new(token: token)
-
-      
-      
 
       if user = FacebookUser.find_by_facebook_id(facebook_client.user_id)
       	user.fb_accesstoken = token
@@ -61,21 +65,70 @@ class FacebookUser
   def like_event(event_shortid, access_token)
   	$redis.sadd("event_likes:#{event_shortid}", facebook_id)
     $redis.sadd("liked_events:#{facebook_id}", event_shortid)
-  	Resque.enqueue(Facebooklike, access_token, event_shortid, facebook_id)
+  	Resque.enqueue(Facebooklike, access_token, event_shortid, self.id.to_s)
   end
 
   def unlike_event(event_shortid, access_token)
     $redis.srem("event_likes:#{event_shortid}", facebook_id)
     $redis.srem("liked_events:#{facebook_id}",event_shortid)
-    Resque.enqueue(Facebookunlike, access_token, event_shortid, facebook_id)
+    Resque.enqueue(Facebookunlike, access_token, event_shortid, self.id.to_s)
   end
 
   def is_white_listed
     ["571905313", "1101625"].include?(self.facebook_id)
   end
 
-  def get_fb_profile_photo
-    return (self.fb_details.nil?) ? nil : "https://graph.facebook.com/#{self.fb_details['username']}/picture"
+  def update_now_profile(params)
+
+    #we don't want to set any values to the NowProfile unless the user explicity puts them there, that way if we periodically pull from fb, we'll
+    #have more up to date info
+
+    self.now_profile ||= NowProfile.new
+
+    self.now_profile.update_attributes(params)
+    
+  end
+
+  def set_profile
+    self.now_profile ||= NowProfile.new
+    fb_details_valid = !self.fb_details.nil?
+    self.now_profile.name ||= ( fb_details_valid ? self.fb_details['name'] : nil )
+    self.now_profile.profile_photo_url ||=  ( fb_details_valid ? "https://graph.facebook.com/#{self.fb_details['username']}/picture" : nil )
+  end
+
+  def get_now_profile(requested_by)
+    profile = {}
+    fb_details_valid = !self.fb_details.nil?
+
+    self.set_profile if self.now_profile.nil?
+    
+    profile[:name] = self.now_profile.name
+    profile[:bio] = self.now_profile.bio
+    profile[:photo] = self.now_profile.profile_photo_url
+    profile[:experiences] = self.events.count
+    profile[:reactions] = self.reactions.count
+    
+    if self == requested_by
+      profile[:notify_like] = self.now_profile.notify_like
+      profile[:notify_repost] = self.now_profile.notify_repost
+      profile[:notify_photos] = self.now_profile.notify_photos
+      profile[:notify_local] = self.now_profile.notify_local
+    end
+    
+    return profile
+
+  end
+
+  def send_notification(message, event_id)
+    self.devices.each do |device|
+      device.subscriptions.each do |subscription|
+        n = APN::Notification.new
+        n.subscription = subscription
+        n.alert = message
+        n.event =  event_id 
+        n.deliver
+      end
+    end
   end
 
 #  def do_redis_checkin(event)

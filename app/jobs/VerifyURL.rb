@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class VerifyURL
   @queue = :verifyURL_queue
   def self.perform(event_id)

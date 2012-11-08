@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Instagram
   class Client
     # Defines methods related to likes

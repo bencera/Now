@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'geocoder/lookups/base'
 require "geocoder/results/google"
 

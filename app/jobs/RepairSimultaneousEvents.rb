@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class RepairSimultaneousEvents
   @queue = :simultaneous_events_queue
 

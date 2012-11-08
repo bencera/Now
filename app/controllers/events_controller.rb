@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class EventsController < ApplicationController
    layout :choose_layout
   respond_to :json, :xml
@@ -6,8 +7,17 @@ class EventsController < ApplicationController
   
   def show
     @event = Event.find(params[:id])
-    @checkins = @event.checkins.entries
-    @other_photos = EventsHelper.build_photo_list(@event, @checkins)
+    params[:version] ||= 0
+    if params[:version].to_i > 1
+      @checkins = @event.checkins.order_by([[:created_at, :asc]]).entries
+      @checkins.unshift OpenStruct.new(@event.make_fake_reply)
+
+      @other_photos = EventsHelper.build_photo_list(@event, @checkins, :version => params[:version].to_i)
+    end
+
+    @other_photos ||= @event.photos
+
+    #this is to put the event's photo card at creation at the top
     begin
     if params[:nowtoken]
       @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
@@ -17,6 +27,8 @@ class EventsController < ApplicationController
     if params[:more] == "yes"
       @more = "yes"
     end
+
+    @event.add_view
   end
   
   def showless
@@ -85,7 +97,7 @@ class EventsController < ApplicationController
 
   def showweb
     @event = Event.where(:shortid => params[:shortid]).first
-    @venue = @event.venue
+    @venue = @event.venue 
     @photos = @event.photos
     case @photos.first.city
     when "newyork"
@@ -105,6 +117,8 @@ class EventsController < ApplicationController
     when "prague"
       @city = "Prague"
     end
+
+    @event.add_view
   end
   
   def cities
@@ -157,7 +171,7 @@ class EventsController < ApplicationController
     
     Resque.enqueue(AddPeopleEvent, converted_params)
      
-    return render :text => "#{converted_params[:id]}|#{converted_params[:shortid]}", :status => :ok
+    return render :text => "#{converted_params[:id]}|#{converted_params[:shortid]}|#{converted_params[:reply_id]}", :status => :ok
 
   end
 
@@ -244,10 +258,13 @@ class EventsController < ApplicationController
 
   def user
 
+    Rails.logger.info("params: #{params}")
+
     if params[:cmd] == "userToken"
     #do nothing
 
     else
+
 
       if APN::Device.where(:udid => params[:deviceid]).first
         d = APN::Device.where(:udid => params[:deviceid]).first

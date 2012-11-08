@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Foursquare
   class VenueProxy
     def initialize(foursquare)

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module MobileFuHelper
   ACCEPTABLE_TYPES = [:mobile, :basic]
   

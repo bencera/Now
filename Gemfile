@@ -4,6 +4,8 @@ gem 'rails', '3.1.3'
 
 gem 'heroku'
 
+
+
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
@@ -84,6 +86,7 @@ gem "typhoeus", '~> 0.2.2'
 gem "timezone", "~> 0.1.5"
 
 group :development do
+  gem "magic_encoding", "~> 0.0.2"
   gem 'faker', '1.0.1'
 end
 

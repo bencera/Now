@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class UsefulsController < ApplicationController
   
   def create

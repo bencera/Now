@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class NowCity
   include Mongoid::Document
   include Mongoid::Timestamps

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'faraday'
 require File.expand_path('../version', __FILE__)
 

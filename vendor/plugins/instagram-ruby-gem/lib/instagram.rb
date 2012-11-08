@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require File.expand_path('../instagram/error', __FILE__)
 require File.expand_path('../instagram/configuration', __FILE__)
 require File.expand_path('../instagram/api', __FILE__)

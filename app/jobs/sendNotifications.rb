@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Sendnotifications
   @queue = :sendnotifications_queue
   def self.perform(event_id)

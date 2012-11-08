@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 Ubimachine::Application.routes.draw do
 
   require 'resque_scheduler'
@@ -13,6 +14,8 @@ Ubimachine::Application.routes.draw do
   match "/event/peoplecreate" => "events#create_people"
 
   match "/venue/has_activity" => "venues#has_activity"
+
+  match "/venue/:id/profile" => "venues#show_profile"
 
 #### Conall end
 
@@ -62,6 +65,10 @@ Ubimachine::Application.routes.draw do
 
   resources :checkins, :only => [:index, :show, :create, :destroy]
 
+  resources :now_users, :only => [:show, :update, :index]
+
+  resources :reactions, :only => [:index]
+
   #
   
   #:venues, :searches, :subscriptions, :callbacks, :tags, :requests, :follows, :sessions, :usefuls, :dones,
@@ -72,6 +79,10 @@ Ubimachine::Application.routes.draw do
   #this is where we create facebook users
   match "/now/user" => "events#user"
   match "/now/like" => "events#like"
+
+  #getting foursquare token
+
+  match "/fs_callback" => "checkins#fs_token"
 
   match "/now/user/signup" => "sessions#now_signup"
   

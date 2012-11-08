@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Checkin
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -12,7 +13,15 @@ class Checkin
   field :category
   field :photo_card, :type => Array, :default => []
 
-  #rather than destroy checkins, we'll just set this to false -- if user re-checks in, then we can flip the boolean
+#  field :fake, :type => Boolean, :default => false
+
+  # this tells us if the user customized photos so we can decide whether or not to display them on the event detail
+  field :new_photos, :type => Boolean, :default => true
+
+  # if the Checkin/Reply was created through the posting mechanism, the user thinks he created the event and it should recognize that
+  field :posted, :type => Boolean, :default => false
+
+  # in cae we ever decide to not delete these. not likely
   field :alive,  :type => Boolean, default: true
 
   belongs_to :facebook_user
@@ -34,6 +43,8 @@ class Checkin
 
     return true
   end
+
+  after_create :create_reaction
 
 # this convert params really shouldn't exist -- iphone app should be sending a json with the necessary params
 # otherwise, at least we could come up with a generalized way to convert params.  maybe something using the 
@@ -111,20 +122,43 @@ class Checkin
   ################################################################################
   
   def get_fb_user_name
-    self.facebook_user.fb_details['name'] unless self.facebook_user.nil? || self.facebook_user.fb_details.nil?
+    self.facebook_user.now_profile.name unless self.facebook_user.nil? || self.facebook_user.now_profile.nil?
   end
 
   def get_fb_user_photo
-    self.facebook_user.get_fb_profile_photo unless self.facebook_user.nil? 
+    self.facebook_user.now_profile.profile_photo_url unless self.facebook_user.nil? || self.facebook_user.now_profile.nil? 
   end
 
   def get_fb_user_id
-    self.facebook_user.facebook_id unless self.facebook_user.nil? || self.facebook_user.fb_details.nil?
+    self.facebook_user.facebook_id unless self.facebook_user.nil? 
+  end
+
+  ################################################################################
+  # these will need to be in every reactable model -- i'm sure there's an OO way
+  # of doing this but for now, we'll just make it work, clean it up later
+  ################################################################################
+  
+  def generate_reaction_text
+    fb_user = self.facebook_user
+    fb_user.set_profile unless fb_user.now_profile
+    return "#{self.facebook_user.now_profile.name} reposted your event"
+  end
+
+  def generate_milestone_text(num)
+    return "Your event has reached #{num} reposts!"
+  end
+
+  def get_image_url
+    return self.facebook_user.now_profile.profile_photo_url
   end
 
   private
 
     def custom_validations
       errors.add(:description, "needs description") if self.description.nil?
+    end
+
+    def create_reaction
+      Resque.enqueue(CreateReplyReaction, self.id)
     end
 end

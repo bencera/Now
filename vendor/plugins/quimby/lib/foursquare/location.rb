@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # https://developer.foursquare.com/docs/responses/venue.html
 
 module Foursquare

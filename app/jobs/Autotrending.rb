@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Autotrending
 	@queue = :autotrending_queue
 	##############################

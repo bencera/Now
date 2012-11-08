@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module APN
   # Module for talking to the Apple Feedback Service.
   # The service is meant to let you know when a device is no longer

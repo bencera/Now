@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Foursquare
   class TipProxy
     def initialize(foursquare)

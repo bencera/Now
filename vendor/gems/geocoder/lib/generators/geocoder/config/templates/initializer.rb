@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 Geocoder.configure do |config|
   ## Configurable parameters: if you wish to change some configurable
   ## behaviour in Geocoder, feel free to uncomment the following lines

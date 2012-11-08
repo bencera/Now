@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # config/initializers/will_paginate.rb
 
 module WillPaginate

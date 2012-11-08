@@ -1,5 +1,5 @@
 object @checkin
-attributes :id, :created_at, :description, :category
+attributes :id, :description, :category, :new_photos
 
 node(:facebook_name) do |u|
   u.get_fb_user_name
@@ -13,6 +13,12 @@ node(:fb_photo) do |u|
   u.get_fb_user_photo
 end
 
-child :preview_photos do
-  attributes :url, :external_source, :external_id
+node(:created_at) do |u|
+  u.created_at.to_i
+end
+
+node(:preview_photos) do |u|
+  if u.new_photos
+    partial("photos/showless", :object => u.checkin_card_list)
+  end
 end

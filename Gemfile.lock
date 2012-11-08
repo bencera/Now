@@ -110,6 +110,7 @@ GEM
       json (>= 1.2.4)
       net-ssh (>= 2.0.22)
       net-ssh-gateway (>= 1.0.1)
+    magic_encoding (0.0.2)
     mail (2.3.0)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
@@ -245,6 +246,7 @@ DEPENDENCIES
   jquery-rails
   json
   localtunnel
+  magic_encoding (~> 0.0.2)
   mathstats
   mongoid (~> 2.3)
   newrelic_rpm

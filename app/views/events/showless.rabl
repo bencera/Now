@@ -1,5 +1,13 @@
 object @event
-attributes :id, :coordinates, :end_time, :description, :category, :shortid, :like_count, :main_photos, :status
+attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :main_photos, :status, :n_reactions
+
+node(:n_reactions) do |u|
+  u.n_reactions || 0
+end
+
+node(:description) do |u|
+  u.get_description 
+end
 
 child :preview_photos do
   attributes :url, :external_source, :external_id
@@ -22,3 +30,4 @@ end
 node(:fb_photo) do |u|
   u.get_fb_user_photo
 end
+

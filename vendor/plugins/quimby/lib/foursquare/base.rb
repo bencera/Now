@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module Foursquare
   class Base
     API = "https://api.foursquare.com/v2/"

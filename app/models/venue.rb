@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Venue
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -17,9 +18,15 @@ class Venue
   field :threshold, :type => Array #[number of people, in number of hours, before time]
   field :autocategory
   field :autoillustrations, :type => Array
+
+  #we want to fill these in someday
+  field :website
+  field :street_address
+  field :phone_number
   
   # top_event is the event with the highest score currently (includes time value)
   field :top_event_id
+  field :has_top_event, :type => Boolean, default: false
 
   # the time adjusted score of the top event for this venue
   field :top_event_score
@@ -344,7 +351,7 @@ class Venue
   end
   
 ################################################################################
-# this will be fazed out for the NowCity model 
+# this will be phased out for the NowCity model 
 ################################################################################
   def find_city(lat,lng)
     if Geocoder::Calculations.distance_between([lat,lng], [40.698390,-73.98843]) < 20
@@ -454,6 +461,27 @@ class Venue
     return nil
   end
 
+  def get_profile()
+    profile = {}
+    profile[:venue_name] = self.name
+    profile[:experiences] = self.events.count
+    likes = 0
+    reactions = 0
+    
+    self.events.each do |event| 
+      likes += event.likes || 0
+      reactions += event.reactions.count
+    end
+
+    profile[:likes] = likes 
+    profile[:reactions] = reactions
+    profile[:address] = (self.address && self.address["address"]) ? self.address["address"] : "No Address Info"
+    profile[:phone_number] = self.phone_number
+    profile[:website] = self.website
+  
+    return profile
+  end
+
 
   ##############################################################
   # trends a new event given a list of photos to put in the new event 
@@ -495,7 +523,7 @@ class Venue
       e.id = optional_id if optional_id
     end
 
-    new_event.photos.push(*new_photos)
+    new_event.insert_photos_safe(new_photos)
 
     new_event.update_keywords
 
@@ -504,48 +532,6 @@ class Venue
 
 
 #this will all have to be cleaned up when we rewrite the venue and photo creation
-
-#options:
-# => :threshold_time in which we need to see min_photos
-# => :min_photo_time is the earliest photo we will show (must be <= threshold_time)
-# => :min_photos is the minimum number of photos since :threshold_time -- if we don't reach it, no photos are returned
-
-# returns the instagram json
-
-  def self.fetch_ig_photos_since(fs_id, options = {})
-
-    threshold_time = options[:threshold_time] || 0
-    min_photo_time = options[:min_photo_time] || 0
-    min_photos = options[:min_photos] || 0
-
-
-    venue = Venue.where(:_id => fs_id).first
-    if venue
-      venue_ig_id = venue.ig_venue_id
-    else
-      begin 
-        venue_ig_id = Rails.cache.fetch "#{fs_id}:instagram:venue", :compress => true do
-          Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id).first['id']
-        end      
-      rescue
-        #if the fetch failed, there's never been a 
-        return []
-      end
-    end
-
-    Rails.logger.info("asking ig for #{venue_ig_id} media")
-    response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
-
-    if response.data.any?
-      num_qualified_photos = 0
-      response.data.each { |photo| num_qualified_photos += 1 if  photo[:created_time].to_i >= threshold_time}
-      return response.data if num_qualified_photos >= min_photos
-    else
-      return []
-    end
-
-  end
-  
 
   ######Conall --- methods for model rewrite here:
 

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Sendquestion
   @queue = :sendquestion_queue
   def self.perform(ig_media_id, accesstoken, question)

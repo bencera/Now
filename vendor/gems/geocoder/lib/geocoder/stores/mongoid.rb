@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'geocoder/stores/base'
 require 'geocoder/stores/mongo_base'
 
