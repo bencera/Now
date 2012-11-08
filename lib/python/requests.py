@@ -19,7 +19,7 @@ payload4 = {'venue_id': "508e154be4b0772b59d1eb0c", 'fs_token': 'IWUTXRTAEUJTSYV
 
 payload2['nowtoken'] = local_token 
 
-r = requests.post(url, data=payload2)
+r = requests.post(url, data=payload4)
 print r.text
 event_id = r.text.split("|")[0]
 
@@ -33,7 +33,7 @@ print r.text
 
 
 url_like = "http://now-uat.herokuapp.com/now/like"
-like_payload = {"shortid" : "hPEJe0", "nowtoken" : production_token, 'cmd' : 'like', 'like' : 'like'}
+like_payload = {"shortid" : "hPEJe0", "nowtoken" : local_token, 'cmd' : 'like', 'like' : 'like'}
 
 r = requests.get(url_like, data=like_payload)
 print r.text

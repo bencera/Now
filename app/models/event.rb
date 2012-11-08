@@ -211,6 +211,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if errors.blank?
       event_params[:shortid] = event ? event.shortid : Event.get_new_shortid
       event_params[:id] = event ? event.id.to_s : Event.new.id.to_s
+      event_params[:reply_id] = event ? Checkin.new.id.to_s : nil
       # technically this isn't safe, since we could end up with duplicate shortids created
       # chances of this are x in 62^6 where x is the number of events being created in the
       # time between this call and the AddPeopleEvent job being called -- that's very low

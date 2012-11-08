@@ -76,8 +76,12 @@ class AddPeopleEvent
     end
 
     if check_in_event
+
       Rails.logger.info("AddPeopleEvent: reposting event #{check_in_event.id}")
-      checkin = check_in_event.checkins.new
+      checkin = check_in_event.checkins.new do |e|
+        e.id = params[:reply_id] if params[:reply_id]
+      end
+ 
       checkin.description = params[:description] || check_in_event.description || " "
       checkin.category = params[:category] || check_in_event.category
       checkin.new_photos = params[:new_photos]
