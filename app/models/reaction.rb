@@ -78,7 +78,10 @@ class Reaction
 
     message = reaction.generate_message(event.facebook_user.facebook_id, false) 
 
-    if(event.facebook_user && event.facebook_user != fb_reactor)
+    if(reaction.reaction_type == TYPE_REPLY)
+      event.notify_chatroom(reaction.generate_reply_message, :except_ids => [reaction.reactor_id, reaction.facebook_user.facebook_id])
+    
+    elsif(event.facebook_user && event.facebook_user != fb_reactor)
       begin
         event.notify_creator(message)
       rescue
@@ -87,9 +90,6 @@ class Reaction
       Rails.logger.info("Reaction: sent message: '#{message}' to event #{event.id} creator")
     end
        
-    if(reaction.reaction_type == TYPE_REPLY)
-      event.notify_chatroom(message, :except_ids => [reaction.reactor_id, reaction.facebook_user.facebook_id])
-    end
   end
 
   def generate_message(viewer_fb_id, event_perspective, options={})
