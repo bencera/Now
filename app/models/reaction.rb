@@ -3,16 +3,28 @@ class Reaction
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  include ActionView::Helpers::TextHelper
+
+  # number of characters in a single line push notification in ios 6
+  LENGTH_ONE_LINE_PUSH = 38 
+
   TYPE_LIKE = "like"
   TYPE_VIEW_MILESTONE = "view_milestone"
   TYPE_REPLY = "reply"
+  TYPE_PICTURE = "picture"
 
   VERB_LIKE = "liked"
   VERB_REPLY = "replied to"
   VERB_VIEW = "viewed"
+  VERB_PICTURE = "were added"
 
-  VERB_HASH = { TYPE_LIKE => VERB_LIKE, TYPE_VIEW_MILESTONE => VERB_VIEW, TYPE_REPLY => VERB_REPLY}
+  EMOJI_LIKE = "❤"
+  EMOJI_PICTURE = "\u{1F4F7}"
+  EMOJI_VIEW = "\u{1F636}"
+  EMOJI_REPLY = "\u{1F4AC}"
 
+  VERB_HASH = { TYPE_LIKE => VERB_LIKE, TYPE_VIEW_MILESTONE => VERB_VIEW, TYPE_REPLY => VERB_REPLY, TYPE_PICTURE => VERB_PICTURE }
+  EMOJI_HASH = { TYPE_LIKE => EMOJI_LIKE, TYPE_VIEW_MILESTONE => EMOJI_VIEW, TYPE_REPLY => EMOJI_REPLY, TYPE_PICTURE => EMOJI_PICTURE }
   VIEW_MILESTONES = [10, 25, 50, 100, 250, 500, 1000, 10000, 100000]
 
   MILESTONE_TYPES = [TYPE_VIEW_MILESTONE]
@@ -86,22 +98,28 @@ class Reaction
     end
   end
 
-  def generate_message(viewer_fb_id, event_perspective)
+  def generate_message(viewer_fb_id, event_perspective, options={})
 
     milestone = MILESTONE_TYPES.include? self.reaction_type
   
     reactor_name_appear = (viewer_fb_id == self.reactor_id) ? "You" : self.reactor_name.split(" ").first unless self.reactor_name.nil?
     owner_name = (viewer_fb_id == self.facebook_user.facebook_id) ? "your" : self.facebook_user.now_profile.name.split(" ").first + "'s"
     
-    event_name = event_perspective ? "this experience" : "#{milestone ? owner_name.capitalize : owner_name} experience at #{self.venue_name}"
+    event_name = event_perspective ? "this experience" : "#{milestone ? owner_name.capitalize : owner_name} experience"
     reaction_verb = VERB_HASH[self.reaction_type]
+    emoji = EMOJI_HASH[self.reaction_type]
+
     if milestone
       message = "#{event_name} was #{reaction_verb} #{self.counter} times"
+    elsif self.reaction_type == TYPE_REPLY
+      other_text_count = reactor_name_appear.length + 13
+      reply_text = truncate(self.additional_message, :length => LENGTH_ONE_LINE_PUSH - other_text_count, :separator => " ")
+      message = "#{reactor_name_appear} replied, \"#{reply_text}\""
     else
       message = "#{reactor_name_appear} #{reaction_verb} #{event_name}"
     end
 
-    return message
+    return emoji + message
   end
 
   def generate_reply_notification()
