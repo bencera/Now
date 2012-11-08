@@ -112,14 +112,14 @@ class Reaction
     if milestone
       message = "#{event_name} was #{reaction_verb} #{self.counter} times"
     elsif self.reaction_type == TYPE_REPLY
-      other_text_count = reactor_name_appear.length + 13
+      other_text_count = reactor_name_appear.length + 14
       reply_text = truncate(self.additional_message, :length => LENGTH_ONE_LINE_PUSH - other_text_count, :separator => " ")
       message = "#{reactor_name_appear} replied, \"#{reply_text}\""
     else
       message = "#{reactor_name_appear} #{reaction_verb} #{event_name}"
     end
 
-    return emoji + message
+    return emoji + " " + message
   end
 
   def generate_reply_notification()
