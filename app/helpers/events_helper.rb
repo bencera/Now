@@ -239,7 +239,7 @@ module EventsHelper
   def self.build_photo_list(event, checkins, options={})
     photos = event.photos.entries
     seen_photos_hash = {}
-    version = options[:version]
+    version = options[:version] || 0
 
     #make fast lookup
     photo_hash = Hash[photos.map {|photo| [photo.id, photo] }]
