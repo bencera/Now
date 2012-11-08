@@ -7,8 +7,11 @@ class EventsController < ApplicationController
   
   def show
     @event = Event.find(params[:id])
-    @checkins = @event.checkins.order_by([[:created_at, :asc]]).entries
-    @checkins.unshift OpenStruct.new(@event.make_fake_reply)
+    params[:version] ||= 0
+    if params[:version] > 1
+      @checkins = @event.checkins.order_by([[:created_at, :asc]]).entries
+      @checkins.unshift OpenStruct.new(@event.make_fake_reply)
+    end
 
     version = params[:version].to_i
     @other_photos = EventsHelper.build_photo_list(@event, @checkins, :version => version)
