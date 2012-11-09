@@ -463,12 +463,15 @@ class Venue
 
   def get_profile()
     profile = {}
+
+    venue_events = self.events.where(:status.in => Event::TRENDED_OR_TRENDING).entries
+
     profile[:venue_name] = self.name
-    profile[:experiences] = self.events.where(:status.in => Event::TRENDED_OR_TRENDING).count
+    profile[:experiences] = venue_events.count
     likes = 0
     reactions = 0
     
-    self.events.each do |event| 
+    venue_events.each do |event| 
       likes += event.likes || 0
       reactions += event.reactions.count
     end
