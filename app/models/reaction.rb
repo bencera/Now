@@ -77,7 +77,7 @@ class Reaction
     reaction.event.save!
 
     if(reaction.reaction_type == TYPE_REPLY)
-      event.notify_chatroom(reaction.generate_reply_message, :except_ids => [reaction.reactor_id, reaction.facebook_user.facebook_id])
+      event.notify_chatroom(reaction.generate_reply_message, :except_ids => [reaction.reactor_id, reaction.facebook_user.now_id])
     
     elsif(event.facebook_user && event.facebook_user != fb_reactor)
       begin

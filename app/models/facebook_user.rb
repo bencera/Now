@@ -80,8 +80,8 @@ class FacebookUser
   end
 
   def like_event(event_shortid, access_token)
-  	$redis.sadd("event_likes:#{event_shortid}", facebook_id)
-    $redis.sadd("liked_events:#{facebook_id}", event_shortid)
+  	$redis.sadd("event_likes:#{event_shortid}", self.facebook_id)
+    $redis.sadd("liked_events:#{self.facebook_id}", event_shortid)
   	Resque.enqueue(Facebooklike, access_token, event_shortid, self.id.to_s)
   end
 

@@ -130,7 +130,7 @@ class Checkin
   end
 
   def get_fb_user_id
-    self.facebook_user.facebook_id unless self.facebook_user.nil? 
+    self.facebook_user.now_id unless self.facebook_user.nil? 
   end
 
   ################################################################################

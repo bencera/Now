@@ -269,7 +269,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
     end
 
-    fb_user.facebook_id unless fb_user.nil? 
+    fb_user.now_id unless fb_user.nil? 
   end
 
   def preview_photos()
@@ -701,7 +701,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     if facebook_users.any?
       FacebookUser.where(:_id.in => facebook_users).entries.each do |fb_user| 
-        fb_user.send_notification(message, self.id) unless except_ids.include? fb_user.facebook_id
+        fb_user.send_notification(message, self.id) unless except_ids.include? fb_user.now_id
       end
     end
   end
@@ -727,7 +727,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     fake_reply[:category] = self.category
     fake_reply[:new_photos] = true
     fake_reply[:get_fb_user_name] = self.facebook_user.nil? ? " " : self.facebook_user.now_profile.name 
-    fake_reply[:get_fb_user_id] = self.facebook_user.nil? ? nil : self.facebook_user.facebook_id
+    fake_reply[:get_fb_user_id] = self.facebook_user.nil? ? nil : self.facebook_user._id
     fake_reply[:get_fb_user_photo] = self.facebook_user.nil? ? nil : self.facebook_user.now_profile.profile_photo_url
     fake_reply[:new_photos] = true
     fake_reply[:get_preview_photo_ids] = self.get_preview_photo_ids
