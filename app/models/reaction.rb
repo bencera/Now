@@ -64,9 +64,9 @@ class Reaction
     reaction.counter = count.to_i 
 
     unless MILESTONE_TYPES.include? type
-      reaction.reactor_name = fb_reactor.now_profile.name || " "
-      reaction.reactor_id = fb_reactor.facebook_id
-      reaction.reactor_photo_url = fb_reactor.now_profile.profile_photo_url || " "
+      reaction.reactor_name = fb_reactor.now_profile.name
+      reaction.reactor_id = fb_reactor.now_id
+      reaction.reactor_photo_url = fb_reactor.now_profile.profile_photo_url
     end
 
     reaction.additional_message = options[:additional_message]

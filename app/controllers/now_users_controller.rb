@@ -1,7 +1,7 @@
 class NowUsersController < ApplicationController
   
   def show
-    profile_user = FacebookUser.where(:facebook_id => params[:id]).first
+    profile_user = FacebookUser.where(:now_id => params[:id]).first
     fb_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
     profile_user = fb_user if profile_user.nil?
     @now_profile = OpenStruct.new(profile_user.get_now_profile(profile_user))

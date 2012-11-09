@@ -1,15 +1,15 @@
 object @checkin
 attributes :id, :description, :category, :new_photos
 
-node(:facebook_name) do |u|
+node(:name) do |u|
   u.get_fb_user_name
 end
 
-node(:facebook_id) do |u|
+node(:now_id) do |u|
   u.get_fb_user_id
 end
 
-node(:fb_photo) do |u|
+node(:photo) do |u|
   u.get_fb_user_photo
 end
 

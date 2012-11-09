@@ -8,8 +8,8 @@ class ReactionsController < ApplicationController
       event = Event.find(params[:event_id])
       @event_perspective = true
       @reactions = event.reactions.order_by([[:created_at, :desc]]).limit(20)
-    elsif params[:facebook_id]
-      facebook_user = FacebookUser.where(:facebook_id => params[:facebook_id]).first
+    elsif params[:now_id]
+      facebook_user = FacebookUser.where(:now_id=> params[:now_id]).first
       @event_perspective = false
       @reactions = facebook_user.reactions.order_by([[:created_at, :desc]]).limit(20)
     elsif params[:nowtoken]

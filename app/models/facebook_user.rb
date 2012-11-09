@@ -27,17 +27,25 @@ class FacebookUser
   has_many :devices, class_name: "APN::Device"
   has_many :scheduled_events
   has_many :events
+<<<<<<< HEAD
   has_many :checkins, :dependent => :destroy
+=======
+  has_many :checkins, dependent: :destroy
+>>>>>>> changing all refs to now_id from facebook_id
 
   embeds_one :now_profile
 
-  has_many :reactions
+  has_many :reactions, dependent: :destroy
 
   validates_numericality_of :score
 
   class << self
 	  def find_by_facebook_id(id)
       FacebookUser.first(conditions: { facebook_id: id })
+    end
+
+    def find_by_now_id(id)
+      FacebookUser.first(conditions: { now_id: id})
     end
 
     def find_or_create_by_facebook_token(token, options={})

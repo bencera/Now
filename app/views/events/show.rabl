@@ -30,14 +30,14 @@ child(:previous_events, :if => @more == "yes") do
 attributes :description, :end_time, :category
 end
 
-node(:facebook_name) do |u|
-  u.facebook_user.fb_details['name'] unless u.anonymous || u.facebook_user.nil?|| u.facebook_user.fb_details.nil?
+node(:name) do |u|
+  u.facebook_user.now_profile.name unless u.anonymous || u.facebook_user.nil?
 end
 
-node(:facebook_id) do |u|
-  u.facebook_user.facebook_id unless  u.anonymous || u.facebook_user.nil?
+node(:now_id) do |u|
+  u.facebook_user.now_id unless  u.anonymous || u.facebook_user.nil?
 end
 
-node(:facebook_photo) do |u|
-  "https://graph.facebook.com/#{u.facebook_user.fb_details['username']}/picture" unless  u.anonymous || u.facebook_user.nil? || u.facebook_user.fb_details.nil?
+node(:profile_photo) do |u|
+  u.facebook_user.now_profile.profile_photo_url unless u.anonymous || u.facebook_user.nil?
 end
