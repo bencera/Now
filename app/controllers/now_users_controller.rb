@@ -17,11 +17,11 @@ class NowUsersController < ApplicationController
       new_values[:email] = params[:email] if params[:email]
       new_values[:profile_photo_url] = params[:profile_photo_url] if params[:profile_photo_url]
 
-      new_values[:notify_like] params[:notify_like] if params[:notify_like]
-      new_values[:notify_reply] params[:notify_reply] if params[:notify_reply]
-      new_values[:notify_views] params[:notify_views] if params[:notify_views]
-      new_values[:notify_photos] params[:notify_photos] if params[:notify_photos]
-      new_values[:notify_local] params[:notify_local] if params[:notify_local]
+      new_values[:notify_like] = params[:notify_like] if params[:notify_like]
+      new_values[:notify_reply] = params[:notify_reply] if params[:notify_reply]
+      new_values[:notify_views] = params[:notify_views] if params[:notify_views]
+      new_values[:notify_photos] = params[:notify_photos] if params[:notify_photos]
+      new_values[:notify_local] = params[:notify_local] if params[:notify_local]
 
       @now_user.update_now_profile(new_values)
     else
