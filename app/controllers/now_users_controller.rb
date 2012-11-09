@@ -36,29 +36,37 @@ class NowUsersController < ApplicationController
   # app needs to be upgraded, etc)
   ################################################################################
   #
-  #Error Codes
-  #100 -- Device Creation/Find Failed -- Send error report message with udid 
-  #101 -- Facebook Access Token Failed -- Get new access token from facebook, try again.  if fail, send error report message with facebook user id
-  #
   #
 
   def hello
     return render :text => "OK", :status => :ok
   end
 
+  #Error Codes
+  #432 -- Device Creation/Find Failed 
+  #433 -- Facebook Access Token Failed -- Get new access token from facebook, try again
+  #434 -- Facebook Service down please try again (not using this yet)
+  #
   def login
     device = NowUsersHelper.find_or_create_device(params)
 
-    return render :text => "100 Device Creation/Find Failed" if device.nil?
-    
-    fb_user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken])
+    return render(:text => "432 Device Creation/Find Failed", :status => 432) if device.nil?
+    return_hash = {} 
 
-    return render :text => "101 Facebook Access Failed" if fb_user.nil?
+    if(params[:fb_accesstoken])
+      fb_user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken], return_hash)
 
-    unless fb_user.devices.include? device
-      fb_user.devices.push device
+      return render(:text => "433 Facebook Access Failed errors: #{return_hash[:errors]}", :status => 433) if fb_user.nil?
+
+      unless fb_user.devices.include? device
+        fb_user.devices.push device
+      end
+
+      return_hash[:now_token] = fb_user.now_token
+      return_hash[:user_id] = fb_user.id 
     end
 
-    return render :json => {:user_id => fb_user.id, :now_token => fb_user.nowtoken}, :status => :ok
+    return render :json => return_hash, :status => :ok
   end
+
 end

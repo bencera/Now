@@ -3,9 +3,9 @@ module NowUsersHelper
 
   def self.find_or_create_device(params={})
     
-    device = APN::Device.where(:udid => params[:deviceid]).firstA ||  APN::Device.create!(:udid => params[:deviceid])
+    device = APN::Device.where(:udid => params[:deviceid]).first ||  APN::Device.create!(:udid => params[:deviceid])
   
-    if !(d.subscriptions.where(:token => params[:token]).first) && params[:token]
+    if params[:token] && !(device.subscriptions.where(:token => params[:token]).first) 
       device.subscriptions.create(:application => APN::Application.first, :token => params[:token])
     end
 
