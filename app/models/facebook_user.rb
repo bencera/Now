@@ -76,7 +76,7 @@ class FacebookUser
 
   def generate_tokens
     self.now_token = Digest::SHA1.hexdigest([Time.now, rand].join)
-    self.now_id = $redis.incr("USER_COUNT")
+    self.now_id = $redis.incr("USER_COUNT").to_s
   end
 
   def like_event(event_shortid, access_token)
