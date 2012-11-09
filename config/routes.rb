@@ -18,8 +18,8 @@ Ubimachine::Application.routes.draw do
   match "/venue/:id/profile" => "venues#show_profile"
 
   match "/now_users/:id" => "now_users#show"
-  match "/now_users/update" => "now_users#update"
-  match "/now_users/login" => "now_users#login"
+  match "/now_users_update" => "now_users#update"
+  match "/now_users_login" => "now_users#login"
 
 #### Conall end
 
