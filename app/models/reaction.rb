@@ -99,21 +99,25 @@ class Reaction
     reactor_name_appear = (viewer_fb_id == self.reactor_id) ? "You" : self.reactor_name.split(" ").first unless self.reactor_name.nil?
     owner_name = (viewer_fb_id == self.facebook_user.facebook_id) ? "your" : self.facebook_user.now_profile.name.split(" ").first + "'s"
     
-    event_name = event_perspective ? "this experience" : "#{milestone ? owner_name.capitalize : owner_name} experience"
+    event_name = event_perspective ? "this experience" : "#{milestone ? owner_name.capitalize : owner_name}'s experience"
     reaction_verb = VERB_HASH[self.reaction_type]
-    emoji = EMOJI_HASH[self.reaction_type]
 
     if milestone
       message = "#{event_name} was #{reaction_verb} #{self.counter} times"
     elsif self.reaction_type == TYPE_REPLY
-      other_text_count = reactor_name_appear.length + 14
+      other_text_count = reactor_name_appear.length + 12
       reply_text = truncate(self.additional_message, :length => LENGTH_ONE_LINE_PUSH - other_text_count, :separator => " ")
-      message = "#{reactor_name_appear} replied: #{reply_text}"
+      if !reply_text.blank?
+        reply_text = "\"#{reply_text}\""
+      end
+      message = "#{reactor_name_appear} replied #{reply_text}"
     else
       message = "#{reactor_name_appear} #{reaction_verb} #{event_name}"
     end
 
-    return emoji + " " + message
+    message = EMOJI_HASH[self.reaction_type] + " " + message unless options[:no_emoji]
+
+    return message
   end
 
   def generate_reply_message

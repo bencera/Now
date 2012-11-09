@@ -19,7 +19,6 @@ module NowUsersHelper
 
     device.save if save_device
 
-
     return device
   end
 end
