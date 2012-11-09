@@ -107,10 +107,12 @@ class FacebookUser
     profile[:photo] = self.now_profile.profile_photo_url
     profile[:experiences] = self.events.count
     profile[:reactions] = self.reactions.count
+
+    profile[:extended_options] = self == requested_by
     
     if self == requested_by
       profile[:notify_like] = self.now_profile.notify_like
-      profile[:notify_repost] = self.now_profile.notify_repost
+      profile[:notify_reply] = self.now_profile.notify_reply
       profile[:notify_photos] = self.now_profile.notify_photos
       profile[:notify_local] = self.now_profile.notify_local
     end

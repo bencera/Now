@@ -108,7 +108,7 @@ class Reaction
     elsif self.reaction_type == TYPE_REPLY
       other_text_count = reactor_name_appear.length + 14
       reply_text = truncate(self.additional_message, :length => LENGTH_ONE_LINE_PUSH - other_text_count, :separator => " ")
-      message = "#{reactor_name_appear} replied, \"#{reply_text}\""
+      message = "#{reactor_name_appear} replied: #{reply_text}"
     else
       message = "#{reactor_name_appear} #{reaction_verb} #{event_name}"
     end

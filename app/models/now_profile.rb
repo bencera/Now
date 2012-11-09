@@ -17,7 +17,7 @@ class NowProfile
 
   #notification settings
   field :notify_like, type: Boolean, default: true
-  field :notify_repost, type: Boolean, default: true
+  field :notify_reply, type: Boolean, default: true
   field :notify_views, type: Boolean, default: true
   field :notify_photos, type: Boolean, default: true
   field :notify_local, type: Boolean, default: true
