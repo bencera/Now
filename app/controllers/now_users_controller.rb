@@ -63,7 +63,7 @@ class NowUsersController < ApplicationController
       end
 
       return_hash[:now_token] = fb_user.now_token
-      return_hash[:user_id] = fb_user.id 
+      return_hash[:user_id] = fb_user.now_id
     end
 
     return render :json => return_hash, :status => :ok

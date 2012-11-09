@@ -4,6 +4,9 @@ class FacebookUser
   include Mongoid::Timestamps
 
   field :facebook_id
+
+  field :now_id
+
   field :email
   field :now_token
   field :fb_accesstoken
@@ -14,9 +17,10 @@ class FacebookUser
   field :score, :default => 0
 
   index({ now_token: 1 }, { unique: true, name: "now_token_index" })
+  index({ now_id: 1}, {unique: true, name: "now_id_index"})
 
 
-  before_create :generate_now_token
+  before_create :generate_tokens
 
   before_save :set_profile
 
@@ -62,8 +66,9 @@ class FacebookUser
     end
   end
 
-  def generate_now_token  	
+  def generate_tokens
     self.now_token = Digest::SHA1.hexdigest([Time.now, rand].join)
+    self.now_id = $redis.incr("USER_COUNT")
   end
 
   def like_event(event_shortid, access_token)
