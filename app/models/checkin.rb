@@ -8,9 +8,9 @@ class Checkin
 
   attr_accessor :checkin_card_list
 
-  field :description
+  field :description, :default => " "
   field :broadcast #for now either public or private -- maybe eventually will allow for friends, twitter, facebook, etc
-  field :category
+  field :category, :default => "Misc"
   field :photo_card, :type => Array, :default => []
 
 #  field :fake, :type => Boolean, :default => false

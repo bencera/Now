@@ -31,7 +31,7 @@ class Photo
   field :now_version, :default => 1
 
   field :url, :type => Array
-  field :caption
+  field :caption, :default => " "
   field :time_taken, :type => Integer
   field :coordinates, :type => Array
   field :status #status are to give a attribute to a photo (guessed, no venue, etc..)

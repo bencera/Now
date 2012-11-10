@@ -42,8 +42,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :coordinates, :type => Array
   field :start_time
   field :end_time
-  field :description
-  field :category
+  field :description, :default => " "
+  field :category, :default => "Misc"
   field :shortid
   field :link
   field :super_user
@@ -293,7 +293,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def get_description
-    return overriding_description || self.description
+    return overriding_description || self.description || " "
   end
 
   def previous_events
