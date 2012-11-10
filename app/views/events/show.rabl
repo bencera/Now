@@ -31,13 +31,13 @@ attributes :description, :end_time, :category
 end
 
 node(:now_name) do |u|
-  u.facebook_user.now_profile.name unless u.anonymous || u.facebook_user.nil?
+  u.get_fb_user_name unless u.anonymous
 end
 
 node(:now_id) do |u|
-  u.facebook_user.now_id unless  u.anonymous || u.facebook_user.nil?
+  u.get_fb_user_id unless  u.anonymous 
 end
 
 node(:profile_photo) do |u|
-  u.facebook_user.now_profile.profile_photo_url unless u.anonymous || u.facebook_user.nil?
+  u.get_fb_user_photo unless u.anonymous 
 end

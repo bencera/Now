@@ -122,15 +122,18 @@ class Checkin
   ################################################################################
   
   def get_fb_user_name
-    self.facebook_user.now_profile.name unless self.facebook_user.nil? || self.facebook_user.now_profile.nil?
+    return self.facebook_user.now_profile.name unless self.facebook_user.nil?  || self.facebook_user.now_profile.nil? 
+    return Event::NOW_BOT_NAME 
   end
 
   def get_fb_user_photo
-    self.facebook_user.now_profile.profile_photo_url unless self.facebook_user.nil? || self.facebook_user.now_profile.nil? 
+    return self.facebook_user.now_profile.profile_photo_url unless self.facebook_user.nil?  || self.facebook_user.now_profile.nil?
+    return Event::NOW_BOT_PHOTO_URL 
   end
 
   def get_fb_user_id
-    self.facebook_user.now_id unless self.facebook_user.nil? 
+    return self.facebook_user.now_id unless self.facebook_user.nil?  || self.facebook_user.now_profile.nil?
+    return Event::NOW_BOT_ID 
   end
 
   ################################################################################

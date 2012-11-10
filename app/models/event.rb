@@ -22,6 +22,10 @@ TRENDED_STATUSES      = [TRENDED, TRENDED_PEOPLE]
 LIVE_STATUSES         = [TRENDING, TRENDING_PEOPLE, WAITING, WAITING_SCHEUDLED, WAITING_CONFIRMATION]
 WAITING_STATUSES      = [WAITING, WAITING_CONFIRMATION, WAITING_SCHEUDLED]
 
+NOW_BOT_NAME          = "Now Bot"
+NOW_BOT_ID            = "0"
+NOW_BOT_PHOTO_URL     = ""
+
 MAX_DESCRIPTION       = 45
 MIN_DESCRIPTION       = 5
 
@@ -249,7 +253,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
     end
 
-    fb_user.now_profile.name unless fb_user.nil?
+    if fb_user.nil?
+      return NOW_BOT_NAME
+    else
+      return fb_user.now_profile.name unless fb_user.nil?
+    end
   end
 
   def get_fb_user_photo
@@ -259,7 +267,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
     end
 
-    fb_user.now_profile.profile_photo_url unless fb_user.nil?
+    if fb_user.nil?
+      return NOW_BOT_PHOTO_URL
+    else
+      fb_user.now_profile.profile_photo_url unless fb_user.nil?
+    end
   end
 
   def get_fb_user_id
@@ -269,7 +281,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
     end
 
-    fb_user.now_id unless fb_user.nil? 
+    if fb_user.nil?
+      return NOW_BOT_ID
+    else
+      fb_user.now_id unless fb_user.nil? 
+    end
   end
 
   def preview_photos()
