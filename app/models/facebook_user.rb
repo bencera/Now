@@ -27,11 +27,7 @@ class FacebookUser
   has_many :devices, class_name: "APN::Device"
   has_many :scheduled_events
   has_many :events
-<<<<<<< HEAD
-  has_many :checkins, :dependent => :destroy
-=======
   has_many :checkins, dependent: :destroy
->>>>>>> changing all refs to now_id from facebook_id
 
   embeds_one :now_profile
 
