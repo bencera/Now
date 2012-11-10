@@ -114,6 +114,7 @@ class FacebookUser
     self.set_profile if self.now_profile.nil?
     
     profile[:name] = self.now_profile.name
+    profile[:email] = self.now_profile.email
     profile[:bio] = self.now_profile.bio
     profile[:photo] = self.now_profile.profile_photo_url
     profile[:experiences] = self.events.count
