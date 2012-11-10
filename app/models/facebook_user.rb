@@ -124,6 +124,8 @@ class FacebookUser
     profile[:extended_options] = self == requested_by
     
     if self == requested_by
+      profile[:first_name] = self.now_profile.first_name
+      profile[:last_name] = self.now_profile.last_name
       profile[:notify_like] = self.now_profile.notify_like
       profile[:notify_reply] = self.now_profile.notify_reply
       profile[:notify_photos] = self.now_profile.notify_photos
