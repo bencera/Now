@@ -11,7 +11,7 @@ class EventsController < ApplicationController
     if params[:version].to_i > 1
       photos = @event.photos.order_by([:time_taken, :asc]]).entries
       @checkins = @event.make_reply_array(photos)
-      @other_photos = EventsHelper.build_photo_list(@event, @checkins, photos :version => params[:version].to_i)
+      @other_photos = EventsHelper.build_photo_list(@event, @checkins, photos, :version => params[:version].to_i)
     end
 
     @other_photos ||= @event.photos
