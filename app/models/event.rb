@@ -256,7 +256,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if fb_user.nil?
       return NOW_BOT_NAME
     else
-      return fb_user.now_profile.name unless fb_user.nil?
+      return fb_user.now_profile.first_name.blank? ? fb_user.now_profile.name : fb_user.now_profile.first_name
     end
   end
 
@@ -270,7 +270,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if fb_user.nil?
       return NOW_BOT_PHOTO_URL
     else
-      fb_user.now_profile.profile_photo_url unless fb_user.nil?
+      fb_user.now_profile.profile_photo_url 
     end
   end
 
@@ -284,7 +284,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if fb_user.nil?
       return NOW_BOT_ID
     else
-      fb_user.now_id unless fb_user.nil? 
+      fb_user.now_id 
     end
   end
 
@@ -752,6 +752,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
     fake_reply[:fake] = true
 
     return fake_reply
+  end
+
+  def make_reply_array(photos)
+
+    
   end
 
   def destroy_reply(reply=nil)
