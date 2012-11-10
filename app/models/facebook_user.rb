@@ -127,7 +127,9 @@ class FacebookUser
       profile[:notify_like] = self.now_profile.notify_like
       profile[:notify_reply] = self.now_profile.notify_reply
       profile[:notify_photos] = self.now_profile.notify_photos
+      profile[:notify_views] = self.now_profile.notify_views
       profile[:notify_local] = self.now_profile.notify_local
+      profile[:share_to_fb_timeline] = self.now_profile.share_to_fb_timeline
     end
     
     return profile

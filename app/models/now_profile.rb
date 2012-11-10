@@ -9,11 +9,11 @@ class NowProfile
   #                            :notify_repost, :notify_views, :notify_photos, :notify_local]
 
   field :name
-  field :first_name
-  field :last_name
-  field :bio
-  field :email
-  field :profile_photo_url
+  field :first_name, :default => " "
+  field :last_name, :default => " "
+  field :bio, :default => " "
+  field :email, :default => " "
+  field :profile_photo_url, :default => Event::NOW_BOT_PHOTO_URL
 
   #notification settings
   field :notify_like, type: Boolean, default: true
