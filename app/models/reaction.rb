@@ -64,9 +64,9 @@ class Reaction
     reaction.counter = count.to_i 
 
     unless MILESTONE_TYPES.include? type
-      reaction.reactor_name = fb_reactor.now_profile.name
+      reaction.reactor_name = fb_reactor.now_profile.name || " "
       reaction.reactor_id = fb_reactor.facebook_id
-      reaction.reactor_photo_url = fb_reactor.now_profile.profile_photo_url
+      reaction.reactor_photo_url = fb_reactor.now_profile.profile_photo_url || " "
     end
 
     reaction.additional_message = options[:additional_message]
@@ -76,13 +76,12 @@ class Reaction
     reaction.event.update_reaction_count
     reaction.event.save!
 
-    message = reaction.generate_message(event.facebook_user.facebook_id, false) 
-
     if(reaction.reaction_type == TYPE_REPLY)
       event.notify_chatroom(reaction.generate_reply_message, :except_ids => [reaction.reactor_id, reaction.facebook_user.facebook_id])
     
     elsif(event.facebook_user && event.facebook_user != fb_reactor)
       begin
+        message = reaction.generate_message(event.facebook_user.facebook_id, false) 
         event.notify_creator(message)
       rescue
         Rails.error.info("Reaction: failed to send message '#{message}' to event #{event.id} creator")
