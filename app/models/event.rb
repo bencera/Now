@@ -751,7 +751,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     fake_reply[:fake] = true
 
-    return fake_reply
+    return OpenStruct.new(fake_reply)
   end
 
   def make_reply_array(photos_orig)
