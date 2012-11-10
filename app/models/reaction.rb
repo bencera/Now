@@ -95,23 +95,31 @@ class Reaction
 
     milestone = MILESTONE_TYPES.include? self.reaction_type
   
-    reactor_name_appear = (viewer_fb_id == self.reactor_id) ? "You" : self.reactor_name.split(" ").first unless self.reactor_name.nil?
-    owner_name = (viewer_fb_id == self.facebook_user.facebook_id) ? "your" : self.facebook_user.now_profile.name.split(" ").first + "'s"
+    if event_perspective || self.facebook_user.nil?
+      event_name = "this experience"
+    else
+      owner_name = (viewer_fb_id == self.facebook_user.facebook_id) ? "your" : (self.facebook_user.now_profile.name.split(" ").first + "'s")
+      event_name = "#{milestone ? owner_name.capitalize : owner_name} experience"
+    end
     
-    event_name = event_perspective ? "this experience" : "#{milestone ? owner_name.capitalize : owner_name}'s experience"
     reaction_verb = VERB_HASH[self.reaction_type]
 
     if milestone
       message = "#{event_name} was #{reaction_verb} #{self.counter} times"
-    elsif self.reaction_type == TYPE_REPLY
-      other_text_count = reactor_name_appear.length + 12
-      reply_text = truncate(self.additional_message, :length => LENGTH_ONE_LINE_PUSH - other_text_count, :separator => " ")
-      if !reply_text.blank?
-        reply_text = "\"#{reply_text}\""
-      end
-      message = "#{reactor_name_appear} replied #{reply_text}"
+
     else
-      message = "#{reactor_name_appear} #{reaction_verb} #{event_name}"
+      reactor_name_appear = (viewer_fb_id == self.reactor_id) ? "You" : self.reactor_name.split(" ").first unless self.reactor_name.blank?
+
+      if self.reaction_type == TYPE_REPLY
+        other_text_count = reactor_name_appear.length + 11
+        reply_text = truncate(self.additional_message, :length => LENGTH_ONE_LINE_PUSH - other_text_count, :separator => " ")
+        if !reply_text.blank?
+          reply_text = "\"#{reply_text}\""
+        end
+        message = "#{reactor_name_appear} replied #{reply_text}"
+      else
+        message = "#{reactor_name_appear} #{reaction_verb} #{event_name}"
+      end
     end
 
     message = EMOJI_HASH[self.reaction_type] + " " + message unless options[:no_emoji]
