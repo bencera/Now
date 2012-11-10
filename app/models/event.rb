@@ -772,6 +772,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
       if new_photo_card.any?
         replies << make_fake_reply(new_photo_card)
       else
+        if checkins.count == 0
+          Rails.logger.error("MAKE_REPLY_ARRAY: somehow we didn't add photos -- something messed up.")
+          return replies
+        end
         replies << checkins.shift
       end
     end
