@@ -770,7 +770,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       end
       
       if new_photo_card.any?
-        replies << create_fake_reply(new_photo_card)
+        replies << make_fake_reply(new_photo_card)
       else
         replies << checkins.shift
       end
