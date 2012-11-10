@@ -24,7 +24,7 @@ WAITING_STATUSES      = [WAITING, WAITING_CONFIRMATION, WAITING_SCHEUDLED]
 
 NOW_BOT_NAME          = "Now Bot"
 NOW_BOT_ID            = "0"
-NOW_BOT_PHOTO_URL     = ""
+NOW_BOT_PHOTO_URL     = "https://s3.amazonaws.com/now_assets/icon.png"
 
 MAX_DESCRIPTION       = 45
 MIN_DESCRIPTION       = 5
@@ -742,9 +742,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
     fake_reply[:description] = self.description
     fake_reply[:category] = self.category
     fake_reply[:new_photos] = true
-    fake_reply[:get_fb_user_name] = self.facebook_user.nil? ? " " : self.facebook_user.now_profile.name 
-    fake_reply[:get_fb_user_id] = self.facebook_user.nil? ? nil : self.facebook_user._id
-    fake_reply[:get_fb_user_photo] = self.facebook_user.nil? ? nil : self.facebook_user.now_profile.profile_photo_url
+    fake_reply[:get_fb_user_name] = self.get_fb_user_name
+    fake_reply[:get_fb_user_id] = self.get_fb_user_id
+    fake_reply[:get_fb_user_photo] = self.get_fb_user_photo
     fake_reply[:new_photos] = true
     fake_reply[:get_preview_photo_ids] = self.get_preview_photo_ids
     fake_reply[:checkin_card_list] = []
