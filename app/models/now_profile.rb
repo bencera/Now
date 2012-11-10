@@ -30,5 +30,15 @@ class NowProfile
   #field :foursquare
   
   embedded_in :facebook_user
-  
+
+  def set_from_fb_details(fb_details)
+    unless fb_details.nil?
+      self.name ||= fb_details["name"]
+      self.profile_photo_url ||=  "https://graph.facebook.com/#{self.fb_details['username']}/picture" 
+      self.first_name ||= fb_details["first_name"]
+      self.last_name ||= fb_details["last_name"]
+      self.email ||= fb_details["email"]
+      self.bio ||= fb_details["bio"]
+    end
+  end
 end

@@ -104,9 +104,7 @@ class FacebookUser
 
   def set_profile
     self.now_profile ||= NowProfile.new
-    fb_details_valid = !self.fb_details.nil?
-    self.now_profile.name ||= ( fb_details_valid ? self.fb_details['name'] : nil )
-    self.now_profile.profile_photo_url ||=  ( fb_details_valid ? "https://graph.facebook.com/#{self.fb_details['username']}/picture" : nil )
+    self.now_profile.set_from_fb_details(self.fb_details)
   end
 
   def get_now_profile(requested_by)
