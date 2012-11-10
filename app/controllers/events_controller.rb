@@ -171,7 +171,7 @@ class EventsController < ApplicationController
     
     Resque.enqueue(AddPeopleEvent, converted_params)
     
-    return render :json => {:event_id => converted_params[:id]}, :event_short_id => converted_params[:shortid], :reply_id => converted_params[:reply_id]}, :status => :ok
+    return render :json => {:event_id => converted_params[:id], :event_short_id => converted_params[:shortid], :reply_id => converted_params[:reply_id]}, :status => :ok
 
   end
 
