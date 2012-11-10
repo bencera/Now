@@ -30,7 +30,7 @@ child(:previous_events, :if => @more == "yes") do
 attributes :description, :end_time, :category
 end
 
-node(:name) do |u|
+node(:now_name) do |u|
   u.facebook_user.now_profile.name unless u.anonymous || u.facebook_user.nil?
 end
 

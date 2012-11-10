@@ -19,15 +19,15 @@ end
 
 node(:like) { |event| event.liked_by_user(@user_id) }
 
-node(:facebook_name) do |u|
+node(:now_name) do |u|
   u.get_fb_user_name
 end
 
-node(:facebook_id) do |u|
+node(:now_id) do |u|
   u.get_fb_user_id
 end
 
-node(:fb_photo) do |u|
+node(:profile_photo) do |u|
   u.get_fb_user_photo
 end
 

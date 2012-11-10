@@ -1,7 +1,7 @@
 object @checkin
 attributes :id, :description, :category, :new_photos
 
-node(:name) do |u|
+node(:now_name) do |u|
   u.get_fb_user_name
 end
 
@@ -9,7 +9,7 @@ node(:now_id) do |u|
   u.get_fb_user_id
 end
 
-node(:photo) do |u|
+node(:profile_photo) do |u|
   u.get_fb_user_photo
 end
 
