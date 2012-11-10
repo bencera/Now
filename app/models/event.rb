@@ -735,7 +735,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.n_reactions = self.reactions.count
   end
 
-  def make_fake_reply
+  def make_fake_reply(new_photo_card)
     fake_reply = {}
     fake_reply[:id] = self.id
     fake_reply[:created_at] = self.created_at
@@ -746,7 +746,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     fake_reply[:get_fb_user_id] = self.get_fb_user_id
     fake_reply[:get_fb_user_photo] = self.get_fb_user_photo
     fake_reply[:new_photos] = true
-    fake_reply[:get_preview_photo_ids] = self.get_preview_photo_ids
+    fake_reply[:get_preview_photo_ids] = new_photo_card
     fake_reply[:checkin_card_list] = []
 
     fake_reply[:fake] = true
@@ -754,9 +754,29 @@ SCORE_HALF_LIFE       = 7.day.to_f
     return fake_reply
   end
 
-  def make_reply_array(photos)
+  def make_reply_array(photos_orig)
+    replies = []
+    photos = photos_orig.dup
 
-    
+    checkins = self.checkins.order_by([[:created_at, :asc]]).entries
+
+    while photos.any?
+      next_checkin = checkins.first.nil? ? photos.last.time_taken : checkins.first.created_at.to_i
+
+      new_photo_card = []
+
+      while photos.first.time_taken < next_checkin && new_photo_card.count < 6
+        new_photo_card << photos.shift.id
+      end
+      
+      if new_photo_card.any?
+        replies << create_fake_reply(new_photo_card)
+      else
+        replies << checkins.shift
+      end
+    end
+
+    return replies
   end
 
   def destroy_reply(reply=nil)

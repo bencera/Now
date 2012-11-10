@@ -9,10 +9,9 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     params[:version] ||= 0
     if params[:version].to_i > 1
-      @checkins = @event.checkins.order_by([[:created_at, :asc]]).entries
-      @checkins.unshift OpenStruct.new(@event.make_fake_reply)
-
-      @other_photos = EventsHelper.build_photo_list(@event, @checkins, :version => params[:version].to_i)
+      photos = @event.photos.entries
+      @checkins = @event.make_reply_array(photos)
+      @other_photos = EventsHelper.build_photo_list(@event, @checkins, photos :version => params[:version].to_i)
     end
 
     @other_photos ||= @event.photos

@@ -236,8 +236,7 @@ module EventsHelper
   end
 
   # builds a 
-  def self.build_photo_list(event, checkins, options={})
-    photos = event.photos.entries
+  def self.build_photo_list(event, checkins, photos, options={})
     seen_photos_hash = {}
     version = options[:version] || 0
 
