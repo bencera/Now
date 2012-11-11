@@ -787,7 +787,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
         description_text = first_card ? self.description : (after_reply ? "I found more photos" : "")
 
-        replies << make_fake_reply(new_photo_card, description_text, time_taken)
+        replies << make_fake_reply(new_photo_card, description_text, timestamp)
       else
         if checkins.count == 0
           Rails.logger.error("MAKE_REPLY_ARRAY: somehow we didn't add photos -- something messed up.")
