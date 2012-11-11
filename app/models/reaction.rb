@@ -11,24 +11,25 @@ class Reaction
   TYPE_LIKE = "like"
   TYPE_VIEW_MILESTONE = "view_milestone"
   TYPE_REPLY = "reply"
-  TYPE_PICTURE = "picture"
+  TYPE_PHOTO = "photo"
 
   VERB_LIKE = "liked"
   VERB_REPLY = "replied to"
   VERB_VIEW = "viewed"
-  VERB_PICTURE = "were added"
+  VERB_PHOTO = "added"
 
   EMOJI_LIKE = "❤"
-  EMOJI_PICTURE = "\u{1F4F7}"
+  EMOJI_PHOTO = "\u{1F4F7}"
   EMOJI_VIEW = "\u{1F636}"
   EMOJI_REPLY = "\u{1F4AC}"
 
-  VERB_HASH = { TYPE_LIKE => VERB_LIKE, TYPE_VIEW_MILESTONE => VERB_VIEW, TYPE_REPLY => VERB_REPLY, TYPE_PICTURE => VERB_PICTURE }
-  EMOJI_HASH = { TYPE_LIKE => EMOJI_LIKE, TYPE_VIEW_MILESTONE => EMOJI_VIEW, TYPE_REPLY => EMOJI_REPLY, TYPE_PICTURE => EMOJI_PICTURE }
+  VERB_HASH = { TYPE_LIKE => VERB_LIKE, TYPE_VIEW_MILESTONE => VERB_VIEW, TYPE_REPLY => VERB_REPLY, TYPE_PHOTO => VERB_PHOTO }
+  EMOJI_HASH = { TYPE_LIKE => EMOJI_LIKE, TYPE_VIEW_MILESTONE => EMOJI_VIEW, TYPE_REPLY => EMOJI_REPLY, TYPE_PHOTO => EMOJI_PHOTO }
   VIEW_MILESTONES = [10, 25, 50, 100, 250, 500, 1000, 10000, 100000]
 
   MILESTONE_TYPES = [TYPE_VIEW_MILESTONE]
   USER_REACTION_TYPES = [TYPE_LIKE, TYPE_REPLY]
+  NOTIFY_GROUP_TYPES = [TYPE_REPLY, TYPE_PHOTO]
 
   #the kind of reaction as in like/reply/view/share
   field :reaction_type
@@ -63,9 +64,9 @@ class Reaction
     reaction.facebook_user = event.facebook_user
     reaction.counter = count.to_i 
 
-    if MILESTONE_TYPES.include? type
+    if fb_reactor.nil? || MILESTONE_TYPES.include? type
       reaction.reactor_name = " "
-      reaction.reactor_id = " "
+      reaction.reactor_id = "0"
       reaction.reactor_photo_url = " "
     else
       reaction.reactor_name = fb_reactor.now_profile.first_name || " "
@@ -80,7 +81,7 @@ class Reaction
     reaction.event.update_reaction_count
     reaction.event.save!
 
-    if(reaction.reaction_type == TYPE_REPLY)
+    if(NOTIFY_GROUP_TYPES.include?(reaction.reaction_type))
       except_ids = [reaction.reactor_id]
       event.notify_chatroom(reaction.generate_reply_message, :except_ids => except_ids)
     
@@ -122,6 +123,8 @@ class Reaction
           reply_text = "\"#{reply_text}\""
         end
         message = "#{reactor_name_appear} replied #{reply_text}"
+      elsif self.reaction_type == TYPE_PHOTO
+        message = "#{reactor_name_appear} added #{pluralize(self.counter, "photo")}"}
       else
         message = "#{reactor_name_appear} #{reaction_verb} #{event_name}"
       end

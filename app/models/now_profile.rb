@@ -13,7 +13,7 @@ class NowProfile
   field :last_name, :default => " "
   field :bio, :default => " "
   field :email, :default => " "
-  field :profile_photo_url, :default => Event::NOW_BOT_PHOTO_URL
+  field :profile_photo_url, :default => " "
 
   #notification settings
   field :notify_like, type: Boolean, default: true
