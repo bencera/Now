@@ -772,7 +772,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
       new_photo_card = []
 
-      while photos.any? && photos.first.time_taken < next_checkin && new_photo_card.count < 6
+      while photos.any? && photos.first.time_taken <= next_checkin && new_photo_card.count < 6
         new_photo_card << photos.shift.id
       end
       
