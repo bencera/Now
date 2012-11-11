@@ -24,6 +24,7 @@ class NowUsersController < ApplicationController
       new_values[:notify_views] = params[:notify_views] if params[:notify_views]
       new_values[:notify_photos] = params[:notify_photos] if params[:notify_photos]
       new_values[:notify_local] = params[:notify_local] if params[:notify_local]
+      new_values[:share_to_fb_timeline] = params[:share_to_fb_timeline] if params[:share_to_fb_timeline]
 
       @now_user.update_now_profile(new_values)
     else

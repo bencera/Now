@@ -759,6 +759,13 @@ SCORE_HALF_LIFE       = 7.day.to_f
     photos = photos_orig.dup
 
     checkins = self.checkins.order_by([[:created_at, :asc]]).entries
+    remove_ids = []
+
+    checkins.each do |checkin|
+      remove_ids.push(*checkin.photo_card) if checkin.new_photos
+    end
+
+    photos.delete_if {|photo| remove_ids.include? photo.id}
 
     while photos.any?
       next_checkin = checkins.first.nil? ? photos.last.time_taken : checkins.first.created_at.to_i
