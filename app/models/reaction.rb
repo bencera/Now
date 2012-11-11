@@ -65,9 +65,9 @@ class Reaction
     reaction.counter = count.to_i 
 
     if fb_reactor.nil? || MILESTONE_TYPES.include?(type)
-      reaction.reactor_name = " "
+      reaction.reactor_name = Event::NOW_BOT_NAME
       reaction.reactor_id = "0"
-      reaction.reactor_photo_url = " "
+      reaction.reactor_photo_url = Event::NOW_BOT_PHOTO_URL
     else
       reaction.reactor_name = fb_reactor.now_profile.first_name || " "
       reaction.reactor_id = fb_reactor.now_id 

@@ -665,6 +665,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if(new_photos.any?)
       Resque.enqueue(VerifyURL2, self.id, last_update, true) 
       Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
+
+      #send reply notification about new photos
+
+      reaction = Reaction.create_reaction_and_notify(Reaction::TYPE_PHOTO, self, nil, new_photos.count)
     else
       Rails.logger.info("no photos were added #{new_photos}")
     end
