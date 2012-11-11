@@ -54,7 +54,7 @@ class Reaction
 
   def self.create_reaction_and_notify(type, event, fb_reactor, count, options={})
 
-    return if type == TYPE_LIKE && event.reactions.where(:reactor_name => fb_reactor.now_profile.name, :reaction_type => type).any?
+    return if type == TYPE_LIKE && event.reactions.where(:reactor_id => fb_reactor.now_id, :reaction_type => type).any?
 
     reaction = event.reactions.new
     reaction.venue_name = event.venue.name
@@ -82,8 +82,6 @@ class Reaction
 
     if(reaction.reaction_type == TYPE_REPLY)
       except_ids = [reaction.reactor_id]
-      except_ids.push reaction.facebook_user.now_id unless reaction.facebook_user.nil?
-
       event.notify_chatroom(reaction.generate_reply_message, :except_ids => except_ids)
     
     elsif(event.facebook_user && event.facebook_user != fb_reactor)

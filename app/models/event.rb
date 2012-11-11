@@ -715,6 +715,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     facebook_users = self.checkins.distinct(:facebook_user_id)
     
     except_ids = options[:except_ids] || []
+    facebook_users << self.facebook_user_id unless self.facebook_user.nil? 
 
     if facebook_users.any?
       FacebookUser.where(:_id.in => facebook_users).entries.each do |fb_user| 
