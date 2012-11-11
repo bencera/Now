@@ -161,7 +161,9 @@ class EventsController < ApplicationController
   def create_people
     
     #make sure this ends up handling now_token
+    #
 
+    Rails.logger.info(params)
     converted_params = Event.convert_params(params)
     if(converted_params[:errors])
       Rails.logger.info("create_people errors: #{converted_params[:errors]}") 

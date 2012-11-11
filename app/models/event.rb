@@ -735,16 +735,16 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.n_reactions = self.reactions.count
   end
 
-  def make_fake_reply(new_photo_card, text, timestamp)
+  def make_fake_reply(new_photo_card, text, timestamp, now_bot=true)
     fake_reply = {}
     fake_reply[:id] = self.id
     fake_reply[:created_at] = timestamp
     fake_reply[:description] = text
     fake_reply[:category] = self.category
     fake_reply[:new_photos] = true
-    fake_reply[:get_fb_user_name] = self.get_fb_user_name
-    fake_reply[:get_fb_user_id] = self.get_fb_user_id
-    fake_reply[:get_fb_user_photo] = self.get_fb_user_photo
+    fake_reply[:get_fb_user_name] = now_bot ? NOW_BOT_NAME : self.get_fb_user_name
+    fake_reply[:get_fb_user_id] = now_bot ? NOW_BOT_ID : self.get_fb_user_id
+    fake_reply[:get_fb_user_photo] = now_bot ? NOW_BOT_PHOTO_URL : self.get_fb_user_photo
     fake_reply[:new_photos] = true
     fake_reply[:get_preview_photo_ids] = new_photo_card
     fake_reply[:checkin_card_list] = []
@@ -764,14 +764,23 @@ SCORE_HALF_LIFE       = 7.day.to_f
     first_card = true
     after_reply = false
 
+    if self.photo_card.any?
+      #need to make the fake first reply
+      initial_reply = make_fake_reply(self.photo_card, self.description, self.start_time, false)
+      replies << initial_reply
+      remove_ids.push(*self.photo_card)
+      after_reply = true
+      first_card = false
+    end
+
     checkins.each do |checkin|
       remove_ids.push(*checkin.photo_card) if checkin.new_photos
     end
 
     photos.delete_if {|photo| remove_ids.include? photo.id}
-
+    
     while photos.any?
-      timestamp = photos.first.time_taken
+      timestamp = photos.first.time_taken < self.start_time ? self.start_time : photos.first.time_taken
 
       num_photos = rand(5) + 1
 
