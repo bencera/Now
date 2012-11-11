@@ -21,6 +21,7 @@ TRENDING_STATUSES     = [TRENDING, TRENDING_PEOPLE]
 TRENDED_STATUSES      = [TRENDED, TRENDED_PEOPLE]
 LIVE_STATUSES         = [TRENDING, TRENDING_PEOPLE, WAITING, WAITING_SCHEUDLED, WAITING_CONFIRMATION]
 WAITING_STATUSES      = [WAITING, WAITING_CONFIRMATION, WAITING_SCHEUDLED]
+PEOPLE_STATUSES       = [TRENDING_PEOPLE, TRENDED_PEOPLE]
 
 NOW_BOT_NAME          = "Now Bot"
 NOW_BOT_ID            = "0"
@@ -89,7 +90,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   has_and_belongs_to_many :photos 
   has_many :checkins, :dependent => :destroy
 
-  has_many :reactions
+  has_many :reactions, :dependent => :destroy
   
   include Geocoder::Model::Mongoid
   reverse_geocoded_by :coordinates

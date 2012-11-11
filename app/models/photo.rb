@@ -127,7 +127,7 @@ class Photo
 
       user_id = self.now_to_ig_user_id(fb_user.now_id)
       user = User.where(:ig_id =>user_id).first || User.new(:ig_id => user_id)
-      user.update_if_new(user_id, fb_user.fb_details["username"], fb_user.now_profile.name, fb_user.now_profile.profile_photo_url, "", "")
+      user.update_if_new(user_id, fb_user.now_profile.first_name, fb_user.now_profile.name, fb_user.now_profile.profile_photo_url, "", "")
       
       photo.user = user
     end 

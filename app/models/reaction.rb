@@ -81,14 +81,17 @@ class Reaction
     reaction.event.save!
 
     if(reaction.reaction_type == TYPE_REPLY)
-      event.notify_chatroom(reaction.generate_reply_message, :except_ids => [reaction.reactor_id, reaction.facebook_user.now_id])
+      except_ids = [reaction.reactor_id]
+      except_ids.push reaction.facebook_user.now_id unless reaction.facebook_user.nil?
+
+      event.notify_chatroom(reaction.generate_reply_message, :except_ids => except_ids)
     
     elsif(event.facebook_user && event.facebook_user != fb_reactor)
       begin
         message = reaction.generate_message(event.facebook_user.facebook_id, false) 
         event.notify_creator(message)
       rescue
-        Rails.error.info("Reaction: failed to send message '#{message}' to event #{event.id} creator")
+        Rails.logger.info("Reaction: failed to send message '#{message}' to event #{event.id} creator")
       end
       Rails.logger.info("Reaction: sent message: '#{message}' to event #{event.id} creator")
     end
