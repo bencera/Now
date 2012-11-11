@@ -37,7 +37,7 @@ class Autotrending
 	        event.save
 	        # For now, send a notification to Ben & Conall to make sure things are going smoothly
 	        alert = "#{event.venue.name} has autotrended with #{event.n_photos} photos"
-	        subscriptions = [APN::Device.find("4fa6f2cb2c1c0f000f000013").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
+	        subscriptions = [APN::Device.find("50985633ed591a000b000001").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
 	        subscriptions.each do |s|
 	        	n = APN::Notification.new
 	        	n.subscription = s
@@ -75,7 +75,7 @@ class Autotrending
 	      	end
 	      	# For now, send a notification to Ben & Conall to make sure things are going smoothly
 	      	alert = "#{new_event.venue.name} has autotrended with #{new_event.n_photos} photos"
-	      	subscriptions = [APN::Device.find("4fa6f2cb2c1c0f000f000013").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
+	      	subscriptions = [APN::Device.find("50985633ed591a000b000001").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
 	        subscriptions.each do |s|
 	        	n = APN::Notification.new
 	        	n.subscription = s
