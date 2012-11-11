@@ -64,7 +64,7 @@ class Reaction
     reaction.facebook_user = event.facebook_user
     reaction.counter = count.to_i 
 
-    if fb_reactor.nil? || MILESTONE_TYPES.include? type
+    if fb_reactor.nil? || MILESTONE_TYPES.include?(type)
       reaction.reactor_name = " "
       reaction.reactor_id = "0"
       reaction.reactor_photo_url = " "
@@ -124,7 +124,7 @@ class Reaction
         end
         message = "#{reactor_name_appear} replied #{reply_text}"
       elsif self.reaction_type == TYPE_PHOTO
-        message = "#{reactor_name_appear} added #{pluralize(self.counter, "photo")}"}
+        message = "#{reactor_name_appear} added #{pluralize(self.counter, "photo")}"
       else
         message = "#{reactor_name_appear} #{reaction_verb} #{event_name}"
       end
