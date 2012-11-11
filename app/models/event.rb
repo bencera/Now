@@ -735,11 +735,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.n_reactions = self.reactions.count
   end
 
-  def make_fake_reply(new_photo_card)
+  def make_fake_reply(new_photo_card, text, timestamp)
     fake_reply = {}
     fake_reply[:id] = self.id
-    fake_reply[:created_at] = self.created_at
-    fake_reply[:description] = self.description
+    fake_reply[:created_at] = timestamp
+    fake_reply[:description] = text
     fake_reply[:category] = self.category
     fake_reply[:new_photos] = true
     fake_reply[:get_fb_user_name] = self.get_fb_user_name
@@ -761,6 +761,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
     checkins = self.checkins.order_by([[:created_at, :asc]]).entries
     remove_ids = []
 
+    first_card = true
+    after_reply = false
+
     checkins.each do |checkin|
       remove_ids.push(*checkin.photo_card) if checkin.new_photos
     end
@@ -768,23 +771,32 @@ SCORE_HALF_LIFE       = 7.day.to_f
     photos.delete_if {|photo| remove_ids.include? photo.id}
 
     while photos.any?
+      timestamp = photos.first.time_taken
+
+      num_photos = rand(5) + 1
+
       next_checkin = checkins.first.nil? ? photos.last.time_taken : checkins.first.created_at.to_i
 
       new_photo_card = []
 
-      while photos.any? && photos.first.time_taken <= next_checkin && new_photo_card.count < 6
+      while photos.any? && photos.first.time_taken <= next_checkin && new_photo_card.count < num_photos
         new_photo_card << photos.shift.id
       end
       
       if new_photo_card.any?
-        replies << make_fake_reply(new_photo_card)
+
+        description_text = first_reply ? self.description : (after_reply ? "I found more photos" : "")
+
+        replies << make_fake_reply(new_photo_card, description_text, time_taken)
       else
         if checkins.count == 0
           Rails.logger.error("MAKE_REPLY_ARRAY: somehow we didn't add photos -- something messed up.")
           return replies
         end
         replies << checkins.shift
+        after_reply = true
       end
+      first_reply = false
     end
 
     return replies
