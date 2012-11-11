@@ -785,7 +785,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       
       if new_photo_card.any?
 
-        description_text = first_reply ? self.description : (after_reply ? "I found more photos" : "")
+        description_text = first_card ? self.description : (after_reply ? "I found more photos" : "")
 
         replies << make_fake_reply(new_photo_card, description_text, time_taken)
       else
@@ -796,7 +796,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
         replies << checkins.shift
         after_reply = true
       end
-      first_reply = false
+      first_card = false
+    end
+
+    #in case there are more replies after last photo
+    while checkins.any?
+      replies << checkins.shift
     end
 
     return replies
