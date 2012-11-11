@@ -51,6 +51,9 @@ class NowUsersController < ApplicationController
   #434 -- Facebook Service down please try again (not using this yet)
   #
   def login
+
+    Rails.logger.info(params)
+
     device = NowUsersHelper.find_or_create_device(params)
 
     return render(:text => "432 Device Creation/Find Failed", :status => 432) if device.nil?

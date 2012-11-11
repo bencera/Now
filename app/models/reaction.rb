@@ -68,7 +68,7 @@ class Reaction
       reaction.reactor_id = " "
       reaction.reactor_photo_url = " "
     else
-      reaction.reactor_name = fb_reactor.now_profile.name || " "
+      reaction.reactor_name = fb_reactor.now_profile.first_name || " "
       reaction.reactor_id = fb_reactor.now_id 
       reaction.reactor_photo_url = fb_reactor.now_profile.profile_photo_url || " "
     end
@@ -102,7 +102,7 @@ class Reaction
     if event_perspective || self.facebook_user.nil?
       event_name = "this experience"
     else
-      owner_name = (viewer_fb_id == self.facebook_user.facebook_id) ? "your" : (self.facebook_user.now_profile.name.split(" ").first + "'s")
+      owner_name = (viewer_fb_id == self.facebook_user.facebook_id) ? "your" : (self.facebook_user.now_profile.first_name + "'s")
       event_name = "#{milestone ? owner_name.capitalize : owner_name} experience"
     end
     
@@ -112,7 +112,7 @@ class Reaction
       message = "#{event_name} was #{reaction_verb} #{self.counter} times"
 
     else
-      reactor_name_appear = (viewer_fb_id == self.reactor_id) ? "You" : self.reactor_name.split(" ").first unless self.reactor_name.blank?
+      reactor_name_appear = (viewer_fb_id == self.reactor_id) ? "You" : self.reactor_name unless self.reactor_name.blank?
 
       if self.reaction_type == TYPE_REPLY
         other_text_count = reactor_name_appear.length + 11
