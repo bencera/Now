@@ -148,7 +148,8 @@ module EventsHelper
     Time.now.in_time_zone(get_tz(city)).utc_offset
   end
 
-  def self.get_user_liked(facebook_id)
+  def self.get_user_liked(now_id)
+    facebook_id = FacebookUser.where(:now_id => now_id).first.facebook_id
     shortids = $redis.smembers("liked_events:#{facebook_id}")
     return Event.where(:shortid.in => shortids).order_by([[:end_time, :desc]]).limit(20).entries
   end
