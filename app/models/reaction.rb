@@ -48,6 +48,7 @@ class Reaction
   #change event to a polymorphic reactable type so we can have reactions to replies as well
   belongs_to :event
   belongs_to :facebook_user
+  belongs_to :checkin
 
   #TODO: put in a validation that user_reaction_types have a reactor
   #validate
@@ -75,6 +76,10 @@ class Reaction
     end
 
     reaction.additional_message = options[:additional_message]
+
+    #might assign it to a reply
+
+    reaction.checkin = Checkin.where(:_id => options[:reply_id]).first if options[:reply_id]
 
     reaction.save!
     

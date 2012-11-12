@@ -28,6 +28,8 @@ class Checkin
   belongs_to :event
   belongs_to :venue
 
+  has_one :reaction, :dependent => :destroy
+
   validates_presence_of :broadcast #, facebook_user, event
   validate :custom_validations
   validates_associated :facebook_user
