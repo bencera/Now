@@ -11,7 +11,6 @@ class AddPeopleEvent
     timestamp = Time.now.to_i
 
     Rails.logger.info("AddPeopleEvent starting #{params} #{params[:photo_id_list]}")
-    photo_ids = params[:photo_id_list].split(",")
     photos = []
 
     #new_photos keeps track of new photos we've created to make sure we destroy things if there's a crash
@@ -33,6 +32,7 @@ class AddPeopleEvent
     if(params[:new_photos] == false)
       photo_card_ids = check_in_event.photo_card
     else
+      photo_ids = params[:photo_id_list].split(",")
       photo_ids.each do |photo_key|
         key = photo_key.split("|")
         photo_source = key[0]
