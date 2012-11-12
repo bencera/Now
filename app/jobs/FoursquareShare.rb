@@ -21,7 +21,7 @@ class FoursquareShare
     end
    
     options = {:query => {venueId: venue_id, oauth_token: fs_token, broadcast: 'public'}}
-    options[:shout] = shout if shout
+    options[:query][:shout] = shout if shout
     response = HTTParty.post("https://api.foursquare.com/v2/checkins/add", options)
     begin
       checkin_id = response['response']['checkin']['id']
