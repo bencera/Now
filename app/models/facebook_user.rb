@@ -20,10 +20,6 @@ class FacebookUser
   index({ now_id: 1}, {unique: true, name: "now_id_index"})
 
 
-  before_create :generate_tokens
-
-  before_save :set_profile
-
   has_many :devices, class_name: "APN::Device"
   has_many :scheduled_events
   has_many :events
@@ -34,6 +30,11 @@ class FacebookUser
   has_many :reactions, dependent: :destroy
 
   validates_numericality_of :score
+
+  def before_create
+    self.generate_tokens
+    self.set_profile
+  end
 
   class << self
 	  def find_by_facebook_id(id)
@@ -143,7 +144,7 @@ class FacebookUser
         n = APN::Notification.new
         n.subscription = subscription
         n.alert = message
-        n.event =  event_id 
+        n.event = event_id 
         n.deliver
       end
     end
