@@ -9,7 +9,8 @@ class FoursquareShare
     if event
       #so we created an event:
       venue_id = event.venue.id
-      shout = "I created a Now Experience here! http://getnowapp.com/#{event.shortid}"
+#      shout = "I created a Now Experience here! http://getnowapp.com/#{event.shortid}"
+      shout = "event.description http://getnowapp.com/#{event.shortid}"
     else
       checkin = Checkin.where(:_id => id_to_share).first
       if checkin
@@ -19,7 +20,8 @@ class FoursquareShare
       end
     end
    
-    options = {:query => {venueId: venue_id, shout: shout, oauth_token: fs_token, broadcast: 'public'}}
+    options = {:query => {venueId: venue_id, oauth_token: fs_token, broadcast: 'public'}}
+    options[:shout] = shout if shout
     response = HTTParty.post("https://api.foursquare.com/v2/checkins/add", options)
     begin
       checkin_id = response['response']['checkin']['id']
