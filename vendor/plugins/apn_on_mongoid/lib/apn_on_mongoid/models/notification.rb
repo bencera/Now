@@ -104,6 +104,7 @@ module APN
       aps['aps']['alert'] = self.alert if self.alert
       aps['aps']['badge'] = self.badge if self.badge
       aps['aps']['sound'] = self.sound if self.sound
+      aps['aps']['event'] = self.event if self.event
       aps.merge!(self.payload) if self.payload
       aps.to_json
     end
