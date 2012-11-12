@@ -45,7 +45,9 @@ class AddPeopleEvent
           if photo.nil?
             photo = Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
             new_photos << photo
-          else
+          end
+
+          unless photo.nil?
             photos << photo 
             photo_card_ids << photo.id
           end
