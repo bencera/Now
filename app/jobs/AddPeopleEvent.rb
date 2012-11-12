@@ -13,6 +13,9 @@ class AddPeopleEvent
     Rails.logger.info("AddPeopleEvent starting #{params} #{params[:photo_id_list]}")
     photo_ids = params[:photo_id_list].split(",")
     photos = []
+
+    #new_photos keeps track of new photos we've created to make sure we destroy things if there's a crash
+    new_photos = []
     photo_card_ids = []
 
     illustration_index = params[:illustration_index] || 0
@@ -41,6 +44,7 @@ class AddPeopleEvent
           photo = Photo.where(:ig_media_id => photo_id).first || Photo.where(:ig_media_id => external_key ).first
           if photo.nil?
             photo = Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
+            new_photos << photo
           end
           unless photo.nil?
             photos << photo 
@@ -51,7 +55,7 @@ class AddPeopleEvent
           Rails.logger.info("AddPeopleEvent failed due to exception #{e.message}\n#{e.backtrace.inspect}")
           #make a different call for trying to 
   
-          photos.each {|photo| photo.destroy }
+          new_photos.each {|photo| photo.destroy }
   
           retry_in = params[:retry_in] || 1
           params[:retry_in] = retry_in * 2
@@ -134,7 +138,7 @@ class AddPeopleEvent
           
       retry_in = params[:retry_in] || 1
       params[:retry_in] = retry_in * 2
-      photos.each {|photo| photo.destroy }
+      new_photos.each {|photo| photo.destroy }
       
       Resque.enqueue_in((retry_in * 15).seconds, AddPeopleEvent, params)
       raise
