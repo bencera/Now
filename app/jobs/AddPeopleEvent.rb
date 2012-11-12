@@ -125,9 +125,10 @@ class AddPeopleEvent
         event.photo_card = photo_card_ids if photo_card_ids.any?
        
         # sometimes photos is invalid and i don't know why -- destroying and re-creating the photos seems to work...
-        event.save!  
+        event.save! 
+
+        share_to_fs = true if params[:fs_token]
   
-        FoursquareShare.perform(event.id, nil, params[:fs_token]) if params[:fs_token]      
         
         Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")
       #elsif venue.last_event.status == "trending_people"
@@ -146,6 +147,8 @@ class AddPeopleEvent
  
     end
   
+        
+    FoursquareShare.perform(event.id, nil, params[:fs_token]) if share_to_fs
     #we probably need additional logic to make sure all photos get in
     Rails.logger.info("AddPeopleEvent finished")
   end
