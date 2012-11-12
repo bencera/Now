@@ -85,6 +85,7 @@ module VenuesHelper
       if !do_nearby
         Rails.logger.info("asking ig for #{venue_ig_id} media")
         response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
+        response_1 = response
         return :data => response.data if response.data && response.data.count >= 6
       end
     end
@@ -102,7 +103,13 @@ module VenuesHelper
     begin
       response = Instagram.media_search(search_loc[1], search_loc[0], :distance => 20) 
     rescue
-      response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
+      if response_1.nil?
+        venue_response = Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id)
+        venue_ig_id = venue_response.first['id']
+        response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
+      else
+        response = response_1
+      end
     end
     
     return :data => response.data 
