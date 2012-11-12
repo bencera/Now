@@ -59,7 +59,7 @@ class AddPeopleEvent
           retry_in = params[:retry_in] || 1
           params[:retry_in] = retry_in * 2
   
-          Resque.enqueue_in((retry_in).minutes, AddPeopleEvent, params)
+          Resque.enqueue_in((retry_in).minutes, AddPeopleEvent, params) unless params[:retry_in] >= 128
           raise
         end
         #TODO: add the illustration to the event
@@ -139,7 +139,7 @@ class AddPeopleEvent
       params[:retry_in] = retry_in * 2
       new_photos.each {|photo| photo.destroy }
       
-      Resque.enqueue_in((retry_in * 15).seconds, AddPeopleEvent, params)
+      Resque.enqueue_in((retry_in * 15).seconds, AddPeopleEvent, params) unless params[:retry_in] >= 128
       raise
  
     end
