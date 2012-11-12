@@ -8,11 +8,11 @@ class NowProfile
   #:attr_accessible, :only => [:name, :bio, :email, :profile_photo_url, :notify_like,
   #                            :notify_repost, :notify_views, :notify_photos, :notify_local]
 
-  field :name, :default => " "
-  field :first_name, :default => " "
-  field :last_name, :default => " "
-  field :bio, :default => " "
-  field :email, :default => " "
+  field :name, :default => ""
+  field :first_name, :default => ""
+  field :last_name, :default => ""
+  field :bio, :default => ""
+  field :email, :default => ""
   field :profile_photo_url, :default => " "
 
   #notification settings
