@@ -51,6 +51,7 @@ class AddPeopleEvent
           Rails.logger.info("AddPeopleEvent failed due to exception #{e.message}\n#{e.backtrace.inspect}")
           #make a different call for trying to 
   
+          photos.each {|photo| photo.destroy }
   
           retry_in = params[:retry_in] || 1
           params[:retry_in] = retry_in * 2
@@ -67,68 +68,79 @@ class AddPeopleEvent
     #if the photos were added properly, it should have created a venue if it wasn't already there.
 
     
-
-      
-    #if an event was waiting, just destroy it and let the user's new event wipe it out
-    if check_in_event && Event::WAITING_STATUSES.include?(check_in_event.status)
-      check_in_event.destroy
-      check_in_event = nil
-    end
-
-    if check_in_event
-
-      Rails.logger.info("AddPeopleEvent: reposting event #{check_in_event.id}")
-      checkin = check_in_event.checkins.new do |e|
-        e.id = params[:reply_id] if params[:reply_id]
+    
+    begin
+        
+      #if an event was waiting, just destroy it and let the user's new event wipe it out
+      if check_in_event && Event::WAITING_STATUSES.include?(check_in_event.status)
+        check_in_event.destroy
+        check_in_event = nil
       end
- 
-      checkin.description = params[:description] || check_in_event.description || " "
-      checkin.category = params[:category] || check_in_event.category
-      checkin.new_photos = params[:new_photos]
-      checkin.posted = params[:new_post]
-      checkin.photo_card = photo_card_ids
-      checkin.facebook_user = fb_user 
-      #we're not using this yet
-      checkin.broadcast = params[:broadcast] ||  "public"
-
-      check_in_event.insert_photos_safe(photos)
-      Rails.logger.info("AddPeopleEvent: saving checkin #{checkin.id}")
-      checkin.save!
-      Rails.logger.info("AddPeopleEvent: saving check_in_event #{check_in_event.id}")
-      check_in_event.save!
-      Rails.logger.info("AddPeopleEvent: created new checkin for check_in_event at venue #{venue.id}")
-
-      #just want to make sure i clean up any mistakes
-      Resque.enqueue_in(3.seconds, RepairSimultaneousEvents, venue.id.to_s)
-    else
-      Rails.logger.info("AddPeopleEvent: creating new event")
-      event = venue.get_new_event("trending_people", photos, params[:id])
-      Rails.logger.info("AddPeopleEvent: created new event #{event.id}" )
-
-      # Since these should have been checked by the model method, we can assume they're safe
-      event.illustration = photos[illustration_index].id
-      event.facebook_user = fb_user 
-      event.description = params[:description] || " "
-      event.category = params[:category]
-      event.shortid = params[:shortid]
-      event.start_time = Time.now.to_i
-      event.end_time = event.start_time
-      event.anonymous = params[:anonymous] && params[:anonymous] != 'false'
-      #create photocard for new event -- might also make specific photocard for each user who checks in
-      event.photo_card = photo_card_ids if photo_card_ids.any?
-     
-      # sometimes photos is invalid and i don't know why -- destroying and re-creating the photos seems to work...
-      event.save!  
-
-      FoursquareShare.perform(event.id, nil, params[:fs_token]) if params[:fs_token]      
+  
+      if check_in_event
+  
+        Rails.logger.info("AddPeopleEvent: reposting event #{check_in_event.id}")
+        checkin = check_in_event.checkins.new do |e|
+          e.id = params[:reply_id] if params[:reply_id]
+        end
+   
+        checkin.description = params[:description] || check_in_event.description || " "
+        checkin.category = params[:category] || check_in_event.category
+        checkin.new_photos = params[:new_photos]
+        checkin.posted = params[:new_post]
+        checkin.photo_card = photo_card_ids
+        checkin.facebook_user = fb_user 
+        #we're not using this yet
+        checkin.broadcast = params[:broadcast] ||  "public"
+  
+        check_in_event.insert_photos_safe(photos)
+        Rails.logger.info("AddPeopleEvent: saving checkin #{checkin.id}")
+        checkin.save!
+        Rails.logger.info("AddPeopleEvent: saving check_in_event #{check_in_event.id}")
+        check_in_event.save!
+        Rails.logger.info("AddPeopleEvent: created new checkin for check_in_event at venue #{venue.id}")
+  
+        #just want to make sure i clean up any mistakes
+        Resque.enqueue_in(3.seconds, RepairSimultaneousEvents, venue.id.to_s)
+      else
+        Rails.logger.info("AddPeopleEvent: creating new event")
+        event = venue.get_new_event("trending_people", photos, params[:id])
+        Rails.logger.info("AddPeopleEvent: created new event #{event.id}" )
+  
+        # Since these should have been checked by the model method, we can assume they're safe
+        event.illustration = photos[illustration_index].id
+        event.facebook_user = fb_user 
+        event.description = params[:description] || " "
+        event.category = params[:category]
+        event.shortid = params[:shortid]
+        event.start_time = Time.now.to_i
+        event.end_time = event.start_time
+        event.anonymous = params[:anonymous] && params[:anonymous] != 'false'
+        #create photocard for new event -- might also make specific photocard for each user who checks in
+        event.photo_card = photo_card_ids if photo_card_ids.any?
+       
+        # sometimes photos is invalid and i don't know why -- destroying and re-creating the photos seems to work...
+        event.save!  
+  
+        FoursquareShare.perform(event.id, nil, params[:fs_token]) if params[:fs_token]      
+        
+        Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")
+      #elsif venue.last_event.status == "trending_people"
+        #this should only happen if there was a failure
+      #  event = venue.last_event
+      #  event.photos.push(*photos)
+      end
+    rescue Exception => e
+          
+      retry_in = params[:retry_in] || 1
+      params[:retry_in] = retry_in * 2
+      photos.each {|photo| photo.destroy }
       
-      Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")
-    #elsif venue.last_event.status == "trending_people"
-      #this should only happen if there was a failure
-    #  event = venue.last_event
-    #  event.photos.push(*photos)
+      Resque.enqueue_in((retry_in * 15).seconds, AddPeopleEvent, params)
+      raise
+ 
     end
-
+  
     #we probably need additional logic to make sure all photos get in
     Rails.logger.info("AddPeopleEvent finished")
   end
