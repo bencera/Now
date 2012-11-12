@@ -21,6 +21,8 @@ Ubimachine::Application.routes.draw do
   match "/now_users_update" => "now_users#update"
   match "/now_users_login" => "now_users#login"
 
+  match "/event_report" => "events#report"
+
 #### Conall end
 
   match "/mu-34dfab81-28f6d162-ec82daa2-3f6b93cd" => "home#blitz"

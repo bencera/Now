@@ -335,6 +335,10 @@ class EventsController < ApplicationController
     end
   end
 
+  def report
+    Rails.logger.info(params)
+  end
+
 
   def facebook_connect_test
     
