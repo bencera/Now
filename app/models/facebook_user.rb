@@ -31,11 +31,14 @@ class FacebookUser
 
   validates_numericality_of :score
 
-  def before_create
+  before_create :initialize_members
+
+  def initialize_members
     self.generate_tokens
     self.set_profile
     return true
   end
+  
 
   class << self
 	  def find_by_facebook_id(id)
