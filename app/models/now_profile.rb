@@ -38,7 +38,7 @@ class NowProfile
       self.first_name = self.first_name.blank? ? fb_details["first_name"] : self.first_name
       self.last_name = self.last_name.blank? ? fb_details["last_name"] : self.last_name
       self.email = self.email.blank? ? fb_details["email"] : self.email
-      self.bio = self.bio.blank? ? fb_details["bio"] : self.bio
+      self.bio = self.bio || ""
     end 
   end
 end
