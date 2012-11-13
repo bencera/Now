@@ -34,6 +34,7 @@ class FacebookUser
   def before_create
     self.generate_tokens
     self.set_profile
+    return true
   end
 
   class << self
