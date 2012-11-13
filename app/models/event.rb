@@ -234,15 +234,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
   def get_preview_photo_ids(options={})
     if options[:repost]
       main_photo_ids = options[:repost]  
-    elsif options[:all_six]
-      main_photo_ids = []
     else
       main_photo_ids = self.overriding_repost ? self.overriding_repost.photo_card : self.photo_card
     end
 
-    if main_photo_ids.empty?
-      #fixed a weird line -- make sure event detail and index still work...
-      main_photo_ids = self.photo_ids[0..(PHOTO_CARD_PHOTOS - 1)] 
+    if main_photo_ids.empty? || (main_photo_ids.count < PHOTO_CARD_PHOTOS && options[:all_six])
+      main_photo_ids << (*self.photo_ids[0..(PHOTO_CARD_PHOTOS - 1)])
     end
       
     return main_photo_ids[0..6]
