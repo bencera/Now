@@ -41,7 +41,15 @@ class AddPeopleEvent
         begin
           external_key =  Photo.get_media_key(photo_source, photo_id)
           
-          photo = Photo.where(:ig_media_id => photo_id).first || Photo.where(:ig_media_id => external_key ).first
+          photo = Photo.where(:ig_media_id => photo_id).last || Photo.where(:ig_media_id => external_key ).last
+
+          #we should have been enforcing ig_media_id uniqueness at the db level, but the cat's out of the bag, so we have to do this
+
+          while photo && !photo.valid?
+            photo.destroy
+            photo = Photo.where(:ig_media_id => photo_id).last || Photo.where(:ig_media_id => external_key ).last
+          end
+
           if photo.nil?
             photo = Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
             new_photos << photo

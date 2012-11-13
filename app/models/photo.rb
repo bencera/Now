@@ -11,7 +11,7 @@ class Photo
   VALID_SOURCES = [INSTAGRAM_SOURCE, NOW_SOURCE]
 
   field :ig_media_id
-  index :ig_media_id, background: true
+  index :ig_media_id, background: true #, :unique => true
 
 # this is to phase out ig_media id so that photos can be from any source, instagram, now, foursquare, twitter, etc
   field :external_media_id
