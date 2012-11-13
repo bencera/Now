@@ -221,7 +221,7 @@ module EventsHelper
     photo_id_list = []
     photo_id_hash = {}
     events.each do |event|
-      photo_ids = event.get_preview_photo_ids
+      photo_ids = event.get_preview_photo_ids(:all_six => true)
       photo_id_list.push(*photo_ids)
       photo_id_hash[event.id] = photo_ids
     end
