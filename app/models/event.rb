@@ -243,7 +243,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       main_photo_ids = main_photo_ids.uniq
     end
       
-    return main_photo_ids[0..6]
+    return main_photo_ids[0..(PHOTO_CARD_PHOTOS - 1)]
   end
 
   def get_fb_user_name
