@@ -54,22 +54,37 @@ class NowUsersController < ApplicationController
 
     Rails.logger.info(params)
 
-    device = NowUsersHelper.find_or_create_device(params)
+    begin
+      device = NowUsersHelper.find_or_create_device(params)
 
-    return render(:text => "432 Device Creation/Find Failed", :status => 432) if device.nil?
-    return_hash = {} 
+      return render(:text => "432 Device Creation/Find Failed", :status => 432) if device.nil?
+      return_hash = {} 
 
-    if(params[:fb_accesstoken])
-      fb_user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken], return_hash)
+      if(params[:fb_accesstoken])
+        fb_user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken], :udid => params[:udid], :return_hash => return_hash)
 
-      return render(:text => "433 Facebook Access Failed errors: #{return_hash[:errors]}", :status => 433) if fb_user.nil?
+        return render(:text => "433 Facebook Access Failed errors: #{return_hash[:errors]}", :status => 433) if fb_user.nil?
 
-      unless fb_user.devices.include? device
-        fb_user.devices.push device
+        unless fb_user.devices.include? device
+          fb_user.devices.push device
+          fb_user.save
+        end
+
+        return_hash[:now_token] = fb_user.now_token
+        return_hash[:user_id] = fb_user.now_id
       end
+    rescue Exception => e
+      params[:now_token] = return_hash_now_token
+      params[:user_id] = return_hash_user_id
+      params[:exception_text] = "#{e.message}\n#{e.backtrace.inspect}"
+      Rescue.enqueue(LogBadFbCreate, params)
+      ##enqueue some job to try to fix this  because we need to associate this fb user and device!
+    end
 
-      return_hash[:now_token] = fb_user.now_token
-      return_hash[:user_id] = fb_user.now_id
+    if fb_user.devices.empty?
+      params[:now_token] = return_hash_now_token
+      params[:user_id] = return_hash_user_id
+      Rescue.enqueue(LogBadFbCreate, params)
     end
 
     return render :json => return_hash, :status => :ok

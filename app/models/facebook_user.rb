@@ -7,6 +7,8 @@ class FacebookUser
 
   field :now_id
 
+  field :udid
+
   field :email
   field :now_token
   field :fb_accesstoken
@@ -56,7 +58,7 @@ class FacebookUser
       	user.fb_accesstoken = token
       else
         if facebook_client.get_errors
-          options[:errors] =  facebook_client.get_errors
+          options[:return_hash][:errors] =  facebook_client.get_errors
           return nil
         end
 
@@ -66,6 +68,9 @@ class FacebookUser
         user.email = facebook_client.email
         user.fb_details = facebook_client.all_user_info
       end
+
+      user.udid = options[:udid] if options[:udid]
+
       user.save!
       user
     end
