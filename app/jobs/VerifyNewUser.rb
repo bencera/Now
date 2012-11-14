@@ -14,14 +14,16 @@ class VerifyNewUser
     if params[:fb_accesstoken]
 
       fb_user = FacebookUser.where(:fb_accesstoken => params[:fb_accesstoken]).first
-
-      errors << "User was not created" if fb_user.nil?
-
-      errors << "User has no device" if fb_user.devices.empty?
-
-      errors << "User has devices, but not the new one" if device && !fb_user.devices.include?(device)
-
-      errors << "Device not attached to user" if device.facebook_user.nil?
+      
+      if fb_user.nil?
+        errors << "User was not created"
+      elsif (fb_user.devices.nil? || fb_user.devices.empty?)
+        errors << "User has no device" 
+      elsif !fb_user.devices.include?(device)
+        errors << "User has devices, but not the new one" 
+      elsif device.facebook_user.nil?
+        errors << "Device not attached to user" 
+      end
     end
 
     users = FacebookUser.where(:now_id.in => ["2"]).entries
