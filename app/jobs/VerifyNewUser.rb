@@ -24,7 +24,7 @@ class VerifyNewUser
       errors << "Device not attached to user" if device.facebook_user.nil?
     end
 
-    UserMailer.verify_user(device, fb_user, :params => params, :errors => errors) 
+    UserMailer.verify_user(device, fb_user, :params => params, :errors => errors) if errors.any?
   end
 end
 
