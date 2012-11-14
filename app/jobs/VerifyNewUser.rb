@@ -12,7 +12,7 @@ class VerifyNewUser
     errors << "Device has no subsription" if device && device.subscriptions.empty? && !params[:token].blank?
   
     check_fb_user = false
-    if params[:fb_accesstoken]
+    if !params[:fb_accesstoken].blank?
       fb_user = FacebookUser.where(:fb_accesstoken => params[:fb_accesstoken]).first
       check_fb_user = true
     elsif params[:nowtoken]
