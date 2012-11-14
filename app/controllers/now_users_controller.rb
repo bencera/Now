@@ -57,6 +57,7 @@ class NowUsersController < ApplicationController
     begin
       device = NowUsersHelper.find_or_create_device(params)
       if device.nil?
+        params[:breakpoint] = 1
         Resque.enqueue(LogBadFbCreate, params)
         return render(:text => "432 Device Creation/Find Failed", :status => 432) 
       end
@@ -65,6 +66,7 @@ class NowUsersController < ApplicationController
       if(!params[:fb_accesstoken].blank?)
         fb_user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken], :udid => params[:udid], :return_hash => return_hash)
         if fb_user.nil?
+          params[:breakpoint] = 2
           Resque.enqueue(LogBadFbCreate, params)
           return render(:text => "433 Facebook Access Failed errors: #{return_hash[:errors]}", :status => 433) 
         end
@@ -86,6 +88,7 @@ class NowUsersController < ApplicationController
       params[:returned_now_token] = return_hash_now_token
       params[:user_id] = return_hash_user_id
       params[:exception_text] = "#{e.message}\n#{e.backtrace.inspect}"
+      params[:breakpoint] = 3
       Resque.enqueue(LogBadFbCreate, params)
       ##enqueue some job to try to fix this  because we need to associate this fb user and device!
     end
@@ -93,6 +96,7 @@ class NowUsersController < ApplicationController
     if fb_user && device.facebook_user_id != fb_user.id
       params[:returned_now_token] = return_hash_now_token
       params[:user_id] = return_hash_user_id
+      params[:breakpoint] = 4
       Resque.enqueue(LogBadFbCreate, params)
     end
 
