@@ -103,7 +103,7 @@ class NowUsersController < ApplicationController
 
   def location
     Rails.logger.info(params)
-    device = APN::Device.where(:udid => params[:device_id]).first
+    device = APN::Device.where(:udid => params[:deviceid]).first
     if device && params[:latitude] && params[:longitude]
       device.coordinates = [params[:longitude].to_f,params[:latitude].to_f] 
       device.save
