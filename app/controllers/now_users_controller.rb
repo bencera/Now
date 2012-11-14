@@ -62,7 +62,7 @@ class NowUsersController < ApplicationController
       end
       return_hash = {} 
 
-      if(params[:fb_accesstoken])
+      if(!params[:fb_accesstoken].blank?)
         fb_user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken], :udid => params[:udid], :return_hash => return_hash)
         if fb_user.nil?
           Resque.enqueue(LogBadFbCreate, params)
