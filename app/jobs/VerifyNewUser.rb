@@ -24,7 +24,11 @@ class VerifyNewUser
       errors << "Device not attached to user" if device.facebook_user.nil?
     end
 
-    UserMailer.verify_user(device, fb_user, :params => params, :errors => errors) if errors.any?
+    users = FacebookUser.where(:now_id.in => ["2"]).entries
+    users.each {|user| user.send_notification("new user error", nil)}
+
+    error_report = ErrorReport.create!(:errors => errors, :params => params, :type => ErrorReport::TYPE_NEW_USER)
+
   end
 end
 
