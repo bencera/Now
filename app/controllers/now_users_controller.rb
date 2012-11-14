@@ -77,14 +77,14 @@ class NowUsersController < ApplicationController
       params[:now_token] = return_hash_now_token
       params[:user_id] = return_hash_user_id
       params[:exception_text] = "#{e.message}\n#{e.backtrace.inspect}"
-      Rescue.enqueue(LogBadFbCreate, params)
+      Resque.enqueue(LogBadFbCreate, params)
       ##enqueue some job to try to fix this  because we need to associate this fb user and device!
     end
 
     if fb_user.devices.empty?
       params[:now_token] = return_hash_now_token
       params[:user_id] = return_hash_user_id
-      Rescue.enqueue(LogBadFbCreate, params)
+      Resque.enqueue(LogBadFbCreate, params)
     end
 
     return render :json => return_hash, :status => :ok
