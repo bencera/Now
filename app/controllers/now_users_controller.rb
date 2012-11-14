@@ -106,6 +106,7 @@ class NowUsersController < ApplicationController
     device = APN::Device.where(:udid => params[:device_id]).first
     
     device.coordinates = [params[:longitude].to_f,params[:latitude].to_f] if device && params[:latitude] && params[:longitude]
+    return render :text => "OK", :status => :ok
   end
 
 end
