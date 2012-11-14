@@ -1,7 +1,7 @@
 class VerifyNewUser
   @queue = :user_verification_queue
 
-  def self.perform(params)
+  def self.perform(in_params)
     errors = []
     params = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
 
@@ -29,6 +29,7 @@ class VerifyNewUser
 
     error_report = ErrorReport.create!(:errors => errors, :params => params, :type => ErrorReport::TYPE_NEW_USER)
 
+    Rails.logger.info("VerifyNewUser: No Errors") if !errors.any?
   end
 end
 
