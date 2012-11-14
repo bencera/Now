@@ -29,4 +29,13 @@ class UserMailer < ActionMailer::Base
     @new_event = new_event
     mail to: "ben.broca@gmail.com", subject: "#{@new_event.venue.description} - (#{@new_event.venue.name})"
   end
+
+  def verify_user(user, device, params={})
+    @user = user
+    @device = device
+    @params = params
+    @errors = params[:errors]
+
+    mail to: "ocallaghan@gmail.com", subject: "User Verification #{@errors.count} error(s)"
+  end
 end

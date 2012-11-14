@@ -91,6 +91,8 @@ class NowUsersController < ApplicationController
       Resque.enqueue(LogBadFbCreate, params)
     end
 
+    Resque.enqueue_in(30.seconds, VerifyNewUser, params)
+
     return render :json => return_hash, :status => :ok
   end
 
