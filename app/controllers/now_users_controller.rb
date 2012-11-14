@@ -85,7 +85,7 @@ class NowUsersController < ApplicationController
       ##enqueue some job to try to fix this  because we need to associate this fb user and device!
     end
 
-    if !fb_user.devices.include? device
+    if fb_user && !fb_user.devices.include?(device)
       params[:now_token] = return_hash_now_token
       params[:user_id] = return_hash_user_id
       Resque.enqueue(LogBadFbCreate, params)
