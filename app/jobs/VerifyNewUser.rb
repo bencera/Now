@@ -10,11 +10,17 @@ class VerifyNewUser
     errors << "Device was not created" if device.nil?
 
     errors << "Device has no subsription" if device && device.subscriptions.empty? && !params[:token].blank?
-
+  
+    check_fb_user = false
     if params[:fb_accesstoken]
-
       fb_user = FacebookUser.where(:fb_accesstoken => params[:fb_accesstoken]).first
-      
+      check_fb_user = true
+    elsif params[:nowtoken]
+      fb_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+      check_fb_user = true
+    end
+
+    if check_fb_user  
       if fb_user.nil?
         errors << "User was not created"
       elsif (fb_user.devices.nil? || fb_user.devices.empty?)
@@ -25,6 +31,7 @@ class VerifyNewUser
         errors << "Device not attached to user" 
       end
     end
+
 
     users = FacebookUser.where(:now_id.in => ["2"]).entries
     users.each {|user| user.send_notification("new user error", nil)}

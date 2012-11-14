@@ -69,16 +69,21 @@ class NowUsersController < ApplicationController
           return render(:text => "433 Facebook Access Failed errors: #{return_hash[:errors]}", :status => 433) 
         end
 
-        unless fb_user.devices.include? device
-          fb_user.devices.push device
-          fb_user.save
-        end
-
         return_hash[:now_token] = fb_user.now_token
         return_hash[:user_id] = fb_user.now_id
       end
+
+      if fb_user.nil? && params[:nowtoken]
+        fb_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+      end
+      
+      if fb_user && !fb_user.devices.include?(device)
+        fb_user.devices.push device
+        fb_user.save
+      end
+
     rescue Exception => e
-      params[:now_token] = return_hash_now_token
+      params[:returned_now_token] = return_hash_now_token
       params[:user_id] = return_hash_user_id
       params[:exception_text] = "#{e.message}\n#{e.backtrace.inspect}"
       Resque.enqueue(LogBadFbCreate, params)
@@ -86,7 +91,7 @@ class NowUsersController < ApplicationController
     end
 
     if fb_user && !fb_user.devices.include?(device)
-      params[:now_token] = return_hash_now_token
+      params[:returned_now_token] = return_hash_now_token
       params[:user_id] = return_hash_user_id
       Resque.enqueue(LogBadFbCreate, params)
     end
@@ -94,6 +99,13 @@ class NowUsersController < ApplicationController
     Resque.enqueue_in(30.seconds, VerifyNewUser, params)
 
     return render :json => return_hash, :status => :ok
+  end
+
+  def location
+    Rails.logger.info(params)
+    device = APN::Device.where(:udid => params[:device_id]).first
+    
+    device.coordinates = [params[:longitude].to_f,params[:latitude].to_f] if device && params[:latitude] && params[:longitude]
   end
 
 end
