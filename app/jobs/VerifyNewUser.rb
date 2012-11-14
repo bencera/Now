@@ -36,9 +36,11 @@ class VerifyNewUser
     users = FacebookUser.where(:now_id.in => ["2"]).entries
     users.each {|user| user.send_notification("new user error", nil)}
 
-    error_report = ErrorReport.create!(:errors => errors, :params => params, :type => ErrorReport::TYPE_NEW_USER)
-
-    Rails.logger.info("VerifyNewUser: No Errors") if !errors.any?
+    if errors.any?
+      error_report = ErrorReport.create!(:errors => errors, :params => params, :type => ErrorReport::TYPE_NEW_USER)
+    else
+      Rails.logger.info("VerifyNewUser: No Errors")
+    end
   end
 end
 
