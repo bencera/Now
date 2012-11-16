@@ -515,10 +515,14 @@ class Venue
 
     new_photos = new_photos.sort { |a,b| b.time_taken <=> a.time_taken}
 
+    event_start_time = new_photos.any? ? new_photos.last.time_taken : Time.now.to_i
+    event_end_time =  new_photos.any? ? new_photos.first.time_taken : Time.now.to_i
+    
+
   # commented out for testing on workers CONALL
-    new_event = self.events.new(:start_time => new_photos.last.time_taken,
-                             :end_time => new_photos.first.time_taken,
-                             :coordinates => new_photos.first.coordinates,
+    new_event = self.events.new(:start_time => event_start_time,
+                             :end_time => event_end_time,
+                             :coordinates => self.coordinates,
                              :n_photos => new_photos.count,
                              :status => status,
                              :city => self.city) do |e|
@@ -549,8 +553,14 @@ class Venue
     #need this to stop before save code running
     new_venue.now_version = 2
 
-    new_venue.now_city = NowCity.where(:name => venue_data.location['city'], :state => venue_data.location['state'], 
+    begin
+      new_venue.now_city = NowCity.where(:name => venue_data.location['city'], :state => venue_data.location['state'], 
                 :country => venue_data.location['country']).first || NowCity.create_from_fs_venue_data(venue_data)
+    rescue
+      #didn't create the city properly find nearest one
+
+      new_venue.now_city = NowCity.where(:coordinates => { "$near" => [venue_data.location['lng'], venue_data.location['lat']] }).first
+    end
 
 
     categories = []

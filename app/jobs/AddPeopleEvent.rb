@@ -32,45 +32,52 @@ class AddPeopleEvent
     if(params[:new_photos] == false)
       photo_card_ids = check_in_event.photo_card
     else
-      photo_ids = params[:photo_id_list].split(",")
+      if params[:photo_id_list].nil?
+        photo_ids = []
+      else
+        photo_ids = params[:photo_id_list].split(",")
+      end
+
       photo_ids.each do |photo_key|
         key = photo_key.split("|")
         photo_source = key[0]
         photo_id = key[1] 
         photo_ts = key[2] || timestamp
-        begin
-          external_key =  Photo.get_media_key(photo_source, photo_id)
-          
-          photo = Photo.where(:ig_media_id => photo_id).last || Photo.where(:ig_media_id => external_key ).last
-
-          #we should have been enforcing ig_media_id uniqueness at the db level, but the cat's out of the bag, so we have to do this
-
-          while photo && !photo.valid?
-            photo.destroy
+        unless photo_id.nil?
+          begin
+            external_key =  Photo.get_media_key(photo_source, photo_id)
+            
             photo = Photo.where(:ig_media_id => photo_id).last || Photo.where(:ig_media_id => external_key ).last
-          end
 
-          if photo.nil?
-            photo = Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
-            new_photos << photo
-          end
+            #we should have been enforcing ig_media_id uniqueness at the db level, but the cat's out of the bag, so we have to do this
 
-          unless photo.nil?
-            photos << photo 
-            photo_card_ids << photo.id
+            while photo && !photo.valid?
+              photo.destroy
+              photo = Photo.where(:ig_media_id => photo_id).last || Photo.where(:ig_media_id => external_key ).last
+            end
+
+            if photo.nil?
+              photo = Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
+              new_photos << photo
+            end
+
+            unless photo.nil?
+              photos << photo 
+              photo_card_ids << photo.id
+            end
+          rescue Exception => e
+            #log the failed attempt, add the photo_ig_id to a redis key for the RetryPhotos job
+            Rails.logger.info("AddPeopleEvent failed due to exception #{e.message}\n#{e.backtrace.inspect}")
+            #make a different call for trying to 
+    
+            new_photos.each {|photo| photo.destroy }
+    
+            retry_in = params[:retry_in] || 1
+            params[:retry_in] = retry_in * 2
+    
+            Resque.enqueue_in((retry_in).minutes, AddPeopleEvent, params) unless params[:retry_in] >= 128
+            raise
           end
-        rescue Exception => e
-          #log the failed attempt, add the photo_ig_id to a redis key for the RetryPhotos job
-          Rails.logger.info("AddPeopleEvent failed due to exception #{e.message}\n#{e.backtrace.inspect}")
-          #make a different call for trying to 
-  
-          new_photos.each {|photo| photo.destroy }
-  
-          retry_in = params[:retry_in] || 1
-          params[:retry_in] = retry_in * 2
-  
-          Resque.enqueue_in((retry_in).minutes, AddPeopleEvent, params) unless params[:retry_in] >= 128
-          raise
         end
         #TODO: add the illustration to the event
       end
@@ -121,7 +128,7 @@ class AddPeopleEvent
         Rails.logger.info("AddPeopleEvent: created new event #{event.id}" )
   
         # Since these should have been checked by the model method, we can assume they're safe
-        event.illustration = photos[illustration_index].id
+        event.illustration = photos[illustration_index].id if photos.any?
         event.facebook_user = fb_user 
         event.description = params[:description] || " "
         event.category = params[:category]

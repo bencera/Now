@@ -10,7 +10,7 @@ class FoursquareShare
       #so we created an event:
       venue_id = event.venue.id
 #      shout = "I created a Now Experience here! http://getnowapp.com/#{event.shortid}"
-      shout = "event.description http://getnowapp.com/#{event.shortid}"
+      shout = "#{event.description} http://getnowapp.com/#{event.shortid}"
     else
       checkin = Checkin.where(:_id => id_to_share).first
       if checkin
