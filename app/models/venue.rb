@@ -566,7 +566,7 @@ class Venue
     new_venue.address = venue_data.location.json unless venue_data.location.nil?
     new_venue.neighborhood = new_venue.find_neighborhood
 
-    reponse = Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id)
+    response = Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id)
     
     if response.empty?
       venue_ig_id = nil
