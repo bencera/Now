@@ -58,7 +58,7 @@ class Venue
   
   
   #category might not exist for a venue
-  validates_presence_of :fs_venue_id, :name, :coordinates, :ig_venue_id #, :address 
+  validates_presence_of :fs_venue_id, :name, :coordinates #, :ig_venue_id #, :address 
   validates_uniqueness_of :fs_venue_id
   validates_numericality_of :score
   before_validation :create_new_venue
@@ -566,8 +566,12 @@ class Venue
     new_venue.address = venue_data.location.json unless venue_data.location.nil?
     new_venue.neighborhood = new_venue.find_neighborhood
 
-    venue_ig_id = Rails.cache.fetch "#{fs_id}:instagram:venue", :compress => true do
-      Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id).first['id']
+    reponse = Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id)
+    
+    if response.empty?
+      venue_ig_id = nil
+    else
+      venue_ig_id = response.first['id']
     end
 
     new_venue.fs_venue_id = fs_id

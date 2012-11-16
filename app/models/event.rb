@@ -633,13 +633,24 @@ SCORE_HALF_LIFE       = 7.day.to_f
     #TODO: don't use self.end_time -- use the timestamp of the last ig photo 
 
     begin
-      response = Instagram.location_recent_media(self.venue.ig_venue_id, :min_timestamp => self.end_time)
+      if self.venue.ig_venue_id.nil?
+        location_reponse = Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id)
+    
+        if location_reponse.empty?
+          venue_ig_id = nil
+        else
+          self.venue.update_attribute(:ig_venue_id, location_reponse.first['id'])
+          response = Instagram.location_recent_media(location_reponse.first['id'], :min_timestamp => self.end_time)
+        end
+      else
+        response = Instagram.location_recent_media(self.venue.ig_venue_id, :min_timestamp => self.end_time)
+      end
     rescue MultiJson::DecodeError => e
       Rails.logger.error("bad response from instagram #{e.message} \n #{e.backtrace.inspect}")
       return false
     end
 
-    response.data.each do |media|
+    response && response.data.each do |media|
       begin
         photo = Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, self.venue.id)
 

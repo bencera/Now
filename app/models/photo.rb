@@ -287,8 +287,10 @@ class Photo
         break if fs_venue_id != nil
       end
       unless fs_venue_id.nil?
-        if Venue.exists?(conditions: {_id: fs_venue_id.to_s}) #should not happen..
-          new_photo = Venue.first(conditions: {_id: fs_venue_id.to_s}).save_photo(media, tag, nil)
+        if Venue.exists?(conditions: {_id: fs_venue_id.to_s}) #this can happen now if photos are added to venue before instagram photos are added there
+          venue = Venue.first(conditions: {_id: fs_venue_id.to_s})
+          venue.update_attribute(:ig_venue_id, media.location.id.to_s)
+          new_photo = venue.save_photo(media, tag, nil)
         else
           v = Venue.new(:fs_venue_id => fs_venue_id.to_s)
           v.save
