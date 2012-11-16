@@ -634,7 +634,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     begin
       if self.venue.ig_venue_id.nil?
-        location_reponse = Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id)
+        location_reponse = Instagram.location_search(nil, nil, :foursquare_v2_id => self.venue.fs_venue_id)
     
         if location_reponse.empty?
           venue_ig_id = nil
