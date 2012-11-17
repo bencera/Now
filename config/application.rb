@@ -52,6 +52,9 @@ module Ubimachine
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
+    config.autoload_paths << "#{config.root}/app/jobs"
+    config.autoload_paths << "#{config.root}/app/helpers"
+
     Timezone::Configure.begin do |c|
       c.username = 'ocallaco'
     end

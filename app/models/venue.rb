@@ -19,6 +19,8 @@ class Venue
   field :autocategory
   field :autoillustrations, :type => Array
 
+  field :num_photos
+
   #we want to fill these in someday
   field :website
   field :street_address

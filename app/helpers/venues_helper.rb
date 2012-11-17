@@ -24,30 +24,29 @@ module VenuesHelper
     end
   end
 
-#  def self.populate_area(options = {})
-#    longitude = options[:longitude]
-#    latitude = options[:latitude]
-#    max_distance = options[:max_distance] || 1000 #meters
-#    begin_time = options[:begin_time] || 1.hour.ago.to_i
-#    end_time = options[:end_time] || Time.now.to_i
-#
-#    current_oldest = end_time
-#    done_pulling = false
-#
-#    while !done_pulling
-#      response = Instagram.media_search(latitude, longitude, :distance => max_distance, :max_timestamp => end_time)
-#      done_pulling = response.data.empty?
-#      response.data.each do |media|
-#      unless media.location.id.nil?
-#        unless Photo.exists?(conditions: {ig_media_id: media.id})
-## need to create venue if it doesn't exist          
-##          photo = Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, self.venue.id)
-#          current_oldest = [photo.time_taken, current_oldest].min
-#          done_pulling = current_oldest < begin_time
-#        end
-#      end
-#    end
-#  end
+  def self.populate_area(options = {})
+
+    Rails.logger = Logger.new(STDOUT)
+    if options[:lat_lon]
+      latitude = options[:lat_lon].first
+      longitude = options[:lat_lon].last
+    else
+      coords = Geocoder.coordinates(options[:address])
+      latitude = coords[0]
+      longitude = coords[1]
+    end
+
+    max_distance = options[:max_distance] || 5000 #meters
+    begin_time = options[:begin_time] || 7.hour.ago.to_i
+    end_time = options[:end_time] || Time.now.to_i
+
+    location_hash = {:latitude => latitude, 
+                     :longitude => longitude, 
+                     :max_distance => max_distance, 
+                     :begin_time => begin_time,
+                     :end_time => end_time}
+    PopulateCity.perform(location_hash)
+  end
 
   #options:
 # => :threshold_time in which we need to see min_photos
