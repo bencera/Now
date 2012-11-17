@@ -51,9 +51,15 @@ module VenuesHelper
   end
 
   def self.get_all_venues_near(options = {})
-    coords = Geocoder.coordinates(options[:address])
-    latitude = coords[0]
-    longitude = coords[1]
+    if options[:address]
+      coords = Geocoder.coordinates(options[:address])
+      latitude = coords[0]
+      longitude = coords[1]
+    else
+      latitude = options[:latitude]
+      longitude = options[:longitude]
+    end
+
     if options[:max_distance]
       max_distance = options[:maxdistance].to_f / 111000
     else 

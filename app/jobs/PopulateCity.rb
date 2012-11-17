@@ -9,13 +9,14 @@ class PopulateCity
     if params[:latitude]
       longitude = params[:longitude]
       latitude = params[:latitude]
+      params[:city] ||= params[:address]
     else
       coords = Geocoder.coordinates(params[:address])
       latitude = coords[0]
       longitude = coords[1]
       params[:latitude] = latitude
       params[:longitude] = longitude
-      params[:city] = params[:address]
+      params[:city] ||= params[:address]
     end
     max_distance = params[:max_distance] || 5000 #meters
     begin_time = params[:begin_time] || 3.hour.ago.to_i
@@ -128,7 +129,7 @@ class PopulateCity
         send_progress(percentage, params[:city], conall)
       end
     end
-    venue_list.each {|venue| venue.update_attribute(:num_photos, venue.photos.count)}
+    venue_list.each {|venue| venue.update_attributes(:num_photos => venue.photos.count, venue.city => params[:city])}
 
     Rails.logger.info("PopulateCity created #{venue_list.count} new venues")
 
