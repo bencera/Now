@@ -45,6 +45,7 @@ module VenuesHelper
                      :max_distance => max_distance, 
                      :begin_time => begin_time,
                      :end_time => end_time,
+                     :city => options[:address],
                      :mode => options[:mode] || "debug" }
     PopulateCity.perform(location_hash)
   end

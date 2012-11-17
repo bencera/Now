@@ -3,9 +3,18 @@ class PopulateCity
 
   def self.perform(in_params)
     params = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
-    
-    longitude = params[:longitude]
-    latitude = params[:latitude]
+
+    if params[:latitude]
+      longitude = params[:longitude]
+      latitude = params[:latitude]
+    else
+      coords = Geocoder.coordinates(params[:address])
+      latitude = coords[0]
+      longitude = coords[1]
+      params[:latitude] = latitude
+      params[:longitude] = longitude
+      params[:city] = params[:address]
+    end
     max_distance = params[:max_distance] || 5000 #meters
     begin_time = params[:begin_time] || 3.hour.ago.to_i
     end_time = params[:end_time] || Time.now.to_i
@@ -15,6 +24,7 @@ class PopulateCity
     
     ig_fail_attempt = 0
     venue_list = []
+    total_photos = 0
 
     while !done_pulling
       begin
@@ -94,10 +104,14 @@ class PopulateCity
       end
       Rails.logger.info("Queried up to #{Time.at(last_oldest)}.  Created #{new_photos} new photos.  Created #{new_venues} new venues")
       last_oldest = current_oldest
+      total_photos += new_photos
     end
     venue_list.each {|venue| venue.update_attribute(:num_photos, venue.photos.count)}
 
     Rails.logger.info("PopulateCity created #{venue_list.count} new venues")
+
+    conall = FacebookUser.where(:now_id => "2").first
+    conall.send_notification("City: #{params[:city]}: added #{total_photos} new photos in #{venues_list.count} new venues", nil)
 
   end
 end
