@@ -9,7 +9,7 @@ class PopulateCity
     if params[:latitude]
       longitude = params[:longitude]
       latitude = params[:latitude]
-      params[:city] ||= params[:address]
+      params[:city] ||= params[:address] || "no_city"
     else
       coords = Geocoder.coordinates(params[:address])
       latitude = coords[0]
@@ -129,7 +129,7 @@ class PopulateCity
         send_progress(percentage, params[:city], conall)
       end
     end
-    venue_list.each {|venue| venue.update_attributes(:num_photos => venue.photos.count, venue.city => params[:city])}
+    venue_list.each {|venue| venue.update_attributes(:num_photos => venue.photos.count, :city => params[:city])}
 
     Rails.logger.info("PopulateCity created #{venue_list.count} new venues")
 
