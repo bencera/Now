@@ -111,7 +111,7 @@ class PopulateCity
     Rails.logger.info("PopulateCity created #{venue_list.count} new venues")
 
     conall = FacebookUser.where(:now_id => "2").first
-    conall.send_notification("City: #{params[:city]}: added #{total_photos} new photos in #{venues_list.count} new venues", nil)
+    conall.send_notification("City: #{params[:city]}: added #{total_photos} new photos in #{venue_list.count} new venues", nil)
 
   end
 end
