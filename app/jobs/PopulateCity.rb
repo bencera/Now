@@ -21,9 +21,9 @@ class PopulateCity
         
       rescue Exception => e
         
+        Rails.logger.info("IG failed: #{e.message}, retrying attempt #{ig_fail_attempt}")
         if ig_fail_attempt <= 5
           ig_fail_attempt += 1
-          Rails.logger.info("IG failed: #{e.message}, retrying attempt #{ig_fail_attempt}")
           sleep(ig_fail_attempt * 3)
           next
         end
@@ -32,6 +32,7 @@ class PopulateCity
 
         if params[:mode] == "debug"
           Rails.logger.info("FAILED: Please run PopulateCity.perform(#{params})")
+          break
         else
           retry_in = params[:retry_in] || 1
           return if retry_in >  5
