@@ -108,7 +108,7 @@ class PopulateCity
         current_oldest = [media.created_time.to_i, current_oldest.to_i].min
         done_pulling = (current_oldest <= begin_time) 
       end
-      Rails.logger.info("Queried up to #{Time.at(last_oldest)}.  Created #{new_photos} new photos.  Created #{new_venues} new venues. Going until #{Time.at(begin_time}")
+      Rails.logger.info("Queried up to #{Time.at(last_oldest)}.  Created #{new_photos} new photos.  Created #{new_venues} new venues. Going until #{Time.at(begin_time)}")
       if last_oldest == current_oldest #we didn't make progress for some reason...
         current_oldest -= 60 
         loop_count += 1
