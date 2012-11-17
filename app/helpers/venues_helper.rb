@@ -50,6 +50,19 @@ module VenuesHelper
     PopulateCity.perform(location_hash)
   end
 
+  def self.get_all_venues_near(options = {})
+    coords = Geocoder.coordinates(options[:address])
+    latitude = coords[0]
+    longitude = coords[1]
+    if options[:max_distance]
+      max_distance = options[:maxdistance].to_f / 111000
+    else 
+      max_distance = 20.0 / 111.0
+
+
+    Venue.where(:coordinates.within => {"$center" => [[longitude, latitude], max_distance]}).entries
+  end
+
   #options:
 # => :threshold_time in which we need to see min_photos
 # => :min_photo_time is the earliest photo we will show (must be <= threshold_time)
