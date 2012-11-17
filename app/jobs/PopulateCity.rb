@@ -7,7 +7,7 @@ class PopulateCity
     longitude = params[:longitude]
     latitude = params[:latitude]
     max_distance = params[:max_distance] || 5000 #meters
-    begin_time = params[:begin_time] || 7.hour.ago.to_i
+    begin_time = params[:begin_time] || 3.hour.ago.to_i
     end_time = params[:end_time] || Time.now.to_i
     last_oldest = end_time
     current_oldest = end_time

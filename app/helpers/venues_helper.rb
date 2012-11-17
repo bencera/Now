@@ -37,7 +37,7 @@ module VenuesHelper
     end
 
     max_distance = options[:max_distance] || 5000 #meters
-    begin_time = options[:begin_time] || 7.hour.ago.to_i
+    begin_time = options[:begin_time] || 3.hour.ago.to_i
     end_time = options[:end_time] || Time.now.to_i
 
     location_hash = {:latitude => latitude, 
