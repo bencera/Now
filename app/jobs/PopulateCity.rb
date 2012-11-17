@@ -72,6 +72,8 @@ class PopulateCity
     end
     venue_list.each {|venue| venue.update_attribute(:num_photos, venue.photos.count)}
 
+    Rails.logger.info("PopulateCity created #{venue_list.count} new venues")
+
   end
 end
 
