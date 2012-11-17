@@ -109,7 +109,16 @@ class PopulateCity
         done_pulling = (current_oldest <= begin_time) 
       end
       Rails.logger.info("Queried up to #{Time.at(last_oldest)}.  Created #{new_photos} new photos.  Created #{new_venues} new venues. Going until #{Time.at(begin_time}")
-      current_oldest -= 60 if last_oldest == current_oldest #we didn't make progress for some reason...
+      if last_oldest == current_oldest #we didn't make progress for some reason...
+        current_oldest -= 60 
+        loop_count += 1
+        if loop_count > 5
+          break
+        end
+      else
+        loop_count = 0
+      end
+
       last_oldest = current_oldest
       total_photos += new_photos
 
