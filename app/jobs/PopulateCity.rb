@@ -17,11 +17,11 @@ class PopulateCity
       begin
         response = Instagram.media_search(latitude, longitude, :distance => max_distance, :max_timestamp => current_oldest)
       rescue
-        retry_in = params[:retry_in]
+        retry_in = params[:retry_in] || 1
         return if retry_in >  5
         params[:retry_in] = retry_in + 1
         params[:end_time] = current_oldest
-        Rescue.enqueue_in(retry_in.minues, PopulateCity, params)
+        #Rescue.enqueue_in(retry_in.minues, PopulateCity, params)
       end
       done_pulling = response.data.empty?
       
