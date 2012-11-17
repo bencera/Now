@@ -4,6 +4,8 @@ class PopulateCity
   def self.perform(in_params)
     params = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
 
+    conall = FacebookUser.where(:now_id => "2").first
+
     if params[:latitude]
       longitude = params[:longitude]
       latitude = params[:latitude]
@@ -25,6 +27,10 @@ class PopulateCity
     ig_fail_attempt = 0
     venue_list = []
     total_photos = 0
+
+    last_message = end_time
+    message_step = (end_time - begin_time) / 10
+    percentage = 0
 
     while !done_pulling
       begin
@@ -102,17 +108,27 @@ class PopulateCity
         current_oldest = [media.created_time.to_i, current_oldest.to_i].min
         done_pulling = (current_oldest <= begin_time) 
       end
-      Rails.logger.info("Queried up to #{Time.at(last_oldest)}.  Created #{new_photos} new photos.  Created #{new_venues} new venues")
+      Rails.logger.info("Queried up to #{Time.at(last_oldest)}.  Created #{new_photos} new photos.  Created #{new_venues} new venues. Going until #{Time.at(begin_time}")
+      current_oldest -= 60 if last_oldest == current_oldest #we didn't make progress for some reason...
       last_oldest = current_oldest
       total_photos += new_photos
+
+      if last_message - current_oldest > message_step
+        last_message = current_oldest
+        percentage += 10
+        send_progress(percentage, params[:city], conall)
+      end
     end
     venue_list.each {|venue| venue.update_attribute(:num_photos, venue.photos.count)}
 
     Rails.logger.info("PopulateCity created #{venue_list.count} new venues")
 
-    conall = FacebookUser.where(:now_id => "2").first
     conall.send_notification("City: #{params[:city]}: added #{total_photos} new photos in #{venue_list.count} new venues", nil)
 
+  end
+
+  def self.send_progress(percent_complete, city, user)
+    user.send_notification("#{percent_complete}% in #{city}", nil)
   end
 end
 
