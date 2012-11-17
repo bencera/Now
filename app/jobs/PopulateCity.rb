@@ -69,13 +69,21 @@ class PopulateCity
             if(fs_venue_id.nil?)
               next
             end
-            venue = Venue.where(:_id => fs_venue_id).first ||  ((new_venues += 1) && Venue.create_venue(fs_venue_id))
+            begin
+              venue = Venue.where(:_id => fs_venue_id).first ||  ((new_venues += 1) && Venue.create_venue(fs_venue_id))
+            rescue
+              next
+            end
           end
           if Photo.exists?(conditions: {ig_media_id: media.id})
             photo = Photo.where(:ig_media_id => media.id).first
           else
 # need to create venue if it doesn't exist          
-            photo = ((new_photos += 1) && Photo.create_photo("ig", media, venue.id))
+            begin
+              photo = ((new_photos += 1) && Photo.create_photo("ig", media, venue.id))
+            rescue
+              next
+            end
           end
 
           Rails.logger.info("photo_time #{photo.time_taken} current_oldest #{current_oldest}")
