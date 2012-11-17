@@ -58,6 +58,7 @@ module VenuesHelper
       max_distance = options[:maxdistance].to_f / 111000
     else 
       max_distance = 20.0 / 111.0
+    end
 
 
     Venue.where(:coordinates.within => {"$center" => [[longitude, latitude], max_distance]}).entries
