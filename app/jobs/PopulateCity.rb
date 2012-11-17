@@ -14,6 +14,7 @@ class PopulateCity
     done_pulling = false
     
     ig_fail_attempt = 0
+    venue_list = []
 
     while !done_pulling
       begin
@@ -46,7 +47,6 @@ class PopulateCity
       new_venues = 0
       new_photos = 0
 
-      venue_list = []
 
       response.data.each do |media|
         
