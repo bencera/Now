@@ -12,17 +12,34 @@ class PopulateCity
     last_oldest = end_time
     current_oldest = end_time
     done_pulling = false
+    
+    ig_fail_attempt = 0
 
     while !done_pulling
       begin
-        response = Instagram.media_search(latitude, longitude, :distance => max_distance, :max_timestamp => current_oldest)
-      rescue
-        retry_in = params[:retry_in] || 1
-        return if retry_in >  5
-        params[:retry_in] = retry_in + 1
+        response = Instagram.media_search(latitude, longitude, :distance => max_distance, :max_timestamp => (current_oldest))
+        
+      rescue Exception => e
+        
+        if ig_fail_attempt <= 5
+          ig_fail_attempt += 1
+          Rails.logger.info("IG failed: #{e.message}, retrying attempt #{ig_fail_attempt}")
+          sleep(ig_fail_attempt * 3)
+          next
+        end
+
         params[:end_time] = current_oldest
-        #Rescue.enqueue_in(retry_in.minues, PopulateCity, params)
+
+        if params[:mode] == "debug"
+          Rails.logger.info("FAILED: Please run PopulateCity.perform(#{params})")
+        else
+          retry_in = params[:retry_in] || 1
+          return if retry_in >  5
+          params[:retry_in] = retry_in + 1
+          #Rescue.enqueue_in(retry_in.minues, PopulateCity, params)
+        end
       end
+
       done_pulling = response.data.empty?
       
       new_venues = 0
@@ -32,6 +49,7 @@ class PopulateCity
 
       response.data.each do |media|
         
+        ig_fail_attempt = 0
         unless media.location.id.nil?
           venue = Venue.where(:ig_media_id => media.location.id.to_s).first
           if venue.nil?
@@ -60,14 +78,12 @@ class PopulateCity
           end
 
           Rails.logger.info("photo_time #{photo.time_taken} current_oldest #{current_oldest}")
-          current_oldest = [photo.time_taken.to_i, current_oldest.to_i].min
-          done_pulling = (current_oldest <= begin_time) 
           venue_list << venue unless venue_list.include? venue
         end
+        current_oldest = [media.created_time.to_i, current_oldest.to_i].min
+        done_pulling = (current_oldest <= begin_time) 
       end
-      Rails.logger.info("Queried up to #{current_oldest}.  Created #{new_photos} new photos.  Created #{new_venues} new venues")
-
-      done_pulling ||= current_oldest == last_oldest
+      Rails.logger.info("Queried up to #{last_oldest}.  Created #{new_photos} new photos.  Created #{new_venues} new venues")
       last_oldest = current_oldest
     end
     venue_list.each {|venue| venue.update_attribute(:num_photos, venue.photos.count)}
