@@ -13,6 +13,8 @@ class PopulateVenues
 
     last_pull =  $redis.get("LASTVENUEPULL:${city}") || 10.days.ago
 
+    total_photos = 0
+
     min_ts = params[:begin_time].to_i || last_pull.to_i
     venues.each do |venue|
       id = venue.ig_venue_id
@@ -59,11 +61,14 @@ class PopulateVenues
 
       n_photos = venue.photos.where(:time_taken.gt => min_ts).count
       venue.update_attribute(:num_photos,  n_photos)
+      total_photos += n_photos
 
     end
 
     #now that we're done, let's leave a redis value so we know not to pull too far back next time
 
+    conall = FacebookUser.where(:now_id => "2").first
+    conall.send_notification("Finished city #{city} with #{total_photos} photos")
     current_time = Time.now.to_i
     $redis.set("LASTVENUEPULL:${city}", current_time)
   end
