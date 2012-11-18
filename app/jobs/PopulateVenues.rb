@@ -32,7 +32,8 @@ class PopulateVenues
 
         data = response.parsed_response["data"]
         
-        data.each do |media|
+        data.each do |media_hash|
+          media = OpenStruct.new(media_hash) 
           photo = Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, venue.id) 
         end
 
