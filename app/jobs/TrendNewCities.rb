@@ -16,8 +16,8 @@ class TrendNewCities
 
     now_city = venues.first.now_city
     current_time = Time.now
-    start_time = now_city.new_local_time(current_time.year, current_time.month, current_time.day - days ago, start_hour, 0, 0)
-    end_time = now_city.new_local_time(current_time.year, current_time.month, current_time.day - days ago, end_hour, 0, 0)
+    start_time = now_city.new_local_time(current_time.year, current_time.month, current_time.day - days_ago, start_hour, 0, 0)
+    end_time = now_city.new_local_time(current_time.year, current_time.month, current_time.day - days_ago, end_hour, 0, 0)
     
     end_time += 1.day if end_time < start_time 
 
