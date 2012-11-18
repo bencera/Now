@@ -11,22 +11,22 @@ class PopulateVenues
 
     venues = Venue.where(:city => city).entries
 
-    min_ts = params[:begin_time].to_i || 1.day.ago.to_i
+    last_pull =  $redis.get("LASTVENUEPULL:${city}") || 10.days.ago
 
+    min_ts = params[:begin_time].to_i || last_pull.to_i
     venues.each do |venue|
       id = venue.ig_venue_id
       continue = true
       response = []
       i = 0
 
-      last_photo_ts = venue.photos.first.time_taken
+      last_photo_ts = venue.photos.any? ? venue.photos.first.time_taken : min_ts
 
       venue_min_ts = force ? min_ts : [last_photo_ts, min_ts].max
 
       ##while we didn't get all the photos from the past week, keep on paginating
       while continue
 
-        puts "doing batch numero " + i.to_s
         #the first time, get "recent media", else get the next page of media
         if i == 0
           url = "https://api.instagram.com/v1/locations/" + id + "/media/recent?client_id=6c3d78eecf06493499641eb99056d175"
@@ -48,7 +48,8 @@ class PopulateVenues
           photo = Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, venue.id) 
         end
 
-        continue = response.data.any? && response.data.last.created_time.to_i < venue_min_ts && !response.pagination.url.nil?
+#        Rails.logger.info("#{ response.data.any? } #{ response.data.last.created_time.to_i < venue_min_ts} #{ !response.pagination.next_url.nil?} ")
+        continue = response.data.any? && response.data.last.created_time.to_i < venue_min_ts && !response.pagination.next_url.nil?
         i += 1
       end
 
@@ -56,5 +57,11 @@ class PopulateVenues
       venue.update_attribute(:num_photos,  n_photos)
 
     end
+
+    #now that we're done, let's leave a redis value so we know not to pull too far back next time
+
+    current_time = Time.now.to_i
+    $redis.set("LASTVENUEPULL:${city}", current_time)
   end
 end
+

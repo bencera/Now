@@ -8,19 +8,22 @@ class TrendNewCities
     city = params[:city]
     venues = Venue.where(:city => city).entries
 
+    start_hour = params[:start_hour].to_i
+    end_hour = params[:end_hour].to_i
+    days_ago = params[:days_ago].to_i
+
+    min_photos = params[:min_photos] || 6
+
     now_city = venues.first.now_city
     current_time = Time.now
-    start_time = now_city.new_local_time(current_time.year, current_time.month, current_time.day, 12, 0, 0)
-    end_time = now_city.new_local_time(current_time.year, current_time.month, current_time.day, 23, 59, 0)
+    start_time = now_city.new_local_time(current_time.year, current_time.month, current_time.day - days ago, start_hour, 0, 0)
+    end_time = now_city.new_local_time(current_time.year, current_time.month, current_time.day - days ago, end_hour, 0, 0)
     
-    if start_time > current_time
-      start_time -= 1.day
-      end_time -= 1.day
-    end
+    end_time += 1.day if end_time < start_time 
 
     venues.each do |venue|
       n_photos = venue.photos.where(:time_taken.gt => start_time.to_i, :time_taken.lt => end_time.to_i).count
-      if n_photos > 6 && !venue.cannot_trend
+      if n_photos > min_photos.to_i && !venue.cannot_trend
         photos =  venue.photos.where(:time_taken.gt => start_time.to_i, :time_taken.lt => end_time.to_i).entries
         event = venue.create_new_event("waiting", photos)
       end
