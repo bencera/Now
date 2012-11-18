@@ -20,7 +20,7 @@ class TrendNewCities
 
     venues.each do |venue|
       n_photos = venue.photos.where(:time_taken.gt => start_time.to_i, :time_taken.lt => end_time.to_i).count
-      if n_photos > 6 && !Event::TRENDING_STATUSES.include?(venue.last_event.status)
+      if n_photos > 6 && !venue.cannot_trend
         photos =  venue.photos.where(:time_taken.gt => start_time.to_i, :time_taken.lt => end_time.to_i).entries
         event = venue.create_new_event("waiting", photos)
       end
