@@ -27,7 +27,7 @@ class TrendNewCities
       venue.update_attribute(:num_photos, n_photos)
     end
 
-    events.where(:city => city, :status.in => Event::LIVE_STATUSES).each do |event|
+    Event.where(:city => city, :status.in => Event::LIVE_STATUSES).each do |event|
       if event.began_today2?(current_time)
         event.fetch_and_add_photos(current_time)
       else
