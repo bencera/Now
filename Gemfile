@@ -39,7 +39,6 @@ gem 'rabl'
 
 gem 'httparty'
 
-
 #gem 'infinitescrolling-rails'
 gem 'mathstats'
 #gem 'resque', :require => "resque/server"
