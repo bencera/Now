@@ -48,7 +48,7 @@ class PopulateVenues
           photo = Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, venue.id) 
         end
 
-#        Rails.logger.info("#{ response.data.any? } #{ response.data.last.created_time.to_i < venue_min_ts} #{ !response.pagination.next_url.nil?} ")
+        Rails.logger.info("#{ response.data.any? } #{ response.data.last.created_time.to_i < venue_min_ts} #{ !response.pagination.next_url.nil?} ")
         continue = response.data.any? && response.data.last.created_time.to_i < venue_min_ts && !response.pagination.next_url.nil?
         i += 1
       end
