@@ -31,7 +31,7 @@ class TrendNewCities
       if event.began_today2?(current_time)
         event.fetch_and_add_photos(current_time)
       else
-        event.untrend
+        #event.untrend
       end
     end
 
