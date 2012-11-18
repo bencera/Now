@@ -8,7 +8,7 @@ class TemporaryVenueFill
 
     cities.each do |city|
       Rails.logger.info("doing city #{city}")
-      PopulateVenues.perform(:city => city, :begin_time => 3.hours.ago.to_i, :force => true)
+      PopulateVenues.perform(:city => city, :begin_time => 10.days.ago.to_i, :force => true)
       sleep(20 * 60) #wait 20 minutes between pulls.  don't want to overdo this
     end
   end
