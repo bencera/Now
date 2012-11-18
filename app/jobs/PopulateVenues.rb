@@ -38,8 +38,14 @@ class PopulateVenues
 
         Rails.logger.info("PopulateVenues: getting #{url}")
         #query instagram with HTTParty
-        
-        response = Hashie::Mash.new(HTTParty.get(url))
+       
+        begin
+          ig_response = Hashie::Mash.new(HTTParty.get(url))
+          response = ig_response
+        rescue
+          continue = false
+          next
+        end
 
         data = response.data
 
@@ -68,7 +74,7 @@ class PopulateVenues
     #now that we're done, let's leave a redis value so we know not to pull too far back next time
 
     conall = FacebookUser.where(:now_id => "2").first
-    conall.send_notification("Finished city #{city} with #{total_photos} photos")
+    conall.send_notification("Finished city #{city} with #{total_photos} photos", nil)
     current_time = Time.now.to_i
     $redis.set("LASTVENUEPULL:${city}", current_time)
   end

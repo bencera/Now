@@ -4,7 +4,7 @@ class TemporaryVenueFill
 
   def self.perform()
     #cities = ["moscow", "madrid", "berlin", "vienna", "amsterdam", "dublin", "milan", "chicago", "boston", "philadelphia", "neworleans", "nashville", "sandiego", "austin", "rome", "toronto", "vancouver", "atlanta", "washington", "seattle"]
-    cities = ["moscow", "madrid", "berlin", "vienna", "amsterdam", "dublin", "milan", "chicago"] 
+    cities = ["madrid", "berlin", "vienna", "amsterdam", "dublin", "milan", "chicago"] 
 
     cities.each do |city|
       Rails.logger.info("doing city #{city}")
