@@ -137,10 +137,17 @@ class AddPeopleEvent
         event.end_time = event.start_time
         event.anonymous = params[:anonymous] && params[:anonymous] != 'false'
         #create photocard for new event -- might also make specific photocard for each user who checks in
-        event.photo_card = photo_card_ids if photo_card_ids.any?
+        event.photo_card = photo_card_ids if photo_card_ids.any? && fb_user.id != "0"
        
         # sometimes photos is invalid and i don't know why -- destroying and re-creating the photos seems to work...
         event.save! 
+
+        if fb_user.now_id == "0" && event.photos.any?
+          #we need to fix the start and end time
+          start_time = event.photos.last.time_taken
+          end_time = event.photos.first.time_taken
+          event.update_attributes(:start_time => start_time, :end_time => end_time)
+        end
 
         share_to_fs = true if params[:fs_token]
   
