@@ -142,6 +142,7 @@ module VenuesHelper
       user_loc = venue_loc
     end
 
+    ## make this 1/4 a mile -- not 1 mile
     search_loc = (Geocoder::Calculations.distance_between(user_loc, venue_loc) > 1) ? venue_loc : user_loc
 
     Rails.logger.info("searching within 50 meters of location #{search_loc}")

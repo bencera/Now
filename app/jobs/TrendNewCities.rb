@@ -25,8 +25,7 @@ class TrendNewCities
       n_photos = venue.photos.where(:time_taken.gt => start_time.to_i, :time_taken.lt => end_time.to_i).count
       if n_photos >= min_photos.to_i && !venue.cannot_trend
         photos =  venue.photos.where(:time_taken.gt => start_time.to_i, :time_taken.lt => end_time.to_i).entries
-        event = venue.create_new_event("waiting", photos)
-        Rails.logger.info("Created new event #{event.id} in city #{city}")
+        venue.create_new_event("waiting", photos)
       end
       venue.update_attribute(:num_photos, n_photos)
     end
