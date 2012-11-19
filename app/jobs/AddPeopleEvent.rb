@@ -146,7 +146,7 @@ class AddPeopleEvent
           #we need to fix the start and end time
           start_time = event.photos.last.time_taken
           end_time = event.photos.first.time_taken
-          event.update_attributes(:start_time => start_time, :end_time => end_time)
+          event.update_attributes(:start_time => start_time, :end_time => end_time, :status => "trending")
         end
 
         share_to_fs = true if params[:fs_token]

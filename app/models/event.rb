@@ -711,6 +711,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
   ##############################################################
   def update_interval
     # for now just give a random number between 2 and 8 to load balance
+    
+    # we want to make this smarter so that events that aren't very active will not spam instagram
+    #newest_photo_ts = self.photos.first.time_taken
+
     return [*2..8].sample.minutes.to_i
   end
 

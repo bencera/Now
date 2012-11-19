@@ -1,3 +1,5 @@
+##### This is not likely to be used anywhere.  was just one time for exploration
+
 class PopulateCity
   @queue = :city_pop_queue
 

@@ -57,8 +57,8 @@ class PopulateVenues
         end
       
         begin
-          Rails.logger.info("#{ response.data.any? } #{ response.data.last.created_time.to_i < venue_min_ts} #{ !response.pagination.next_url.nil?} ")
-          continue = response.data.any? && response.data.last.created_time.to_i < venue_min_ts && !response.pagination.next_url.nil?
+          Rails.logger.info("#{ response.data.any? } #{ response.data.last.created_time.to_i > venue_min_ts} #{ !response.pagination.next_url.nil?} ")
+          continue = response.data.any? && response.data.last.created_time.to_i > venue_min_ts && !response.pagination.next_url.nil?
         rescue
           continue = false
         end

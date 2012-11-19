@@ -2,7 +2,10 @@
 class Venue
   include Mongoid::Document
   include Mongoid::Timestamps
-  
+ 
+  FOURSQUARE_CLIENT_ID = "RFBT1TT41OW1D22SNTR21BGSWN2SEOUNELL2XKGBFLVMZ5X2"
+  FOURSQUARE_CLIENT_SECRET =  "W1FN2P3PR30DIKSWEKFEJVF51NJMZTBUY3KY3T0JNCG51QD0"
+
   field :ig_venue_id
   field :fs_venue_id
   field :categories, :type => Array
