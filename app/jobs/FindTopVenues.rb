@@ -6,6 +6,8 @@ class FindTopVenues
   def self.perform(options)
     city = options[:city]
 
+    city_name = options[:city_name] || options[:city]
+
     if options[:latlon]
       latlon = options[:latlon].split(",")
       latitude = latlon[0].to_f
@@ -30,7 +32,10 @@ class FindTopVenues
 
     response = Hashie::Mash.new(JSON.parse(open(url).read))
 
-    
+    venues = []
+    response.response.groups.first.items.each {|item| venues << (Venue.where(:_id => item.venue.id).first || Venue.create_venue(item.venue.id))}
+
+    venues.each {|venue| venue.update_attributes(:city => city_name)}
 
   end
 

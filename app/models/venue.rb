@@ -508,7 +508,7 @@ class Venue
 
     new_event.photos.push(*new_photos)
 
-    new_event.update_keywords
+    #new_event.update_keywords
 
     Rails.logger.info("Venue::create_new_event: created new event at venue #{self.id} with #{new_event.photos.count} photos")
 
