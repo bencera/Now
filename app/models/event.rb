@@ -774,13 +774,15 @@ SCORE_HALF_LIFE       = 7.day.to_f
     replies = []
     photos = photos_orig.dup
 
+    max_rand = (photos.count > 20) ? 5 : 2
+
     checkins = self.checkins.order_by([[:created_at, :asc]]).entries
     remove_ids = []
 
     first_card = true
     after_reply = false
 
-    if self.photo_card.any? || !self.facebook_user.nil?
+    if self.photo_card.any? || (self.facebook_user && self.facebook_user.now_id != "0")
       #need to make the fake first reply
       initial_reply = make_fake_reply(self.photo_card, self.description, self.start_time, false)
       replies << initial_reply
@@ -798,7 +800,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     while photos.any?
       timestamp = photos.first.time_taken < self.start_time ? self.start_time : photos.first.time_taken
 
-      num_photos = rand(5) + 1
+      num_photos = rand(max_rand) + 1
 
       next_checkin = checkins.first.nil? ? photos.last.time_taken : checkins.first.created_at.to_i
 
