@@ -89,6 +89,8 @@ class FindTopVenues
 
     venues.each do |venue| 
       venue.update_attributes(:city => city_name)
+
+      next if venue.cannot_trend
       
       id = venue.ig_venue_id
       next if id.nil?
