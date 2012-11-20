@@ -40,8 +40,7 @@ class PopulateVenues
         #query instagram with HTTParty
        
         begin
-          ig_response = Hashie::Mash.new(HTTParty.get(url))
-          response = ig_response
+          response = Hashie::Mash.new(JSON.parse(open(url).read))
         rescue
           continue = false
           next
