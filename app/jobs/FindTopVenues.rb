@@ -137,7 +137,7 @@ class FindTopVenues
    
     photos = []
 
-    if data.last.created_time < max_time
+    if data.last.created_time.to_i < max_time
       data.each do |media|
   #          Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
         photo = (Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, venue.id))
