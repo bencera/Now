@@ -133,6 +133,8 @@ class FindTopVenues
 
     data = response.data
 
+    return nil if data.empty?
+
     #this way we can stop once we reach the last photo we already knew about
    
     photos = []
