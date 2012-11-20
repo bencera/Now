@@ -21,13 +21,23 @@ class TrendNewCities
     
     end_time += 1.day if end_time < start_time 
 
+    new_events = []
+
     venues.each do |venue|
       n_photos = venue.photos.where(:time_taken.gt => start_time.to_i, :time_taken.lt => end_time.to_i).count
       if n_photos >= min_photos.to_i && !venue.cannot_trend
         photos =  venue.photos.where(:time_taken.gt => start_time.to_i, :time_taken.lt => end_time.to_i).entries
-        venue.create_new_event("waiting", photos)
+        new_events << venue.create_new_event("waiting", photos)
       end
       venue.update_attribute(:num_photos, n_photos)
+    end
+
+    new_events.each do |event|
+      event.shortid = Event.get_new_shortid
+      event.description = ""
+      event.category = "Misc"
+      event.keywords = []
+      event.save
     end
 
 #    Event.where(:city => city, :status.in => Event::LIVE_STATUSES).each do |event|

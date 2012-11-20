@@ -508,11 +508,13 @@ class Venue
 
     new_event.photos.push(*new_photos)
 
+    new_event.keywords = []
     #new_event.update_keywords
 
     Rails.logger.info("Venue::create_new_event: created new event at venue #{self.id} with #{new_event.photos.count} photos")
 
     new_event.generate_short_id
+    return new_event
   end
 
   def get_new_event(status, new_photos, optional_id=nil)

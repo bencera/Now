@@ -3,7 +3,9 @@ class FindTopVenues
 
   require 'open-uri'
 
-  def self.perform(options)
+  def self.perform(in_params)
+    options = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
+
     city = options[:city]
 
     city_name = options[:city_name] || options[:city]
@@ -19,12 +21,18 @@ class FindTopVenues
       near = options[:city].split(" ").join("+")
     end
 
+
+
     url = "https://api.foursquare.com/v2/venues/explore"
    
     if near
       url = url + "?near=#{near}"
     else
       url = url + "?ll=#{latitude},#{longitude}"
+    end
+
+    if options[:section]
+      url = url + "&section=#{options[:section]}"
     end
 
     url = url + "&client_id=#{Venue::FOURSQUARE_CLIENT_ID}&client_secret=#{Venue::FOURSQUARE_CLIENT_SECRET}&v=20121119"

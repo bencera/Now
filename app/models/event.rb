@@ -571,11 +571,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
   end
 
-  ##############################################################
-  # generates a new shortid unless one already exists but doesn't
-  # save it.  TODO: clean this
-  ##############################################################
-
   def generate_initial_likes
     likes = [2,3,4,5,6,7,8,9]
     self.initial_likes = likes[rand(likes.size)]
