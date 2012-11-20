@@ -75,7 +75,7 @@ class AddPeopleEvent
             retry_in = params[:retry_in] || 1
             params[:retry_in] = retry_in * 2
     
-            Resque.enqueue_in((retry_in).minutes, AddPeopleEvent, params) unless params[:retry_in] >= 128
+            Resque.enqueue_in((retry_in * 5).seconds, AddPeopleEvent, params) unless params[:retry_in] >= 128
             raise
           end
         end
