@@ -2,6 +2,7 @@ class FindTopVenues
   @queue = :top_venues_queue
 
   require 'open-uri'
+  require 'iconv'
 
   def self.perform(in_params)
     options = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
@@ -40,8 +41,13 @@ class FindTopVenues
 
     response = Hashie::Mash.new(JSON.parse(open(url).read))
 
+    ic = Iconv.new('UTF-8//IGNORE', 'UTF-8')
+
     venues = []
-    response.response.groups.first.items.each {|item| venues << (Venue.where(:_id => item.venue.id).first || Venue.create_venue(item.venue.id))}
+    response.response.groups.first.items.each do |item| 
+      venue_id = ic.iconv(item.venue.id)
+      venues << (Venue.where(:_id => venue_id).first || Venue.create_venue(venue_id))
+    end
 
     venues.each {|venue| venue.update_attributes(:city => city_name)}
 
