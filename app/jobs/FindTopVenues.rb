@@ -67,6 +67,11 @@ class FindTopVenues
     current_time = Time.now
 
     #set event window to noon to 4am yesterday local time
+    
+
+    days_ago = options[:days_ago] || 0
+    days_ago = days_ago.to_i
+
 
     event_window_begin = now_city.new_local_time(current_time.year, current_time.month, current_time.day, 12, 0, 0).to_i
     event_window_end = now_city.new_local_time(current_time.year, current_time.month, current_time.day + 1, 4, 0, 0).to_i
@@ -76,19 +81,24 @@ class FindTopVenues
       event_window_end -= 1.day.to_i
     end
 
+    event_window_begin -= days_ago.day.to_i
+    event_window_end -= days_ago.day.to_i
+
+
     new_events = []
 
     venues.each do |venue| 
       venue.update_attributes(:city => city_name)
       
       id = venue.ig_venue_id
+      next if id.nil?
       url = "https://api.instagram.com/v1/locations/" + id + "/media/recent?client_id=6c3d78eecf06493499641eb99056d175" 
       event_found = false
 
       photos = []
 
       while !url.nil? 
-        url = pull_more_photos(venue, url, event_window_begin)
+        url = pull_more_photos(venue, url, event_window_begin, event_window_end)
         Rails.logger.info("Venue #{venue.id} now has #{venue.photos.count} photos")
       end
 
@@ -108,7 +118,7 @@ class FindTopVenues
 
 
 
-  def self.pull_more_photos(venue, next_url, min_time)
+  def self.pull_more_photos(venue, next_url, min_time, max_time)
 
     url = next_url
 
@@ -127,16 +137,19 @@ class FindTopVenues
    
     photos = []
 
-    data.each do |media|
-#          Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
-      photo = (Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, venue.id))
-      photos << photo
+    if data.first.created_time < max_time
+      data.each do |media|
+  #          Photo.create_general_photo(photo_source, photo_id, photo_ts, params[:venue_id], fb_user)
+        photo = (Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, venue.id))
+        photos << photo
+      end
+
+      if photos.last.time_taken < min_time
+        Rails.logger.info("Photo was taken at time #{Time.at(photos.last.time_taken)} < #{Time.at(min_time)}")
+        return nil
+      end
     end
 
-    if photos.last.time_taken < min_time
-      Rails.logger.info("Photo was taken at time #{Time.at(photos.last.time_taken)} < #{Time.at(min_time)}")
-      return nil
-    end
     return response.pagination.next_url
   end
 
