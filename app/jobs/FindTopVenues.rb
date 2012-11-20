@@ -21,7 +21,11 @@ class FindTopVenues
       near = options[:city].split(" ").join("+")
     end
 
-    begin_time = options[:begin_time] || 1.day.ago.to_i
+    begin_time = options[:begin_time] || 1.day.ago
+    begin_time = begin_time.to_i
+
+    max_events = optons[:max_events] || 20
+    max_events = max_events.to_i
 
     url = "https://api.foursquare.com/v2/venues/explore"
    
@@ -35,6 +39,8 @@ class FindTopVenues
 
     venues = []
     sections.each do |section|
+
+      Rails.logger.info("Starting section: #{section}")
 
       url = url + "&client_id=#{Venue::FOURSQUARE_CLIENT_ID}&client_secret=#{Venue::FOURSQUARE_CLIENT_SECRET}&v=20121119"
     #url = url + "&client_id=RFBT1TT41OW1D22SNTR21BGSWN2SEOUNELL2XKGBFLVMZ5X2&client_secret=W1FN2P3PR30DIKSWEKFEJVF51NJMZTBUY3KY3T0JNCG51QD0&v=20121119"
@@ -57,12 +63,13 @@ class FindTopVenues
       url = "https://api.instagram.com/v1/locations/" + id + "/media/recent?client_id=6c3d78eecf06493499641eb99056d175" 
       event_found = false
 
-      while !url.nil? && !event_found
+      while !url.nil? && !event_found && !venue.cannot_trend
         url = pull_more_photos(venue, url, begin_time)
         event_found = create_event_if_possible(venue)
       end
 
       new_events << event_found if event_found
+      break if new_events.count >= max_events
     end
 
     Rails.logger.info("created #{new_events.count} new events")
