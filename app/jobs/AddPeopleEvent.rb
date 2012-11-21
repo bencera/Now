@@ -150,6 +150,8 @@ class AddPeopleEvent
         end
 
         share_to_fs = true if params[:fs_token]
+        share_to_fb = true if params[:fb_token]
+
   
         
         Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")
@@ -171,6 +173,8 @@ class AddPeopleEvent
   
         
     FoursquareShare.perform(:event_id => event.id, :fs_token => params[:fs_token]) if share_to_fs
+
+    PostToFacebook.perform(:event_id => event.id, :fb_user_id => fb_user.facebook_id, :fb_token => params[:fb_token]) if share_to_fb
     #we probably need additional logic to make sure all photos get in
     Rails.logger.info("AddPeopleEvent finished")
   end
