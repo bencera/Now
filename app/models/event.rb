@@ -781,7 +781,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     first_card = true
     after_reply = false
 
-    if self.photo_card.any? || (self.facebook_user && self.facebook_user.now_id != "0")
+    if self.photo_card.any? && !(self.facebook_user && self.facebook_user.now_id == "0")
       #need to make the fake first reply
       initial_reply = make_fake_reply(self.photo_card, self.description, self.start_time, false)
       replies << initial_reply
