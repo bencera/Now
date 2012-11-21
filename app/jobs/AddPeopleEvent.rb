@@ -170,7 +170,7 @@ class AddPeopleEvent
     end
   
         
-    FoursquareShare.perform(event_id => event.id, :fs_token => params[:fs_token]) if share_to_fs
+    FoursquareShare.perform(:event_id => event.id, :fs_token => params[:fs_token]) if share_to_fs
     #we probably need additional logic to make sure all photos get in
     Rails.logger.info("AddPeopleEvent finished")
   end
