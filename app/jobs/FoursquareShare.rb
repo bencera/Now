@@ -2,9 +2,14 @@ class FoursquareShare
   @queue = :foursquareshare_queue
 
   #can't be sure if it's an event or reply so handle both
-  def self.perform(id_to_share, now_photo_ids, fs_token)
-    require 'rest_client'
+  def self.perform(in_params)
 
+    params = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
+
+  
+    id_to_share = params[:event_id]
+    fs_token = params[:fs_token]
+  
     event = Event.where(:_id => id_to_share).first
     if event
       #so we created an event:
@@ -22,13 +27,20 @@ class FoursquareShare
    
     options = {:query => {venueId: venue_id, oauth_token: fs_token, shout: shout, broadcast: 'public'}}
   
-    response = HTTParty.post("https://api.foursquare.com/v2/checkins/add", options)
     begin
+      #should avoid using httparty
+      response = HTTParty.post("https://api.foursquare.com/v2/checkins/add", options)
       checkin_id = response['response']['checkin']['id']
 
       Rails.logger.info("Created foursquare checkin #{checkin_id}")
     rescue
       Rails.logger.info("Failed to create fs checkin")  #retry? probably a bad fs token
+
+      retry_in = params[:retry_in] || 1
+      params[:retry_in] = retry_in * 2
+    
+      Resque.enqueue_in((retry_in * 5).seconds, FoursquareShare, params) unless params[:retry_in] >= 128
+
       raise
     end
 
