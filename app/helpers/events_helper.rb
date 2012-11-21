@@ -273,9 +273,13 @@ module EventsHelper
 
   def self.get_localized_results(lon_lat, max_dist, options={})
 
-    event_query = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :status.in => Event::TRENDED_OR_TRENDING)
+    event_query = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]})
     if options[:category]
       event_query = event_query.where(:category => options[:category])
+    elsif options[:waiting]
+      event_query = event_query.where(:status => Event::WAITING)
+    else
+      event_query = event_query.where(:status.in => Event::TRENDED_OR_TRENDING)
     end
     event_list = event_query.order_by([[:end_time, :desc]]).entries
 
