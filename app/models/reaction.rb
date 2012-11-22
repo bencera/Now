@@ -94,7 +94,7 @@ class Reaction
       begin
 
         message = reaction.generate_message(event.facebook_user.facebook_id, false) 
-        event.notify_creator(message) if event.facebook_user.accepts_notifications(reation.reaction_type)
+        event.notify_creator(message) if event.facebook_user.accepts_notifications(reaction.reaction_type)
       rescue
         Rails.logger.info("Reaction: failed to send message '#{message}' to event #{event.id} creator")
       end
