@@ -104,8 +104,6 @@ class EventsController < ApplicationController
     @venue = @event.venue
     @photos = @event.photos
 
-    @reposts = @reposts.take(4)
-
     @reposts_position = []
     @photo_positions = []
     i = 0
