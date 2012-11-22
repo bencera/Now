@@ -1,67 +1,87 @@
-%script{:type=>"text/javascript"}
-    mixpanel.track("Show:loaded")
-    mixpanel.track_links("#nowlogo a", "Show:logo")
-    mixpanel.track_links("#downloadlogo a", "Show:download")
-    mixpanel.track_links("#content a", "Show:photo")
-#header-container
-    #header
-        #logo-container{:style => "margin-bottom: 80px;"}
-            #nowlogo{:style => "float:left;  margin-left: 36px"}
-                %a{:href => "/"}
-                    =image_tag "logo_eventpage2.png"
-            #downloadlogo{:style => "float:right; margin-right: 40px"}
-                %a{:href => "http://itunes.apple.com/app/now./id525956360"}
-                    %p.download_btn Get the app
-        %p
-        .title= @event.description.capitalize
-        .time_place
-            - if @photos.first.time_taken.to_i < 3.hours.ago.to_i
-                Happened
-                %span.timeago= "#{time_ago_in_words(Time.at @photos.first.time_taken.to_i).to_s} ago"
-            - else
-                Happening
-                %span.timeago now
-            at 
-            %span.timeago= truncate(@venue.name, :length => 40)
-            in 
-            %span.timeago= @city
-        %div{:class=>"fb-like", 'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
-        %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button", :'data-lang'=>"en"} Tweet
-#content
-
-    #map_canvas{:style => "width: 600px; height: 200px; margin-bottom: 20px"}
-
-    - @photos.each do |p|
-        %a{:href => "/"}
-            = image_tag p.url[0], :width => '197px'
+.background{:style => "background-image: url('#{@photos.all[rand(@photos.count)].url[1]}')"}
+.dimmer
+.view.view-moments_show
+  .timeline-line
+  .moment
+    .map_container{:style => "position: relative"}
+      = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]+0.03},#{@venue.coordinates[0]}&zoom=10&size=680x225&maptype=roadmap&markers=icon:http://www.ubimachine.com/assets/map_pin.png%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=true&scale=2", :width => '680px', :height => '225px', :class => 'map-block photo-image'
+      %b.photo-border{:style => "width:680px; height: 225px"}
+    .tooltip-block
+      .tooltip-container
+        %span.tooltip-text=@venue.name
+        %span.tooltip-pointer
 
 
 
-%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
-%script{:src=>"http://srobbin.github.com/chosen/chosen.jquery.min.js"}
-%script{:src=>"http://srobbin.github.com/intelligist/jquery.intelligist.min.js"}
-%script{:src=>"http://srobbin.github.com/backstretch/jquery.backstretch.min.js"}
-:javascript
-    $.backstretch("#{@photos.all[rand(@photos.count)].url[1]}");
-:javascript
-    function initialize() {
-      var myLatlng = new google.maps.LatLng(#{@venue.coordinates[1]},#{@venue.coordinates[0]});
-      var myOptions = {
-        center: myLatlng,
-        zoom: 15,
-        scrollwheel: false,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      var map = new google.maps.Map(document.getElementById("map_canvas"),
-          myOptions);
-      var image = '/assets/map_pin.png';
-      var marker = new google.maps.Marker({
-            position: myLatlng,
-            title:"#{@venue.name}",
-            icon: image,
-            map: map
-            });
-            marker.setMap(map);
+.timeline
+  %ol
+    - i = 0
+    - @reposts.each do |repost|
+      %li{:style => "height: #{@reposts_position[i][0]}px;"}
+        - if @reposts_position[i][2]
+          .moment-block.leftblock{:style => "height: #{@reposts_position[i][1]}px"}
+            .leftarrow
+            .moments_feedback
+              .profile-pic
+                = image_tag "#{repost.get_fb_user_photo}", :width => '35px', :height => '35px'
+              .username
+                %p= repost.get_fb_user_name
+              .timestamp
+                %p 2h
+              .text
+                - if repost.description.empty?
+                  %p= "."
+                - else
+                  %p=repost.description
+              - if repost.new_photos
+                .images-block
+                  - j = 0
+                  - repost.checkin_card_list.each do |photo|
+                    = image_tag "#{photo.url[1]}", :width => "#{@photo_positions[i][j][0]}px", :height => "#{@photo_positions[i][j][1]}px", :style => "left:#{@photo_positions[i][j][2]}px; top:#{@photo_positions[i][j][3]}px", :class => "image-timeline"
+                    - j = j + 1
+        - else
+          .moment-block.rightblock{:style => "height: #{@reposts_position[i][1]}px"}
+            .timeline-arrow
+            .moments_feedback
+              .profile-pic
+                = image_tag "#{repost.get_fb_user_photo}", :width => '35px', :height => '35px'
+              .username
+                %p= repost.get_fb_user_name
+              .timestamp
+                %p 2h
+              .text
+                - if repost.description.empty?
+                  %p= "."
+                - else
+                  %p=repost.description
+              - if repost.new_photos
+                .images-block
+                  - j = 0
+                  - repost.checkin_card_list.each do |photo|
+                    = image_tag "#{photo.url[1]}", :width => "#{@photo_positions[i][j][0]}px", :height => "#{@photo_positions[i][j][1]}px", :style => "left:#{@photo_positions[i][j][2]}px; top:#{@photo_positions[i][j][3]}px", :class => "image-timeline"
+                    - j = j + 1
+      - i = i + 1
 
-        }
-    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+/ .moment-block{:style => "height: 1000px; width: 100%; margin-top: 100px; background: #fc4a6f;"}
+/   #wrapper
+/     .left
+/       =image_tag "iphone_landing.png", :width => "400px", :id => "iphone"
+      
+
+/     .right
+/       #content
+/         =image_tag "logo_landing.png", :width => "260px"
+/         %p.tagline Experience your city.
+/         %p.question What is happening in your city?
+/         %p.description{:style => "width: 360px"} Now detects events in your city and shows you photos taken by others there. Finally be in the know.
+/         %a{:href => "http://itunes.apple.com/app/now./id525956360", :target => "_blank"}
+/           %p.download_btn Get the free app
+/         %p{:style => "font-size: 14px; margin-top: 68px", :class => "instagram"} Photos powered by the Instagram API
+/     .footer
+/       %a{:href => "http://checkthis.com/aboutnow"} About
+/       ·
+/       %a{:href => "http://checkthis.com/nowhelpcenter"} Help
+/       ·
+/       %a{:href => "http://checkthis.com/nowtermsofservice"} Terms
+/       ·
+/       %a{:href => "http://checkthis.com/nowprivacy"} Privacy
