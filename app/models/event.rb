@@ -732,7 +732,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     if facebook_users.any?
       FacebookUser.where(:_id.in => facebook_users).entries.each do |fb_user| 
-        fb_user.send_notification(message, self.id) unless except_ids.include? fb_user.now_id || !fb_user.accepts_notifications(options[:reaction_type])
+        fb_user.send_notification(message, self.id) unless except_ids.include? fb_user.now_id && !fb_user.accepts_notifications(options[:reaction_type])
       end
     end
   end
