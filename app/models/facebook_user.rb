@@ -147,6 +147,22 @@ class FacebookUser
 
   end
 
+  def accepts_notifications(reaction_type)
+    case reaction_type
+    when Reaction::TYPE_PHOTO
+      return self.now_profile.notify_photos
+    when Reaction::TYPE_REPLY
+      return self.now_profile.notify_reply
+    when Reaction::TYPE_LIKE
+      return self.now_profile.notify_like
+    when Reaction::TYPE_VIEW_MILESTONE
+      return self.now_profile.notify_views
+    end
+
+    Rails.logger.error("unknown reaction type #{reaction_type}")
+    return false
+  end
+
   def send_notification(message, event_id)
     self.devices.each do |device|
       device.subscriptions.each do |subscription|
