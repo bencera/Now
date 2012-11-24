@@ -48,7 +48,7 @@ class VerifyNewUser
             tokens = []
             device.subscriptions.each do |subscription|
               if tokens.include? subscription.token
-                subscriptions.destroy
+                subscription.destroy
               else
                 tokens << subscription.token
               end
