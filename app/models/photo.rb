@@ -76,6 +76,7 @@ class Photo
   #photo doesnt always have caption, but needs to be geolocated (for now)
   validates_presence_of :ig_media_id, :url, :time_taken, :coordinates #user_id???
   validates_uniqueness_of :ig_media_id
+  validate :check_user 
 
 ####Conall added
  
@@ -323,5 +324,13 @@ class Photo
   def get_last_photos(category, time)  
     Delayed::Job.enqueue(Getlastphotos.new(category, time))
   end
+
+  private
+
+    def check_user
+      if self.user_id.nil?
+        errors.add(:user_id, "Needs a user")
+      end
+    end
   
 end
