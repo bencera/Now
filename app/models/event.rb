@@ -768,7 +768,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       photo_count -= self.photo_card.count
     end
 
-    reply_count = self.facebook_user.nil? self.checkins.count : self.checkins.where(:reactor_id.ne => self.facebook_user.now_id).count
+    reply_count = self.facebook_user.nil? ? self.checkins.count : self.checkins.where(:reactor_id.ne => self.facebook_user.now_id).count
 
     self.n_reactions = photo_count + reply_count + self.likes.to_i + + (view_reactions / 10) 
   end
