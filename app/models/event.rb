@@ -673,16 +673,20 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
       #send reply notification about new photos
       current_now_bot_photos = $redis.get("NOW_BOT_PHOTOS:#{self.id}").to_i
-      $redis.incrby("NOW_BOT_PHOTOS:#{self.id}", new_photos.count)
+      new_now_bot_photos = $redis.incrby("NOW_BOT_PHOTOS:#{self.id}", new_photos.count)
+
       next_milestone = 1
+      milestones_crossed = []
       i = 0
-      while next_milestone < current_now_bot_photos
-        next_milestone = Reaction.PHOTO_MILESTONES[i]
+
+      while next_milestone <= new_now_bot_photos && i < Reaction::PHOTO_MILESTONES.count
+        next_milestone = Reaction::PHOTO_MILESTONES[i]
+        milestones_crossed << i if next_milestone > current_now_bot_photos 
         i += 1
       end
-
-      if current_now_bot_photos + new_photos.count >= next_milestone
-        reaction = Reaction.create_reaction_and_notify(Reaction::TYPE_PHOTO, self, nil, next_milestone)
+      
+      milestones_crossed.each do |milestone|
+        reaction = Reaction.create_reaction_and_notify(Reaction::TYPE_PHOTO, self, nil, Reaction::PHOTO_MILESTONES[milestone])
       end
     else
       Rails.logger.info("no photos were added #{new_photos}")
