@@ -681,7 +681,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
       while next_milestone <= new_now_bot_photos && i < Reaction::PHOTO_MILESTONES.count
         next_milestone = Reaction::PHOTO_MILESTONES[i]
-        milestones_crossed << i if next_milestone > current_now_bot_photos 
+        milestones_crossed << i if next_milestone > current_now_bot_photos && next_milestone <= new_now_bot_photos
         i += 1
       end
       
