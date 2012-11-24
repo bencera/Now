@@ -672,8 +672,18 @@ SCORE_HALF_LIFE       = 7.day.to_f
       Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
 
       #send reply notification about new photos
+      current_now_bot_photos = $redis.get("NOW_BOT_PHOTOS:#{self.id}").to_i
+      $redis.incrby("NOW_BOT_PHOTOS:#{self.id}", new_photos.count)
+      next_milestone = 1
+      i = 0
+      while next_milestone < current_now_bot_photos
+        next_milestone = Reaction.PHOTO_MILESTONES[i]
+        i += 1
+      end
 
-      reaction = Reaction.create_reaction_and_notify(Reaction::TYPE_PHOTO, self, nil, new_photos.count)
+      if current_now_bot_photos + new_photos.count >= next_milestone
+        reaction = Reaction.create_reaction_and_notify(Reaction::TYPE_PHOTO, self, nil, next_milestone)
+      end
     else
       Rails.logger.info("no photos were added #{new_photos}")
     end
@@ -747,7 +757,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def update_reaction_count
-    self.n_reactions = self.reactions.count
+    view_reactions = $redis.get("VIEW_COUNT:#{self.shortid}").to_i
+    self.n_reactions = self.photos.count + self.likes + self.checkins.where(:reactor_id.ne => self.facebook_user.now_id).count + (view_reactions / 10) 
   end
 
   def make_fake_reply(new_photo_card, text, timestamp, now_bot=true)

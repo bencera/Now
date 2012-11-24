@@ -11,7 +11,7 @@ class Facebooklike
     end
     user_id = fb_user.facebook_id
 
-    unless Rails.env == "development"
+    unless Rails.env == "development" || !fb_user.now_profile.share_to_fb_timeline
       response = HTTParty.post("https://graph.facebook.com/me/og.likes?access_token=#{access_token}&object=http://getnowapp.com/#{event_shortid}")
       if response['id']
         $redis.set("facebook_love:#{user_id}:#{event_shortid}", response['id'])
