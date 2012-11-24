@@ -137,6 +137,8 @@ class Reaction
       end
     end
 
+    message = message.capitalize
+
     message = EMOJI_HASH[self.reaction_type] + " " + message unless options[:no_emoji]
 
     return message
