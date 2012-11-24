@@ -53,7 +53,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :n_photos
   field :city
   field :keywords
-  field :likes
+  field :likes, :default => 0
   field :illustration
   
   field :anonymous, :type => Boolean, :default => false
@@ -758,7 +758,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def update_reaction_count
     view_reactions = $redis.get("VIEW_COUNT:#{self.shortid}").to_i
-    self.n_reactions = self.photos.count + self.likes + self.checkins.where(:reactor_id.ne => self.facebook_user.now_id).count + (view_reactions / 10) 
+    self.n_reactions = self.photos.count + self.likes.to_i + self.checkins.where(:reactor_id.ne => self.facebook_user.now_id).count + (view_reactions / 10) 
   end
 
   def make_fake_reply(new_photo_card, text, timestamp, now_bot=true)
