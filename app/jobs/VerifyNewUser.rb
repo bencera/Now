@@ -38,6 +38,29 @@ class VerifyNewUser
       error_report = ErrorReport.create!(:errors => errors, :params => params, :type => ErrorReport::TYPE_NEW_USER)
       users = FacebookUser.where(:now_id.in => ["2"]).entries
       users.each {|user| user.send_notification("new user error", nil)}
+
+      #let's try to repair this error
+
+      if device && fb_user
+        if !device.valid?
+          if device.subscriptions.count > 1
+            #in this case, the device may have bad subscriptions
+            tokens = []
+            device.subscriptions.each do |subscription|
+              if tokens.include? subscription.token
+                subscriptions.destroy
+              else
+                tokens << subscription.token
+              end
+            end
+            if device.valid?
+              device.facebook_user = fb_user
+              device.save!
+              users.each {|user| user.send_notification("repair was successful", nil)}
+            end
+          end
+        end
+      end
     else
       Rails.logger.info("VerifyNewUser: No Errors")
     end
