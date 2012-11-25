@@ -52,27 +52,46 @@ class FacebookUser
     end
 
     def find_or_create_by_facebook_token(token, options={})
-      facebook_client = FacebookClient.new(token: token)
+      retry_attempt = 0
+      begin
 
-      if user = FacebookUser.find_by_facebook_id(facebook_client.user_id)
-      	user.fb_accesstoken = token
-      else
-        if facebook_client.get_errors
-          options[:return_hash][:errors] =  facebook_client.get_errors
-          return nil
+        facebook_client = FacebookClient.new(token: token)
+
+        if user = FacebookUser.find_by_facebook_id(facebook_client.user_id)
+          user.fb_accesstoken = token
+        else
+          while facebook_client.get_errors
+            
+            if retry_attempt > 5
+              options[:return_hash][:errors] =  facebook_client.get_errors
+              return nil
+            end
+
+            Rails.logger.info("FacebookUser failed to create! Retrying. Errors: #{facebook_client.get_errors}")
+            retry_attempt += 1
+            sleep 0.1
+            facebook_client = FacebookClient.new(token: token)
+          end
+
+          user = FacebookUser.new
+          user.fb_accesstoken = token
+          user.facebook_id = facebook_client.user_id
+          user.email = facebook_client.email
+          user.fb_details = facebook_client.all_user_info
         end
 
-        user = FacebookUser.new
-        user.fb_accesstoken = token
-        user.facebook_id = facebook_client.user_id
-        user.email = facebook_client.email
-        user.fb_details = facebook_client.all_user_info
+        user.udid = options[:udid] if options[:udid]
+
+        user.save!
+        user
+      rescue 
+        retry_attempt += 1
+        if retry_attempt < 5
+          retry
+        else
+          raise
+        end
       end
-
-      user.udid = options[:udid] if options[:udid]
-
-      user.save!
-      user
     end
 
     def find_by_nowtoken(token)
