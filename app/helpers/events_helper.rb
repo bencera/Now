@@ -273,6 +273,8 @@ module EventsHelper
 
   def self.get_localized_results(lon_lat, max_dist, options={})
 
+    Rails.logger.info("localized results options #{lon_lat} #{max_dist} #{options}")
+
     event_query = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]})
     if options[:category]
       event_query = event_query.where(:category => options[:category])
