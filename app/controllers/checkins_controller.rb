@@ -41,7 +41,6 @@ class CheckinsController < ApplicationController
       end
       event.save
       return render :text => "OK -- DEMOTED", :status => :ok
-
     end
 
     fb_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
