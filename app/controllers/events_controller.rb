@@ -45,7 +45,7 @@ class EventsController < ApplicationController
         facebook_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
         if facebook_user 
           @user_id = facebook_user.facebook_id 
-          params[:facebook_user_id] = @user_id
+          params[:facebook_user_id] = facebook_user.id
         end
       end
     rescue
