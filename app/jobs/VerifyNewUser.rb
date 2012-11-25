@@ -58,11 +58,31 @@ class VerifyNewUser
               device.save!
               users.each {|user| user.send_notification("repair was successful", nil)}
             end
+          elsif APN::Device.where(:udid => device.udid).count > 1
+            #multiple devices with 1 udid
+            repair_udid(device.udid, fb_user)
+            if device.valid?
+              device.facebook_user = fb_user
+              device.save!
+              users.each {|user| user.send_notification("repair was successful", nil)}
+            end
           end
         end
       end
     else
       Rails.logger.info("VerifyNewUser: No Errors")
+    end
+  end
+
+  def self.repair_udid(udid, fb_user)
+    devices = APN::Device.where(:udid => udid).entries
+    if devices.count > 1
+      device = devices.first
+      devices[1..-1].each do |device|
+        device.destroy 
+      end
+      device.facebook_user = fb_user
+      device.save
     end
   end
 end
