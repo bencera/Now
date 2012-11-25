@@ -32,6 +32,18 @@ class CheckinsController < ApplicationController
 
   def destroy
 
+    if params[:demote]
+      event = Event.where(:_id => params[:id]).first
+      if event.status == Event::TRENDED_PEOPLE
+        event.status = Event::TRENDED_LOW
+      elsif event.status == Event::TRENDING_PEOPLE
+        event.status = Event::TRENDING_LOW
+      end
+      event.save
+      return render :text => "OK -- DEMOTED", :status => :ok
+
+    end
+
     fb_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
     checkin = Checkin.where(:_id => params[:id]).first

@@ -486,6 +486,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
       self.status = TRENDED
     when TRENDING_PEOPLE
       self.status = TRENDED_PEOPLE
+    when TRENDING_LOW
+      self.status = TRENDED_LOW
     else
       self.status = NOT_TRENDING
     end
