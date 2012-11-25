@@ -278,6 +278,8 @@ module EventsHelper
       event_query = event_query.where(:category => options[:category])
     elsif options[:waiting]
       event_query = event_query.where(:status => Event::WAITING)
+    elsif options[:facebook_user_id]
+      event_query = event_query.where("$or" =>[{:facebook_user_id => options[:facebook_user_id]}, {:status => {"$in" => Event::TRENDED_OR_TRENDING}}])
     else
       event_query = event_query.where(:status.in => Event::TRENDED_OR_TRENDING)
     end

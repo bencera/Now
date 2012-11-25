@@ -39,6 +39,18 @@ class EventsController < ApplicationController
   end
 
   def index
+
+    begin
+      if params[:nowtoken]
+        facebook_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+        if facebook_user 
+          @user_id = facebook_user.facebook_id 
+          params[:facebook_user_id] = @user_id
+        end
+      end
+    rescue
+    end
+
     if params[:lon_lat]
       coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
 
@@ -75,12 +87,7 @@ class EventsController < ApplicationController
         @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).limit(10).entries
       end
     end
-    begin
-      if params[:nowtoken]
-        @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
-      end
-    rescue
-    end
+
 
     EventsHelper.get_event_cards(@events)
     return @events
