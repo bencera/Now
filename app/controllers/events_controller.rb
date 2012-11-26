@@ -69,7 +69,7 @@ class EventsController < ApplicationController
       ids = [BSON::ObjectId('4ffc94556ff1c9000f00000e'), BSON::ObjectId('503e79f097b4800009000003'), BSON::ObjectId('50a64cb8877a28000f000007'), BSON::ObjectId('50aa7f16212060000200000e'), nil]
       @events =Event.where(:facebook_user_id.nin => ids, :facebook_user_id.ne => nil).order_by([[:created_at, :desc]]).limit(20).entries
     elsif params[:venue_id]
-      @events = Venue.find(params[:venue_id]).events.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).limit(20).entries
+      @events = Venue.find(params[:venue_id]).events.where(:status.in => Event::TRENDED_OR_TRENDING_LOW).order_by([[:end_time, :desc]]).limit(20).entries
     elsif params[:liked_by]
       @events = EventsHelper.get_user_liked(params[:liked_by])
     elsif params[:created_by] 
