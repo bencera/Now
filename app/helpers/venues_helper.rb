@@ -135,6 +135,7 @@ module VenuesHelper
           response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
         rescue
           if rety_attempt < 5
+            sleep 0.1
             retry_attempt += 1
             retry
           else
@@ -163,6 +164,7 @@ module VenuesHelper
     rescue
       Rails.logger.error("Instagram error on venue activity search -- defaulting to venue media search")
       if retry_attempt < 5
+        sleep 0.1
         retry_attempt += 1
         retry
       else
