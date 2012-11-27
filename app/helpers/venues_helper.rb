@@ -130,7 +130,17 @@ module VenuesHelper
       end
       if !do_nearby
         Rails.logger.info("asking ig for #{venue_ig_id} media")
-        response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
+        rety_attempt = 0
+        begin
+          response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
+        rescue
+          if rety_attempt < 5
+            retry_attempt += 1
+            retry
+          else
+            return []
+          end
+        end
         response_1 = response
         return :data => response.data if response.data && response.data.count >= 6
       end
@@ -142,22 +152,25 @@ module VenuesHelper
       user_loc = venue_loc
     end
 
-    ## make this 1/4 a mile -- not 1 mile
-    search_loc = (Geocoder::Calculations.distance_between(user_loc, venue_loc) > 1) ? venue_loc : user_loc
+    search_loc = (Geocoder::Calculations.distance_between(user_loc, venue_loc) > 0.25) ? venue_loc : user_loc
 
     Rails.logger.info("searching within 50 meters of location #{search_loc}")
+
+    retry_attempt = 0
 
     begin
       response = Instagram.media_search(search_loc[1], search_loc[0], :distance => 20) 
     rescue
       Rails.logger.error("Instagram error on venue activity search -- defaulting to venue media search")
-      if response_1.nil?
-        Rails.logger.info("have to find venue id now")
-        venue_response = Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id)
-        venue_ig_id = venue_response.first['id']
-        response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
+      if retry_attempt < 5
+        retry_attempt += 1
+        retry
       else
-        response = response_1
+        if response_1.nil?
+          return []
+        else
+          response = response_1
+        end
       end
     end
     
