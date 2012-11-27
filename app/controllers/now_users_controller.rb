@@ -55,13 +55,14 @@ class NowUsersController < ApplicationController
     Rails.logger.info(params)
 
     begin
+      return_hash = {} 
+
       device = NowUsersHelper.find_or_create_device(params)
       if device.nil?
         params[:breakpoint] = 1
         Resque.enqueue(LogBadFbCreate, params)
         return render(:text => "432 Device Creation/Find Failed", :status => 432) 
       end
-      return_hash = {} 
 
       if(!params[:fb_accesstoken].blank?)
         fb_user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken], :udid => params[:udid], :return_hash => return_hash)
