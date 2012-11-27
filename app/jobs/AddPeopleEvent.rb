@@ -28,6 +28,7 @@ class AddPeopleEvent
         raise
       else
         retry_find_venue += 1
+        sleep 0.1
         retry
       end
     end
