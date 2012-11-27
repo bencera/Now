@@ -20,7 +20,17 @@ class AddPeopleEvent
     illustration_index = params[:illustration_index] || 0
     fb_user = FacebookUser.find(params[:facebook_user_id]) if params[:facebook_user_id]
     
-    venue = Venue.where(:_id => params[:venue_id]).first || Venue.create_venue(params[:venue_id])
+    retry_find_venue = 0
+    begin
+      venue = Venue.where(:_id => params[:venue_id]).first || Venue.create_venue(params[:venue_id])
+    rescue
+      if retry_find_venue > 3
+        raise
+      else
+        retry_find_venue += 1
+        retry
+      end
+    end
 
     if params[:event_id]
       check_in_event = Event.where(:_id => params[:event_id]).first
