@@ -8,6 +8,7 @@ module NowUsersHelper
     save_device = false
   
     if params[:longitude] && params[:latitude]
+      device.inc(:visits, 1)
       device.coordinates = [params[:longitude].to_f,params[:latitude].to_f] 
       save_device = true
     end
