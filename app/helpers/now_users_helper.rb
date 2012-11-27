@@ -9,6 +9,7 @@ module NowUsersHelper
   
     if params[:longitude] && params[:latitude]
       device.inc(:visits, 1)
+      Rails.logger.info("New visits #{device.visits}")
       device.coordinates = [params[:longitude].to_f,params[:latitude].to_f] 
       save_device = true
     end
