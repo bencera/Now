@@ -84,7 +84,6 @@ class Reaction
 
     reaction.save!
     
-    reaction.event.update_reaction_count
     reaction.event.save!
 
     if(NOTIFY_GROUP_TYPES.include?(reaction.reaction_type))

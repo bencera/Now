@@ -113,7 +113,7 @@ module VenuesHelper
     end
 
     Rails.logger.info(options)
-    Rails.logger.info("more info new_event: #{for_new_event == false} xx#{for_new_event}xx  test #{fs_id} #{user_lon_lat}")
+    Rails.logger.info("more info new_event: #{for_new_event}  test #{fs_id} #{user_lon_lat}")
 
     if for_new_event
       venue = Venue.where(:_id => fs_id).first
