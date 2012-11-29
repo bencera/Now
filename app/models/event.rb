@@ -117,6 +117,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
 
     self.calculate_score
+    self.update_reaction_count
 
     return true
   end
@@ -775,7 +776,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     reply_count = self.facebook_user.nil? ? self.checkins.count : self.checkins.where(:reactor_id.ne => self.facebook_user.now_id).count
 
-    self.n_reactions = photo_count + reply_count + self.likes.to_i + + (view_reactions / 10) 
+    self.n_reactions = photo_count + reply_count + self.likes.to_i + (view_reactions / 10) 
   end
 
   def make_fake_reply(new_photo_card, text, timestamp, now_bot=true)
