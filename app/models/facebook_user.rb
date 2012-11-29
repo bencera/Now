@@ -147,7 +147,9 @@ class FacebookUser
     profile[:bio] = self.now_profile.bio
     profile[:photo] = self.now_profile.profile_photo_url
     profile[:experiences] = self.events.count
-    profile[:reactions] = self.reactions.count
+    echo_count = 0
+    self.events.each {|event| echo_count += event.n_reactions }
+    profile[:reactions] = echo_count
 
     profile[:extended_options] = self == requested_by
     
