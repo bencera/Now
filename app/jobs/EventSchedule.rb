@@ -80,7 +80,7 @@ class EventSchedule
           scheduled_event.trend_event(event)
           scheduled_event.update_photos
           latency = (Time.now.to_i - event.start_time) / 60
-          notify_ben_and_conall("New scheduled event trended: '#{event.description}'", event)
+          #notify_ben_and_conall("New scheduled event trended: '#{event.description}'", event)
           Rails.logger.info("EventSchedule: trended event #{event.id} with #{event.photos.count} photos and #{event.num_users} users")
         end
       elsif( event && event.status == "trending" )
@@ -107,7 +107,7 @@ class EventSchedule
       if(scheduled_event)
         # if outside of trendable time, untrend the event        
         if ( current_time.to_i > scheduled_event.next_end_time || current_time.to_i < scheduled_event.next_start_time)
-          notify_ben_and_conall("Stopped trending '#{event.description}' on schedule. #{event.live_photo_count} photos", event) if event.status == "trending"
+          #notify_ben_and_conall("Stopped trending '#{event.description}' on schedule. #{event.live_photo_count} photos", event) if event.status == "trending"
           #this logic might belong in the scheduled event
           event.transition_status_force 
 
@@ -139,20 +139,20 @@ class EventSchedule
 
 
   def self.notify_ben_and_conall(alert, event)
-    if Rails.env == "development"
-      Rails.logger.info("notifying ben and conall")
-    else
-      subscriptions = [APN::Device.find("50985633ed591a000b000001").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
-
-      subscriptions.each do |s|
-        n = APN::Notification.new
-        n.subscription = s
-        n.alert = alert
-        n.event = event.id
-        n.deliver
-      end
-    end
-
+#    if Rails.env == "development"
+#      Rails.logger.info("notifying ben and conall")
+#    else
+#      subscriptions = [APN::Device.find("50985633ed591a000b000001").subscriptions.first, APN::Device.find("4fd257f167d137024a00001c").subscriptions.first]
+#
+#      subscriptions.each do |s|
+#        n = APN::Notification.new
+#        n.subscription = s
+#        n.alert = alert
+#        n.event = event.id
+#        n.deliver
+#      end
+#    end
+#
   end
 
 end

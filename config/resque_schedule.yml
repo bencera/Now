@@ -136,11 +136,11 @@ maintenance:
   args: 
   description: "remove duplicate events and photos"
 
-waiting_notification:
-  every: "60m"
-  class: WaitingNotification
-  args: 
-  description: "notifying users of events waiting confirmation"
+#waiting_notification:
+#  every: "60m"
+#  class: WaitingNotification
+#  args: 
+#  description: "notifying users of events waiting confirmation"
 
 people_trending:
   every: "1m"

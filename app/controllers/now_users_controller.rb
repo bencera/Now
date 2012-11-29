@@ -103,6 +103,8 @@ class NowUsersController < ApplicationController
     end
 
     Resque.enqueue_in(30.seconds, VerifyNewUser, params)
+   
+    Resque.enqueue(NotifyBen, "New User #{fb_user.now_profile.name} in #{device.city}") if return_hash[:new_fb_user]
 
     return render :json => return_hash, :status => :ok
   end

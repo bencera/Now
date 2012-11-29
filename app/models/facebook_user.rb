@@ -78,6 +78,7 @@ class FacebookUser
           user.facebook_id = facebook_client.user_id
           user.email = facebook_client.email
           user.fb_details = facebook_client.all_user_info
+          options[:return_hash][:new_fb_user] = true
         end
 
         user.udid = options[:udid] if options[:udid]
