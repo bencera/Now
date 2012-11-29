@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class EventsController < ApplicationController
-   layout :choose_layout
+  layout :choose_layout
   respond_to :json, :xml
 
   include EventsHelper
@@ -80,11 +80,11 @@ class EventsController < ApplicationController
       @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).limit(20).entries
     else
       #leaving just "trended"/"trending" for these because this is an endpoint the old app uses
-      events = Event.where(:city => params[:city]).where(:end_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).entries
+      events = Event.where(:city => params[:city]).where(:end_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending", "trending_people", "trended_people"]).order_by([[:end_time, :desc]]).entries
       if events.count >= 10
         @events = events
       else
-        @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending"]).order_by([[:end_time, :desc]]).limit(10).entries
+        @events = Event.where(:city => params[:city]).where(:status.in => ["trended", "trending", "trending_people", "trended_people"]).order_by([[:end_time, :desc]]).limit(10).entries
       end
     end
 
