@@ -115,7 +115,7 @@ trending_2_tok:
 trending_2_saopaulo:
   every: "10m"
   class: Trending2
-  args: "saopaulo 3 6"
+  args: "saopaulo 3 5"
   description: "Trending emails" 
 
 autotrending:
