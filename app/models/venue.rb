@@ -227,7 +227,7 @@ class Venue
         self.address = venue.location.json unless venue.location.nil?
         self.neighborhood = self.find_neighborhood
         self.city = Venue.new.find_city(self.coordinates[1], self.coordinates[0])
-        self.fetch_ig_photos
+        #self.fetch_ig_photos
       end
     end
   end
