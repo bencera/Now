@@ -77,6 +77,8 @@ class Venue
       tz = "Paris"
     elsif city == "london"
       tz = "Edinburgh"
+    elsif city == "saopaulo"
+      tz = "America/Sao_Paulo"
     end
     time = Time.at(time_s.to_i).in_time_zone(tz)
     week_day = time.wday

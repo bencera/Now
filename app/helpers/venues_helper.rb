@@ -143,7 +143,7 @@ module VenuesHelper
           end
         end
         response_1 = response
-        return :data => response.data if response.data && response.data.count >= 6
+        return {:data => response.data} if response.data && (response.data.count >= 6)
       end
     end
 
@@ -176,7 +176,7 @@ module VenuesHelper
       end
     end
     
-    return :data => response.data 
+    return {:data => response.data }
 
   end
 

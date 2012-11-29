@@ -58,10 +58,16 @@ fetch_photos_london:
   args: "1434811"
   description: "Fetchs instagram pics every minute"
 
-fetch_photos_prague:
-  every: "30s"
+fetch_photos_saopaulo:
+  every: "45s"
   class: Fetchigphotos
-  args: "1449368"
+  args: "1692949"
+  description: "Fetchs instagram pics every minute"
+
+fetch_photos_saopaulo2:
+  every: "45s"
+  class: Fetchigphotos
+  args: "1692950"
   description: "Fetchs instagram pics every minute"
 
 #trending:
@@ -106,16 +112,10 @@ trending_2_tok:
   args: "tokyo 3 6"
   description: "Trending emails" 
 
-trending_2_saopaolo:
+trending_2_saopaulo:
   every: "10m"
   class: Trending2
   args: "saopaulo 3 6"
-  description: "Trending emails" 
-
-trending_2_pr:
-  every: "10m"
-  class: Trending2
-  args: "prague 3 4"
   description: "Trending emails" 
 
 autotrending:
