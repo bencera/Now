@@ -116,7 +116,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       self.photo_card = self.photo_card[0..(PHOTO_CARD_PHOTOS -1)]
     end
 
-#    self.update_reaction_count
+    self.calculate_score
 
     return true
   end
