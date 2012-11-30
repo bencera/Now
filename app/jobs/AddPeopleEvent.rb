@@ -165,10 +165,7 @@ class AddPeopleEvent
 
         #### notify us if a user creates a new event
 
-        unless [BSON::ObjectId('4ffc94556ff1c9000f00000e'), BSON::ObjectId('503e79f097b4800009000003'), BSON::ObjectId('50a64cb8877a28000f000007'), BSON::ObjectId('50aa7f16212060000200000e'), nil].include? fb_user.id 
-          users_to_notify = FacebookUser.where(:now_id.in => ["1", "2"])
-          users_to_notify.each {|notify_user| notify_user.send_notification("New User event #{event.description} by user #{fb_user.now_profile.name} in city #{venue.now_city.name}, #{venue.now_city.state}, #{venue.now_city.country}", event.id) }
-        end
+
         
         Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")
       #elsif venue.last_event.status == "trending_people"
@@ -192,6 +189,13 @@ class AddPeopleEvent
 
     PostToFacebook.perform(:event_id => event.id, :fb_user_id => fb_user.facebook_id, :fb_token => params[:fb_token]) if share_to_fb
     #we probably need additional logic to make sure all photos get in
-    Rails.logger.info("AddPeopleEvent finished")
+ 
+    unless fb_user.nil? || ([BSON::ObjectId('4ffc94556ff1c9000f00000e'), BSON::ObjectId('503e79f097b4800009000003'), BSON::ObjectId('50a64cb8877a28000f000007'), BSON::ObjectId('50aa7f16212060000200000e'), nil].include? fb_user.id ) || event.nil? 
+    
+      users_to_notify = FacebookUser.where(:now_id.in => ["1", "2"])
+      
+      users_to_notify.each {|notify_user| notify_user.send_notification("New User event #{event.description} by user #{fb_user.now_profile.name} in city #{venue.now_city.name}, #{venue.now_city.state}, #{venue.now_city.country}", event.id) }
+      
+    end   Rails.logger.info("AddPeopleEvent finished")
   end
 end
