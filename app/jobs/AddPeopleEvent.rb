@@ -147,7 +147,7 @@ class AddPeopleEvent
         event.facebook_user = fb_user 
         event.description = params[:description] || " "
         event.category = params[:category]
-        event.shortid = params[:shortid]
+        event.shortid = params[:shortid] || Event.get_new_shortid
         event.start_time = Time.now.to_i
         event.end_time = event.start_time
         event.anonymous = params[:anonymous] && params[:anonymous] != 'false'
@@ -197,15 +197,15 @@ class AddPeopleEvent
     PostToFacebook.perform(:event_id => event.id, :fb_user_id => fb_user.facebook_id, :fb_token => params[:fb_token]) if share_to_fb
     #we probably need additional logic to make sure all photos get in
  
-    unless fb_user.nil? || ([BSON::ObjectId('4ffc94556ff1c9000f00000e'), BSON::ObjectId('503e79f097b4800009000003'), 
-                             BSON::ObjectId('50a64cb8877a28000f000007'), BSON::ObjectId('50aa7f16212060000200000e'), nil].include? fb_user.id ) || event.nil? 
-    
-      users_to_notify = FacebookUser.where(:now_id.in => ["1", "2"])
-      
-      users_to_notify.each {|notify_user| notify_user.send_notification(
-        "New User event #{event.description} by user #{fb_user.now_profile.name} in city #{venue.now_city.name}, #{venue.now_city.state}, #{venue.now_city.country}", event.id) }
-      
-    end
+#    unless fb_user.nil? || ([BSON::ObjectId('4ffc94556ff1c9000f00000e'), BSON::ObjectId('503e79f097b4800009000003'), 
+#                             BSON::ObjectId('50a64cb8877a28000f000007'), BSON::ObjectId('50aa7f16212060000200000e'), nil].include? fb_user.id ) || event.nil? 
+#    
+#      users_to_notify = FacebookUser.where(:now_id.in => ["1", "2"])
+#      
+#      users_to_notify.each {|notify_user| notify_user.send_notification(
+#        "New User event #{event.description} by user #{fb_user.now_profile.name} in city #{venue.now_city.name}, #{venue.now_city.state}, #{venue.now_city.country}", event.id) }
+#      
+#    end
     
     Rails.logger.info("AddPeopleEvent finished")
   end
