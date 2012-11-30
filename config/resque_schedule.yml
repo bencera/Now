@@ -125,7 +125,7 @@ autotrending:
   description: "Autotrending venues"
 
 fetch_venue_photos:
-  every: "10m"
+  every: "30m"
   class: Fetchvenuephotos
   args: "3"
   description: "Fetch Venue photos"
