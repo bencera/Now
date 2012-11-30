@@ -54,6 +54,9 @@ class AddPeopleEvent
         photo_source = key[0]
         photo_id = key[1] 
         photo_ts = key[2] || timestamp
+        
+        next if photo_id == "123123123" 
+
         unless photo_id.nil?
           begin
             external_key =  Photo.get_media_key(photo_source, photo_id)
