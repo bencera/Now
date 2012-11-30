@@ -772,6 +772,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     if self.photo_card.any?
       photo_count -= self.photo_card.count
+      photo_count = [photo_count, 0].max
     end
 
     reply_count = self.facebook_user.nil? ? self.checkins.count : self.checkins.where(:facebook_user_id.ne => self.facebook_user_id).count

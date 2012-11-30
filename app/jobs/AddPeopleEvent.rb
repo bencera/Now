@@ -127,6 +127,7 @@ class AddPeopleEvent
         check_in_event.insert_photos_safe(photos)
         Rails.logger.info("AddPeopleEvent: saving checkin #{checkin.id}")
         checkin.save!
+        new_checkin_created = checkin
         Rails.logger.info("AddPeopleEvent: saving check_in_event #{check_in_event.id}")
         check_in_event.save!
         Rails.logger.info("AddPeopleEvent: created new checkin for check_in_event at venue #{venue.id}")
@@ -152,6 +153,7 @@ class AddPeopleEvent
        
         # sometimes photos is invalid and i don't know why -- destroying and re-creating the photos seems to work...
         event.save! 
+        new_event_created = event
 
         if fb_user.now_id == "0" && event.photos.any?
           #we need to fix the start and end time
@@ -178,6 +180,8 @@ class AddPeopleEvent
       retry_in = params[:retry_in] || 1
       params[:retry_in] = retry_in * 2
       new_photos.each {|photo| photo.destroy }
+      new_checkin_created.destroy if new_checkin_created
+      new_event_created.destroy if new_event_created
       
       Resque.enqueue_in((retry_in * 15).seconds, AddPeopleEvent, params) unless params[:retry_in] >= 128
       raise
@@ -190,12 +194,16 @@ class AddPeopleEvent
     PostToFacebook.perform(:event_id => event.id, :fb_user_id => fb_user.facebook_id, :fb_token => params[:fb_token]) if share_to_fb
     #we probably need additional logic to make sure all photos get in
  
-    unless fb_user.nil? || ([BSON::ObjectId('4ffc94556ff1c9000f00000e'), BSON::ObjectId('503e79f097b4800009000003'), BSON::ObjectId('50a64cb8877a28000f000007'), BSON::ObjectId('50aa7f16212060000200000e'), nil].include? fb_user.id ) || event.nil? 
+    unless fb_user.nil? || ([BSON::ObjectId('4ffc94556ff1c9000f00000e'), BSON::ObjectId('503e79f097b4800009000003'), 
+                             BSON::ObjectId('50a64cb8877a28000f000007'), BSON::ObjectId('50aa7f16212060000200000e'), nil].include? fb_user.id ) || event.nil? 
     
       users_to_notify = FacebookUser.where(:now_id.in => ["1", "2"])
       
-      users_to_notify.each {|notify_user| notify_user.send_notification("New User event #{event.description} by user #{fb_user.now_profile.name} in city #{venue.now_city.name}, #{venue.now_city.state}, #{venue.now_city.country}", event.id) }
+      users_to_notify.each {|notify_user| notify_user.send_notification(
+        "New User event #{event.description} by user #{fb_user.now_profile.name} in city #{venue.now_city.name}, #{venue.now_city.state}, #{venue.now_city.country}", event.id) }
       
-    end   Rails.logger.info("AddPeopleEvent finished")
+    end
+    
+    Rails.logger.info("AddPeopleEvent finished")
   end
 end
