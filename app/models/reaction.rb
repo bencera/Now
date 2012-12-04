@@ -153,7 +153,8 @@ class Reaction
       reactor_id: options[:reactor_id] || "0",
       event_id: event_id,
       timestamp: timestamp,
-      generate_message: message,
+      message: message,
+      fake: true
     }
 
     return OpenStruct.new(hash)

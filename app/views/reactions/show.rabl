@@ -6,5 +6,9 @@ node(:timestamp) do |u|
 end
 
 node(:message) do |u|
-  u.generate_message(@viewer_id, @event_perspective, :no_emoji => true)
+  if u.fake
+    u.message
+  else
+    u.generate_message(@viewer_id, @event_perspective, :no_emoji => true)
+  end
 end
