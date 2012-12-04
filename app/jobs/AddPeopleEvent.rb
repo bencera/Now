@@ -55,7 +55,7 @@ class AddPeopleEvent
         photo_id = key[1] 
         photo_ts = key[2] || timestamp
         
-        next if photo_id == "123123123" 
+        next if photo_id == "308685368112629367_1223504" 
 
         unless photo_id.nil?
           begin
