@@ -22,7 +22,7 @@ class ReactionsController < ApplicationController
                                                      "This event has #{pluralize(photo_count, "photo")}",
                                                      :venue_name => event.venue.name,
                                                      :counter => photo_count)
-        @reactions.shift photo_reaction
+        @reactions.unshift photo_reaction
       end
 
       total_views = event.get_num_views
@@ -33,7 +33,7 @@ class ReactionsController < ApplicationController
                                                      "This event has been viewed #{pluralize(total_views, "times")}",
                                                      :venue_name => event.venue.name,
                                                      :counter => total_views)
-        @reactions.shift view_reaction
+        @reactions.unshift view_reaction
       end
 
 
