@@ -1,2 +1,4 @@
 collection @reactions
-extends 'reactions/show'
+child @reactions do
+  extends 'reactions/show'
+end
