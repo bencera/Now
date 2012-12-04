@@ -87,6 +87,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   #field :n_people
 
   field :n_reactions, type: Integer, default: 0
+
+  field :last_viewed
   
   belongs_to :venue
   belongs_to :scheduled_event
@@ -759,12 +761,18 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   # every view of an event, increment a counter.  if the counter is high enough, enqueue a reaction
-  
+ 
+  def get_num_views
+    $redis.get("VIEW_COUNT:#{self.shortid}").to_i
+  end
+
   def add_view
     n_views = $redis.incr("VIEW_COUNT:#{self.shortid}")
     if Reaction::VIEW_MILESTONES.include? n_views.to_i
       Resque.enqueue(ViewReaction, self.id, n_views)
     end
+
+    self.last_viewed = Time.now.to_i
   end
 
   def add_click

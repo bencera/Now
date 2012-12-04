@@ -143,6 +143,22 @@ class Reaction
     return message
   end
 
+  def self.make_fake_reaction(reaction_type, event_id, timestamp, message, options={})
+    hash = {
+      reaction_type: reaction_type,
+      reactor_name: options[:reactor_name] || "Now Bot",
+      reactor_photo_url: options[:reactor_photo_url] || "https://s3.amazonaws.com/now_assets/icon.png",
+      venue_name: options[:venue_name],
+      counter: options[:counter] || 0,
+      reactor_id: options[:reactor_id] || "0",
+      event_id: event_id,
+      timestamp: timestamp,
+      message: message,
+    }
+
+    return OpenStruct.new(hash)
+  end
+
   def generate_reply_message
     return self.generate_message(nil, false)
   end
