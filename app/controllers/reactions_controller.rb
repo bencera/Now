@@ -19,7 +19,7 @@ class ReactionsController < ApplicationController
         photo_reaction = Reaction.make_fake_reaction(Reaction::TYPE_PHOTO, 
                                                      event.id.to_s, 
                                                      event.photos.first.time_taken,
-                                                     "This event has #{pluralize(photo_count, "photo")}",
+                                                     "This experience has #{pluralize(photo_count, "photo")}",
                                                      :venue_name => event.venue.name,
                                                      :counter => photo_count)
         @reactions.unshift photo_reaction
@@ -30,7 +30,7 @@ class ReactionsController < ApplicationController
         view_reaction = Reaction.make_fake_reaction(Reaction::TYPE_PHOTO, 
                                                      event.id.to_s, 
                                                      event.last_viewed,
-                                                     "This event has been viewed #{pluralize(total_views, "times")}",
+                                                     "This experience was viewed #{pluralize(total_views, "times")}",
                                                      :venue_name => event.venue.name,
                                                      :counter => total_views)
         @reactions.unshift view_reaction
