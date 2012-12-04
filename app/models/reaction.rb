@@ -46,6 +46,8 @@ class Reaction
 
   field :additional_message
 
+  field :fake, :default => false
+
   #change event to a polymorphic reactable type so we can have reactions to replies as well
   belongs_to :event
   belongs_to :facebook_user
