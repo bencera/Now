@@ -1,2 +1,2 @@
-collection @reactions
+collection @reactions => :reactions
 extends 'reactions/show'
