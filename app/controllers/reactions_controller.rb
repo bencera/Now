@@ -27,7 +27,7 @@ class ReactionsController < ApplicationController
 
       total_views = event.get_num_views
       if !(Reaction::VIEW_MILESTONES.include? total_views)
-        view_reaction = Reaction.make_fake_reaction(Reaction::TYPE_PHOTO, 
+        view_reaction = Reaction.make_fake_reaction(Reaction::TYPE_VIEW_MILESTONE, 
                                                      event.id.to_s, 
                                                      event.last_viewed,
                                                      "This experience was viewed #{pluralize(total_views, "times")}",
