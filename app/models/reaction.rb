@@ -154,7 +154,7 @@ class Reaction
       counter: options[:counter] || 0,
       reactor_id: options[:reactor_id] || "0",
       event_id: event_id,
-      timestamp: timestamp,
+      timestamp: timestamp || Time.now.to_i,
       message: message,
       fake: true
     }

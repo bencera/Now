@@ -19,7 +19,7 @@ class ReactionsController < ApplicationController
         photo_reaction = Reaction.make_fake_reaction(Reaction::TYPE_PHOTO, 
                                                      event.id.to_s, 
                                                      event.photos.first.time_taken,
-                                                     "#{pluralize(photo_count, "photo")} #{photo_count == 1 ? "has" : "have"} been added to this experience",
+                                                     "#{pluralize(photo_count, "photo")} #{photo_count == 1 ? "has" : "have"} been added",
                                                      :venue_name => event.venue.name,
                                                      :counter => photo_count,
                                                      :reactor_name => "#{pluralize(photo_count, "photo")}")
