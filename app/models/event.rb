@@ -767,6 +767,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
   end
 
+  def add_click
+    n_clicks = $redis.incr("CLICK_COUNT:#{self.shortid}")
+  end
+
   def update_reaction_count
     view_reactions = $redis.get("VIEW_COUNT:#{self.shortid}").to_i
     photo_count = self.photos.count 

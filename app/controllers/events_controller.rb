@@ -28,6 +28,7 @@ class EventsController < ApplicationController
     end
 
     @event.add_view
+    @event.add_click
   end
   
   def showless
@@ -90,6 +91,11 @@ class EventsController < ApplicationController
 
 
     EventsHelper.get_event_cards(@events)
+
+    event_ids = []
+    @events.each {|event| event_ids << event.id.to_s}
+
+    Resque.enqueue(AddView, event_ids.join(","))
     return @events
   end
 
@@ -197,7 +203,7 @@ class EventsController < ApplicationController
       i = i + 1
 
       @event.add_view
-
+      @event.add_click
     end
 
 
