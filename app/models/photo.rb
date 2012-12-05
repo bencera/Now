@@ -190,6 +190,8 @@ class Photo
 
     photo.user = user
 
+    photo.city = venue.city
+
     photo.save!
     #not sure if i need this  
     photo.reload
