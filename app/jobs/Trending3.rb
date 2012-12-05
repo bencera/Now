@@ -10,7 +10,7 @@ class Trending3
     trending_cities = $redis.smembers("TRENDING_CITIES")
 
     trending_cities.each do |city|
-      fetch_and_trend(city)# unless (30.minutes.ago.to_i < $redis.get("LAST_FETCH:#{city}"))
+      fetch_and_trend(city) unless (5.hours.ago.to_i < $redis.get("LAST_FETCH:#{city}"))
     end
   end
 
