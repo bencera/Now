@@ -124,11 +124,19 @@ autotrending:
   args: "3"
   description: "Autotrending venues"
 
-fetch_venue_photos:
-  every: "30m"
-  class: Fetchvenuephotos
-  args: "3"
-  description: "Fetch Venue photos"
+#fetch_venue_photos:
+#  every: "30m"
+#  class: Fetchvenuephotos
+#  args: "3"
+#  description: "Fetch Venue photos"
+
+
+fetch_venue_new:
+  every: "15m"
+  class: Trending3
+  args: 
+  description: "New Photo Fetch and Trending" 
+
 
 maintenance:
   every: "10m"

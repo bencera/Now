@@ -1,16 +1,16 @@
 # -*- encoding : utf-8 -*-
 class Trending3 
   @queue = :trending3_queue
-  def self.perform(in_params)
+  def self.perform()
 
-    params = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
+#    params = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
 
-    params.keys.each {|key| params[key] = true if params[key] == "true"; params[key] = false if params[key] == "false"}
+#    params.keys.each {|key| params[key] = true if params[key] == "true"; params[key] = false if params[key] == "false"}
 
     trending_cities = $redis.smembers("TRENDING_CITIES")
 
     trending_cities.each do |city|
-      fetch_and_trend(city) unless (5.hours.ago.to_i < $redis.get("LAST_FETCH:#{city}"))
+      fetch_and_trend(city) unless (5.hours.ago.to_i < $redis.get("LAST_FETCH:#{city}")).to_i
     end
   end
 
