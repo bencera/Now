@@ -83,7 +83,15 @@ class Trending3
 
     url = url + "&client_id=#{Venue::FOURSQUARE_CLIENT_ID}&client_secret=#{Venue::FOURSQUARE_CLIENT_SECRET}&v=20121119"
 
-    response = Hashie::Mash.new(JSON.parse(open(url).read))
+    retry_attempts = 0
+    begin
+      response = Hashie::Mash.new(JSON.parse(open(url).read))
+    rescue
+      raise if retry_attempts > 5
+      retry_attempts += 1
+      sleep 0.1
+      retry 
+    end
 
     response.response.venues.each do |item| 
       venue_id = item.id
@@ -100,10 +108,14 @@ class Trending3
 
     venues.each do |venue|
       url = "https://api.instagram.com/v1/locations/" + venue.ig_venue_id + "/media/recent?client_id=6c3d78eecf06493499641eb99056d175" 
+      retry_attempts = 0
       begin
         response = Hashie::Mash.new(JSON.parse(open(url).read))
       rescue
-        next
+        retry_attempts += 1
+        sleep 0.1
+        next if retry_attempts > 5
+        retry 
       end
 
       data = response.data
