@@ -115,7 +115,7 @@ class Trending3
 
     #run our trending code on this
 
-    $redis.get("LAST_FETCH:#{city}", Time.now.to_i)
+    $redis.set("LAST_FETCH:#{city}", Time.now.to_i)
 
     trending_params = $redis.get("TRENDING_PARAMS:#{city}") || "4 5"
     Trending2.perform("#{city} #{trending_params}")
