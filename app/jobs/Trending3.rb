@@ -10,7 +10,7 @@ class Trending3
     trending_cities = $redis.smembers("TRENDING_CITIES")
 
     trending_cities.each do |city|
-      fetch_and_trend(city)
+      fetch_and_trend(city)# unless (30.minutes.ago.to_i < $redis.get("LAST_FETCH:#{city}"))
     end
   end
 
@@ -26,9 +26,13 @@ class Trending3
 
     venue_list = $redis.get("CITY_VENUES:#{city}")
 
+    Rails.logger.info("city: #{city}, city_long #{city_long}, city_coords #{city_coords}")
 
     # if redis didn't have top venues, pull those from foursquare
     if !venue_list
+
+      Rails.logger.info("First time running trending on this city -- pulling top venues from foursquare")
+
       sections = ["food", "drinks", "coffee", "shops", "arts", "outdoors", "sights", "topPicks"]
 
       venues = []
@@ -49,7 +53,7 @@ class Trending3
         response.response.groups.first.items.each do |item| 
           venue_id = item.venue.id
           venue = (Venue.where(:_id => venue_id).first || Venue.create_venue(venue_id))
-          venues << venue unless venues.include? venue
+          (venues << venue) unless venues.include?(venue) || venue.ig_venue_id.nil?
         end
       end
       venue_ids = []
@@ -67,6 +71,9 @@ class Trending3
 
     
     #pull the venues that are trending from foursquare
+    #
+
+    Rails.logger.info("Finding trending venues")
 
     url = "https://api.foursquare.com/v2/venues/trending"
 
@@ -79,11 +86,16 @@ class Trending3
     response.response.venues.each do |item| 
       venue_id = item.id
       venue = (Venue.where(:_id => venue_id).first || Venue.create_venue(venue_id))
-      (venue_ids << venue.ig_venue_id) unless venue.ig_venue_id.nil? || venue_ids.include?(venue.ig_venue_id)
+      (venues << venue) unless venue.ig_venue_id.nil? || venue_ids.include?(venue.ig_venue_id)
     end
 
 
     #now pull the most recent photos from each venue
+
+    Rails.logger.info("Pulling recent photos from #{venues.count} venues in #{city}")
+
+    start_timestamp = Time.now.to_i
+
     venues.each do |venue|
       url = "https://api.instagram.com/v1/locations/" + venue.ig_venue_id + "/media/recent?client_id=6c3d78eecf06493499641eb99056d175" 
       begin
@@ -99,8 +111,11 @@ class Trending3
       end
     end
 
+    Rails.logger.info("Done pulling photos in #{Time.now.to_i - start_timestamp} seconds")
 
     #run our trending code on this
+
+    $redis.get("LAST_FETCH:#{city}", Time.now.to_i)
 
     trending_params = $redis.get("TRENDING_PARAMS:#{city}") || "4 5"
     Trending2.perform("#{city} #{trending_params}")
