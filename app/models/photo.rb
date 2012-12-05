@@ -133,6 +133,8 @@ class Photo
       photo.user = user
     end 
     
+    photo.city = venue.city 
+
     photo.user_details = [photo.user.ig_username, photo.user.ig_details[1], photo.user.ig_details[0]]
     photo.now_version = 2
     photo.url = [photo.low_resolution_url, photo.high_resolution_url, photo.thumbnail_url]

@@ -1,128 +1,128 @@
-fetch_photos_newyork1:
-  every: "25s"
-  class: Fetchigphotos
-  args: "1434800"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_newyork2:
-  every: "25s"
-  class: Fetchigphotos
-  args: "1434803"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_sanfrancisco1:
-  every: "35s"
-  class: Fetchigphotos
-  args: "1434804"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_sanfrancisco2:
-  every: "35s"
-  class: Fetchigphotos
-  args: "1434806"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_paris1:
-  every: "45s"
-  class: Fetchigphotos
-  args: "1434807"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_paris2:
-  every: "45s"
-  class: Fetchigphotos
-  args: "1434810"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_losangeles1:
-  every: "25s"
-  class: Fetchigphotos
-  args: "1434812"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_losangeles2:
-  every: "25s"
-  class: Fetchigphotos
-  args: "1434813"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_losangeles3:
-  every: "25s"
-  class: Fetchigphotos
-  args: "1434814"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_london:
-  every: "40s"
-  class: Fetchigphotos
-  args: "1434811"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_saopaulo:
-  every: "45s"
-  class: Fetchigphotos
-  args: "1692949"
-  description: "Fetchs instagram pics every minute"
-
-fetch_photos_saopaulo2:
-  every: "45s"
-  class: Fetchigphotos
-  args: "1692950"
-  description: "Fetchs instagram pics every minute"
-
-#trending:
+#fetch_photos_newyork1:
+#  every: "25s"
+#  class: Fetchigphotos
+#  args: "1434800"
+#  description: "Fetchs instagram pics every minute"
+#
+#fetch_photos_newyork2:
+#  every: "25s"
+#  class: Fetchigphotos
+#  args: "1434803"
+#  description: "Fetchs instagram pics every minute"
+#
+#fetch_photos_sanfrancisco1:
+#  every: "35s"
+#  class: Fetchigphotos
+#  args: "1434804"
+#  description: "Fetchs instagram pics every minute"
+#
+#fetch_photos_sanfrancisco2:
+#  every: "35s"
+#  class: Fetchigphotos
+#  args: "1434806"
+#  description: "Fetchs instagram pics every minute"
+#
+#fetch_photos_paris1:
+#  every: "45s"
+#  class: Fetchigphotos
+#  args: "1434807"
+#  description: "Fetchs instagram pics every minute"
+#
+#fetch_photos_paris2:
+#  every: "45s"
+#  class: Fetchigphotos
+#  args: "1434810"
+#  description: "Fetchs instagram pics every minute"
+#
+#fetch_photos_losangeles1:
+#  every: "25s"
+#  class: Fetchigphotos
+#  args: "1434812"
+#  description: "Fetchs instagram pics every minute"
+#
+#fetch_photos_losangeles2:
+#  every: "25s"
+#  class: Fetchigphotos
+#  args: "1434813"
+#  description: "Fetchs instagram pics every minute"
+#
+#fetch_photos_losangeles3:
+#  every: "25s"
+#  class: Fetchigphotos
+#  args: "1434814"
+#  description: "Fetchs instagram pics every minute"
+#
+#fetch_photos_london:
+#  every: "40s"
+#  class: Fetchigphotos
+#  args: "1434811"
+#  description: "Fetchs instagram pics every minute"
+#
+#fetch_photos_saopaulo:
+#  every: "45s"
+#  class: Fetchigphotos
+#  args: "1692949"
+#  description: "Fetchs instagram pics every minute"
+#
+#fetch_photos_saopaulo2:
+#  every: "45s"
+#  class: Fetchigphotos
+#  args: "1692950"
+#  description: "Fetchs instagram pics every minute"
+#
+##trending:
+##  every: "10m"
+##  class: Trending
+##  args: "3"
+##  description: "Trending emails"
+#
+#trending_2_ny:
 #  every: "10m"
-#  class: Trending
+#  class: Trending2
+#  args: "newyork 3 5"
+#  description: "Trending emails" 
+#
+#trending_2_lon:
+#  every: "10m"
+#  class: Trending2
+#  args: "london 3 4"
+#  description: "Trending emails" 
+#
+#trending_2_par:
+#  every: "10m"
+#  class: Trending2
+#  args: "paris 3 4"
+#  description: "Trending emails" 
+#
+#trending_2_sf:
+#  every: "10m"
+#  class: Trending2
+#  args: "sanfrancisco 3 5"
+#  description: "Trending emails" 
+#
+#trending_2_la:
+#  every: "10m"
+#  class: Trending2
+#  args: "losangeles 3 6"
+#  description: "Trending emails" 
+#
+#trending_2_tok:
+#  every: "10m"
+#  class: Trending2
+#  args: "tokyo 3 6"
+#  description: "Trending emails" 
+#
+#trending_2_saopaulo:
+#  every: "10m"
+#  class: Trending2
+#  args: "saopaulo 3 5"
+#  description: "Trending emails" 
+#
+#autotrending:
+#  every: "10m"
+#  class: Autotrending
 #  args: "3"
-#  description: "Trending emails"
-
-trending_2_ny:
-  every: "10m"
-  class: Trending2
-  args: "newyork 3 5"
-  description: "Trending emails" 
-
-trending_2_lon:
-  every: "10m"
-  class: Trending2
-  args: "london 3 4"
-  description: "Trending emails" 
-
-trending_2_par:
-  every: "10m"
-  class: Trending2
-  args: "paris 3 4"
-  description: "Trending emails" 
-
-trending_2_sf:
-  every: "10m"
-  class: Trending2
-  args: "sanfrancisco 3 5"
-  description: "Trending emails" 
-
-trending_2_la:
-  every: "10m"
-  class: Trending2
-  args: "losangeles 3 6"
-  description: "Trending emails" 
-
-trending_2_tok:
-  every: "10m"
-  class: Trending2
-  args: "tokyo 3 6"
-  description: "Trending emails" 
-
-trending_2_saopaulo:
-  every: "10m"
-  class: Trending2
-  args: "saopaulo 3 5"
-  description: "Trending emails" 
-
-autotrending:
-  every: "10m"
-  class: Autotrending
-  args: "3"
-  description: "Autotrending venues"
+#  description: "Autotrending venues"
 
 #fetch_venue_photos:
 #  every: "30m"
