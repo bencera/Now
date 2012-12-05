@@ -50,7 +50,16 @@ class Trending3
 
         url = url + "&client_id=#{Venue::FOURSQUARE_CLIENT_ID}&client_secret=#{Venue::FOURSQUARE_CLIENT_SECRET}&v=20121119"
 
-        response = Hashie::Mash.new(JSON.parse(open(url).read))
+        retry_attempts = 0
+        begin
+          response = Hashie::Mash.new(JSON.parse(open(url).read))
+        rescue
+          raise if retry_attempts > 5
+          retry_attempts += 1
+          sleep 0.1
+          retry 
+        end
+
 
         response.response.groups.first.items.each do |item| 
           venue_id = item.venue.id
@@ -79,7 +88,7 @@ class Trending3
 
     url = "https://api.foursquare.com/v2/venues/trending"
 
-    url = url + "?ll=#{city_coords[0]},#{city_coords[1]}"
+    url = url + "?ll=#{city_coords[1]},#{city_coords[0]}"
 
     url = url + "&client_id=#{Venue::FOURSQUARE_CLIENT_ID}&client_secret=#{Venue::FOURSQUARE_CLIENT_SECRET}&v=20121119"
 
