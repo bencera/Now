@@ -11,7 +11,7 @@ class Trending3
 
     trending_cities.each do |city|
       last_fetch = $redis.get("LAST_FETCH:#{city}") || 0
-      city_frequency = $redis.get("CITY_FREQ:#{city}") || 6
+      city_frequency = $redis.get("CITY_FREQ:#{city}") || 5
       fetch_and_trend(city) unless (last_fetch.to_i > (city_frequency.to_i).hours.ago.to_i)
     end
   end
@@ -21,6 +21,9 @@ class Trending3
     city_lon_lat= $redis.get("CITY_LONLAT:#{city}")
     
     if !city_lon_lat
+      
+      return if city_long.nil?
+
       city_lon_lat= Geocoder.coordinates(city_long).reverse.join(",")
       $redis.set("CITY_LONLAT:#{city}", city_lon_lat)
     end
