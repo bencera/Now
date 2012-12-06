@@ -102,9 +102,13 @@ class NowUsersController < ApplicationController
       Resque.enqueue(LogBadFbCreate, params)
     end
 
-    Resque.enqueue_in(30.seconds, VerifyNewUser, params)
+    begin
+      Resque.enqueue_in(30.seconds, VerifyNewUser, params)
    
-    Resque.enqueue(NotifyBen, "New User #{fb_user.now_profile.name} in #{device.city}") if return_hash[:new_fb_user]
+      Resque.enqueue_in(1.minutes, NewUserNotification, fb_user.id) if fb_user && return_hash[:new_fb_user]
+    rescue
+      #just so we don't crash for a stupid reason here
+    end
 
     return render :json => return_hash, :status => :ok
   end
