@@ -1,4 +1,7 @@
 class UserFollowEvent
+  @queue = :user_follow_queue
+
+
   def self.perform
 
     #user ids of people set up
