@@ -773,6 +773,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
 
     self.last_viewed = Time.now.to_i
+
+    self.save if (n_views % 10 == 0)
   end
 
   def add_click
