@@ -11,7 +11,7 @@ class Trending3
 
     trending_cities.each do |city|
       last_fetch = $redis.get("LAST_FETCH:#{city}") || 0
-      city_frequency = $redis.get("CITY_FREQ:#{city}") || 5
+      city_frequency = $redis.get("CITY_FREQ:#{city}") || 4
       fetch_and_trend(city) unless (last_fetch.to_i > (city_frequency.to_i).hours.ago.to_i)
     end
   end
