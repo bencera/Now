@@ -63,7 +63,7 @@ class UserFollowEvent
 
       if now_id.nil?
         fb_user = FacebookUser.where(:ig_username => photo.user.username).first
-        now_id = fb_user.ig_username if fb_user
+        now_id = fb_user.now_id if fb_user
       end
 
       next if now_id.nil?
