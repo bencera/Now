@@ -42,6 +42,9 @@ class ReactionsController < ApplicationController
       facebook_user = FacebookUser.where(:now_id=> params[:now_id]).first
       @event_perspective = false
       @reactions = facebook_user.reactions.where(:reactor_id.ne => params[:now_id]).order_by([[:created_at, :desc]]).limit(20)
+    elsif params[:insider]
+      @event_perspective = false
+      @reactions = Reaction.where(:reaction_type.in => [Reaction::TYPE_LIKE, Reaction::TYPE_REPLY], :reactor_id.nin => ["1", "2", "359"]).order_by([[:created_at, :desc]]).limit(50)
     elsif params[:nowtoken]
       @event_perspective = false
       @reactions = viewer.reactions.where(:reactor_id.ne => viewer.now_id).order_by([[:created_at, :desc]]).limit(20)
