@@ -57,7 +57,14 @@ class UserFollowEvent
       user_id = photo.user.id
 
       last_ig_media_id = $redis.get("#{user_id}:last_media_id")
+      
+      #phase this line out (and the hash at the top of this)
       now_id = user_id_now_id[user_id]
+
+      if now_id.nil?
+        fb_user = FacebookUser.where(:ig_username => photo.user.username).first
+        now_id = fb_user.ig_username if fb_user
+      end
 
       next if now_id.nil?
 
