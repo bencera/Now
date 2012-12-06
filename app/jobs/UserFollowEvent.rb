@@ -48,6 +48,9 @@ class UserFollowEvent
 #      url = "https://api.instagram.com/v1/users/" + userid + "/media/recent/?access_token=1200123.f59def8.a74c678f2ba24ac399cc9a6018a6f26e"
     recent_media = Hashie::Mash.new(JSON.parse(open(url).read))
     redisLastPhotoSeenWasSet = false
+    if recent_media.data.any? 
+      min_photo_id =  $redis.set("MIN_FOLLOWED_PHOTO_ID", recent_media.data.first.id)
+    end
     ###For each photo, see if we can create an event out of it
     recent_media.data.each do |photo|
 
