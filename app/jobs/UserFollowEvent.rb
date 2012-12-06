@@ -175,7 +175,7 @@ class UserFollowEvent
                 end
               elsif first_reply
                 message = "\u2728 Now bot added your instagram photo to an event at #{event.venue.name}!"
-                event.facebook_user.send_notification(message, event.id)
+                fb_user.send_notification(message, live_event.id)
               end
               
               unless event.facebook_user.now_id == "1" || event.facebook_user.now_id == "2"
