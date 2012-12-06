@@ -1,4 +1,4 @@
-class CategoriesHelper
+module CategoriesHelper
   @@categories = {"4bf58dd8d48988d1e2931735" => "Art",
  "4bf58dd8d48988d1e4931735" => "Sport",
  "4bf58dd8d48988d18e941735" => "Performance",
