@@ -10,6 +10,7 @@ class FacebookUser
   field :udid
 
   field :email
+  field :ig_username
   field :now_token
   field :fb_accesstoken
   field :fb_details, type: Hash
@@ -20,7 +21,7 @@ class FacebookUser
 
   index({ now_token: 1 }, { unique: true, name: "now_token_index" })
   index({ now_id: 1}, {unique: true, name: "now_id_index"})
-
+  index({ ig_username: 1}, {unique: true, name: "ig_username_index"})
 
   has_many :devices, class_name: "APN::Device"
   has_many :scheduled_events
@@ -32,6 +33,7 @@ class FacebookUser
   has_many :reactions, dependent: :destroy
 
   validates_numericality_of :score
+  validates_uniqueness_of :ig_username
 
   before_create :initialize_members
 
