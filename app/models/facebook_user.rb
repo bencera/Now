@@ -20,7 +20,7 @@ class FacebookUser
   field :score, :default => 0
 
   index({ now_token: 1 }, { unique: true, name: "now_token_index" })
-  index({ ig_username: 1}, {unique: true, name: "ig_username_index"})
+  index({ now_id: 1}, {unique: true, name: "now_id_index"})
 
   has_many :devices, class_name: "APN::Device"
   has_many :scheduled_events
