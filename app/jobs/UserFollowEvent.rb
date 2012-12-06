@@ -175,13 +175,13 @@ class UserFollowEvent
                 event.facebook_user.send_notification(message, event.id)
               end
               
-              unless event.facebook_user.now_id == "1"
+              unless event.facebook_user.now_id == "1" || event.facebook_user.now_id == "2"
                 if live_event
                   message = "Instagram reply created for  #{event.facebook_user.fb_details["name"]}"
                 else
                   message = "Instagram event created for #{event.facebook_user.fb_details["name"]}"
                 end
-                FacebookUser.first(conditions: {now_id: "1"}).send_notification(message, event.id)
+                FacebookUser.where(:now_id.in => ["1", "2"]).each {|admin_user| admin_user.send_notification(message, event.id)}
               end
             end
           end
