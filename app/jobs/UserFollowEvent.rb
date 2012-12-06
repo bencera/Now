@@ -171,7 +171,7 @@ class UserFollowEvent
                   event.facebook_user.send_notification(message, event.id)
                 end
               elsif first_reply
-                message "\u2728 Now bot added your instagram photo to an event at #{event.venue.name}!"
+                message = "\u2728 Now bot added your instagram photo to an event at #{event.venue.name}!"
                 event.facebook_user.send_notification(message, event.id)
               end
               
