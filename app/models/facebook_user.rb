@@ -20,7 +20,6 @@ class FacebookUser
   field :score, :default => 0
 
   index({ now_token: 1 }, { unique: true, name: "now_token_index" })
-  index({ now_id: 1}, {unique: true, name: "now_id_index"})
   index({ ig_username: 1}, {unique: true, name: "ig_username_index"})
 
   has_many :devices, class_name: "APN::Device"
@@ -33,7 +32,6 @@ class FacebookUser
   has_many :reactions, dependent: :destroy
 
   validates_numericality_of :score
-  validates_uniqueness_of :ig_username
 
   before_create :initialize_members
 
