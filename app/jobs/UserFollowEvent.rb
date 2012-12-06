@@ -65,10 +65,12 @@ class UserFollowEvent
                 event.facebook_user = FacebookUser.first(conditions: {now_id: user_id_now_id[user_id]})
                 event.description = photo.caption.text
                 #try to guess the caetegory
-                if CategoriesHelper::categories[photos.first.venue.categories.first["id"]].nil?
+
+                categories = CategoriesHelper.categories
+                if categories[photos.first.venue.categories.first["id"]].nil?
                   event.category = "Misc"
                 else
-                  event.category = CategoriesHelpe::rcategories[photos.first.venue.categories.first["id"]]           
+                  event.category = categories[photos.first.venue.categories.first["id"]]           
                 end
                 event.shortid = Event.get_new_shortid
                 event.start_time = Time.now.to_i
