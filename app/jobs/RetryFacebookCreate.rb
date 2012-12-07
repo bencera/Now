@@ -9,7 +9,7 @@ class RetryFacebookCreate
     fb_accesstoken = params[:fb_accesstoken]
 
     device = APN::Device.where(:udid => device_id).first
-    if device.nil || !device.valid?
+    if device.nil? || !device.valid?
       raise
     end
     
