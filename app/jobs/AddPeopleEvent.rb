@@ -40,6 +40,17 @@ class AddPeopleEvent
       check_in_event = venue.get_live_event
     end
 
+    if check_in_event && ( fb_user.super_user || fb_user.id == check_in_event.facebook_user_id)
+      #check to see if this is an admin command: #rename
+      description_words = params[:description].split(" ")
+      if description_words.first == "#rename"
+        new_description = description_words[1..-1].join(" ")
+        event.description = new_description
+        event.save!
+        return
+      end
+    end
+
     if(params[:new_photos] == false)
       photo_card_ids = check_in_event.photo_card
     else

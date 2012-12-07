@@ -16,6 +16,8 @@ class FacebookUser
   field :fb_details, type: Hash
   field :whitelist_cities, type: Array, default: []
 
+  field :super_user, type: Boolean, default: false
+
   #this will be the user's score as an event creator
   field :score, :default => 0
 
