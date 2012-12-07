@@ -135,6 +135,12 @@ class UserFollowEvent
 
               categories = CategoriesHelper.categories
 
+              if venue.categories.nil? || venue.categories.first.nil? || categories[venue.categories.first["id"]].nil?
+                category = "Misc"
+              else
+                category = categories[venue.categories.first["id"]]
+              end
+
 
               event_params = {:photo_id_list => "ig|#{photo.id}",
                               :new_photos => true,
@@ -144,7 +150,7 @@ class UserFollowEvent
                               :id => event_id,
                               :short_id => event_short_id,
                               :description => photo.caption.text,
-                              :category => (categories[venue.categories.first["id"]] || "Misc")}
+                              :category => category}
 
               AddPeopleEvent.perform(event_params)
 
