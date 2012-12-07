@@ -45,6 +45,7 @@ class UserFollowEvent
     min_photo_id =  $redis.get("MIN_FOLLOWED_PHOTO_ID")
 
     url = "https://api.instagram.com/v1/users/self/feed?min_id=#{min_photo_id}&access_token=44178321.f59def8.63f2875affde4de98e043da898b6563f"
+    #url = "https://api.instagram.com/v1/users/self/feed?access_token=44178321.f59def8.63f2875affde4de98e043da898b6563f"
 #      url = "https://api.instagram.com/v1/users/" + userid + "/media/recent/?access_token=1200123.f59def8.a74c678f2ba24ac399cc9a6018a6f26e"
     recent_media = Hashie::Mash.new(JSON.parse(open(url).read))
     redisLastPhotoSeenWasSet = false
@@ -116,24 +117,6 @@ class UserFollowEvent
             #dont create event if there's no caption => not interesting!
             unless photo.caption.nil?
               Rails.logger.info("create event at #{photo.location.name} with #{recent_photo_count} photos")
-#                event = photos.first.venue.get_new_event("trending_people", photos)
-#                event.illustration = photos[0].id if photos.any?
-#                event.facebook_user = FacebookUser.first(conditions: {now_id: user_id_now_id[user_id]})
-#                event.description = photo.caption.text
-#                #try to guess the caetegory
-#
-#                categories = CategoriesHelper.categories
-#                if categories[photos.first.venue.categories.first["id"]].nil?
-#                  event.category = "Misc"
-#                else
-#                  event.category = categories[photos.first.venue.categories.first["id"]]           
-#                end
-#                event.shortid = Event.get_new_shortid
-#                event.start_time = Time.now.to_i
-#                event.end_time = event.start_time
-#                ##make the photocard only one photo
-#                event.photo_card = [photos.first.id]
-#                event.save!
                
               live_event = venue.get_live_event
               fb_user = FacebookUser.where(:now_id => now_id).first
