@@ -45,8 +45,8 @@ class AddPeopleEvent
       description_words = params[:description].split(" ")
       if description_words.first == "#rename"
         new_description = description_words[1..-1].join(" ")
-        event.description = new_description
-        event.save!
+        check_in_event.description = new_description
+        check_in_event.save!
         return
       end
     end
