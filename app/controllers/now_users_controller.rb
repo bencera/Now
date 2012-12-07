@@ -71,12 +71,15 @@ class NowUsersController < ApplicationController
         fb_user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken], :udid => params[:udid], :return_hash => return_hash)
         if fb_user.nil?
 
-          if params[:return_hash][:errors]["code"] == 190
-            Resque.enqueue_in(1.minute, RetryFacebookCreate, {:deviceid => params[:deviceid], :fb_accesstoken => params[:fb_accesstoken]})
-          end
+
           params[:breakpoint] = 2
           params[:return_hash] = return_hash
           Resque.enqueue(LogBadFbCreate, params)
+          
+          if params[:return_hash][:errors]["code"] == 190
+            Resque.enqueue_in(1.minute, RetryFacebookCreate, {:deviceid => params[:deviceid], :fb_accesstoken => params[:fb_accesstoken]})
+          end
+          
           return render(:text => "433 Facebook Access Failed errors: #{return_hash[:errors]}", :status => 433) 
         end
 
