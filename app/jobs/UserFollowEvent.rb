@@ -8,7 +8,7 @@ class UserFollowEvent
     #correspondance with their now_id
     #we probably want to put this in redis or something later
     user_id_now_id = {"1200123" => "1", #ben
-                      "146227201" => "2", #conall
+                      #"146227201" => "2", #conall
                       "29377063" => "359", #@chrispulliam:
                       "14848852" => "485", #@romulon:
                       "1392868" => "358", #@c0wb0yz:
@@ -67,7 +67,7 @@ class UserFollowEvent
         now_id = fb_user.now_id if fb_user
       end
 
-      next if now_id.nil?
+      now_id = "0" if now_id.nil?
 
       ##only look at location photos
       unless photo.location.nil? || photo.location.id.nil?
@@ -122,6 +122,10 @@ class UserFollowEvent
               fb_user = FacebookUser.where(:now_id => now_id).first
               
               if live_event
+                
+                #don't want to reply to a live event as nowbot
+                next if now_id == "0"
+
                 event = live_event 
                 event_id = event.id
                 event_short_id = event.shortid
@@ -164,7 +168,7 @@ class UserFollowEvent
                 $redis.incrby("NOW_BOT_PHOTOS:#{event.id}", photos.count - 1)
                 message = "\u2728 Now bot created an event for you at #{event.venue.name}!"
                                 ## send notifications to the user to tell him about the completion!
-                event.facebook_user.send_notification(message, event.id)
+                event.facebook_user.send_notification(message, event.id) unless now_id == "0"
                 if photos.count > 1
                   message = "\u{1F4F7} Now bot added #{photos.count - 1} photos"
                   event.facebook_user.send_notification(message, event.id)
@@ -177,6 +181,8 @@ class UserFollowEvent
               unless event.facebook_user.now_id == "1" || event.facebook_user.now_id == "2"
                 if live_event
                   message = "Instagram reply created for  #{event.facebook_user.fb_details["name"]}"
+                elsif now_id == "0"
+                  message = "Instagram event created at #{venue.name}: #{event.description}"
                 else
                   message = "Instagram event created for #{event.facebook_user.fb_details["name"]}"
                 end
