@@ -48,6 +48,8 @@ class AddPeopleEvent
         check_in_event.description = new_description
         check_in_event.save!
         return
+      elsif description_words.first == "#delete"
+        check_in_event.destroy
       end
     end
 
