@@ -28,6 +28,8 @@ class RetryFacebookCreate
     begin
       device.facebook_user = fb_user
       device.save!
+      users = FacebookUser.where(:now_id.in => ["2"]).entries
+      users.each {|user| user.send_notification("successfully repaired fb_user with bad fb reply", nil)}
     rescue
       Resque.enqueue_in(1.minute, RetryFacebookCreate, params) unless retry_attempt > 5
       raise
