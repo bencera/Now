@@ -50,6 +50,7 @@ class AddPeopleEvent
         return
       elsif description_words.first == "#delete"
         check_in_event.destroy
+        return
       end
     end
 
