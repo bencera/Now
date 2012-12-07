@@ -70,7 +70,7 @@ class UserFollowEvent
       next if now_id.nil?
 
       ##only look at location photos
-      unless photo.location.id.nil?
+      unless photo.location.nil? || photo.location.id.nil?
         ##stop if we've already seen that photo before
         if photo.id == last_ig_media_id
           break
