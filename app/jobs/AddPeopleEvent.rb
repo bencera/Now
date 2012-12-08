@@ -51,6 +51,10 @@ class AddPeopleEvent
       elsif description_words.first == "#delete"
         check_in_event.destroy
         return
+      elsif description_words.first == "#demote"
+        check_in_event.status = Event::TRENDING_LOW 
+        check_in_event.save!
+        return
       end
     end
 
