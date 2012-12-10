@@ -3,6 +3,11 @@ class Facebooklike
   @queue = :facebooklike_queue
   def self.perform(access_token, event_shortid, fb_user_id)
     event = Event.where(:shortid => event_shortid).first
+
+#    if event.nil?
+#      #we should retry the like 
+#    end
+
     event.inc(:likes,1)
 
     fb_user = FacebookUser.where(:_id => fb_user_id).first

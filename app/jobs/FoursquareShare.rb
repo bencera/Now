@@ -9,6 +9,8 @@ class FoursquareShare
   
     id_to_share = params[:event_id]
     fs_token = params[:fs_token]
+
+    new_photos = []
   
     event = Event.where(:_id => id_to_share).first
     if event
@@ -16,12 +18,14 @@ class FoursquareShare
       venue_id = event.venue.id
 #      shout = "I created a Now Experience here! http://getnowapp.com/#{event.shortid}"
       shout = "#{event.description} http://getnowapp.com/#{event.shortid}"
+      new_photo_ids = event.photo_card
     else
       checkin = Checkin.where(:_id => id_to_share).first
       if checkin
         event = checkin.event
         venue_id = checkin.event.venue.id
         shout = "I replied to a Now Experience here!  http://getnowapp.com/#{event.shortid}"
+        new_photo_ids = checkin.photo_card
       end
     end
    
@@ -44,27 +48,17 @@ class FoursquareShare
       raise
     end
 
-    #photo upload
-#    require 'net/http/post/multipart'
-
-#    url = URI.parse "https://api.foursquare.com/v2/photos/add?oauth_token=IWUTXRTAEUJTSYVKNZEBVJSSZRMLPGF0T3GJIPK35B2QT0CW"
-
-    
-
     #try photo upload next
-    
-#    now_photo_ids.each do |photo_id|
-#      photo = Photo.find(photo_id)
-#
-#      unless photo.external_source != Photo::NOW_SOURCE
-#
-#        RestClient.post('https://api.foursquare.com/v2/photos/add',  :checkinId => checkin_id,
-#                  :broadcast => 'public',
-#                  :public => 1,
-#                  :oauth_token => fs_token,
-#                  :upload => open(photo.high_resolution_url).read ) 
-#      end
-#    end
+   
+    fsuploader = FsPhotoUploader.new
 
+    new_photo_ids.each do |photo_id|
+      photo = Photo.find(photo_id)
+
+      unless photo.external_source != Photo::NOW_SOURCE
+        photo_path = photo.high_resolution_url
+        fsuploader.upload(photo_path, fs_token, :checkinId => checkin_id)
+      end
+    end
   end
 end
