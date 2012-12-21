@@ -54,7 +54,11 @@ class AddPeopleEvent
       elsif description_words.first == "#demote"
         check_in_event.status = Event::TRENDING_LOW 
         check_in_event.save!
-        return
+      elsif description_words.first == "#category"
+        new_cat = description_words[1].downcase.capitalize
+        check_in_event.category = new_cat
+        check_in_event.save!
+        return        
       end
     end
 
