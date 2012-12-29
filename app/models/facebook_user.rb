@@ -11,6 +11,8 @@ class FacebookUser
 
   field :email
   field :ig_username
+  field :ig_user_id
+
   field :now_token
   field :fb_accesstoken
   field :fb_details, type: Hash
