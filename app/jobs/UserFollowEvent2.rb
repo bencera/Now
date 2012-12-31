@@ -59,10 +59,10 @@ class UserFollowEvent2
       if additional_photos.any?
         event.insert_photos_safe(additional_photos)
         event.save!
-        $redis.incrby("NOW_BOT_PHOTOS:#{event.id}", additional_photos.count)
+        $redis.incrby("NOW_BOT_PHOTOS:#{event.id}", additional_photos.count - 1)
       end
 
-      notify_user(fb_user, event, additional_photos.count, existing_event.nil?) if fb_user.now_id != "0" && first_reply
+      notify_user(fb_user, event, additional_photos.count - 1, existing_event.nil?) if fb_user.now_id != "0" && first_reply
       notify_us(fb_user, event, existing_event.nil?) unless fb_user.now_id == "1" || fb_user.now_id == "2"
 
     end
@@ -182,14 +182,14 @@ class UserFollowEvent2
     ## send notifications to the user to tell him about the completion!
     
     ######DEBUG
-    #event.facebook_user.send_notification(message, event.id) unless now_id == "0"
+    event.facebook_user.send_notification(message, event.id) unless now_id == "0"
 
     Rails.logger.info("Will notify user #{fb_user.now_profile.name}: \"#{message}\"")
     
     if nowbot_photo_count > 0
       message = "\u{1F4F7} Now bot added #{nowbot_photo_count} photos"
       #######DEBUG
-      #event.facebook_user.send_notification(message, event.id)
+      event.facebook_user.send_notification(message, event.id)
       Rails.logger.info("Will notify user #{fb_user.now_profile.name}: \"#{message}\"")
     end
     
@@ -206,7 +206,7 @@ class UserFollowEvent2
     end
 
     #####DEBUG
-    #FacebookUser.where(:now_id.in => ["1", "2"]).each {|admin_user| admin_user.send_notification(message, event.id)}
+    FacebookUser.where(:now_id.in => ["1", "2"]).each {|admin_user| admin_user.send_notification(message, event.id)}
 
     Rails.logger.info("WILL NOTIFY US: #{message}")
 
