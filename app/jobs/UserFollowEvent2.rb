@@ -182,7 +182,7 @@ class UserFollowEvent2
     ## send notifications to the user to tell him about the completion!
     
     ######DEBUG
-    event.facebook_user.send_notification(message, event.id) unless now_id == "0"
+    event.facebook_user.send_notification(message, event.id) unless fb_user.now_id == "0"
 
     Rails.logger.info("Will notify user #{fb_user.now_profile.name}: \"#{message}\"")
     
