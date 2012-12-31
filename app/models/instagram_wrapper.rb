@@ -10,9 +10,23 @@ class InstagramWrapper
     InstagramWrapper.get_data(url)
   end
 
+  def user_media(user_id, options={})
+    url = "https://api.instagram.com/v1/users/#{user_id}/media/recent/?access_token=#{@access_token}"
+    InstagramWrapper.get_data(url)
+  end
+
   def venue_media(location_id, options={})
     url = "https://api.instagram.com/v1/locations/" + "#{location_id}" + "/media/recent/?access_token=#{@access_token}"
     url += "&min_timestamp=#{options[:min_timestamp]}" if options[:min_timestamp]
+    InstagramWrapper.get_data(url)
+  end
+
+  def user_info(user_id, options={})
+    url = "https://api.instagram.com/v1/users/#{user_id}/?access_token=#{@access_token}"
+    InstagramWrapper.get_data(url)
+  end
+
+  def pull_pagination(url)
     InstagramWrapper.get_data(url)
   end
 
