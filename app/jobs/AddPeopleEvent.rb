@@ -244,7 +244,7 @@ class AddPeopleEvent
         check_in_event.status = Event::TRENDING_LOW 
         check_in_event.save!
       when "#category"
-        if !Event.CATEGORIES.include? check_in_event.category
+        if !Event::CATEGORIES.include?(check_in_event.category)
           new_cat = commands[1].downcase.capitalize
           check_in_event.category = new_cat
           check_in_event.save!
