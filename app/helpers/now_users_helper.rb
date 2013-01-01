@@ -60,7 +60,7 @@ module NowUsersHelper
       return
     end
 
-    user.ig_use_id = ig_user_id
+    user.ig_user_id = ig_user_id
     user.save!
   end
 
