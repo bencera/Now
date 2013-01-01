@@ -227,8 +227,8 @@ module VenuesHelper
       pages = 0
 
       begin
+        pages += 1
         user_media.data.each do |media|
-          pages += 1
           unless media.location.nil? || media.location.id.nil?
             user_media_count[user_id] += 1
             (venues << media.location.id) unless venues.include?(media.location.id)
