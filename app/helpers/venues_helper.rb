@@ -213,6 +213,8 @@ module VenuesHelper
     user_media_count = {}
     user_info = {}
 
+    Rails.logger.info("#{users.count} users found")
+
     users.each do |user_id|
       user_info[:user_id] = @client.user_info(user_id)
       
