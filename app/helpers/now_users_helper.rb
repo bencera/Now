@@ -47,7 +47,7 @@ module NowUsersHelper
       return
     end
 
-    if ig_username.blank?
+    if ig_username.blank? && params[:unset].nil?
       puts "bad ig_username"
       return
     end
@@ -70,7 +70,7 @@ module NowUsersHelper
       return
     end
 
-    if ig_user_id.blank?
+    if ig_user_id.blank?  && params[:unset].nil?
       puts "bad ig_user_id"
       return
     end
