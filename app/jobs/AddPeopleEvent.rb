@@ -239,6 +239,7 @@ class AddPeopleEvent
     elsif fb_user.super_user
       case commands[0]
       when "#rename"
+        fb_user.inc(:rename_count, 1)
         if (check_in_event.facebook_user == now_bot) || (check_in_event.description.blank?)
           new_description = commands[1..-1].join(" ")
           check_in_event.description = new_description
@@ -246,6 +247,7 @@ class AddPeopleEvent
           check_in_event.save!
         end
       when "#delete"
+        fb_user.inc(:delete_count, 1)
         if Event::TRENDING_2_STATUSES.include?(check_in_event.status)
           check_in_event.status = Event::TRENDING_LOW 
         else
@@ -260,6 +262,7 @@ class AddPeopleEvent
         end
         check_in_event.save!
       when "#category"
+        fb_user.inc(:category_count, 1)
         if !Event::CATEGORIES.include?(check_in_event.category)
           new_cat = commands[1].downcase.capitalize
           check_in_event.category = new_cat
