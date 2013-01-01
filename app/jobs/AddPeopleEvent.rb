@@ -40,7 +40,7 @@ class AddPeopleEvent
       check_in_event = venue.get_live_event
     end
 
-    if fb_user && fb_user.now_id != "0"
+    if fb_user && fb_user.now_id != "0" && params[:description]
       return if check_hashtags(fb_user, check_in_event, params[:description].split(" "))
     end
 
