@@ -19,6 +19,7 @@ class FacebookUser
   field :whitelist_cities, type: Array, default: []
 
   field :super_user, type: Boolean, default: false
+  field :admin_user, type: Boolean, default: false
 
   #this will be the user's score as an event creator
   field :score, :default => 0
@@ -67,7 +68,7 @@ class FacebookUser
           while facebook_client.get_errors
             
             if retry_attempt > 5
-              options[:return_hash][:errors] =  facebook_client.get_errors
+              options[:return_hash][:errors] =  facebook_client.get_errors unless options[:return_hash].nil?
               return nil
             end
 
@@ -82,7 +83,7 @@ class FacebookUser
           user.facebook_id = facebook_client.user_id
           user.email = facebook_client.email
           user.fb_details = facebook_client.all_user_info
-          options[:return_hash][:new_fb_user] = true
+          options[:return_hash][:new_fb_user] = true unless options[:return_hash].nil?
         end
 
         user.udid = options[:udid] if options[:udid]
