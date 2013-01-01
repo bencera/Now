@@ -50,6 +50,7 @@ private
     rescue
       retry_attempt += 1
       raise if retry_attempt > 5
+      sleep 0.1
       retry
     end
     
