@@ -195,6 +195,7 @@ module VenuesHelper
     end_time = options[:begin_time] || 4.weeks.ago.to_i
     min_followers = options[:min_followers] || 200
 
+    Rails.logger.info("Pulling info for venue #{venue.name}")
     venue_media = @client.venue_media(venue_ig_id, :min_timestamp => end_time)
     
     keep_reading = true
@@ -214,13 +215,18 @@ module VenuesHelper
 
     users.each do |user_id|
       user_info[:user_id] = @client.user_info(user_id)
+      
+      Rails.logger.info("Pulling info for user #{user_names[user_id]} -- #{ user_info[:user_id].data.counts.followed_by } followers")
       next if user_info[:user_id].data.counts.followed_by < min_followers
       user_media = @client.user_media(user_id)
       user_venues[user_id] = []
       user_media_count[user_id] = 0
 
+      pages = 0
+
       begin
         user_media.data.each do |media|
+          pages += 1
           unless media.location.nil? || media.location.id.nil?
             user_media_count[user_id] += 1
             (venues << media.location.id) unless venues.include?(media.location.id)
@@ -228,6 +234,8 @@ module VenuesHelper
           end
         end
       end while user_media.pagination && user_media.pagination.next_url && (user_media.data.last.created_time.to_i > end_time) && (user_media = @client.pull_pagination(user_media.pagination.next_url))
+
+      Rails.logger.info("User had #{pages} pages of photos to examine")
     end
 
     user_media_count.sort_by {|k| k[1] }.reverse.each {|entry| puts "http://instagram.com/#{user_names[entry[0]]}\t#{entry[1]}"}
