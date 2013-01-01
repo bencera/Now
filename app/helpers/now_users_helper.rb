@@ -48,7 +48,7 @@ module NowUsersHelper
 
   end
   
-  def self.set_ig_username(email, ig_user_id, params={})
+  def self.set_ig_user_id(email, ig_user_id, params={})
     user = FacebookUser.where(:email => email).first
     if user.nil?
       puts "Invalid email -- #{email} not in our system" 
