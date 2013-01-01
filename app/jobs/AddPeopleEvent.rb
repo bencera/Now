@@ -217,11 +217,19 @@ class AddPeopleEvent
         check_in_event.description = new_description
         check_in_event.save!
       when "#delete"
-        check_in_event.status = Event::TRENDING_LOW
+        if Event::TRENDING_2_STATUSES.include?(check_in_event.status)
+          check_in_event.status = Event::TRENDING_LOW 
+        else
+          check_in_event.status = Event::TRENDED_LOW 
+        end
         check_in_event.facebook_user = now_bot
         check_in_event.save!
       when "#demote"
-        check_in_event.status = Event::TRENDING_LOW 
+        if Event::TRENDING_2_STATUSES.include?(check_in_event.status)
+          check_in_event.status = Event::TRENDING_LOW 
+        else
+          check_in_event.status = Event::TRENDED_LOW 
+        end
         check_in_event.save!
       when "#category"
         new_cat = commands[1].downcase.capitalize
@@ -238,10 +246,18 @@ class AddPeopleEvent
           check_in_event.save!
         end
       when "#delete"
-        check_in_event.status = Event::TRENDING_LOW 
+        if Event::TRENDING_2_STATUSES.include?(check_in_event.status)
+          check_in_event.status = Event::TRENDING_LOW 
+        else
+          check_in_event.status = Event::TRENDED_LOW 
+        end
         check_in_event.save!
       when "#demote"
-        check_in_event.status = Event::TRENDING_LOW 
+        if Event::TRENDING_2_STATUSES.include?(check_in_event.status)
+          check_in_event.status = Event::TRENDING_LOW 
+        else
+          check_in_event.status = Event::TRENDED_LOW 
+        end
         check_in_event.save!
       when "#category"
         if !Event::CATEGORIES.include?(check_in_event.category)
