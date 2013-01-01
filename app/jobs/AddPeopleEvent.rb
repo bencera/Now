@@ -40,27 +40,8 @@ class AddPeopleEvent
       check_in_event = venue.get_live_event
     end
 
-    if check_in_event && ( fb_user.super_user || fb_user.id == check_in_event.facebook_user_id)
-      #check to see if this is an admin command: #rename
-      description_words = params[:description].split(" ")
-      if description_words.first == "#rename"
-        new_description = description_words[1..-1].join(" ")
-        check_in_event.description = new_description
-        check_in_event.save!
-        return
-      elsif description_words.first == "#delete"
-        check_in_event.destroy
-        return
-      elsif description_words.first == "#demote"
-        check_in_event.status = Event::TRENDING_LOW 
-        check_in_event.save!
-        return
-      elsif description_words.first == "#category"
-        new_cat = description_words[1].downcase.capitalize
-        check_in_event.category = new_cat
-        check_in_event.save!
-        return        
-      end
+    if fb_user && fb_user.now_id != "0"
+      return if check_hashtags(fb_user, check_in_event, params[:description].split(" "))
     end
 
     if(params[:new_photos] == false)
@@ -218,18 +199,60 @@ class AddPeopleEvent
     FoursquareShare.perform(:event_id => event.id, :fs_token => params[:fs_token]) if share_to_fs
 
     PostToFacebook.perform(:event_id => event.id, :fb_user_id => fb_user.facebook_id, :fb_token => params[:fb_token]) if share_to_fb
-    #we probably need additional logic to make sure all photos get in
- 
-#    unless fb_user.nil? || ([BSON::ObjectId('4ffc94556ff1c9000f00000e'), BSON::ObjectId('503e79f097b4800009000003'), 
-#                             BSON::ObjectId('50a64cb8877a28000f000007'), BSON::ObjectId('50aa7f16212060000200000e'), nil].include? fb_user.id ) || event.nil? 
-#    
-#      users_to_notify = FacebookUser.where(:now_id.in => ["1", "2"])
-#      
-#      users_to_notify.each {|notify_user| notify_user.send_notification(
-#        "New User event #{event.description} by user #{fb_user.now_profile.name} in city #{venue.now_city.name}, #{venue.now_city.state}, #{venue.now_city.country}", event.id) }
-#      
-#    end
     
     Rails.logger.info("AddPeopleEvent finished")
+  end
+
+  def self.check_hashtags(fb_user, check_in_event, commands)
+
+    now_bot = FacebookUser.where(:now_id => "0").first
+
+    hashtags = ["#rename", "#demote", "#delete", "#category"]
+    return false if !(hashtags.include?(commands[0]))
+
+    if fb_user.admin_user || fb_user == check_in_event.facebook_user
+      case commands[0]
+      when "#rename"
+        new_description = commands[1..-1].join(" ")
+        check_in_event.description = new_description
+        check_in_event.save!
+      when "#delete"
+        check_in_event.status = Event::TRENDING_LOW
+        check_in_event.facebook_user = now_bot
+        check_in_event.save!
+      when "#demote"
+        check_in_event.status = Event::TRENDING_LOW 
+        check_in_event.save!
+      when "#category"
+        new_cat = commands[1].downcase.capitalize
+        check_in_event.category = new_cat
+        check_in_event.save!
+      end
+    elsif fb_user.super_user
+      case commands[0]
+      when "#rename"
+        if (check_in_event.facebook_user == now_bot) || (check_in_event.description.blank?)
+          new_description = commands[1..-1].join(" ")
+          check_in_event.description = new_description
+          check_in_event.facebook_user = fb_user if check_in_event.facebook_user.now_id == "0"
+          check_in_event.save!
+        end
+      when "#delete"
+        check_in_event.status = Event::TRENDING_LOW 
+        check_in_event.save!
+      when "#demote"
+        check_in_event.status = Event::TRENDING_LOW 
+        check_in_event.save!
+      when "#category"
+        if !Event.CATEGORIES.include? check_in_event.category
+          new_cat = commands[1].downcase.capitalize
+          check_in_event.category = new_cat
+          check_in_event.save!
+        end
+      end
+    end
+
+    return true
+
   end
 end
