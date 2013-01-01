@@ -186,6 +186,9 @@ module VenuesHelper
 
     venue_ig_id = venue.ig_venue_id
 
+    if options[:log] 
+      Rails.logger = Logger.new(STDOUT)
+    end
 
     users = []
     user_names = {}
