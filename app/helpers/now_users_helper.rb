@@ -21,4 +21,47 @@ module NowUsersHelper
 
     return device
   end
+
+  def self.set_super_user(email, params={})
+    user = FacebookUser.where(:email => email).first
+    puts "Invalid email -- #{email} not in our system" if user.nil?
+
+    user.super_user = true
+    user.save!
+  end
+
+  def self.set_ig_username(email, ig_username, params={})
+    user = FacebookUser.where(:email => email).first
+    
+    if user.nil?
+      puts "Invalid email -- #{email} not in our system" 
+      return
+    end
+
+    if ig_username.blank?
+      puts "bad ig_username"
+      return
+    end
+
+    user.ig_username = ig_username
+    user.save!
+
+  end
+  
+  def self.set_ig_username(email, ig_user_id, params={})
+    user = FacebookUser.where(:email => email).first
+    if user.nil?
+      puts "Invalid email -- #{email} not in our system" 
+      return
+    end
+
+    if ig_user_id.blank?
+      puts "bad ig_user_id"
+      return
+    end
+
+    user.ig_use_id = ig_user_id
+    user.save!
+  end
+
 end
