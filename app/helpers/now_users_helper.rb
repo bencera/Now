@@ -29,7 +29,7 @@ module NowUsersHelper
       return
     end
 
-    if params[:undo]
+    if params[:unset]
       puts "setting #{email}.super_user to #{!user.super_user}"
       user.super_user = !user.super_user
     else
@@ -52,7 +52,7 @@ module NowUsersHelper
       return
     end
 
-    if params[:undo]
+    if params[:unset]
       puts "unsetting ig_username from #{user.ig_username}"
       user.ig_username = nil
     else
