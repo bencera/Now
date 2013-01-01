@@ -24,7 +24,10 @@ module NowUsersHelper
 
   def self.set_super_user(email, params={})
     user = FacebookUser.where(:email => email).first
-    puts "Invalid email -- #{email} not in our system" if user.nil?
+    if user.nil?
+      puts "Invalid email -- #{email} not in our system" 
+      return
+    end
 
     user.super_user = true
     user.save!
