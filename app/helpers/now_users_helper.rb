@@ -29,7 +29,12 @@ module NowUsersHelper
       return
     end
 
-    user.super_user = true
+    if params[:undo]
+      puts "setting #{email}.super_user to #{!user.super_user}"
+      user.super_user = !user.super_user
+    else
+      user.super_user = true
+    end
     user.save!
   end
 
@@ -46,7 +51,11 @@ module NowUsersHelper
       return
     end
 
-    user.ig_username = ig_username
+    if params[:undo]
+      user.ig_username = nil
+    else
+      user.ig_username = ig_username
+    end
     user.save!
 
   end
@@ -63,7 +72,12 @@ module NowUsersHelper
       return
     end
 
-    user.ig_user_id = ig_user_id
+    if params[:undo]
+      user.ig_user_id = nil
+    else
+      user.ig_user_id = ig_user_id
+    end
+
     user.save!
   end
 
