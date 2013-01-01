@@ -180,4 +180,66 @@ module VenuesHelper
 
   end
 
+  def self.instagram_crawl(venue_id, options={})
+    
+    venue = Venue.where(:_id => venue_id).first || Venue.create_venue(venue_id)
+
+    venue_ig_id = venue.ig_venue_id
+
+
+    users = []
+    user_names = {}
+    
+    @client =  InstagramWrapper.get_client(:access_token => "44178321.f59def8.63f2875affde4de98e043da898b6563f")
+
+    end_time = options[:begin_time] || 4.weeks.ago.to_i
+    min_followers = options[:min_followers] || 200
+
+    venue_media = @client.venue_media(venue_ig_id, :min_timestamp => end_time)
+    
+    keep_reading = true
+
+    begin
+      venue_media.data.each do |media|
+        users << media.user.id unless users.include?(media.user.id)
+        user_names[media.user.id] = media.user.username
+      end
+    
+    end while venue_media.pagination && venue_media.pagination.next_url && (venue_media = @client.pull_pagination(venue_media.pagination.next_url))
+
+    venues = [venue_ig_id]
+    user_venues = {}
+    user_media_count = {}
+    user_info = {}
+
+    users.each do |user_id|
+      user_info[:user_id] = @client.user_info(user_id)
+      next if user_info[:user_id].data.counts.followed_by < min_followers
+      user_media = @client.user_media(user_id)
+      user_venues[user_id] = []
+      user_media_count[user_id] = 0
+
+      begin
+        user_media.data.each do |media|
+          unless media.location.nil? || media.location.id.nil?
+            user_media_count[user_id] += 1
+            (venues << media.location.id) unless venues.include?(media.location.id)
+            (user_venues[user_id] << media.location.id) unless user_venues[user_id].include?(media.location.id)
+          end
+        end
+      end while user_media.pagination && user_media.pagination.next_url && (user_media.data.last.created_time.to_i > end_time) && (user_media = @client.pull_pagination(user_media.pagination.next_url))
+    end
+
+    user_media_count.sort_by {|k| k[1] }.reverse.each {|entry| puts "http://instagram.com/#{user_names[entry[0]]}\t#{entry[1]}"}
+
+    if options[:return_hash]
+      options[:return_hash][:venues] = venues
+      options[:return_hash][:user_media_count] = user_media_count  
+      options[:return_hash][:user_info] = user_info 
+      options[:return_hash][:user_names] = user_names
+      options[:return_hash][:user_venues] = user_venues
+    end
+
+    puts "DONE!"
+  end
 end
