@@ -195,7 +195,8 @@ module VenuesHelper
     
     @client =  InstagramWrapper.get_client(:access_token => "44178321.f59def8.63f2875affde4de98e043da898b6563f")
 
-    end_time = options[:begin_time].to_i || 4.weeks.ago.to_i
+    end_time = options[:begin_time] || 4.weeks.ago
+    end_time = end_time.to_i
     min_followers = options[:min_followers] || 200
 
     Rails.logger.info("Pulling info for venue #{venue.name}")
