@@ -195,7 +195,7 @@ module VenuesHelper
     
     @client =  InstagramWrapper.get_client(:access_token => "44178321.f59def8.63f2875affde4de98e043da898b6563f")
 
-    end_time = options[:begin_time] || 4.weeks.ago.to_i
+    end_time = options[:begin_time].to_i || 4.weeks.ago.to_i
     min_followers = options[:min_followers] || 200
 
     Rails.logger.info("Pulling info for venue #{venue.name}")
@@ -220,6 +220,11 @@ module VenuesHelper
 
     users.each do |user_id|
       user_info[:user_id] = @client.user_info(user_id)
+
+      if user_info[:user_id].nil? || user_info[:user_id].data.nil? || user_info[:user_id].data.counts.nil?
+        Rails.logger.info("failed to pull user #{user_names[user_id]} id #{user_id}")
+        next
+      end
       
       Rails.logger.info("Pulling info for user #{user_names[user_id]} -- #{ user_info[:user_id].data.counts.followed_by } followers")
       next if user_info[:user_id].data.counts.followed_by < min_followers
