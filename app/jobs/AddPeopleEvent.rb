@@ -136,6 +136,7 @@ class AddPeopleEvent
         checkin.save!
         new_checkin_created = checkin
         Rails.logger.info("AddPeopleEvent: saving check_in_event #{check_in_event.id}")
+        check_in_event.status = Event::TRENDING_PEOPLE if check_in_event.status == Event::TRENDING_LOW
         check_in_event.save!
         Rails.logger.info("AddPeopleEvent: created new checkin for check_in_event at venue #{venue.id}")
   
