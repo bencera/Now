@@ -26,6 +26,10 @@ class UserFollowEvent2
       existing_event = get_existing_event(media)
 
       additional_photos = []
+      if existing_event && (existing_event.status == Event::WAITING)
+        existing_event = nil
+      end
+
       if existing_event
         next if fb_user.now_id == "0" || event_already_has(media, existing_event)
 
