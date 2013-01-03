@@ -201,16 +201,29 @@ class UserFollowEvent2
 
   def self.notify_us(fb_user, event, is_new_event)
     
+    notify_pietro = false
+
     if !is_new_event 
       message = "Instagram reply created for #{fb_user.now_profile.name}"
     elsif fb_user.now_id == "0"
+      #check if it's near sao paulo and let pietro know
+      
+      location = event.venue.coordinates.reverse
+      sao_paulo = [-46.638818,-23.548943].reverse
+      
+      notify_pietro = (Geocoder::Calculations.distance_between(location, sao_paulo) < 20)
+
       message = "Instagram event created at #{event.venue.name}: #{event.description}"
     else
       message = "Instagram event created for #{fb_user.now_profile.name}"
     end
 
+    ids_to_notify = ["1", "2"]
+    if notify_pietro
+      ids_to_notify << "450"
+    end
     #####DEBUG
-    FacebookUser.where(:now_id.in => ["1", "2"]).each {|admin_user| admin_user.send_notification(message, event.id)}
+    FacebookUser.where(:now_id.in => ids_to_notify).each {|admin_user| admin_user.send_notification(message, event.id)}
 
     Rails.logger.info("WILL NOTIFY US: #{message}")
 
