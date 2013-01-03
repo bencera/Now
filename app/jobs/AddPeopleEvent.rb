@@ -208,11 +208,13 @@ class AddPeopleEvent
 
     now_bot = FacebookUser.where(:now_id => "0").first
 
-    hashtags = ["#rename", "#demote", "#delete", "#category"]
-    return false if !(hashtags.include?(commands[0]))
+    hashtags = ["#rename", "#demote", "#delete", "#category", "#blacklist", "#push"]
+    command = commands[0].downcase
+
+    return false if !(hashtags.include?(command))
 
     if fb_user.admin_user || fb_user == check_in_event.facebook_user
-      case commands[0]
+      case command
       when "#rename"
         new_description = commands[1..-1].join(" ")
         check_in_event.description = new_description
@@ -236,9 +238,14 @@ class AddPeopleEvent
         new_cat = commands[1].downcase.capitalize
         check_in_event.category = new_cat
         check_in_event.save!
+      when "#blacklist"
+        #blacklist isn't implemented on the venue side yet
+        check_in_event.venue.blacklist = true
+      when "#push"
+        #implement this too
       end
     elsif fb_user.super_user
-      case commands[0]
+      case command
       when "#rename"
         fb_user.inc(:rename_count, 1)
         if (check_in_event.facebook_user == now_bot) || (check_in_event.description.blank?)
