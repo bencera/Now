@@ -196,6 +196,7 @@ module VenuesHelper
     @client =  InstagramWrapper.get_client(:access_token => "44178321.f59def8.63f2875affde4de98e043da898b6563f")
 
     end_time = options[:begin_time] || 4.weeks.ago
+    end_time2 = 4.weeks.ago.to_i
     end_time = end_time.to_i
     min_followers = options[:min_followers] || 200
 
@@ -244,7 +245,7 @@ module VenuesHelper
             (user_venues[user_id] << media.location.id) unless user_venues[user_id].include?(media.location.id)
           end
         end
-      end while user_media.pagination && user_media.pagination.next_url && (user_media.data.last.created_time.to_i > end_time) && (user_media = @client.pull_pagination(user_media.pagination.next_url))
+      end while user_media.pagination && user_media.pagination.next_url && (user_media.data.last.created_time.to_i > end_time2) && (user_media = @client.pull_pagination(user_media.pagination.next_url))
 
       Rails.logger.info("User had #{pages} pages of photos to examine")
     end
