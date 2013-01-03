@@ -12,17 +12,26 @@ class InstagramWrapper
 
   def user_media(user_id, options={})
     url = "https://api.instagram.com/v1/users/#{user_id}/media/recent/?access_token=#{@access_token}"
+    url += "&min_timestamp=#{options[:min_timestamp]}" if options[:min_timestamp]
+    url += "&max_timestamp=#{options[:max_timestamp]}" if options[:max_timestamp]
     InstagramWrapper.get_data(url)
   end
 
   def venue_media(location_id, options={})
     url = "https://api.instagram.com/v1/locations/" + "#{location_id}" + "/media/recent/?access_token=#{@access_token}"
-    url += "&min_timestamp=#{options[:min_timestamp]}" if options[:min_timestamp]
+    url += "&min_timestamp=#{options[:min_timestamp].to_i}" if options[:min_timestamp]
+    url += "&max_timestamp=#{options[:max_timestamp].to_i}" if options[:max_timestamp]
     InstagramWrapper.get_data(url)
   end
 
   def user_info(user_id, options={})
     url = "https://api.instagram.com/v1/users/#{user_id}/?access_token=#{@access_token}"
+    InstagramWrapper.get_data(url)
+  end
+
+  def user_follows(user_id, options={})
+    user_id = "self" if user_id.nil? 
+    url =  "https://api.instagram.com/v1/users/#{user_id}/follows?access_token=#{@access_token}"
     InstagramWrapper.get_data(url)
   end
 
