@@ -253,7 +253,7 @@ class AddPeopleEvent
         end
 
         device_groups.each do |device_group|
-          Rescue.enqueue(SendBatchPush, event.id, device_group)
+          Resque.enqueue(SendBatchPush, event.id, device_group)
         end
         
       when "#delphoto"
