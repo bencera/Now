@@ -242,7 +242,20 @@ class AddPeopleEvent
         #blacklist isn't implemented on the venue side yet
         check_in_event.venue.blacklist = true
       when "#push"
-        #implement this too
+        devices = APN::Device.where(:coordinates.within => {"$center" => [check_in_event.coordinates,  33.0/111]}).entries
+        device_groups = [[]]
+
+        devices.each do |device|
+          if device_groups.last.count >= 100
+            device_groups << []
+          end
+          device_groups.last << device.id
+        end
+
+        device_groups.each do |device_group|
+          Rescue.enqueue(SendBatchPush, event.id, device_group)
+        end
+        
       when "#delphoto"
         indices_to_delete = commands[1..-1].map {|photo| photo.to_i}
         photos = check_in_event.photos.where(:external_media_source.in => [nil, "ig"]).entries
