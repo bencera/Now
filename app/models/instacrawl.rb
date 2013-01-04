@@ -47,7 +47,7 @@ class Instacrawl
 
       end 
     rescue Exception => e
-      if !user_id.nil? && $redis.sismember("SUGGESTED_USERS", user_id)
+      if !user_id.nil? && !$redis.sismember("SUGGESTED_USERS", user_id)
         $redis.sadd("SUGGESTED_USERS", user_id)
       end
       attempt += 1
