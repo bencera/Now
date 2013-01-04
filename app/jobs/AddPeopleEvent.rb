@@ -208,7 +208,7 @@ class AddPeopleEvent
 
     now_bot = FacebookUser.where(:now_id => "0").first
 
-    hashtags = ["#rename", "#demote", "#delete", "#category", "#blacklist", "#push"]
+    hashtags = ["#rename", "#demote", "#delete", "#category", "#blacklist", "#push", "#delphoto"]
     command = commands[0].downcase
 
     return false if !(hashtags.include?(command))
@@ -243,6 +243,18 @@ class AddPeopleEvent
         check_in_event.venue.blacklist = true
       when "#push"
         #implement this too
+      when "#delphoto"
+        indices_to_delete = commands[1..-1].map {|photo| photo.to_i}
+        photos = check_in_event.photos.where(:external_media_source.in => [nil, "ig"]).entries
+        photo_count = photos.count
+
+        bad_photos = []
+
+        indices_to_delete.each do |index|
+          bad_photos << photos[photo_count - index]
+        end
+
+        bad_photos.each {|bad_photo| check_in_event.photos.delete(bad_photo)}
       end
     elsif fb_user.super_user
       case command
