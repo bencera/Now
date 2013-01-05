@@ -209,7 +209,7 @@ class AddPeopleEvent
     now_bot = FacebookUser.where(:now_id => "0").first
 
     hashtags = ["#rename", "#demote", "#delete", "#category", "#blacklist", "#push", "#delphoto"]
-    command = commands[0].downcase
+    command = commands[0].downcase if commands[0]
 
     return false if !(hashtags.include?(command))
 
