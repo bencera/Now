@@ -263,7 +263,7 @@ class AddPeopleEvent
 
         message_to_admins = "PUSHING #{check_in_event.description} @ #{check_in_event.venue.name}"
         users_to_notify = FacebookUser.where(:now_id.in => ["1", "2", "359"])
-        users_to_notify.each {|fb_user| fb_user.send_notification(message_to_admins, check_in_event) }
+        users_to_notify.each {|fb_user| fb_user.send_notification(message_to_admins, check_in_event.id) }
         
       when "#delphoto"
         indices_to_delete = commands[1..-1].map {|photo| photo.to_i}
