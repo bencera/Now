@@ -242,6 +242,11 @@ class AddPeopleEvent
         #blacklist isn't implemented on the venue side yet
         check_in_event.venue.blacklist = true
       when "#push"
+
+        return true if check_in_event.featured
+        check_in_event.featured = true
+        check_in_event.save!
+
         devices = APN::Device.where(:coordinates.within => {"$center" => [check_in_event.coordinates,  33.0/111]}).entries
         device_groups = [[]]
 

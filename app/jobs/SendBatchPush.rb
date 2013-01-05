@@ -37,18 +37,18 @@ class SendBatchPush
     alert = alert + " (#{event.venue.neighborhood})" unless event.venue.neighborhood.nil?
 
     Rails.logger.info("Sending notification -- #{alert} to #{devices.count} devices")
-    FacebookUser.where(:now_id.in => ["1", "2"]).each {|user| user.send_notification(alert, event.id)
-#    devices.each do |device|
-#      next if device.subscriptions.first.nil?
-#      device.subscriptions.each do |sub|
-#        n = APN::Notification.new
-#        n.subscription = sub
-#        n.alert = alert
-#        n.event = event.id
-#        n.deliver
-#        end
-#      end
-#    end
+
+    devices.each do |device|
+      next if device.subscriptions.first.nil?
+      device.subscriptions.each do |sub|
+        n = APN::Notification.new
+        n.subscription = sub
+        n.alert = alert
+        n.event = event.id
+        n.deliver
+        end
+      end
+    end
 
   end
 end
