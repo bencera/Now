@@ -32,24 +32,25 @@ class SendBatchPush
     end
 
     alert = ""
-    alert = alert +  "#{emoji} " unless emoji.nil?
+    alert = alert + "#{emoji} " unless emoji.nil?
     alert = alert + "#{event.description} @ #{event.venue.name}"
     alert = alert + " (#{event.venue.neighborhood})" unless event.venue.neighborhood.nil?
 
     Rails.logger.info("Sending notification -- #{alert} to #{devices.count} devices")
 
     devices.each do |device|
+
       next if device.subscriptions.first.nil?
+
       device.subscriptions.each do |sub|
+
         n = APN::Notification.new
         n.subscription = sub
         n.alert = alert
         n.event = event.id
         n.deliver
-        end
       end
     end
-
   end
 end
     
