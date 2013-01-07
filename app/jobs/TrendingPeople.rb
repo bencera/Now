@@ -6,7 +6,7 @@ class TrendingPeople
     current_time = Time.now
 
     events = Event.where(:status.in => ["trending_people", Event::TRENDING_LOW]).where(:next_update.lt => current_time.to_i).entries
-    now_bot_events = FacebookUser.where(:now_id => "0").first.events.where(:status.in => Event::TRENDING_STATUSES).entries
+    now_bot_events = FacebookUser.where(:now_id => "0").first.events.where(:status.in => Event::TRENDING_STATUSES, :next_update.lt => current_time.to_i).entries
 
     events.push(*now_bot_events)
 
