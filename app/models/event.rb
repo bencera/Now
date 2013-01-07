@@ -82,6 +82,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
   #this event was pushed to the city
   field :featured, :type => Boolean, :default => false
 
+  #renamed/deleted through #commands
+  field :su_renamed, :type => Boolean, :default => false
+  field :su_deleted, :type => Boolean, :default => false
+
   # this the static score of the event from likes, checkins, etc -- not taking into account user specific info (friends checked in etc)
   field :score, :default => 0
   field :adjusted_score, :default => 0

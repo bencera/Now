@@ -216,34 +216,45 @@ class AddPeopleEvent
     if fb_user.admin_user || fb_user == check_in_event.facebook_user
       case command
       when "#rename"
+        fb_user.inc(:rename_count, 1)
         new_description = commands[1..-1].join(" ")
         check_in_event.description = new_description
+        check_in_event.su_renamed = true
         check_in_event.save!
       when "#delete"
+        fb_user.inc(:delete_count, 1)
         if Event::TRENDING_2_STATUSES.include?(check_in_event.status)
           check_in_event.status = Event::TRENDING_LOW 
         else
           check_in_event.status = Event::TRENDED_LOW 
         end
         check_in_event.facebook_user = now_bot
+        check_in_event.su_deleted  = true
         check_in_event.save!
       when "#demote"
+        fb_user.inc(:delete_count, 1)
         if Event::TRENDING_2_STATUSES.include?(check_in_event.status)
           check_in_event.status = Event::TRENDING_LOW 
         else
           check_in_event.status = Event::TRENDED_LOW 
         end
+        check_in_event.su_deleted  = true
         check_in_event.save!
       when "#category"
+        fb_user.inc(:category_count, 1)
         new_cat = commands[1].downcase.capitalize
         check_in_event.category = new_cat
         check_in_event.save!
       when "#blacklist"
-        #blacklist isn't implemented on the venue side yet
+        fb_user.inc(:blacklist_count, 1)
         check_in_event.venue.blacklist = true
+        check_in_event.save!
       when "#push"
 
         return true if check_in_event.featured
+        
+        fb_user.inc(:push_count, 1)
+
         check_in_event.featured = true
         check_in_event.save!
 
@@ -261,7 +272,8 @@ class AddPeopleEvent
           Resque.enqueue(SendBatchPush, check_in_event.id, device_group)
         end
 
-        message_to_admins = "PUSHING #{check_in_event.description} @ #{check_in_event.venue.name}"
+
+        message_to_admins = "PUSHING #{check_in_event.description} @ #{check_in_event.venue.name} to #{devices.count} devices"
         users_to_notify = FacebookUser.where(:now_id.in => ["1", "2", "359"])
         users_to_notify.each {|fb_user| fb_user.send_notification(message_to_admins, check_in_event.id) }
         
@@ -286,6 +298,7 @@ class AddPeopleEvent
           new_description = commands[1..-1].join(" ")
           check_in_event.description = new_description
           check_in_event.facebook_user = fb_user if check_in_event.facebook_user.now_id == "0"
+          check_in_event.su_renamed = true
           check_in_event.save!
         end
       when "#delete"
@@ -295,13 +308,16 @@ class AddPeopleEvent
         else
           check_in_event.status = Event::TRENDED_LOW 
         end
+        check_in_event.su_deleted  = true
         check_in_event.save!
       when "#demote"
+        fb_user.inc(:delete_count, 1)
         if Event::TRENDING_2_STATUSES.include?(check_in_event.status)
           check_in_event.status = Event::TRENDING_LOW 
         else
           check_in_event.status = Event::TRENDED_LOW 
         end
+        check_in_event.su_deleted  = true
         check_in_event.save!
       when "#category"
         fb_user.inc(:category_count, 1)

@@ -28,6 +28,9 @@ class FacebookUser
   field :rename_count, type: Integer, default: 0
   field :delete_count, type: Integer, default: 0
   field :category_count, type: Integer, default: 0
+  field :push_count, type: Integer, default: 0
+  field :blacklist_count, type: Integer, default: 0
+
 
   index({ now_token: 1 }, { unique: true, name: "now_token_index" })
   index({ now_id: 1}, {unique: true, name: "now_id_index"})

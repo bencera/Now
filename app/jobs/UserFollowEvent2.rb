@@ -49,10 +49,17 @@ class UserFollowEvent2
       new_photo = add_photo(media)
       venue ||= new_photo.venue
 
+      next if venue.blacklist 
+
       event_options = {}
 
+#      captions = [media.caption.text]
+     
+#      additional_photos.each {|photo| (captions << photo.caption) if photo.caption && !photo.caption.blank? }
+      
       event_options[:event_id] = existing_event.id if existing_event
       event_options[:event_short_id] = existing_event.shortid if existing_event
+#      event_options[:captions] = captions
 
       event_id = create_event_or_reply(venue, fb_user, media, event_options)
 
@@ -150,6 +157,10 @@ class UserFollowEvent2
     event_short_id = options[:event_short_id] || Event.get_new_shortid
     categories = CategoriesHelper.categories
 
+#    captions = options[:captions]
+
+#    caption = captions.any? ? captions.last : media.caption.text
+
     if venue.categories.nil? || venue.categories.first.nil? || categories[venue.categories.first["id"]].nil?
       category = "Misc"
     else
@@ -218,7 +229,7 @@ class UserFollowEvent2
       message = "Instagram event created for #{fb_user.now_profile.name}"
     end
 
-    ids_to_notify = ["1", "2", "359"]
+    ids_to_notify = ["359"]
     if notify_pietro
       ids_to_notify << "450"
     end
