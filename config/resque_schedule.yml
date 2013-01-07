@@ -10,11 +10,11 @@ maintenance:
   args: 
   description: "remove duplicate events and photos"
 
-#people_trending:
-#  every: "1m"
-#  class: TrendingPeople
-#  args: 
-#  description: "updating events created by members of Now community"
+people_trending:
+  every: "1m"
+  class: TrendingPeople
+  args: 
+  description: "updating events created by members of Now community"
 
 auto_ig_events:
   every: "1m"
