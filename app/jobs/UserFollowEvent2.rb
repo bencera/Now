@@ -22,7 +22,6 @@ class UserFollowEvent2
       fb_user = get_media_user(media)
       Rails.logger.info("user is #{fb_user.now_id}")
      
-      #get_existing_event seems to be broken
       existing_event = get_existing_event(media)
 
       additional_photos = []
@@ -65,6 +64,11 @@ class UserFollowEvent2
 
       #get the event
       event = Event.find(event_id)
+
+      if event.ig_creator.nil? && !existing_event
+        event.ig_creator =  media.user.username
+        event.save!
+      end
 
       #add additional photos
       if additional_photos.any?

@@ -86,6 +86,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :su_renamed, :type => Boolean, :default => false
   field :su_deleted, :type => Boolean, :default => false
 
+  #created by our ig follow
+  field :ig_creator
+
   # this the static score of the event from likes, checkins, etc -- not taking into account user specific info (friends checked in etc)
   field :score, :default => 0
   field :adjusted_score, :default => 0
