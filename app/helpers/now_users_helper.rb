@@ -24,6 +24,11 @@ module NowUsersHelper
 
   def self.set_super_user(email, params={})
     user = FacebookUser.where(:email => email).first
+    
+    if params[:city]
+      user.coordinates = Geocoder.coordinates(params[:city]).reverse
+      puts "setting coordinates to #{user.coordinates.reverse.join(",")}"
+    end
     if user.nil?
       puts "Invalid email -- #{email} not in our system" 
       return

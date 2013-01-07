@@ -31,6 +31,9 @@ class FacebookUser
   field :push_count, type: Integer, default: 0
   field :blacklist_count, type: Integer, default: 0
 
+  #coordinates for receiving super user push notifications
+  field :coordinates, type: Array
+  field :event_dist, type: Integer, default: 20 #radius that this super user will watch
 
   index({ now_token: 1 }, { unique: true, name: "now_token_index" })
   index({ now_id: 1}, {unique: true, name: "now_id_index"})

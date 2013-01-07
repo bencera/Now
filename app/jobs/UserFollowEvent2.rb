@@ -217,8 +217,8 @@ class UserFollowEvent2
   end
 
   def self.notify_us(fb_user, event, is_new_event)
-    
-    notify_pietro = false
+
+    super_users_to_notify = []
 
     if !is_new_event 
       message = "Instagram reply created for #{fb_user.now_profile.name}"
@@ -226,9 +226,15 @@ class UserFollowEvent2
       #check if it's near sao paulo and let pietro know
       
       location = event.venue.coordinates.reverse
-      sao_paulo = [-46.638818,-23.548943].reverse
-      
-      notify_pietro = (Geocoder::Calculations.distance_between(location, sao_paulo) < 20)
+
+      super_users = FacebookUser.where(:super_user => true)
+
+      super_users.each do |su|
+        dist = su.event_dist || 20
+        (super_users_to_notify << su.now_id) if Geocoder::Calculations.distance_between() < dist
+      end
+#      sao_paulo = [-46.638818,-23.548943].reverse
+#      notify_pietro = (Geocoder::Calculations.distance_between(location, sao_paulo) < 20)
 
       message = "Instagram event created at #{event.venue.name}: #{event.description}"
     else
@@ -236,9 +242,10 @@ class UserFollowEvent2
     end
 
     ids_to_notify = ["359"]
-    if notify_pietro
-      ids_to_notify << "450"
+    if super_users_to_notify.any?
+      ids_to_notify.push(*super_users_to_notify)
     end
+
     #####DEBUG
     FacebookUser.where(:now_id.in => ids_to_notify).each {|admin_user| admin_user.send_notification(message, event.id)}
 
