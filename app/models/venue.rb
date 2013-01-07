@@ -480,7 +480,7 @@ class Venue
     
     venue_events.each do |event| 
       likes += event.likes || 0
-      reactions += event.reactions.count
+      reactions += event.n_reactions
     end
 
     profile[:likes] = likes 
