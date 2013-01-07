@@ -231,7 +231,7 @@ class UserFollowEvent2
 
       super_users.each do |su|
         dist = su.event_dist || 20
-        (super_users_to_notify << su.now_id) if Geocoder::Calculations.distance_between() < dist
+        (super_users_to_notify << su.now_id) if Geocoder::Calculations.distance_between(su.coordinates, event.coordinates) < dist
       end
 #      sao_paulo = [-46.638818,-23.548943].reverse
 #      notify_pietro = (Geocoder::Calculations.distance_between(location, sao_paulo) < 20)
