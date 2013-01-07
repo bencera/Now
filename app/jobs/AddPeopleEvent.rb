@@ -245,6 +245,12 @@ class AddPeopleEvent
         new_cat = commands[1].downcase.capitalize
         check_in_event.category = new_cat
         check_in_event.save!
+
+        venue = check_in_event.venue
+        if !venue.autocategory && Event::CATEGORIES.include?(new_cat)
+          venue.autocategory = new_cat
+          venue.save!
+        end
       when "#blacklist"
         fb_user.inc(:blacklist_count, 1)
         check_in_event.venue.blacklist = true
@@ -335,6 +341,12 @@ class AddPeopleEvent
           new_cat = commands[1].downcase.capitalize
           check_in_event.category = new_cat
           check_in_event.save!
+          
+          venue = check_in_event.venue
+          if !venue.autocategory && Event::CATEGORIES.include?(new_cat)
+            venue.autocategory = new_cat
+            venue.save!
+          end
         end
       end
     end

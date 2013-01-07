@@ -165,7 +165,9 @@ class UserFollowEvent2
 
 #    caption = captions.any? ? captions.last : media.caption.text
 
-    if venue.categories.nil? || venue.categories.first.nil? || categories[venue.categories.first["id"]].nil?
+    if venue.autocategory
+      category = venue.autocategory
+    elsif venue.categories.nil? || venue.categories.first.nil? || categories[venue.categories.first["id"]].nil?
       category = "Misc"
     else
       category = categories[venue.categories.first["id"]]
