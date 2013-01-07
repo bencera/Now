@@ -664,6 +664,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
           venue_ig_id = nil
         else
           self.venue.update_attribute(:ig_venue_id, location_reponse.first['id'])
+          #paginate this
           response = Instagram.location_recent_media(location_reponse.first['id'], :min_timestamp => self.end_time)
         end
       else
@@ -753,7 +754,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
     # we want to make this smarter so that events that aren't very active will not spam instagram
     #newest_photo_ts = self.photos.first.time_taken
 
-    return [*2..8].sample.minutes.to_i
+   
+    #dont update nowbot events as often for now unless it's featured
+    if self.facebook_user.now_id == "0" && !event.featured
+      return [*20..60].sample.minutes.to_i
+    end
+    return [*2..10].sample
   end
 
   # send the creator a message about his event (reaction)
