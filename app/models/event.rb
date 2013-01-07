@@ -756,7 +756,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
    
     #dont update nowbot events as often for now unless it's featured
-    if self.facebook_user.now_id == "0" && !event.featured
+    if self.facebook_user.now_id == "0" && !self.featured
       return [*20..60].sample.minutes.to_i
     end
     return [*2..10].sample
