@@ -1,8 +1,8 @@
-fetch_venue_new:
-  every: "15m"
-  class: Trending3
-  args: 
-  description: "New Photo Fetch and Trending" 
+#fetch_venue_new:
+#  every: "15m"
+#  class: Trending3
+#  args: 
+#  description: "New Photo Fetch and Trending" 
 
 maintenance:
   every: "10m"
