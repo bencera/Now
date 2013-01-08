@@ -137,12 +137,12 @@ class Captionator
 
     keyword_n = sorted_words.count{|u,v| v > 1}
 
-    #GET CAPTIONS WITH ONE KEYWORD
+    #GET CAPTIONS BELOW 35 CHARS
 
     captions_new = []
-    if captions.count > 0 && keyword_n > 0
+    if captions.count > 0
         captions.each do |c|
-            if c.downcase.include?(keywords.first[0])
+            if c.length <= 35
                 captions_new << c
             end
         end
@@ -152,12 +152,12 @@ class Captionator
         captions = captions_new
     end
 
-    #GET CAPTIONS BELOW 35 CHARS
+    #GET CAPTIONS WITH ONE KEYWORD
 
     captions_new = []
-    if captions.count > 0
+    if captions.count > 0 && keyword_n > 0
         captions.each do |c|
-            if c.length <= 35
+            if c.downcase.include?(keywords.first[0])
                 captions_new << c
             end
         end
