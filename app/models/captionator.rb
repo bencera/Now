@@ -107,7 +107,7 @@ class Captionator
     captions_new = []
 
     captions.each do |c|
-      unless c == " " || c.first == "#"
+      unless c.blank?  || c.first == "#"
         while c.split(/ /).last.first == "#"
           c = c.gsub(c.split(/ /).last, "")
         end
