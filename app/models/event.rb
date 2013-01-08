@@ -663,6 +663,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     #TODO: don't use self.end_time -- use the timestamp of the last ig photo 
 
+    venue_photos = []
+
     begin
       if self.venue.ig_venue_id.nil?
         location_reponse = Instagram.location_search(nil, nil, :foursquare_v2_id => self.venue.fs_venue_id)
@@ -671,18 +673,26 @@ SCORE_HALF_LIFE       = 7.day.to_f
           venue_ig_id = nil
         else
           self.venue.update_attribute(:ig_venue_id, location_reponse.first['id'])
+          venue_ig_id = location_reponse.first['id']
           #paginate this
-          response = Instagram.location_recent_media(location_reponse.first['id'], :min_timestamp => self.end_time)
         end
       else
-        response = Instagram.location_recent_media(self.venue.ig_venue_id, :min_timestamp => self.end_time)
+        venue_ig_id = self.venue.ig_venue_id
       end
+
+      response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => self.end_time)
+      
+      begin
+        venue_photos.push(*(response.data))
+      end while response && response.pagination && response.pagination.next_url && 
+        (response = Hashie::Mash.new(JSON.parse(open(response.pagination.next_url).read)))
+
     rescue MultiJson::DecodeError => e
       Rails.logger.error("bad response from instagram #{e.message} \n #{e.backtrace.inspect}")
       return false
     end
 
-    response && response.data.each do |media|
+    venue_photos.each do |media|
       begin
         photo = Photo.where(:ig_media_id => media.id).first || Photo.create_photo("ig", media, self.venue.id)
 
