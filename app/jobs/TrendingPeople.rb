@@ -25,7 +25,18 @@ class TrendingPeople
         event.description = new_caption unless new_caption.blank?
         event.save!
       end
+
+      #check event velocity
       
+      if !event.reached_velocity
+        if event.photos.where(:time_taken.gt => 1.hour.ago.to_i).count > 5
+          event.reached_velocity = true
+          event.save!
+
+          FacebookUser.where(:now_id.in => ["1", "2", "359"]).each {|admin_user| admin_user.send_notification("\u{1F525}: #{event.description} @ #{event.venue.name}", event.id)}
+
+        end
+      end
     end
 
     Rails.logger.info("TrendingPeople: done")

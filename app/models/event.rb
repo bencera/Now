@@ -86,6 +86,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :su_renamed, :type => Boolean, :default => false
   field :su_deleted, :type => Boolean, :default => false
 
+  #if event reached a certain photo velocity already (so we don't notify twice)
+  field :reached_velocity, :type => Boolean, :default => false
+
   #created by our ig follow
   field :ig_creator
 
