@@ -208,7 +208,7 @@ class AddPeopleEvent
 
     now_bot = FacebookUser.where(:now_id => "0").first
 
-    hashtags = ["#rename", "#demote", "#delete", "#category", "#blacklist", "#push", "#delphoto"]
+    hashtags = ["#rename", "#demote", "#delete", "#category", "#blacklist", "#push", "#delphoto", "#graylist"]
     command = commands[0].downcase if commands[0]
 
     return false if !(hashtags.include?(command))
@@ -264,6 +264,10 @@ class AddPeopleEvent
         end
         check_in_event.su_deleted  = true
 
+        check_in_event.save!
+      when "#graylist"
+        fb_user.inc(:graylist_count, 1)
+        check_in_event.venue.graylist = true
         check_in_event.save!
       when "#push"
 

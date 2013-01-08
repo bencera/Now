@@ -39,6 +39,7 @@ class Venue
 
 
   field :blacklist, :type => Boolean, default: false
+  field :graylist, :type => Boolean, default: false
 
   #this is the static score that the event adds to all its events
   field :score, :default => 0

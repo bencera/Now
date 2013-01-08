@@ -30,6 +30,7 @@ class FacebookUser
   field :category_count, type: Integer, default: 0
   field :push_count, type: Integer, default: 0
   field :blacklist_count, type: Integer, default: 0
+  field :graylist_count, type: Integer, default: 0
 
   #coordinates for receiving super user push notifications
   field :coordinates, type: Array
