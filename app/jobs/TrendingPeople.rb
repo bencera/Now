@@ -19,6 +19,13 @@ class TrendingPeople
       else
         event.untrend
       end
+
+      if (event.facebook_user.nil? || event.facebook_user.now_id == "0") && event.su_renamed == false
+        new_caption =  Captionator.get_caption(event)
+        event.description = new_caption unless new_caption.blank?
+        event.save!
+      end
+      
     end
 
     Rails.logger.info("TrendingPeople: done")
