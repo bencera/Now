@@ -489,6 +489,8 @@ class Venue
     profile[:address] = (self.address && self.address["address"]) ? self.address["address"] : "No Address Info"
     profile[:phone_number] = self.phone_number
     profile[:website] = self.website
+
+    profile[:in_system] = true
   
     return profile
   end

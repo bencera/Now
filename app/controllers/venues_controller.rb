@@ -4,8 +4,19 @@ class VenuesController < ApplicationController
   include VenuesHelper
 
   def show_profile
-    venue = Venue.find(params[:id])
-    @venue_profile =  OpenStruct.new(venue.get_profile) 
+    venue = Venue.where(:_id => params[:id]).first
+    if venue
+      @venue_profile =  OpenStruct.new(venue.get_profile) 
+    else
+      @venue_profile = OpenStruct.new({:venue_name => "",
+                                       :experiences => 0,
+                                       :likes => 0,
+                                       :reactions => 0,
+                                       :address => "",
+                                       :phone_number => "",
+                                       :website => "",
+                                       :in_system => false})
+    end
   end
 
   def show
