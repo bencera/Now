@@ -78,7 +78,7 @@ class EventsController < ApplicationController
         @events = []
       end
 
-      if params[:search] && (@events.empty? || Event::TRENDING_2_STATUSES.include?(@events.first.status))
+      if params[:search] && (@events.empty? || !Event::TRENDING_2_STATUSES.include?(@events.first.status))
         #create a fake event from venue activity -- and start creating it
 
         fake_event =  EventsHelper.get_fake_event(params[:venue_id])[:fake_event]
