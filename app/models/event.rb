@@ -76,6 +76,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :keywords
   field :likes, :default => 0
   field :illustration
+
+  field :fake, :type => Boolean, :default => false
   
   field :anonymous, :type => Boolean, :default => false
  
