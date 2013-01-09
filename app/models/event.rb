@@ -841,6 +841,28 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.n_reactions = photo_count + reply_count + self.likes.to_i + (view_reactions / 10) 
   end
 
+  def self.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, options={})
+    fake_event = {:id => event_id,
+                  :shortid => event_short_id,
+                  :description => options[:description] || "",
+                  :like_count => 0, 
+                  :like => false, 
+                  :end_time => Time.now.to_i, 
+                  :status => "trending", 
+                  :category => options[:category] || "Misc",
+                  :coordinates => venue_lon_lat,
+                  :n_reactions => 0, 
+                  :now_name => "Now Bot",
+                  :now_id => "0",
+                  :profile_photo => "https://s3.amazonaws.com/now_assets/icon.png",
+                  :venue => {:id => venue_id, :name => venue_name},
+                  :photos => options[:photo_list] || []
+    
+        }
+    fake_event[:fake] = true
+    return OpenStruct.new(fake_reply)
+  end
+
   def make_fake_reply(new_photo_card, text, timestamp, now_bot=true)
     fake_reply = {}
     fake_reply[:id] = self.id

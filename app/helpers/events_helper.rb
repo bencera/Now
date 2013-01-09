@@ -221,6 +221,7 @@ module EventsHelper
     photo_id_list = []
     photo_id_hash = {}
     events.each do |event|
+      next if event.fake
       photo_ids = event.get_preview_photo_ids(:all_six => true)
       photo_id_list.push(*photo_ids)
       photo_id_hash[event.id] = photo_ids
@@ -229,6 +230,7 @@ module EventsHelper
      all_photos = Photo.where(:_id.in => photo_id_list).entries
 
      events.each do |event|
+       next if event.fake
        photo_ids = photo_id_hash[event.id]
        event.event_card_list = all_photos.find_all {|photo| photo_ids.include? photo._id}.
          sort {|a,b| photo_ids.index(a._id) <=> photo_ids.index(b.id)} 
@@ -357,6 +359,66 @@ EOS
     first_events.each {|event| events << Event.new(event["value"]["doc"]) if event["value"]}
 
     events
+
+  end
+
+  def self.get_fake_event(venue_id, options={})
+    min_timestamp = options[:min_timestamp] || 3.hours.ago.to_i
+    venue = Venue.where(:_id => venue_id).first
+
+    if venue.nil?
+      venue_retry = 0
+      begin 
+        venue_response = Instagram.location_search(nil, nil, :foursquare_v2_id => venue_id)
+        venue_ig_id = venue_response.first.id
+        venue_name = venue_response.first.id
+        venue_lon_lat = [venue_response.first.longitude, venue_response.first.latitude]
+        #get lat and lon
+      rescue
+        venue_retry += 1
+        sleep 0.1
+        retry if venue_retry < 2
+        return {:errors => ["Couldn't get venue info from instagram"]}
+      end
+    else
+      venue_ig_id = venue.ig_venue_id
+      venue_name = venue.name
+      venue_lon_lat = venue.coordinates
+    end
+
+    rety_attempt = 0
+    begin
+      response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_timestamp)
+    rescue
+      if rety_attempt < 5
+        sleep 0.1
+        retry_attempt += 1
+        retry
+      else
+        return {:errors => ["Couldn't get venue info from instagram"]}
+      end
+    end
+
+
+    photos = []
+
+    response.data[0..5].each do |photo|
+      fake_photo = {:fake => true,
+                    :url => [photo.images.low_resolution.url, photo.images.standard_resolution.url, photo.images.thumbnail.url],
+                    :external_source => "ig",
+                    :external_id => photo.id}
+#      photos << OpenStruct.new(fake_photo)
+      photos << fake_photo
+    end
+
+    event_id = Event.new.id
+    event_short_id = Event.get_new_shortid
+
+    #enqueue the job to create the new event
+
+    return Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos )
+    
+    
 
   end
 end

@@ -94,6 +94,8 @@ module VenuesHelper
     for_new_event = options[:new_event].nil? || options[:new_event] == "true"
     user_lon_lat = options[:user_lon_lat]
     venue_lon_lat = options[:venue_lon_lat]
+    version = options[:version].to_i
+
 
     errors.push "need a venue_id" if fs_id.nil?
 #    errors.push "need a user_lon_lat" if user_lon_lat.nil?
@@ -120,10 +122,15 @@ module VenuesHelper
       if venue
         venue_ig_id = venue.ig_venue_id
       else
+        venue_retry = 0
+
         begin 
           venue_response = Instagram.location_search(nil, nil, :foursquare_v2_id => fs_id)
           venue_ig_id = venue_response.first['id']
         rescue
+          venue_retry += 1
+
+          retry if venue_retry < 2
           #if the fetch failed, there's never been a photo there so let's just look nearby
           do_nearby = true
         end
@@ -143,7 +150,7 @@ module VenuesHelper
           end
         end
         response_1 = response
-        return {:data => response.data} if response.data && (response.data.count >= 6)
+        return {:data => response.data} if version >= 3 || (response.data && (response.data.count >= 6))
       end
     end
 
