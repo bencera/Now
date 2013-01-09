@@ -14,11 +14,11 @@ class ExamineUsers
     limit_remaining = $redis.get("INSTAGRAM_RATE_LIMIT_REMAINING")
 
     if limit_remaining.to_i < 2000
-      Resque.enqueue_in(30.minutes, ExamineUsers, params)
+      Resque.enqueue_in(10.minutes, ExamineUsers, params)
       return
     end
 
-    Resque.enqueue_in(10.minutes, ExamineUsers, params)
+    Resque.enqueue_in(5.minutes, ExamineUsers, params)
 
     Instacrawl.get_more_users_2(:token => token)
 
