@@ -70,7 +70,18 @@ class EventsController < ApplicationController
       ids = [BSON::ObjectId('4ffc94556ff1c9000f00000e'), BSON::ObjectId('503e79f097b4800009000003'), BSON::ObjectId('50a64cb8877a28000f000007'), nil]
       @events =Event.where(:facebook_user_id.nin => ids, :facebook_user_id.ne => nil).order_by([[:created_at, :desc]]).limit(50).entries
     elsif params[:venue_id]
-      @events = Venue.find(params[:venue_id]).events.where(:status.in => Event::TRENDED_OR_TRENDING_LOW).order_by([[:end_time, :desc]]).limit(20).entries
+      venue = Venue.where(:_id => params[:venue_id]).first
+
+      if venue
+        @events = venue.events.where(:status.in => Event::TRENDED_OR_TRENDING_LOW).order_by([[:end_time, :desc]]).limit(20).entries 
+      else
+        @events = []
+      end
+
+      if params[:search] && (@events.empty? || Event::TRENDING_2_STATUSES.include?(@events.first.status))
+        #create a fake event from venue activity -- and start creating it
+        @events.unshift EventsHelper.get_fake_event(params[:venue_id])
+      end
     elsif params[:liked_by]
       @events = EventsHelper.get_user_liked(params[:liked_by])
     elsif params[:created_by] 

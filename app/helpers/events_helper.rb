@@ -407,8 +407,7 @@ EOS
                     :url => [photo.images.low_resolution.url, photo.images.standard_resolution.url, photo.images.thumbnail.url],
                     :external_source => "ig",
                     :external_id => photo.id}
-#      photos << OpenStruct.new(fake_photo)
-      photos << fake_photo
+      photos << OpenStruct.new(fake_photo)
     end
 
     event_id = Event.new.id

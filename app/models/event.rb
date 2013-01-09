@@ -844,7 +844,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   def self.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, options={})
     fake_event = {:id => event_id,
                   :shortid => event_short_id,
-                  :description => options[:description] || "",
+                  :get_description => options[:description] || "",
                   :like_count => 0, 
                   :like => false, 
                   :end_time => Time.now.to_i, 
@@ -852,15 +852,15 @@ SCORE_HALF_LIFE       = 7.day.to_f
                   :category => options[:category] || "Misc",
                   :coordinates => venue_lon_lat,
                   :n_reactions => 0, 
-                  :now_name => "Now Bot",
-                  :now_id => "0",
-                  :profile_photo => "https://s3.amazonaws.com/now_assets/icon.png",
+                  :get_fb_user_name => "Now Bot",
+                  :get_fb_user_id => "0",
+                  :get_fb_user_photo => "https://s3.amazonaws.com/now_assets/icon.png",
                   :venue => {:id => venue_id, :name => venue_name},
-                  :photos => options[:photo_list] || []
+                  :preview_photos => options[:photo_list] || []
     
         }
     fake_event[:fake] = true
-    return OpenStruct.new(fake_reply)
+    return OpenStruct.new(fake_event)
   end
 
   def make_fake_reply(new_photo_card, text, timestamp, now_bot=true)

@@ -1,4 +1,4 @@
-object @event
+object @event => :event
 attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :main_photos, :status, :n_reactions
 
 node(:n_reactions) do |u|
@@ -9,7 +9,7 @@ node(:description) do |u|
   u.get_description 
 end
 
-child :preview_photos do
+child :preview_photos => "photos" do
   attributes :url, :external_source, :external_id
 end
 
@@ -17,7 +17,7 @@ child :venue do
   attributes :name, :id
 end
 
-node(:like) { |event| event.liked_by_user(@user_id) }
+node(:like) { |event| event.fake ? false : event.liked_by_user(@user_id) }
 
 node(:now_name) do |u|
   u.get_fb_user_name
