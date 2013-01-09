@@ -402,6 +402,10 @@ EOS
 
     photos = []
 
+    if response.data.count < 3
+      return :fake_event => nil
+    end
+
     response.data[0..5].each do |photo|
       fake_photo = {:fake => true,
                     :url => [photo.images.low_resolution.url, photo.images.standard_resolution.url, photo.images.thumbnail.url],
@@ -415,7 +419,7 @@ EOS
 
     #enqueue the job to create the new event
 
-    return Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos )
+    return :fake_event => Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos )
     
     
 
