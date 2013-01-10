@@ -241,7 +241,7 @@ class UserFollowEvent2
       message = "Instagram event created for #{fb_user.now_profile.name}"
     end
 
-    ids_to_notify = ["359"]
+    ids_to_notify = []
     if super_users_to_notify.any?
       ids_to_notify.push(*super_users_to_notify)
     end
