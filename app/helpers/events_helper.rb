@@ -388,7 +388,7 @@ EOS
 
     rety_attempt = 0
     begin
-      response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_timestamp)
+      response = Instagram.location_recent_media(venue_ig_id)
     rescue
       if rety_attempt < 5
         sleep 0.1
@@ -402,10 +402,33 @@ EOS
 
     photos = []
 
-    if response.data.count < 3
+    if response.data.count == 0
       return :fake_event => nil
     end
 
+    #if 3 users in last 3 hours -- present it as an event
+    #else, create photos and venue in db, give id FAKE and user must hit another endpoint to get to all photos as fake event
+
+    start_time = 3.hours.ago.to_i
+    user_list = []
+    response.data.each do |photo|
+      break if photo.created_time.to_i < start_time
+      user_list << photo.user.id unless user_list.include? photo.user.id
+    end
+
+    if user_list.count > 3
+      description = "There are #{user_list.count} users here.  See their photos!"
+    else
+      ids = []
+      response.data.each do |photo|
+        ids << photo.id
+      end
+      #enqueue a job to create these photos
+      Rescue.enqueue(CreatePhotos, venue_id, ids)
+
+      description = "There isn't much activity here, but here are some older photos"
+    end
+    
     response.data[0..5].each do |photo|
       fake_photo = {:fake => true,
                     :url => [photo.images.low_resolution.url, photo.images.standard_resolution.url, photo.images.thumbnail.url],
@@ -420,8 +443,6 @@ EOS
     #enqueue the job to create the new event
 
     return :fake_event => Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos )
-    
-    
 
   end
 end
