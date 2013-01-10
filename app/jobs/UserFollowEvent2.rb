@@ -46,6 +46,9 @@ class UserFollowEvent2
      
       #first add the photo to our db
       new_photo = add_photo(media)
+      
+      next if new_photo.nil?
+
       venue ||= new_photo.venue
 
       next if venue.blacklist 
@@ -73,6 +76,13 @@ class UserFollowEvent2
       #add additional photos
       if additional_photos.any?
         event.insert_photos_safe(additional_photos)
+       
+        #give it a good captionator title
+        if event.facebook_user.now_id == "0" && event.su_renamed == false
+          new_caption =  Captionator.get_caption(event)
+          event.description = new_caption unless new_caption.blank?
+        end
+        
         event.save!
         $redis.incrby("NOW_BOT_PHOTOS:#{event.id}", additional_photos.count - 1)
       end
