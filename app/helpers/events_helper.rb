@@ -418,7 +418,7 @@ EOS
 
     if user_list.count > 1
       description = "There are #{user_list.count} users here.  See their photos!"
-      new_event = user_list.count > 3
+      new_event = user_list.count >= 3
     else
       description = "There isn't much activity here, but here are some older photos"
       new_event = false
