@@ -425,7 +425,7 @@ EOS
         ids << photo.id
       end
       #enqueue a job to create these photos
-      #Resque.enqueue(CreatePhotos, venue_id, ids)
+      Resque.enqueue(CreatePhotos, venue_id, ids)
 
       description = "There isn't much activity here, but here are some older photos"
       new_event = false
