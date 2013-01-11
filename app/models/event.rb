@@ -871,19 +871,68 @@ SCORE_HALF_LIFE       = 7.day.to_f
        
     fake_replies = []
     
+
+    now_city = venue.now_city
+
+    midnight = now_city.new_local_time(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0) 
+
+    photo_groups = [[]]
+    photo_group_titles = []
+
+    photo_time = now_city.to_local_time(Time.at(photos.first.time_taken))
+    last_day = "#{photo_time.month},#{photo_time.day}"
+
+    if midnight < photo_time
+      photo_group_titles << "Earlier Today"
+    elsif (midnight - photo_time) < 1.day
+      photo_group_titles << "Yesterday"
+    else
+      days_ago = ((midnight - photo_time) / 1.day).ceil
+
+      photo_group_titles << "#{days_ago} Days Ago"
+    end
+ 
+    photos.each do |photo|
+
+      photo_time =  now_city.to_local_time(Time.at(photo.time_taken))
+      current_day = "#{photo_time.month},#{photo_time.day}"
+
+      if current_day != last_day
+        last_day = current_day
+        photo_groups << [photo]
+        
+        if midnight < photo_time
+          photo_group_titles << "Earlier Today"
+        elsif (midnight - photo_time) < 1.day
+          photo_group_titles << "Yesterday"
+        else
+          days_ago = ((midnight - photo_time) / 1.day).ceil
+
+          photo_group_titles << "#{days_ago} Days Ago"
+       
+        end
+      else
+        photo_groups.last << photo
+      end
+    end
+
     photo_bucket_size = rand(2) + 1
     photo_bucket = []
 
-    photo_day = 
-    photos.each do |photo|
-      photo_bucket << photo
-      if photo_bucket.size > photo_bucket_size
-        photo_bucket_size = rand(2) + 1
-        description = Time.at(photo_bucket.first.time_taken).to_s
-        fake_reply = make_fake_reply("FAKE", "Misc", "", "", "", [], description, photo_bucket.first.time_taken)
-        fake_reply.checkin_card_list.push(*photo_bucket)
-        fake_replies << fake_reply
-        photo_bucket = []
+    photo_groups.each do |photo_group|
+      description = photo_group_titles.shift
+
+      photo_group.each do |photo|
+        photo_bucket << photo
+        if (photo_bucket.size > photo_bucket_size) || photo == photo_group.last
+          photo_bucket_size = rand(2) + 1
+#          puts "creating bucket with #{description}"
+          fake_reply = make_fake_reply("FAKE", "Misc", "", "", "", [], description, photo_bucket.first.time_taken)
+          fake_reply.checkin_card_list.push(*photo_bucket)
+          fake_replies << fake_reply
+          photo_bucket = []
+          description = ""
+        end
       end
     end
 
