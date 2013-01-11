@@ -420,13 +420,6 @@ EOS
       description = "There are #{user_list.count} users here.  See their photos!"
       new_event = user_list.count > 3
     else
-      ids = []
-      response.data.each do |photo|
-        ids.push(photo.id) unless ids.include? photo.id
-      end
-      #enqueue a job to create these photos
-      Resque.enqueue(CreatePhotos, venue_id, ids)
-
       description = "There isn't much activity here, but here are some older photos"
       new_event = false
     end
@@ -457,6 +450,13 @@ EOS
                       :category => "Misc"}
 
       Resque.enqueue(AddPeopleEvent, event_params)
+    else
+      ids = []
+      response.data.each do |photo|
+        ids.push(photo.id) unless ids.include? photo.id
+      end
+      #enqueue a job to create these photos
+      Resque.enqueue(CreatePhotos, venue_id, ids)
     end
 
     return :fake_event => Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos, :description => description )
