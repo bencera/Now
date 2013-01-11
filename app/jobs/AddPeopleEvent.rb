@@ -200,6 +200,13 @@ class AddPeopleEvent
     FoursquareShare.perform(:event_id => event.id, :fs_token => params[:fs_token]) if share_to_fs
 
     PostToFacebook.perform(:event_id => event.id, :fb_user_id => fb_user.facebook_id, :fb_token => params[:fb_token]) if share_to_fb
+
+    #give it a captionator title if it doesn't have a good one
+    if event && event.facebook_user && event.facebook_user.now_id == "0" && event.description == "" && event.su_renamed == false
+      new_caption =  Captionator.get_caption(event)
+      event.description = new_caption unless new_caption.blank?
+      event.save!
+    end
     
     Rails.logger.info("AddPeopleEvent finished")
   end
