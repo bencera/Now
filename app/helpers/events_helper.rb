@@ -414,7 +414,7 @@ EOS
     response.data.each do |photo|
       break if photo.created_time.to_i < start_time
       user_list << photo.user.id unless user_list.include? photo.user.id
-      photo_ids << "ig|#{photo.id}
+      photo_ids << "ig|#{photo.id}"
     end
 
     if user_list.count > 1
@@ -423,7 +423,7 @@ EOS
     else
       ids = []
       response.data.each do |photo|
-        ids << photo.id
+        ids.push(photo.id) unless ids.include? photo.id
       end
       #enqueue a job to create these photos
       Resque.enqueue(CreatePhotos, venue_id, ids)
