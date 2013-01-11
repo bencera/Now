@@ -874,6 +874,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     photo_bucket_size = rand(2) + 1
     photo_bucket = []
 
+    photo_day = 
     photos.each do |photo|
       photo_bucket << photo
       if photo_bucket.size > photo_bucket_size

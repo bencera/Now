@@ -411,11 +411,9 @@ EOS
 
     start_time = 3.hours.ago.to_i
     user_list = []
-    photo_ids = []
     response.data.each do |photo|
       break if photo.created_time.to_i < start_time
       user_list << photo.user.id unless user_list.include? photo.user.id
-      photo_ids << "ig|#{photo.id}"
     end
 
     if user_list.count > 1
@@ -433,20 +431,22 @@ EOS
       new_event = false
     end
     
+    photo_ids = []
     response.data[0..5].each do |photo|
       fake_photo = {:fake => true,
                     :url => [photo.images.low_resolution.url, photo.images.standard_resolution.url, photo.images.thumbnail.url],
                     :external_source => "ig",
                     :external_id => photo.id}
       photos << OpenStruct.new(fake_photo)
+      photo_ids << "ig|#{photo.id}"
     end
 
     event_id = new_event ? Event.new.id : "FAKE"
     event_short_id = new_event ? Event.get_new_shortid : "FAKE"
 
-    if new_event
+    if new_event && (venue.nil? || !venue.blacklist)
 
-      event_params = {:photo_id_list => photo_ids,
+      event_params = {:photo_id_list => photo_ids.join(","),
                       :new_photos => true,
                       :illustration_index => 0,
                       :venue_id => venue_id,
