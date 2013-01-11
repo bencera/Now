@@ -207,7 +207,7 @@ class AddPeopleEvent
       event.description = new_caption unless new_caption.blank?
       event.save!
     end
-    
+
     Rails.logger.info("AddPeopleEvent finished")
   end
 
