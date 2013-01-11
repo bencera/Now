@@ -411,6 +411,7 @@ EOS
 
     start_time = 3.hours.ago.to_i
     user_list = []
+    photo_ids = []
     response.data.each do |photo|
       break if photo.created_time.to_i < start_time
       user_list << photo.user.id unless user_list.include? photo.user.id
