@@ -878,8 +878,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       photo_bucket << photo
       if photo_bucket.size > photo_bucket_size
         photo_bucket_size = rand(2) + 1
-        #description = time_ago_in_words(Time.at(photo_bucket.first.time_taken))
-        description = ""
+        description = Time.at(photo_bucket.first.time_taken).to_s
         fake_reply = make_fake_reply("FAKE", "Misc", "", "", "", [], description, photo_bucket.first.time_taken)
         fake_reply.checkin_card_list.push(*photo_bucket)
         fake_replies << fake_reply
