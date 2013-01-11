@@ -371,7 +371,7 @@ EOS
       begin 
         venue_response = Instagram.location_search(nil, nil, :foursquare_v2_id => venue_id)
         venue_ig_id = venue_response.first.id
-        venue_name = venue_response.first.id
+        venue_name = venue_response.first.name
         venue_lon_lat = [venue_response.first.longitude, venue_response.first.latitude]
         #get lat and lon
       rescue
@@ -416,9 +416,9 @@ EOS
       user_list << photo.user.id unless user_list.include? photo.user.id
     end
 
-    if user_list.count > 3
+    if user_list.count > 1
       description = "There are #{user_list.count} users here.  See their photos!"
-      new_event = true
+      new_event = user_list.count > 3
     else
       ids = []
       response.data.each do |photo|

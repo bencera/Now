@@ -844,6 +844,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def self.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, options={})
+   
+    venue =  OpenStruct.new({:id => venue_id, :name => venue_name})
     fake_event = {:id => event_id,
                   :shortid => event_short_id,
                   :get_description => options[:description] || "",
@@ -857,7 +859,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
                   :get_fb_user_name => "Now Bot",
                   :get_fb_user_id => "0",
                   :get_fb_user_photo => "https://s3.amazonaws.com/now_assets/icon.png",
-                  :venue => {:id => venue_id, :name => venue_name},
+                  :venue => venue,
                   :preview_photos => options[:photo_list] || []
     
         }
@@ -866,6 +868,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def self.make_fake_event_detail(venue, photos)
+       
     fake_replies = []
     
     photo_bucket_size = rand(2) + 1
@@ -875,7 +878,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
       photo_bucket << photo
       if photo_bucket.size > photo_bucket_size
         photo_bucket_size = rand(2) + 1
-        fake_reply = make_fake_reply("FAKE", "Misc", "", "", "", [], "", photo_bucket.first.time_taken)
+        #description = time_ago_in_words(Time.at(photo_bucket.first.time_taken))
+        description = ""
+        fake_reply = make_fake_reply("FAKE", "Misc", "", "", "", [], description, photo_bucket.first.time_taken)
         fake_reply.checkin_card_list.push(*photo_bucket)
         fake_replies << fake_reply
         photo_bucket = []

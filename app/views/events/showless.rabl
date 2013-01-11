@@ -13,7 +13,7 @@ child :preview_photos => "photos" do
   attributes :url, :external_source, :external_id
 end
 
-child :venue do
+child :venue => "venue" do
   attributes :name, :id
 end
 
