@@ -123,6 +123,7 @@ class FacebookUser
   end
 
   def like_event(event_shortid, access_token)
+    return if event_shortid == "FAKE"
   	$redis.sadd("event_likes:#{event_shortid}", self.facebook_id)
     $redis.sadd("liked_events:#{self.facebook_id}", event_shortid)
   	Resque.enqueue(Facebooklike, access_token, event_shortid, self.id.to_s)
