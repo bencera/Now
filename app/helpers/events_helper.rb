@@ -422,7 +422,7 @@ EOS
       description = "💤 No social activity now."
     elsif user_list.count < 3
       description = "💦 Little social activity now."
-    elsif user_list.count < 4
+    elsif user_list.count < 6
       description = "✨ Good social activity now."
     elsif user_list.count < 10
       description = "💥 Great social activity now."

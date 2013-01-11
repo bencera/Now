@@ -956,7 +956,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
                   :get_fb_user_photo =>  "https://s3.amazonaws.com/now_assets/icon.png",
                   :reposts => fake_replies,
                   :liked_by_user => false,
-                  :fake => true}
+                  :fake => true,
+                  :venue => venue}
 
     OpenStruct.new(fake_event)
   end
