@@ -416,12 +416,18 @@ EOS
       user_list << photo.user.id unless user_list.include? photo.user.id
     end
 
-    if user_list.count > 1
-      description = "There are #{user_list.count} users here.  See their photos!"
-      new_event = user_list.count >= 3
+    new_event = user_list.count >= 3
+
+    if user_list.count < 1
+      description = "💤 No social activity now."
+    elsif user_list.count < 3
+      description = "💦 Little social activity now."
+    elsif user_list.count < 4
+      description = "✨ Good social activity now."
+    elsif user_list.count < 10
+      description = "💥 Great social activity now."
     else
-      description = "There isn't much activity here, but here are some older photos"
-      new_event = false
+      description = "🔥 Insane social activity now."
     end
     
     photo_ids = []
@@ -437,6 +443,13 @@ EOS
     event_id = new_event ? Event.new.id : "FAKE"
     event_short_id = new_event ? Event.get_new_shortid : "FAKE"
 
+    if venue
+      categories = CategoriesHelper.categories
+      category = categories[venue.categories.first["id"]]
+    else
+      category = "Misc"
+    end
+
     if new_event && (venue.nil? || !venue.blacklist)
 
       event_params = {:photo_id_list => photo_ids.join(","),
@@ -447,7 +460,7 @@ EOS
                       :id => event_id,
                       :short_id => event_short_id,
                       :description => "",
-                      :category => "Misc"}
+                      :category => category}
 
       Resque.enqueue(AddPeopleEvent, event_params)
     else
