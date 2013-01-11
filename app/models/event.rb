@@ -845,13 +845,14 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def self.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, options={})
    
+    end_time = options[:photo_list] ? options[:photo_list].first.time_taken : Time.now.to_i
     venue =  OpenStruct.new({:id => venue_id, :name => venue_name})
     fake_event = {:id => event_id,
                   :shortid => event_short_id,
                   :get_description => options[:description] || "",
                   :like_count => 0, 
                   :like => false, 
-                  :end_time => Time.now.to_i, 
+                  :end_time => end_time,
                   :status => "trending", 
                   :category => options[:category] || "Misc",
                   :coordinates => venue_lon_lat,

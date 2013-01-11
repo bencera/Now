@@ -436,7 +436,8 @@ EOS
       fake_photo = {:fake => true,
                     :url => [photo.images.low_resolution.url, photo.images.standard_resolution.url, photo.images.thumbnail.url],
                     :external_source => "ig",
-                    :external_id => photo.id}
+                    :external_id => photo.id,
+                    :time_taken => photo.created_time}
       photos << OpenStruct.new(fake_photo)
       photo_ids << "ig|#{photo.id}"
     end
