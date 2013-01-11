@@ -1,4 +1,4 @@
-object @event
+object @event => "event"
 attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :venue_category, :n_photos, :start_time, :keywords, :city_fullname, :main_photos, :status
 
 node(:n_reactions) do |u|
@@ -25,7 +25,7 @@ child :venue do
     u.categories.first["name"] unless u.categories.nil?
   end
 end
-node(:like) { |event| event.liked_by_user(@user_id) }
+node(:like) { |event| event.fake ? false : event.liked_by_user(@user_id) }
 child(:previous_events, :if => @more == "yes") do
 attributes :description, :end_time, :category
 end

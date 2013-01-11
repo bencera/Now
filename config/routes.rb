@@ -17,6 +17,8 @@ Ubimachine::Application.routes.draw do
 
   match "/venue/:id/profile" => "venues#show_profile"
 
+  match "/venue/:id/as_event" => "venues#show_as_event"
+
   match "/now_users/:id" => "now_users#show"
   match "/now_users_update" => "now_users#update"
   match "/now_users_login" => "now_users#login"

@@ -19,6 +19,19 @@ class VenuesController < ApplicationController
     end
   end
 
+  def show_as_event
+    venue = Venue.where(:_id => params[:id]).first
+    if venue
+      photos = venue.photos.take(40)
+      @event = Event.make_fake_event_detail(venue, photos)
+      @checkins = @event.reposts
+    else
+      @event = nil
+      @checkins = nil
+    end
+    render 'events/show'
+  end
+
   def show
     if params[:page].nil?
       n = 1

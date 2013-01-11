@@ -865,16 +865,57 @@ SCORE_HALF_LIFE       = 7.day.to_f
     return OpenStruct.new(fake_event)
   end
 
-  def make_fake_reply(new_photo_card, text, timestamp, now_bot=true)
+  def self.make_fake_event_detail(venue, photos)
+    fake_replies = []
+    
+    photo_bucket_size = rand(2) + 1
+    photo_bucket = []
+
+    photos.each do |photo|
+      photo_bucket << photo
+      if photo_bucket.size > photo_bucket_size
+        photo_bucket_size = rand(2) + 1
+        fake_reply = make_fake_reply("FAKE", "Misc", "", "", "", [], "", photo_bucket.first.time_taken)
+        fake_reply.checkin_card_list.push(*photo_bucket)
+        fake_replies << fake_reply
+        photo_bucket = []
+      end
+    end
+
+    fake_event = {:id => "FAKE",
+                  :shortid => "FAKE",
+                  :get_description => "",
+                  :coordinate => venue.coordinates,
+                  :end_time => photos.first.time_taken,
+                  :category => "Misc",
+                  :like_count => 0,
+                  :venue_category => "",
+                  :n_photos => photos.count,
+                  :start_time => photos.last.time_taken,
+                  :keywords => [""],
+                  :city_fullname => venue.city,
+                  :status => "not_trending",
+                  :like => false,
+                  :get_fb_user_name => "Now Bot",
+                  :get_fb_user_id => "0",
+                  :get_fb_user_photo =>  "https://s3.amazonaws.com/now_assets/icon.png",
+                  :reposts => fake_replies,
+                  :liked_by_user => false,
+                  :fake => true}
+
+    OpenStruct.new(fake_event)
+  end
+
+  def self.make_fake_reply(reply_id, reply_category, fb_user_name, fb_user_id, fb_user_photo, new_photo_card, text, timestamp, now_bot=true)
     fake_reply = {}
-    fake_reply[:id] = self.id
+    fake_reply[:id] = reply_id
     fake_reply[:created_at] = timestamp
     fake_reply[:description] = text
-    fake_reply[:category] = self.category
+    fake_reply[:category] = reply_category
     fake_reply[:new_photos] = true
-    fake_reply[:get_fb_user_name] = now_bot ? NOW_BOT_NAME : self.get_fb_user_name
-    fake_reply[:get_fb_user_id] = now_bot ? NOW_BOT_ID : self.get_fb_user_id
-    fake_reply[:get_fb_user_photo] = now_bot ? NOW_BOT_PHOTO_URL : self.get_fb_user_photo
+    fake_reply[:get_fb_user_name] = now_bot ? NOW_BOT_NAME : fb_user_name
+    fake_reply[:get_fb_user_id] = now_bot ? NOW_BOT_ID : fb_user_id
+    fake_reply[:get_fb_user_photo] = now_bot ? NOW_BOT_PHOTO_URL : fb_user_photo
     fake_reply[:new_photos] = true
     fake_reply[:get_preview_photo_ids] = new_photo_card
     fake_reply[:checkin_card_list] = []
@@ -882,6 +923,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
     fake_reply[:fake] = true
 
     return OpenStruct.new(fake_reply)
+  end
+
+  def make_fake_reply(new_photo_card, text, timestamp, now_bot=true)
+    Event.make_fake_reply(self.id, self.category, self.get_fb_user_name, self.get_fb_user_id, self.get_fb_user_photo,
+                          new_photo_card, text, timestamp, now_bot)
   end
 
   def make_reply_array(photos_orig)

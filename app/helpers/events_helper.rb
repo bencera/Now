@@ -418,15 +418,17 @@ EOS
 
     if user_list.count > 3
       description = "There are #{user_list.count} users here.  See their photos!"
+      new_event = true
     else
       ids = []
       response.data.each do |photo|
         ids << photo.id
       end
       #enqueue a job to create these photos
-      Rescue.enqueue(CreatePhotos, venue_id, ids)
+      Resque.enqueue(CreatePhotos, venue_id, ids)
 
       description = "There isn't much activity here, but here are some older photos"
+      new_event = false
     end
     
     response.data[0..5].each do |photo|
@@ -437,8 +439,8 @@ EOS
       photos << OpenStruct.new(fake_photo)
     end
 
-    event_id = Event.new.id
-    event_short_id = Event.get_new_shortid
+    event_id = new_event ? Event.new.id : "FAKE"
+    event_short_id = new_event ? Event.get_new_shortid : "FAKE"
 
     #enqueue the job to create the new event
 
