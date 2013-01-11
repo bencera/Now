@@ -414,6 +414,7 @@ EOS
     response.data.each do |photo|
       break if photo.created_time.to_i < start_time
       user_list << photo.user.id unless user_list.include? photo.user.id
+      photo_ids << "ig|#{photo.id}
     end
 
     if user_list.count > 1
@@ -442,7 +443,20 @@ EOS
     event_id = new_event ? Event.new.id : "FAKE"
     event_short_id = new_event ? Event.get_new_shortid : "FAKE"
 
-    #enqueue the job to create the new event
+    if new_event
+
+      event_params = {:photo_id_list => photo_ids,
+                      :new_photos => true,
+                      :illustration_index => 0,
+                      :venue_id => venue_id,
+                      :facebook_user_id => FacebookUser.where(:now_id => "0").first.id,
+                      :id => event_id,
+                      :short_id => event_short_id,
+                      :description => "",
+                      :category => "Misc"}
+
+      Resque.enqueue(AddPeopleEvent, event_params)
+    end
 
     return :fake_event => Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos, :description => description )
 
