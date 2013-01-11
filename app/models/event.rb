@@ -875,7 +875,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     now_city = venue.now_city
     now_city ||= NowCity.first
 
-    midnight = now_city.new_local_time(Time.now.year, Time.now.month, Time.now.day, 6, 0, 0) 
+    midnight = now_city.new_local_time(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0) 
 
     photo_groups = [[]]
     photo_group_titles = []
