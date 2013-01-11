@@ -444,7 +444,7 @@ EOS
 
     #enqueue the job to create the new event
 
-    return :fake_event => Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos )
+    return :fake_event => Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos, :description => description )
 
   end
 end
