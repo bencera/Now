@@ -689,7 +689,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       
       begin
         venue_photos.push(*(response.data))
-      end while response && response.pagination && response.pagination.next_url && 
+      end while self.status != TRENDING_LOW && response && response.pagination && response.pagination.next_url && 
         (response = Hashie::Mash.new(JSON.parse(open(response.pagination.next_url).read)))
 
     rescue MultiJson::DecodeError => e
@@ -778,6 +778,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
    
     #dont update nowbot events as often for now unless it's featured
+
+    return 60 if self.status == TRENDING_LOW
     if self.facebook_user.now_id == "0" && !self.featured
       return [*20..60].sample.minutes.to_i
     end
