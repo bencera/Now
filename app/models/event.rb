@@ -941,7 +941,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     fake_event = {:id => "FAKE",
                   :shortid => "FAKE",
                   :get_description => "",
-                  :coordinate => venue.coordinates,
+                  :coordinates => venue.coordinates,
                   :end_time => photos.first.time_taken,
                   :category => "Misc",
                   :like_count => 0,
