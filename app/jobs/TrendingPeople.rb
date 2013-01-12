@@ -29,7 +29,7 @@ class TrendingPeople
       #check event velocity
       
       if !event.reached_velocity && !event.venue.graylist
-        if event.photos.where(:time_taken.gt => 1.hour.ago.to_i).count > 3 && ["Concert", "Conference", "Sport"].include?(event.category)
+        if event.photos.where(:time_taken.gt => 1.hour.ago.to_i).count > 3 && ["Concert", "Conference", "Sport", "Movie", "Performance"].include?(event.category)
           event.reached_velocity = true
           event.save!
 
