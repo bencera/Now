@@ -447,7 +447,7 @@ EOS
 
     if venue
       categories = CategoriesHelper.categories
-      category = categories[venue.categories.first["id"]]
+      category = categories[venue.categories.first["id"]] || "Misc"
     else
       category = "Misc"
     end
