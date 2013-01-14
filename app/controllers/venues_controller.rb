@@ -25,9 +25,11 @@ class VenuesController < ApplicationController
       photos = venue.photos.take(40)
       @event = Event.make_fake_event_detail(venue, photos)
       @checkins = @event.reposts
+      @other_photos = []
     else
       @event = nil
       @checkins = nil
+      @other_photos = []
     end
     render 'events/show'
   end
