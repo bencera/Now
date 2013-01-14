@@ -116,29 +116,42 @@ class AddPeopleEvent
       end
   
       if check_in_event
-  
-        Rails.logger.info("AddPeopleEvent: reposting event #{check_in_event.id}")
-        checkin = check_in_event.checkins.new do |e|
-          e.id = params[:reply_id] if params[:reply_id]
+ 
+        if params[:new_post] == true
+          Rails.logger.info("AddPeopleEvent: claiming event #{check_in_event.id}")
+          check_in_event.facebook_user = fb_user
+          check_in_event.category = params[:category] || check_in_event.category
+          check_in_event.photo_card = photo_card_ids
+          check_in_event.description = params[:description] || check_in_event.description || " "
+
+          check_in_event.insert_photos_safe(photos)
+          
+          check_in_event.save!
+        else
+
+          Rails.logger.info("AddPeopleEvent: reposting event #{check_in_event.id}")
+          checkin = check_in_event.checkins.new do |e|
+            e.id = params[:reply_id] if params[:reply_id]
+          end
+     
+          checkin.description = params[:description] || check_in_event.description || " "
+          checkin.category = params[:category] || check_in_event.category
+          checkin.new_photos = params[:new_photos]
+          checkin.posted = params[:new_post]
+          checkin.photo_card = photo_card_ids
+          checkin.facebook_user = fb_user 
+          #we're not using this yet
+          checkin.broadcast = params[:broadcast] ||  "public"
+    
+          check_in_event.insert_photos_safe(photos)
+          Rails.logger.info("AddPeopleEvent: saving checkin #{checkin.id}")
+          checkin.save!
+          new_checkin_created = checkin
+          Rails.logger.info("AddPeopleEvent: saving check_in_event #{check_in_event.id}")
+          check_in_event.status = Event::TRENDING_PEOPLE if check_in_event.status == Event::TRENDING_LOW
+          check_in_event.save!
+          Rails.logger.info("AddPeopleEvent: created new checkin for check_in_event at venue #{venue.id}")
         end
-   
-        checkin.description = params[:description] || check_in_event.description || " "
-        checkin.category = params[:category] || check_in_event.category
-        checkin.new_photos = params[:new_photos]
-        checkin.posted = params[:new_post]
-        checkin.photo_card = photo_card_ids
-        checkin.facebook_user = fb_user 
-        #we're not using this yet
-        checkin.broadcast = params[:broadcast] ||  "public"
-  
-        check_in_event.insert_photos_safe(photos)
-        Rails.logger.info("AddPeopleEvent: saving checkin #{checkin.id}")
-        checkin.save!
-        new_checkin_created = checkin
-        Rails.logger.info("AddPeopleEvent: saving check_in_event #{check_in_event.id}")
-        check_in_event.status = Event::TRENDING_PEOPLE if check_in_event.status == Event::TRENDING_LOW
-        check_in_event.save!
-        Rails.logger.info("AddPeopleEvent: created new checkin for check_in_event at venue #{venue.id}")
   
         #just want to make sure i clean up any mistakes
         Resque.enqueue_in(3.seconds, RepairSimultaneousEvents, venue.id.to_s)
