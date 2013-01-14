@@ -164,7 +164,7 @@ class AddPeopleEvent
         event.illustration = photos[illustration_index].id if photos.any?
         event.facebook_user = fb_user 
         event.description = params[:description] || " "
-        event.category = params[:category]
+        event.category = params[:category] || "Misc"
         event.shortid = params[:shortid] || Event.get_new_shortid
         event.start_time = Time.now.to_i
         event.end_time = event.start_time
