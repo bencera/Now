@@ -19,7 +19,7 @@ Ubimachine::Application.routes.draw do
 
   match "/venue/:id/as_event" => "venues#show_as_event"
 
-  match "/venues/suggestion" => "venues#suggestions"
+  match "/venues/suggestions" => "venues#suggestions"
 
   match "/now_users/:id" => "now_users#show"
   match "/now_users_update" => "now_users#update"

@@ -1,5 +1,5 @@
 collection @venues, :object_root => "venue"
-attributes :name
+attributes :name, :id
 
 node(:type) do |u|
   if !u.event_category.blank? && !u.event_category == "Misc" 
