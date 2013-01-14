@@ -48,8 +48,7 @@ class VenuesController < ApplicationController
       retries -= 1
     end
 
-
-    @venues = events.map {|event| venue = event.venue; venue.event_category = event.category; venue}
+    @venues = events.map {|event| venue = event.venue; venue}
 
   end
 

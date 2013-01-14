@@ -1,12 +1,7 @@
-collection @venues, :object_root => "venue"
-attributes :name, :id
+object false
 
-node(:type) do |u|
-  if !u.event_category.blank? && !u.event_category == "Misc" 
-    u.event_category
-  elsif u.categories && u.categories.last && u.categories.last["name"]
-    u.categories.last["name"] 
-  else
-    ""
+child :response => "response" do
+  node(:venues) do
+    @venues.map {|venue| {:name => venue.name, :id => venue.id, :categories =>[{:name => venue.categories.first["name"]}] }}
   end
 end
