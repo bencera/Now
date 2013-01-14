@@ -36,7 +36,7 @@ class VenuesController < ApplicationController
 
   def suggestions
     coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
-    max_distance = 500
+    max_distance = 50
         
     max_distance = max_distance.to_f / 111000
 
