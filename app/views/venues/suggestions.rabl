@@ -1,5 +1,11 @@
 object false
 
+child :meta => "meta" do
+  node(:text) do
+    {:title => "Recently Trending Nearby"}
+  end
+end
+
 child :response => "response" do
   node(:venues) do
     @venues.map {|venue| {:name => venue.name, :id => venue.id, 
