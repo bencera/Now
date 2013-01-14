@@ -1,4 +1,7 @@
 class Instacrawl
+  @users_to_look_at_keys = ["CAL_USERS_TO_LOOK_AT", "CITY_USERS_TO_LOOK_AT"]
+
+
   def self.get_more_users(options={})
 
     count = options[:count] || 50
