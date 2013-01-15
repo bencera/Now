@@ -419,15 +419,15 @@ EOS
     new_event = user_list.count >= 3
 
     if user_list.count < 1
-      description = "💤 No social activity now."
+      description = "\u{1F4A4} No social activity now"
     elsif user_list.count < 3
-      description = "💦 Little social activity now."
+      description = "\u2728 Little social activity now"
     elsif user_list.count < 6
-      description = "✨ Good social activity now."
+      description = "\u{1F31F} Good social activity now"
     elsif user_list.count < 10
-      description = "💥 Great social activity now."
+      description = "\u{1F4A5} Great social activity now"
     else
-      description = "🔥 Insane social activity now."
+      description = "\u{1F525} Insane social activity now"
     end
     
     photo_ids = []
