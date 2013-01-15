@@ -4,7 +4,15 @@ class CreatePhotos
 
   def self.perform(venue_id, photo_ids)
 
-    venue = Venue.where(:_id => venue_id).first || Venue.create_venue(venue_id)
+    retry_attempt = 0
+    begin
+      venue = Venue.where(:_id => venue_id).first || Venue.create_venue(venue_id)
+    rescue
+      retry_attempt += 1
+      sleep 0.5
+      retry if retry_attempt < 5
+      raise
+    end
 
     photo_ids.each do |photo_id|
       begin
