@@ -386,11 +386,11 @@ EOS
       venue_lon_lat = venue.coordinates
     end
 
-    rety_attempt = 0
+    retry_attempt = 0
     begin
       response = Instagram.location_recent_media(venue_ig_id)
     rescue
-      if rety_attempt < 5
+      if retry_attempt < 5
         sleep 0.1
         retry_attempt += 1
         retry
