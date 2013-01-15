@@ -14,10 +14,16 @@ class NowCitiesController < ApplicationController
                                     :latitude => city_hash["latitude"].to_f,
                                     :longitude => city_hash["longitude"].to_f,
                                     :radius => city_hash["radius"].to_f,
-                                    :url => city_hash["url"], :experiences => exp_count.to_i})
+                                    :url => city_hash["url"], :experiences => exp_count.to_i,
+                                    :id => "", :theme => false})
     end
 
     @cities = unordered_cities.sort_by {|city| city.experiences}.reverse
+
+    #now pull themes and append them to the list
+
+    theme_entries = Theme.index
+    @cities.push(*theme_entries)
 
   end
 end

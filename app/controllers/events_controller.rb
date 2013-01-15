@@ -66,6 +66,10 @@ class EventsController < ApplicationController
       else
         @events = EventsHelper.get_localized_results(coordinates, max_distance, params).entries
       end
+    elsif params[:theme]
+      theme_id = params[:theme].to_s
+      experience_ids = Theme.get_exp_list(theme_id)
+      @events = Event.find(experience_ids)
     elsif params[:user_created]
       ids = [BSON::ObjectId('4ffc94556ff1c9000f00000e'), BSON::ObjectId('503e79f097b4800009000003'), BSON::ObjectId('50a64cb8877a28000f000007'), nil]
       @events =Event.where(:facebook_user_id.nin => ids, :facebook_user_id.ne => nil).order_by([[:created_at, :desc]]).limit(50).entries

@@ -125,6 +125,7 @@ class Instacrawl
 
   def self.suggest_users_from_venue(venue_id, options={})
     venue = Venue.where(:_id => venue_id).first || Venue.create_venue(venue_id)
+
     city = options[:city] || "CITY"
 
     city = city.upcase
