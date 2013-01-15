@@ -1,6 +1,15 @@
 object @event => :event
 attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :main_photos, :status, :n_reactions
 
+node(:fake) do |u|
+  if u.fake
+    true
+  else
+    false
+  end
+
+end
+
 node(:n_reactions) do |u|
   u.n_reactions || 0
 end
