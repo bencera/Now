@@ -1,6 +1,8 @@
 # -*- encoding : utf-8 -*-
 Ubimachine::Application.routes.draw do
 
+#  get "themes/index"
+
   require 'resque_scheduler'
   mount Resque::Server, :at => "/resque"
 
@@ -25,6 +27,8 @@ Ubimachine::Application.routes.draw do
   match "/now_users_update" => "now_users#update"
   match "/now_users_login" => "now_users#login"
   match "/now_users_location" => "now_users#location"
+
+  match "/now_cities/index" => "now_cities#index"
 
   match "/event_report" => "events#report"
 
