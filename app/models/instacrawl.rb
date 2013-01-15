@@ -67,6 +67,7 @@ class Instacrawl
     count = options[:count] || 50
     token = options[:token] || "44178321.f59def8.63f2875affde4de98e043da898b6563f"
 
+
     @client ||= InstagramWrapper.get_client(:access_token => token)
 
     i = 0
@@ -124,6 +125,13 @@ class Instacrawl
 
   def self.suggest_users_from_venue(venue_id, options={})
     venue = Venue.where(:_id => venue_id).first || Venue.create_venue(venue_id)
+    city = options[:city] || "CITY"
+
+    city = city.upcase
+
+    city_key = "SUGGESTED_#{city}_USERS"
+
+    $redis.sadd("CITY_SUGGESTION_KEYS", city_key) unless $redis.sismember("CITY_SUGGESTION_KEYS", city_key)
 
     venue_ig_id = venue.ig_venue_id
 
@@ -149,7 +157,7 @@ class Instacrawl
     
     end while venue_media.pagination && venue_media.pagination.next_url && (venue_media = @client.pull_pagination(venue_media.pagination.next_url))
 
-    users.uniq.each {|user_id| $redis.sadd("SUGGESTED_CITY_USERS", user_id)}
+    users.uniq.each {|user_id| $redis.sadd(city_key, user_id)}
   end
 
 
