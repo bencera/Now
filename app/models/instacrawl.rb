@@ -66,6 +66,7 @@ class Instacrawl
 
     count = options[:count] || 50
     token = options[:token] || "44178321.f59def8.63f2875affde4de98e043da898b6563f"
+    city = options[:city] || "CITY"
 
 
     @client ||= InstagramWrapper.get_client(:access_token => token)
@@ -85,7 +86,7 @@ class Instacrawl
 
         i += 1
 
-        user_id = $redis.spop("SUGGESTED_CITY_USERS")
+        user_id = $redis.spop("SUGGESTED_#{city}_USERS")
         break if user_id.nil?
 
         puts "examining #{user_id}"
@@ -104,15 +105,15 @@ class Instacrawl
         if event_list.count >= 1
           entry_string = "http://instagram.com/#{user_info.data.username}\t#{user_stats[0]} Photos\t#{event_list.count} Events\n#{event_list.join("\n")}"
           puts "#{entry_string}"
-          $redis.zadd("CITY_USERS_TO_LOOK_AT", event_list.count, entry_string) 
+          $redis.zadd("#{city}_USERS_TO_LOOK_AT", event_list.count, entry_string) 
         end
 
         $redis.sadd("ALREADY_EXAMINED_USERS", user_id)
 
       end 
     rescue Exception => e
-      if !user_id.nil? && !$redis.sismember("SUGGESTED_CITY_USERS", user_id)
-        $redis.sadd("SUGGESTED_CITY_USERS", user_id)
+      if !user_id.nil? && !$redis.sismember("SUGGESTED_#{city}_USERS", user_id)
+        $redis.sadd("SUGGESTED_#{city}_USERS", user_id)
       end
       attempt += 1
       sleep 0.5
@@ -254,18 +255,43 @@ class Instacrawl
 
   def self.get_users_to_look_at_2(options={})
     count = options[:count] || 25
+       
+    city = options[:city] || ""
 
-    total_users = $redis.zcard("CITY_USERS_TO_LOOK_AT")
+    if city.blank?
+      cities = $redis.smembers("CITY_SUGGESTION_KEYS").map {|city_key| city_key[/SUGGESTED_(\w+)_/,1].upcase}
+      most_waiting = cities.first
+      max_waiting = 0
+      cities.each do |city|
+        num_waiting = $redis.zcard("#{city}_USERS_TO_LOOK_AT")
+        if num_waiting > max_waiting
+          max_waiting = num_waiting
+          most_waiting = city
+        end
+      end
+    else
+      city = city.upcase
+    end
+
+    if city.blank?
+      puts "NO CITY"
+      return
+    end
+
+    puts "USERS FROM #{city}"
+
+
+    total_users = $redis.zcard("#{city}_USERS_TO_LOOK_AT")
     begin_range = total_users - count
 
     begin_range = 0 if(begin_range < 0)
 
-    members = $redis.zrange("CITY_USERS_TO_LOOK_AT", begin_range, total_users)
+    members = $redis.zrange("#{city}_USERS_TO_LOOK_AT", begin_range, total_users)
 
     members.reverse.each do |member|
       puts member
       puts "\n"
-      $redis.zrem("CITY_USERS_TO_LOOK_AT", member)
+      $redis.zrem("#{city}_USERS_TO_LOOK_AT", member)
     end
 
   end

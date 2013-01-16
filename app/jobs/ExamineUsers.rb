@@ -7,7 +7,23 @@ class ExamineUsers
 
     token = params[:token]
 
-    users_left = $redis.scard("SUGGESTED_CITY_USERS").to_i
+    city_buckets = $redis.smembers("CITY_SUGGESTION_KEYS")
+    biggest_bucket = city_buckets.first
+    biggest_bucket_size = 0
+
+    city_buckets.each do |bucket_key|
+      city = bucket_key[/SUGGESTED_(\w+)_/,1]
+      next if city.nil?
+
+      bucket_size = $redis.scard(bucket_key)
+      if bucket_size > biggest_bucket_size
+        biggest_bucket_size = bucket_size
+        biggest_bucket = bucket_key
+      end
+    end
+
+
+    users_left = biggest_bucket_size
 
     return if users_left == 0
 
@@ -20,7 +36,7 @@ class ExamineUsers
 
     Resque.enqueue_in(5.minutes, ExamineUsers, params)
 
-    Instacrawl.get_more_users_2(:token => token)
+    Instacrawl.get_more_users_2(:token => token, :city => city)
 
   end
 end
