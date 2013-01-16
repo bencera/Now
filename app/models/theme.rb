@@ -36,6 +36,17 @@ class Theme
     return theme_id
   end
 
+  def self.destroy_theme(id)
+    $redis.lrem("NOW_THEMES", 1, id)
+    $redis.del("THEME_#{id}_DATA")
+    $redis.del("THEME_#{id}_EXP_LIST")
+  end
+
+  def self.archive_theme(id)
+    $redis.lrem("NOW_THEMES", 1, id)
+    $redis.sadd("ARCHIVED_THEMES", id)
+  end
+
   def self.add_experience(theme_id, event_id)
     $redis.sadd("THEME_#{theme_id}_EXP_LIST", event_id)
   end
