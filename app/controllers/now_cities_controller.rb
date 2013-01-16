@@ -1,7 +1,7 @@
 class NowCitiesController < ApplicationController
   def index
     #take the redis entry, convert it from a string to a hash, then change hash keys to symbols
-    city_entries = $redis.smembers("NOW_CITY_KEYS")
+    city_entries = $redis.smembers("NOW_CITY_KEYS")[0..4]
 
     unordered_cities = []
 
@@ -22,8 +22,8 @@ class NowCitiesController < ApplicationController
 
     #now pull themes and append them to the list
 
-    theme_entries = Theme.index
-    @cities.push(*theme_entries)
+    @themes = Theme.index
+   
 
   end
 end
