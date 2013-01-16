@@ -68,6 +68,7 @@ class Instacrawl
     token = options[:token] || "44178321.f59def8.63f2875affde4de98e043da898b6563f"
     city = options[:city] || "CITY"
 
+    city = city.upcase
 
     @client ||= InstagramWrapper.get_client(:access_token => token)
 
@@ -260,15 +261,18 @@ class Instacrawl
 
     if city.blank?
       cities = $redis.smembers("CITY_SUGGESTION_KEYS").map {|city_key| city_key[/SUGGESTED_(\w+)_/,1].upcase}
-      most_waiting = cities.first
+      most_waiting = ""
       max_waiting = 0
       cities.each do |city|
+        next if ["SAOPAULO", "CITY"].include? city
         num_waiting = $redis.zcard("#{city}_USERS_TO_LOOK_AT")
         if num_waiting > max_waiting
           max_waiting = num_waiting
           most_waiting = city
         end
       end
+
+      city = most_waiting
     else
       city = city.upcase
     end

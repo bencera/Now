@@ -13,7 +13,7 @@ class ExamineUsers
 
     city_buckets.each do |bucket_key|
       city = bucket_key[/SUGGESTED_(\w+)_/,1]
-      next if city.nil?
+      next if city.nil? || ["LONDON", "CITY", "SAOPAULO"].include?(city)
 
       bucket_size = $redis.scard(bucket_key)
       if bucket_size > biggest_bucket_size
@@ -22,6 +22,7 @@ class ExamineUsers
       end
     end
 
+    city = biggest_bucket[/SUGGESTED_(\w+)_/,1]
 
     users_left = biggest_bucket_size
 
@@ -29,7 +30,7 @@ class ExamineUsers
 
     limit_remaining = $redis.get("INSTAGRAM_RATE_LIMIT_REMAINING")
 
-    if limit_remaining.to_i < 2000
+    if limit_remaining.to_i < 1500
       Resque.enqueue_in(10.minutes, ExamineUsers, params)
       return
     end
