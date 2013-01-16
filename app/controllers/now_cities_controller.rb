@@ -1,7 +1,7 @@
 class NowCitiesController < ApplicationController
   def index
     #take the redis entry, convert it from a string to a hash, then change hash keys to symbols
-    city_entries = $redis.smembers("NOW_CITY_KEYS")[0..4]
+    city_entries = $redis.smembers("NOW_CITY_KEYS")
 
     unordered_cities = []
 
@@ -18,7 +18,7 @@ class NowCitiesController < ApplicationController
                                     :id => "", :theme => false})
     end
 
-    @cities = unordered_cities.sort_by {|city| city.experiences}.reverse
+    @cities = unordered_cities.sort_by {|city| city.experiences}.reverse[0..4]
 
     #now pull themes and append them to the list
 
