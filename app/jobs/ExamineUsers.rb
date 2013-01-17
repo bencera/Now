@@ -16,6 +16,7 @@ class ExamineUsers
       next if city.nil? || ["LONDON", "CITY", "SAOPAULO"].include?(city)
 
       bucket_size = $redis.scard(bucket_key)
+      #puts "#{city} #{bucket_size}"
       if bucket_size > biggest_bucket_size
         biggest_bucket_size = bucket_size
         biggest_bucket = bucket_key
