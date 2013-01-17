@@ -359,6 +359,23 @@ class AddPeopleEvent
         end
         check_in_event.su_deleted  = true
         check_in_event.save!
+      when "#blacklist"
+        #blacklist -- maybe we should just make this propose, but for now, it's good
+        
+        fb_user.inc(:blacklist_count, 1)
+        check_in_event.venue.blacklist = true
+
+        #also delete it 
+        fb_user.inc(:delete_count, 1)
+        if Event::TRENDING_2_STATUSES.include?(check_in_event.status)
+          check_in_event.status = Event::TRENDING_LOW 
+        else
+          check_in_event.status = Event::TRENDED_LOW 
+        end
+        check_in_event.su_deleted  = true
+
+        check_in_event.save!
+
       when "#category"
         fb_user.inc(:category_count, 1)
         if !Event::CATEGORIES.include?(check_in_event.category)
