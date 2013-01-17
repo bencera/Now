@@ -3,7 +3,10 @@ class NowCity
   include Mongoid::Document
   include Mongoid::Timestamps
   include Geocoder::Model::Mongoid
-  
+ 
+  BOUNDARY_MILES = 70
+  BOUNDARY_KILOM = 110
+
   field :name
   field :state
   field :country
@@ -64,6 +67,29 @@ class NowCity
 
   def new_local_time(year, month, day, hour, minute, second)
     Time.new(year, month, day, hour, minute, second, self.get_tz_offset)
+  end
+
+  def self.add_featured_city(name, latitude, longitude, radius, url)
+    city_key = name.split(" ").join.upcase
+
+    $redis.sadd("NOW_CITY_KEYS", city_key)
+    $redis.set("#{city_key}_EXP", 0)
+
+    modify_city(city_key, :name => name, :latitude => latitude, :longitude => longitude, :radius => radius, :url => url)
+
+  end
+
+  def self.modify_city(city_key, options={})
+
+    return if !$redis.sismember("NOW_CITY_KEYS", city_key)
+
+
+    $redis.hset("#{city_key}_VALUES", :name, options[:name]) if options[:name]
+    $redis.hset("#{city_key}_VALUES", :latitude, options[:latitude]) if options[:latitude]
+    $redis.hset("#{city_key}_VALUES", :longitude, options[:longitude]) if options[:longitude]
+    $redis.hset("#{city_key}_VALUES", :radius, options[:radius]) if options[:radius]
+    $redis.hset("#{city_key}_VALUES", :url, options[:url]) if options[:url]
+
   end
 
 end
