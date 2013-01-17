@@ -266,6 +266,7 @@ class Instacrawl
       cities.each do |city|
         next if ["SAOPAULO", "CITY"].include? city
         num_waiting = $redis.zcard("#{city}_USERS_TO_LOOK_AT")
+        puts "#{city} #{num_waiting}"
         if num_waiting > max_waiting
           max_waiting = num_waiting
           most_waiting = city
