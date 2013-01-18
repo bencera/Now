@@ -108,7 +108,7 @@ private
     $redis.set("INSTAGRAM_RATE_LIMIT", rate_limit)
     $redis.set("INSTAGRAM_RATE_LIMIT_REMAINING", rate_limit_remaining)
 
-    $redis.hset("IG_RATE_LIMIT_HASH", @access_token, rate_limit_remaining.to_i)
+    $redis.hset("IG_RATE_LIMIT_HASH", @access_token, rate_limit_remaining.to_i) unless @access_token.blank?
 
     Hashie::Mash.new(JSON.parse(response.body))
   end
