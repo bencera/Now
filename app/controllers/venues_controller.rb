@@ -36,19 +36,20 @@ class VenuesController < ApplicationController
 
   def suggestions
     coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
-    max_distance = 50
-        
-    max_distance = max_distance.to_f / 111000
+#    max_distance = 50
+#        
+#    max_distance = max_distance.to_f / 111000
+#
+#    retries = 2
+#    events = []
+#    while events.empty? || retries >= 0
+#      events = EventsHelper.get_localized_results(coordinates, max_distance, params).entries 
+#      max_distance = max_distance * 4
+#      retries -= 1
+#    end
 
-    retries = 2
-    events = []
-    while events.empty? || retries >= 0
-      events = EventsHelper.get_localized_results(coordinates, max_distance, params).entries 
-      max_distance = max_distance * 4
-      retries -= 1
-    end
-
-    @venues = events.map {|event| venue = event.venue; venue}
+    #@venues = events.map {|event| venue = event.venue; venue}
+    @venues = VenuesHelper.get_venue_suggestions(:coordinates => coordinates)
 
   end
 

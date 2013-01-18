@@ -70,6 +70,48 @@ module VenuesHelper
     Venue.where(:coordinates.within => {"$center" => [[longitude, latitude], max_distance]}).entries
   end
 
+  def self.get_venue_suggestions(options={})
+    coordinates = options[:coordinates]
+    max_distance = 2000
+    max_distance = max_distance.to_f / 111000
+
+    retries = 2
+
+    events = []
+
+    already_trending_venue_ids = []
+    
+    venue_echo_count = Hash.new(0)
+
+    while (venue_echo_count.keys.count - already_trending_venue_ids.uniq.count) < 10 && retries > 0 
+      event_query = Event.where(:status.in => Event::TRENDED_OR_TRENDING, :coordinates.within => {"$center" => [coordinates, max_distance]})
+      
+      or_hashes = []
+      8.times do |i|
+        time_begin = i.weeks.ago - 3.hours
+        time_end = i.weeks.ago + 3.hours
+        or_hashes << {:created_at => {"$gt" => time_begin.to_i, "$lt" => time_end.to_i}}
+      end
+      event_query = event_query.where("$or" => or_hashes)
+
+      new_events = event_query.entries
+      events.push(*new_events)
+
+      new_events.each do |event|
+        (already_trending_venue_ids << event.venue_id) if Event::TRENDING_STATUSES.include?(event.status)
+        venue_echo_count[event.venue_id] += event.n_reactions
+      end
+      retries -= 1
+      max_distance *= 2
+    end
+
+    result_venues = venue_echo_count.sort_by {|x| x[1]}.reverse.delete_if {|x| already_trending_venue_ids.include?(x[0])}.map {|x| x[0]}
+
+    return [] if result_venues.empty?
+    return Venue.find(result_venues[0..19])
+
+  end
+
   #options:
 # => :threshold_time in which we need to see min_photos
 # => :min_photo_time is the earliest photo we will show (must be <= threshold_time)
