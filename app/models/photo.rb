@@ -145,7 +145,7 @@ class Photo
 
   end
 
-#this only works for IG media, not internal now photos -- will be deprecated
+#this only works for IG media, not internal now photos 
   def self.create_photo(media_source, media, fs_venue_id)
 
     if(media.location.nil? || media.location.id.nil? || media.location.longitude.blank?)

@@ -2,7 +2,9 @@
 class CreatePhotos
   @queue = :create_photo_queue
 
-  def self.perform(venue_id, photo_ids)
+  def self.perform(venue_id, photo_json_body)
+
+    json =  Hashie::Mash.new(JSON.parse(photo_json_body))
 
     retry_attempt = 0
     begin
@@ -14,11 +16,17 @@ class CreatePhotos
       raise
     end
 
-    photo_ids.each do |photo_id|
+    json.data.each do |media|
       begin
-        photo = Photo.where(:ig_media_id => photo_id).last || Photo.create_general_photo("ig", photo_id, nil, venue_id, nil)
+        photo =  Photo.where(:ig_media_id => media.id).last || Photo.create_photo("ig", media, venue_id)
       rescue
       end
     end
+#    photo_ids.each do |photo_id|
+#      begin
+#        photo = Photo.where(:ig_media_id => photo_id).last || Photo.create_general_photo("ig", photo_id, nil, venue_id, nil)
+#      rescue
+#      end
+#    end
   end
 end

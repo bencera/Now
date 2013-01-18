@@ -386,9 +386,14 @@ EOS
       venue_lon_lat = venue.coordinates
     end
 
+    token = InstagramWrapper.get_best_token()
+
+    ig_client = InstagramWrapper.get_client(:access_token => token)
+
     retry_attempt = 0
     begin
-      response = Instagram.location_recent_media(venue_ig_id)
+      body = ig_client.venue_media(venue_ig_id, :text => true)
+      response = Hashie::Mash.new(JSON.parse(body))
     rescue
       if retry_attempt < 5
         sleep 0.1
@@ -471,7 +476,7 @@ EOS
         ids.push(photo.id) unless ids.include? photo.id
       end
       #enqueue a job to create these photos
-      Resque.enqueue(CreatePhotos, venue_id, ids)
+      Resque.enqueue(CreatePhotos, venue_id, body)
     end
 
     return :fake_event => Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos, :description => description )
