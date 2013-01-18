@@ -386,7 +386,11 @@ EOS
       venue_lon_lat = venue.coordinates
     end
 
-    token = InstagramWrapper.get_best_token()
+    if $redis.get("USE_OTHER_TOKENS") == "true"
+      token = InstagramWrapper.get_best_token()
+    else
+      token = "44178321.f59def8.63f2875affde4de98e043da898b6563f"
+    end
 
     ig_client = InstagramWrapper.get_client(:access_token => token)
 
