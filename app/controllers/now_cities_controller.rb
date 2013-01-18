@@ -29,7 +29,7 @@ class NowCitiesController < ApplicationController
                                     :longitude => city_hash["longitude"].to_f,
                                     :radius => city_hash["radius"].to_f,
                                     :url => city_hash["url"], :experiences => exp_count.to_i,
-                                    :id => "", :theme => false})
+                                    :id => "", :closest_city => false})
 
       unordered_cities << city_entry
 
@@ -43,6 +43,10 @@ class NowCitiesController < ApplicationController
     end
 
     @cities = unordered_cities.sort_by {|city| city.experiences}.reverse[0..4]
+
+    if closest_city
+      closest_city.nearest_city = true
+    end
 
     if show_my_city && closest_city && !@cities.include?(closest_city)
       @cities.pop

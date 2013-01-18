@@ -1,7 +1,7 @@
 object false
 
 child @cities => "cities" do 
-  attributes :name, :latitude, :longitude, :radius, :url, :experiences
+  attributes :name, :latitude, :longitude, :radius, :url, :experiences, :nearest_city
 end
 
 child @themes => "themes" do
