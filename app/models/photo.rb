@@ -138,7 +138,12 @@ class Photo
     photo.user_details = [photo.user.ig_username, photo.user.ig_details[1], photo.user.ig_details[0]]
     photo.now_version = 2
     photo.url = [photo.low_resolution_url, photo.high_resolution_url, photo.thumbnail_url]
-    photo.save!
+    begin
+      photo.save!
+    rescue Mongoid::Errors::Validations
+      photo = Photo.where(:ig_media_id => photo_id).last 
+      raise if photo.nil?
+    end
 
     Rails.logger.info("Photo.rb: created new photo #{photo.id} in venue #{photo.venue.id} by user #{photo.user.id}")
     return photo
