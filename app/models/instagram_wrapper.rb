@@ -55,7 +55,7 @@ class InstagramWrapper
     end
   end
 
-  def pull_pagination(url)
+  def pull_pagination(url, options={})
     if(options[:text])
       InstagramWrapper.get_json_string(url)
     else
