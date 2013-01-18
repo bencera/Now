@@ -3,7 +3,7 @@ class NowCitiesController < ApplicationController
     #take the redis entry, convert it from a string to a hash, then change hash keys to symbols
 
     if params[:lon_lat]
-      coordinates = params[:lon_lat].split(",").reverse.map {|entry| entry.to_f}
+      coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
       show_my_city = true
     else
       show_my_city = false
