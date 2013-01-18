@@ -29,7 +29,7 @@ class NowCitiesController < ApplicationController
                                     :longitude => city_hash["longitude"].to_f,
                                     :radius => city_hash["radius"].to_f,
                                     :url => city_hash["url"], :experiences => exp_count.to_i,
-                                    :id => "", :closest_city => false})
+                                    :id => "", :nearest_city => false})
 
       unordered_cities << city_entry
 
