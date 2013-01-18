@@ -137,7 +137,7 @@ private
     $redis.set("INSTAGRAM_RATE_LIMIT", rate_limit)
     $redis.set("INSTAGRAM_RATE_LIMIT_REMAINING", rate_limit_remaining)
 
-    $redis.hset("IG_RATE_LIMIT_HASH", @access_token, rate_limit_remaining.to_i)
+    $redis.hset("IG_RATE_LIMIT_HASH", @access_token, rate_limit_remaining.to_i) unless @access_token.nil?
 
     return response.body
 
