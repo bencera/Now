@@ -88,8 +88,8 @@ module VenuesHelper
       
       or_hashes = []
       8.times do |i|
-        time_begin = i.weeks.ago - 3.hours
-        time_end = i.weeks.ago + 3.hours
+        time_begin = i.weeks.ago - 1.hours
+        time_end = i.weeks.ago + 5.hours
         or_hashes << {:created_at => {"$gt" => time_begin.to_i, "$lt" => time_end.to_i}}
       end
       event_query = event_query.where("$or" => or_hashes)
