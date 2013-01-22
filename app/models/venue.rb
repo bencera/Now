@@ -466,8 +466,8 @@ class Venue
   end
 
   def get_live_event()
-    event = self.last_event
-    return event if event && (Event::LIVE_STATUSES.include? event.status)
+    event = self.events.where(:status.in => Event::LIVE_STATUSES).last
+    return event if event 
     return nil
   end
 
