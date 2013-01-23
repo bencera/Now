@@ -44,11 +44,11 @@ class UserFollowEvent2
    
     media_list.each do |media|
 
-      Rails.logger.info("Examining photo #{media.id}")
+#      Rails.logger.info("Examining photo #{media.id}")
       next if media.location.nil? || media.location.id.nil? || (media.created_time.to_i < since_time) || media.caption.nil? 
 
       fb_user = get_media_user(media)
-      Rails.logger.info("user is #{fb_user.now_id}")
+#      Rails.logger.info("user is #{fb_user.now_id}")
      
       existing_event = get_existing_event(media)
 
