@@ -158,11 +158,31 @@ class Photo
       return nil 
     end
 
-    #i'd prefer to use find, but it raises an exception when it fails -- there's a config option we could change
-    venue = Venue.where(:_id => fs_venue_id).first
-    if venue.nil?
-      venue = Venue.create_venue(fs_venue_id)
+    if fs_venue_id.nil?
+      venue = Venue.first(conditions: {ig_venue_id: media.location.id.to_s }) 
+      
+      if venue.nil?
+        #copied directly from find location and save
+        p = Venue.search(media.location.name, media.location.latitude, media.location.longitude, false)
+        fs_venue_id = nil
+        p.each do |venue|
+          fs_venue_id = venue.id unless media.location.name != venue.name
+          break if fs_venue_id != nil
+        end
+        venue = Venue.create_venue(fs_venue_id) unless fs_venue_id.nil?
+      end
+    else
+      #i'd prefer to use find, but it raises an exception when it fails -- there's a config option we could change
+      venue = Venue.where(:_id => fs_venue_id).first
+      if venue.nil?
+        venue = Venue.create_venue(fs_venue_id)
+      end    
     end
+
+    return nil if venue.nil?
+
+    #i'd prefer to use find, but it raises an exception when it fails -- there's a config option we could change
+
 
     #shouldn't have to hit db again -- i'm only calling this if i didn't find the photo already.
     photo = Photo.new()
