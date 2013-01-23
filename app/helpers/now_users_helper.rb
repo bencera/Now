@@ -2,23 +2,39 @@
 module NowUsersHelper
 
   def self.find_or_create_device(params={})
-    
-    device = APN::Device.where(:udid => params[:deviceid]).first ||  APN::Device.create!(:udid => params[:deviceid])
+   
+    attempt = 0
+    begin
+      device = APN::Device.where(:udid => params[:deviceid]).first ||  APN::Device.create!(:udid => params[:deviceid])
 
-    save_device = false
-  
-    if params[:longitude] && params[:latitude]
-      device.coordinates = [params[:longitude].to_f,params[:latitude].to_f] 
-      save_device = true
-    end
-    
-    if params[:token] && !(device.subscriptions.where(:token => params[:token]).first) 
-      device.subscriptions.create(:application => APN::Application.first, :token => params[:token])
       save_device = false
+    
+      if params[:longitude] && params[:latitude]
+        device.coordinates = [params[:longitude].to_f,params[:latitude].to_f] 
+        save_device = true
+      end
+      
+      if params[:token] && !(device.subscriptions.where(:token => params[:token]).first) 
+        device.subscriptions.create(:application => APN::Application.first, :token => params[:token])
+        save_device = false
+      end
+
+      device.save! if save_device
+      
+    rescue Exception => e
+      if e.message.match(/Udid is already taken/)
+        attempt += 1
+        retry unless attempt > 4
+      elsif e.message.match(/Subscriptions is invalid/)
+        subscriptions = device.subscriptions.where(:token => params[:token]).entries
+        while subscriptions > 1
+          subscription = subscriptions.pop.destroy
+        end
+        attempt += 1
+        retry unless attempt > 4
+      end
+      raise
     end
-
-    device.save if save_device
-
     return device
   end
 
