@@ -186,8 +186,7 @@ class UserFollowEvent2
     if Photo.where(:ig_media_id => media.id).first
       new_photo = Photo.where(:ig_media_id => media.id).first
     else
-      Photo.new.find_location_and_save(media,nil)
-      new_photo = Photo.first(conditions: {ig_media_id: media.id})
+      new_photo = Photo.create_photo("ig", media, nil)
     end
 
     return new_photo
