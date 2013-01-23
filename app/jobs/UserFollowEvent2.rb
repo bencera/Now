@@ -37,6 +37,8 @@ class UserFollowEvent2
         pages += 1
       end
       $redis.hset("LAST_DEEP_LOOK", token, Time.now.to_i)
+
+      Rails.logger.info("Doing a deeper look on #{media_list.count} photos")
     end
 
    
