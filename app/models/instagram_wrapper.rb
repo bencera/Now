@@ -68,6 +68,7 @@ class InstagramWrapper
   end
 
   def self.get_best_token(options={})
+
     limits = $redis.hgetall("IG_RATE_LIMIT_HASH")
     token = limits.keys.first
     
