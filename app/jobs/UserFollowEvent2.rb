@@ -9,15 +9,41 @@ class UserFollowEvent2
     now = params[:current_time] || Time.now.to_i
     since_time = params[:since_time] || 3.hours.ago.to_i
 
-    ig_client = InstagramWrapper.get_client(:access_token => "44178321.f59def8.63f2875affde4de98e043da898b6563f")
+    token =  "44178321.f59def8.63f2875affde4de98e043da898b6563f"
+    ig_client = InstagramWrapper.get_client(:access_token => token)
 
     Rails.logger.info("Loading feed")
-    media_list = ig_client.feed.data
+    response = ig_client.feed
+    media_list = response.data
+
+    last_deep_look = $redis.hget("LAST_DEEP_LOOK", token).to_i
+    if last_deep_look < 30.minutes.ago.to_i
+      #go 10 searches deep or 3.hours deep
+
+      pages = 0
+      done_pulling = false
+      while pages <= 5 && !done_pulling && response && response.pagination && response.pagination.next_url && 
+        (response = Hashie::Mash.new(JSON.parse(open(response.pagination.next_url).read)))
+
+        break if !response || !response.data || response.data.empty? || response.data.first.created_time.to_i < 3.hours.ago.to_i
+
+        done_pulling = true
+        response.data.each do |media|
+          if media.created_time.to_i > 3.hours.ago.to_i
+            done_pulling = false
+            media_list << media
+          end
+        end
+        pages += 1
+      end
+      $redis.hset("LAST_DEEP_LOOK", token, Time.now.to_i)
+    end
+
    
     media_list.each do |media|
 
       Rails.logger.info("Examining photo #{media.id}")
-      next if media.location.nil? || media.location.id.nil? || (media.created_time.to_i < since_time) || media.caption.nil?
+      next if media.location.nil? || media.location.id.nil? || (media.created_time.to_i < since_time) || media.caption.nil? 
 
       fb_user = get_media_user(media)
       Rails.logger.info("user is #{fb_user.now_id}")
