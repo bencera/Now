@@ -64,15 +64,21 @@ class InstagramWrapper
   end
 
   def self.get_client(options={})
-    @client ||= InstagramWrapper.new(options)
+    if @client.nil?
+      @client = InstagramWrapper.new(options)
+    else
+      @access_token =  options[:access_token] || @access_token
+    end
   end
 
   def self.get_best_token(options={})
     limits = $redis.hgetall("IG_RATE_LIMIT_HASH")
-    token = limits.keys.first
+    tokens = $redis.smembers("IG_FOLLOW_TOKENS")
+
+    token = tokens.first
     
     max_limit = 0
-    limits.keys.each do |key|
+    tokens.each do |key|
       if limits[key].to_i > max_limit
         max_limit = limits[key].to_i
         token = key
@@ -80,6 +86,12 @@ class InstagramWrapper
     end
 
     return token
+  end
+
+  def self.get_random_token(options={})
+    
+    $redis.srandmember("IG_FOLLOW_TOKENS")
+
   end
 
 private
