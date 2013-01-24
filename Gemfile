@@ -10,10 +10,11 @@ gem 'rails', '3.2.11'
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
 #gem 'sqlite3'
-
+gem "pg"
 gem "mongoid", "~> 2.3"
 gem "bson_ext", "~> 1.4"
 gem 'unicorn'
+
 #gem instagram .. wait for it to be resolved
 
 # Gems used only for assets and not required

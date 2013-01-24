@@ -10,11 +10,11 @@ class LogSearch
     user_token = params[:now_token]
     udid = params[:udid]
 
-#    if user_token
-#      fb_user = FacebookUser.where(:now_token => user_token).first
-#    elsif udid
-#      device = APN::Device.where(:udid => udid)
-#    end
+    if user_token
+      fb_user = FacebookUser.where(:now_token => user_token).first
+    elsif udid
+      device = APN::Device.where(:udid => udid)
+    end
   end
 end
 
