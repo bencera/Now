@@ -68,6 +68,7 @@ class InstagramWrapper
       @client = InstagramWrapper.new(options)
     else
       @access_token =  options[:access_token] || @access_token
+      return @client
     end
   end
 
