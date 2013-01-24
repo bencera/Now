@@ -59,6 +59,7 @@ class Venue
   has_many :checkins
 
 
+
   belongs_to :now_city
   
   include Geocoder::Model::Mongoid

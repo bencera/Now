@@ -6,6 +6,7 @@ class CreateSearchEntries < ActiveRecord::Migration
       t.string :venue_id
       
       t.timestamps
+
     end
   end
 
