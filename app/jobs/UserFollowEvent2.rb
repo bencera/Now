@@ -9,7 +9,8 @@ class UserFollowEvent2
     now = params[:current_time] || Time.now.to_i
     since_time = params[:since_time] || 3.hours.ago.to_i
 
-    token =  "44178321.f59def8.63f2875affde4de98e043da898b6563f"
+
+    token =  InstagramWrapper.get_random_token()
     ig_client = InstagramWrapper.get_client(:access_token => token)
 
     Rails.logger.info("Loading feed")
