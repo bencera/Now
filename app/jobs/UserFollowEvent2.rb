@@ -47,7 +47,7 @@ class UserFollowEvent2
 #      Rails.logger.info("Examining photo #{media.id}")
       next if media.location.nil? || media.location.id.nil? || (media.created_time.to_i < since_time) || media.caption.nil? 
 
-      venue = Venue.where(:ig_venue_id => media.location.id).first
+      venue = Venue.where(:ig_venue_id => media.location.id.to_s).first
 
       fb_user = get_media_user(media)
 #      Rails.logger.info("user is #{fb_user.now_id}")
