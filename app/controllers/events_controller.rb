@@ -87,7 +87,7 @@ class EventsController < ApplicationController
 
         fake_event =  EventsHelper.get_fake_event(params[:venue_id])[:fake_event]
         
-        @events.unshift(fake_event) unless fake_event.nil?
+        @events.unshift(fake_event) unless fake_event.nil? 
       end
     elsif params[:liked_by]
       @events = EventsHelper.get_user_liked(params[:liked_by])
