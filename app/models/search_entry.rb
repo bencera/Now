@@ -9,4 +9,12 @@ class SearchEntry < ActiveRecord::Base
   def venue
     Venue.first(conditions: {:_id => self.venue_id})
   end
+
+  def set_facebook_user(facebook_user)
+    self.facebook_user_id = facebook_user.id.to_s
+  end
+
+  def set_venue(venue)
+    self.venue_id = venue.id.to_s
+  end
 end
