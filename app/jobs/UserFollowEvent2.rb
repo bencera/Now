@@ -19,7 +19,7 @@ class UserFollowEvent2
 
     last_deep_look = $redis.hget("LAST_DEEP_LOOK", token).to_i
     if last_deep_look < 30.minutes.ago.to_i
-      #go 10 searches deep or 3.hours deep
+      #go 5 searches deep or 3.hours deep
 
       pages = 0
       done_pulling = false
