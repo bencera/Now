@@ -1,15 +1,14 @@
 class InstagramWrapper
 
-  @@access_token = "44178321.f59def8.63f2875affde4de98e043da898b6563f"
-  @@client = nil
+  #we actually shouldn't do this -- this is a bad idea
 
   #find out the proper way of doing this
   def initialize(options={})
-    @@access_token = options[:access_token] || ENV["INSTAGRAM_TOKEN"]  
+    @access_token = options[:access_token] || ENV["INSTAGRAM_TOKEN"]  
   end
 
   def feed(options={})
-    url = "https://api.instagram.com/v1/users/self/feed?access_token=#{@@access_token}"
+    url = "https://api.instagram.com/v1/users/self/feed?access_token=#{@access_token}"
     if(options[:text])
       InstagramWrapper.get_json_string(url)
     else
@@ -18,7 +17,7 @@ class InstagramWrapper
   end
 
   def user_media(user_id, options={})
-    url = "https://api.instagram.com/v1/users/#{user_id}/media/recent/?access_token=#{@@access_token}"
+    url = "https://api.instagram.com/v1/users/#{user_id}/media/recent/?access_token=#{@access_token}"
     url += "&min_timestamp=#{options[:min_timestamp]}" if options[:min_timestamp]
     url += "&max_timestamp=#{options[:max_timestamp]}" if options[:max_timestamp]
     if(options[:text])
@@ -29,7 +28,7 @@ class InstagramWrapper
   end
 
   def venue_media(location_id, options={})
-    url = "https://api.instagram.com/v1/locations/" + "#{location_id}" + "/media/recent/?access_token=#{@@access_token}"
+    url = "https://api.instagram.com/v1/locations/" + "#{location_id}" + "/media/recent/?access_token=#{@access_token}"
     url += "&min_timestamp=#{options[:min_timestamp].to_i}" if options[:min_timestamp]
     url += "&max_timestamp=#{options[:max_timestamp].to_i}" if options[:max_timestamp]
     if(options[:text])
@@ -40,7 +39,7 @@ class InstagramWrapper
   end
 
   def user_info(user_id, options={})
-    url = "https://api.instagram.com/v1/users/#{user_id}/?access_token=#{@@access_token}"
+    url = "https://api.instagram.com/v1/users/#{user_id}/?access_token=#{@access_token}"
     if(options[:text])
       InstagramWrapper.get_json_string(url)
     else
@@ -50,13 +49,32 @@ class InstagramWrapper
 
   def user_follows(user_id, options={})
     user_id = "self" if user_id.nil? 
-    url =  "https://api.instagram.com/v1/users/#{user_id}/follows?access_token=#{@@access_token}"
+    url =  "https://api.instagram.com/v1/users/#{user_id}/follows?access_token=#{@access_token}"
     if(options[:text])
       InstagramWrapper.get_json_string(url)
     else
       InstagramWrapper.get_data(url)
     end
   end
+
+  def follow_user(user_id, options={})
+    url = "https://api.instagram.com/v1/users/#{user_id}/relationship?access_token=#{@access_token}"
+    parsed_url = URI.parse(url)
+    http = Net::HTTP.new(parsed_url.host, parsed_url.port)
+    request = Net::HTTP::Post.new(parsed_url.request_uri)
+    request.set_form_data({"action" => "follow"})
+    
+    http.use_ssl = true
+
+    response = http.request(request)
+  end
+
+  def unfollow_user(user_id, options={})
+    url = "https://api.instagram.com/v1/users/#{user_id}/relationship?access_token==#{@access_token}"
+    parsed_url = URI.parse(url)
+    post = Net::HTTP.post_form(parsed_url, :action => "unfollow")
+  end
+
 
   def pull_pagination(url, options={})
     if(options[:text])
@@ -67,12 +85,7 @@ class InstagramWrapper
   end
 
   def self.get_client(options={})
-    if @@client.nil?
-      @@client = InstagramWrapper.new(options)
-    else
-      @@access_token =  options[:access_token] || @@access_token
-      return @@client
-    end
+    InstagramWrapper.new(options)
   end
 
   def self.get_best_token(options={})
@@ -100,7 +113,7 @@ class InstagramWrapper
 
 private
 
-  def self.get_data(url)
+  def self.get_data(url, access_token)
     parsed_url = URI.parse(url)
 
     http = Net::HTTP.new(parsed_url.host, parsed_url.port)
@@ -124,12 +137,16 @@ private
     $redis.set("INSTAGRAM_RATE_LIMIT", rate_limit)
     $redis.set("INSTAGRAM_RATE_LIMIT_REMAINING", rate_limit_remaining)
 
-    $redis.hset("IG_RATE_LIMIT_HASH", @@access_token, rate_limit_remaining.to_i) unless @@access_token.blank?
+    $redis.hset("IG_RATE_LIMIT_HASH", access_token, rate_limit_remaining.to_i) unless access_token.blank?
 
     Hashie::Mash.new(JSON.parse(response.body))
   end
 
-  def self.get_json_string(url)
+  def self.post(url)
+
+  end
+
+  def self.get_json_string(url, access_token)
     parsed_url = URI.parse(url)
 
     http = Net::HTTP.new(parsed_url.host, parsed_url.port)
@@ -153,7 +170,7 @@ private
     $redis.set("INSTAGRAM_RATE_LIMIT", rate_limit)
     $redis.set("INSTAGRAM_RATE_LIMIT_REMAINING", rate_limit_remaining)
 
-    $redis.hset("IG_RATE_LIMIT_HASH", @@access_token, rate_limit_remaining.to_i) unless @@access_token.blank?
+    $redis.hset("IG_RATE_LIMIT_HASH", access_token, rate_limit_remaining.to_i) unless access_token.blank?
 
     return response.body
 
