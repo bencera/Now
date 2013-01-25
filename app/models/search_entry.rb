@@ -17,4 +17,12 @@ class SearchEntry < ActiveRecord::Base
   def set_venue(venue)
     self.venue_id = venue.id.to_s
   end
+
+  def set_device(udid)
+    self.udid = udid
+  end
+
+  def get_device()
+    APN::Device.where(:udid => self.udid).first
+  end
 end

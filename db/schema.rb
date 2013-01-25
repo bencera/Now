@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130124070019) do
+ActiveRecord::Schema.define(:version => 20130125004629) do
 
   create_table "search_entries", :force => true do |t|
     t.datetime "search_time"
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(:version => 20130124070019) do
     t.string   "venue_id"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.string   "udid"
   end
 
 end
