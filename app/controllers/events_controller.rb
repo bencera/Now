@@ -84,7 +84,7 @@ class EventsController < ApplicationController
 
       if params[:search]
         #log the search in our postgres
-        Resque.enqueue(LogSearch, {:search_time => Time.now, 
+        Resque.enqueue(LogSearch, {:search_time => Time.now.to_i, 
                                    :venue_id => params[:venue_id], 
                                    :now_token => params[:nowtoken],
                                    :udid => params[:device_id]})

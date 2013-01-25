@@ -9,7 +9,7 @@ class LogSearch
     venue_id = params[:venue_id]
     user_token = params[:now_token]
     udid = params[:udid]
-    search_time = params[:search_time]
+    search_time = Time.at(params[:search_time].to_i)
 
     if user_token
       user = FacebookUser.where(:now_token => user_token).first
