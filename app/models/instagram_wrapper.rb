@@ -10,9 +10,9 @@ class InstagramWrapper
   def feed(options={})
     url = "https://api.instagram.com/v1/users/self/feed?access_token=#{@access_token}"
     if(options[:text])
-      InstagramWrapper.get_json_string(url)
+      InstagramWrapper.get_json_string(url, @access_token)
     else
-      InstagramWrapper.get_data(url)
+      InstagramWrapper.get_data(url, @access_token)
     end
   end
 
@@ -21,9 +21,9 @@ class InstagramWrapper
     url += "&min_timestamp=#{options[:min_timestamp]}" if options[:min_timestamp]
     url += "&max_timestamp=#{options[:max_timestamp]}" if options[:max_timestamp]
     if(options[:text])
-      InstagramWrapper.get_json_string(url)
+      InstagramWrapper.get_json_string(url, @access_token)
     else
-      InstagramWrapper.get_data(url)
+      InstagramWrapper.get_data(url, @access_token)
     end
   end
 
@@ -32,18 +32,18 @@ class InstagramWrapper
     url += "&min_timestamp=#{options[:min_timestamp].to_i}" if options[:min_timestamp]
     url += "&max_timestamp=#{options[:max_timestamp].to_i}" if options[:max_timestamp]
     if(options[:text])
-      InstagramWrapper.get_json_string(url)
+      InstagramWrapper.get_json_string(url, @access_token)
     else
-      InstagramWrapper.get_data(url)
+      InstagramWrapper.get_data(url, @access_token)
     end
   end
 
   def user_info(user_id, options={})
     url = "https://api.instagram.com/v1/users/#{user_id}/?access_token=#{@access_token}"
     if(options[:text])
-      InstagramWrapper.get_json_string(url)
+      InstagramWrapper.get_json_string(url, @access_token)
     else
-      InstagramWrapper.get_data(url)
+      InstagramWrapper.get_data(url, @access_token)
     end
   end
 
@@ -51,9 +51,9 @@ class InstagramWrapper
     user_id = "self" if user_id.nil? 
     url =  "https://api.instagram.com/v1/users/#{user_id}/follows?access_token=#{@access_token}"
     if(options[:text])
-      InstagramWrapper.get_json_string(url)
+      InstagramWrapper.get_json_string(url, @access_token)
     else
-      InstagramWrapper.get_data(url)
+      InstagramWrapper.get_data(url, @access_token)
     end
   end
 
@@ -78,9 +78,9 @@ class InstagramWrapper
 
   def pull_pagination(url, options={})
     if(options[:text])
-      InstagramWrapper.get_json_string(url)
+      InstagramWrapper.get_json_string(url, @access_token)
     else
-      InstagramWrapper.get_data(url)
+      InstagramWrapper.get_data(url, @access_token)
     end
   end
 
