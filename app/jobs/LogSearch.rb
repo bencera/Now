@@ -16,8 +16,8 @@ class LogSearch
       user_id = user && user.id
     end
 
-    search_entry = SearchEntry.create(:venue_id => venue_id, 
-                                   :facebook_user_id => user_id,
+    search_entry = SearchEntry.create(:venue_id => venue_id.to_s, 
+                                   :facebook_user_id => user_id.to_s,
                                    :udid => udid,
                                    :search_time => search_time)
                                    
