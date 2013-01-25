@@ -9,12 +9,18 @@ class LogSearch
     venue_id = params[:venue_id]
     user_token = params[:now_token]
     udid = params[:udid]
+    search_time = params[:search_time]
 
     if user_token
-      fb_user = FacebookUser.where(:now_token => user_token).first
-    elsif udid
-      device = APN::Device.where(:udid => udid)
+      user = FacebookUser.where(:now_token => user_token).first
+      user_id = user && user.id
     end
+
+    search_entry = SearchEntry.create(:venue_id => venue_id, 
+                                   :user_id => user_id,
+                                   :udid => udid,
+                                   :search_time => search_time)
+                                   
   end
 end
 

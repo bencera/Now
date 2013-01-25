@@ -88,6 +88,7 @@ gem "timezone", "~> 0.1.5"
 group :development do
   gem "magic_encoding", "~> 0.0.2"
   gem 'faker', '1.0.1'
+  gem 'annotate', '2.4.0'
 end
 
 group :test do
