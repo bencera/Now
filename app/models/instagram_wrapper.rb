@@ -1,5 +1,8 @@
 class InstagramWrapper
 
+  @@access_token = "44178321.f59def8.63f2875affde4de98e043da898b6563f"
+  @@client = nil
+
   #find out the proper way of doing this
   def initialize(options={})
     @@access_token = options[:access_token] || ENV["INSTAGRAM_TOKEN"]  
