@@ -14,7 +14,7 @@ class TrendingPeople
 
     events.each do |event|
       #if the event began today, we can keep trending it, otherwise, it's done
-      if event.began_today2?(current_time) || event.end_time > 3.hours.ago.to_i
+      if event.began_today2?(current_time) && event.end_time > 3.hours.ago.to_i
         event.fetch_and_add_photos(current_time)
       else
         event.untrend
