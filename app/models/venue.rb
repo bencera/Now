@@ -498,6 +498,15 @@ class Venue
     return profile
   end
 
+  def notify_subscribers(event)
+    device_subscribers = $redis.smembers("#{self.id.to_s}:UDID_NOTIFY")
+    $redis.del("#{self.id.to_s}:UDID_NOTIFY")
+    fb_user_subscribers = $redis.smembers("#{self.id.to_s}:USER_NOTIFY")
+    $redis.del("#{self.id.to_s}:USER_NOTIFY")
+
+    SentPush.notify_users("#{self.name} now has activity", event.id.to_s, device_subscribers, fb_user_subscribers)
+
+  end
 
   ##############################################################
   # trends a new event given a list of photos to put in the new event 

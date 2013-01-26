@@ -171,6 +171,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.next_update = current_time
   end
 
+  after_create do
+    self.venue.notify_subscribers(self) if Event::TRENDING_STATUSES.include?(self.status)
+  end
+
 
   #description should be 50char long max...
 

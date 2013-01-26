@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130125004629) do
+ActiveRecord::Schema.define(:version => 20130125231536) do
 
   create_table "search_entries", :force => true do |t|
     t.datetime "search_time"
@@ -20,6 +20,16 @@ ActiveRecord::Schema.define(:version => 20130125004629) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.string   "udid"
+  end
+
+  create_table "sent_pushes", :force => true do |t|
+    t.string   "event_id"
+    t.datetime "sent_time"
+    t.boolean  "opened_event"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.text     "message"
+    t.string   "facebook_user_id"
   end
 
 end
