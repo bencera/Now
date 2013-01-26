@@ -37,6 +37,7 @@ class SentPush < ActiveRecord::Base
     fb_users_notified.each do |fb_user_id|
       begin
         SentPush.create(:facebook_user_id => fb_user_id, :event_id => event_id, :message => message, :sent_time => Time.now, :opened_event => false)
+
       rescue
       end
     end
