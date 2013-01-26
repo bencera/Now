@@ -172,7 +172,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   after_create do
-    self.venue.notify_subscribers(self) if Event::TRENDING_STATUSES.include?(self.status)
+    #take this out so it won't fail silently later
+    begin
+      self.venue.notify_subscribers(self) if Event::TRENDING_STATUSES.include?(self.status)
+    rescue
+    end
   end
 
 
