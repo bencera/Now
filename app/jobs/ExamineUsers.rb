@@ -5,7 +5,7 @@ class ExamineUsers
 
     params = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
 
-    token = params[:token]
+    token = params[:token] || InstagramWrapper.get_random_token()
 
     city_buckets = $redis.smembers("CITY_SUGGESTION_KEYS")
     biggest_bucket = city_buckets.first
