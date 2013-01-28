@@ -1,9 +1,8 @@
 class Captionator 
-  def self.get_caption(event)
-    #STOP WORDS
-    stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "/", ":", "<", ">", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 
-    stop_words = ["a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+  @@stop_characters = ["-",".","~", "!", "&", ",", "(", ")", "/", ":", "<", ">", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+
+  @@stop_words = ["a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
           "a's", "able", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", 
           "again", "against", "ain't", "all", "allow", "allows", "almost", "alone", "along", "already", "also", "although", "always", 
           "am", "among", "amongst", "an", "and", "another", "any", "anybody", "anyhow", "anyone", "anything", "anyway", "anyways", 
@@ -51,20 +50,26 @@ class Captionator
           "your", "yours", "yourself", "yourselves", "zero",""]
 
 
+  def self.get_caption(event)
+    #STOP WORDS
+    self.get_caption_from_photos(event.photos)
+  end
+  
+  def self.get_caption_from_photos(photos)
     #GET WORDS + HASHTAGS
     comments = ""
-    event.photos.each do |photo|
+    photos.each do |photo|
       comments << photo.caption unless photo.caption.nil?
       comments << " "
     end
 
-    stop_characters.each do |c|
+    @@stop_characters.each do |c|
       comments = comments.gsub(c, '')
     end
 
     comments = comments.downcase
     words = comments.split(/ /)
-    real_words = words - stop_words
+    real_words = words - @@stop_words
 
 
     relevant_hashtags = []
