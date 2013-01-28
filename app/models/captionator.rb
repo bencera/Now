@@ -52,10 +52,10 @@ class Captionator
 
   def self.get_caption(event)
     #STOP WORDS
-    self.get_caption_from_photos(event.photos)
+    self.get_caption_from_photos(event.photos, event.venue)
   end
   
-  def self.get_caption_from_photos(photos)
+  def self.get_caption_from_photos(photos, venue)
     #GET WORDS + HASHTAGS
     comments = ""
     photos.each do |photo|
@@ -88,7 +88,7 @@ class Captionator
 
     #TAKE OUT VENUE NAME
 
-    venue_words = event.venue.name.downcase.split(/ /)
+    venue_words = venue.name.downcase.split(/ /)
     relevant_words = relevant_words - venue_words
 
     #GET KEYWORDS OUT OF WORDS
@@ -107,7 +107,11 @@ class Captionator
 
 
     #GET CAPTIONS WITHOUT END HASHTAGS (used in the end) or BEGINNING HASHTAGS
-    captions = event.photos.distinct(:caption)
+    captions = []
+    
+    photos.each {|photo| captions << photo.caption}
+
+    caption = captions.uniq
 
     captions_new = []
 
