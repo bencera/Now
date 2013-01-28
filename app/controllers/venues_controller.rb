@@ -53,7 +53,7 @@ class VenuesController < ApplicationController
 
     @venues = result[:venues]
 #    @title = result[:title] || ""
-    @title = "Popular on Wednesday around lunchtime"
+    @title = "Popular on Wednesday around lunch"
 
   end
 

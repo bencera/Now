@@ -15,7 +15,7 @@ class NowCity
   EVENING = 18
   NIGHT = 22
 
-  TIME_TITLES = {LATENIGHT => "late nights", MORNING => "mornings", LUNCH => "around lunchtime", 
+  TIME_TITLES = {LATENIGHT => "late nights", MORNING => "mornings", LUNCH => "around lunch", 
                  AFTERNOON => "afternoons", EVENING => "evenings", NIGHT => "nights"}
 
   field :name
