@@ -70,9 +70,15 @@ class InstagramWrapper
   end
 
   def unfollow_user(user_id, options={})
-    url = "https://api.instagram.com/v1/users/#{user_id}/relationship?access_token==#{@access_token}"
+    url = "https://api.instagram.com/v1/users/#{user_id}/relationship?access_token=#{@access_token}"
     parsed_url = URI.parse(url)
-    post = Net::HTTP.post_form(parsed_url, :action => "unfollow")
+    http = Net::HTTP.new(parsed_url.host, parsed_url.port)
+    request = Net::HTTP::Post.new(parsed_url.request_uri)
+    request.set_form_data({"action" => "unfollow"})
+    
+    http.use_ssl = true
+
+    response = http.request(request)
   end
 
 
