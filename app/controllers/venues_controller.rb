@@ -52,7 +52,8 @@ class VenuesController < ApplicationController
     result = VenuesHelper.get_venue_suggestions(:coordinates => coordinates)
 
     @venues = result[:venues]
-    @title = result[:title] || ""
+#    @title = result[:title] || ""
+    @title = "Popular on Wednesday around lunchtime"
 
   end
 
