@@ -21,3 +21,9 @@ auto_ig_events:
   class: UserFollowEvent2
   args: 
   description: "pull recent instagram photos from our tastemakers -- create an event if its good"
+
+drain_event_opens:
+  every: "5m"
+  class: DrainAnalytics
+  args: 
+  description: "Enter recent activity into the database"

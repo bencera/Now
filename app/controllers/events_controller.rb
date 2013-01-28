@@ -31,7 +31,7 @@ class EventsController < ApplicationController
 
     click_params = {}
     click_params[:now_token] = params[:nowtoken] if params[:nowtoken]
-    #add udid if we have it to click_params
+    click_params[:udid] = params[:device_id] if params[:deviceid]
     @event.add_click(click_params)
   end
   
