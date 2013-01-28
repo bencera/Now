@@ -113,7 +113,7 @@ module VenuesHelper
 
     result_venue_objects =  Venue.find(result_venues[0..19])
 
-    result_venues_objects.each do |venue|
+    result_venue_objects.each do |venue|
       now_city = venue.now_city
       break if venue.now_city
     end
