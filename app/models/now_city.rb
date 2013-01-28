@@ -83,7 +83,7 @@ class NowCity
   def get_general_time(time)
     local_time = time.nil? ? self.get_local_time : self.to_local_time(time)
 
-    return TIME_TITLES[NowCity.get_time_group_from_time(time).hour]
+    return TIME_TITLES[NowCity.get_time_group_from_time(local_time)]
   end
 
   def self.add_featured_city(name, latitude, longitude, radius, url)
@@ -112,17 +112,17 @@ class NowCity
   def self.get_time_group_from_time(time)
 
     if time.hour < LATENIGHT || time.hour >= NIGHT
-      return :night
+      return NIGHT
     elsif time.hour >= LATENIGHT && time.hour < MORNING
-      return :latenight
+      return LATENIGHT
     elsif time.hour >= MORNING && time.hour < LUNCH
-      return :morning
+      return MORNING
     elsif time.hour >= LUNCH && time.hour < AFTERNOON
-      return :lunch
+      return LUNCH
     elsif time.hour >= AFTERNOON && time.hour < EVENING
-      return :afternoon
+      return AFTERNOON
     elsif time.hour >= EVENING && time.hour < NIGHT
-      return :evening
+      return EVENING
     end
   end
 
