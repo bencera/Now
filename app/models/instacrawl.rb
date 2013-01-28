@@ -220,17 +220,24 @@ class Instacrawl
 
   def self.backup_our_follow_list
 
-    @client =  InstagramWrapper.get_client(:access_token => "44178321.f59def8.63f2875affde4de98e043da898b6563f")
+    tokens = $redis.smembers("IG_FOLLOW_TOKENS")
+    clients = []
+
+    tokens.each do |token|
+      clients << InstagramWrapper.get_client(:access_token => token)
+    end
 
     followed_users = []
 
-    followed_response = @client.user_follows("self")
+    clients.each do |client|
+      followed_response = client.user_follows("self")
 
-    begin
-      followed_response.data.each do |user|
-        followed_users << user.id
-      end
-    end while followed_response.pagination && followed_response.pagination.next_url && (followed_response = @client.pull_pagination(followed_response.pagination.next_url))
+      begin
+        followed_response.data.each do |user|
+          followed_users << user.id
+        end
+      end while followed_response.pagination && followed_response.pagination.next_url && (followed_response = client.pull_pagination(followed_response.pagination.next_url))
+    end
 
     followed_users.each {|user_id| $redis.sadd("USERS_NOWAPP_FOLLOWS", user_id) unless $redis.sismember("USERS_NOWAPP_FOLLOWS", user_id)}
 
