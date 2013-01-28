@@ -123,7 +123,7 @@ module VenuesHelper
     end
     
     local_time = now_city.get_local_time
-    title_string = "Venues that trend " + now_city.get_general_time(local_time) + " on a " + local_time.strftime("%A")
+    title_string = "Popular venues " + now_city.get_general_time(local_time) + " on a " + local_time.strftime("%A")
 
     return {:venues => result_venue_objects, :title => title_string}
   end
