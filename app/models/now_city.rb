@@ -83,7 +83,7 @@ class NowCity
   def get_general_time(time)
     local_time = time.nil? ? self.get_local_time : self.to_local_time(time)
 
-    return TIME_TITLES[NowCity.get_time_group_from_time(time)]
+    return TIME_TITLES[NowCity.get_time_group_from_time(time).hour]
   end
 
   def self.add_featured_city(name, latitude, longitude, radius, url)
