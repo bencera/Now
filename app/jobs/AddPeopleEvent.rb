@@ -313,6 +313,8 @@ class AddPeopleEvent
         users_to_notify = FacebookUser.where(:now_id.in => ["1", "2", "359"])
         users_to_notify.each {|fb_user| fb_user.send_notification(message_to_admins, check_in_event.id) }
         
+        SentPush.batch_push(SendBatchPush.get_message(event), event.id.to_s, devices.count)
+        
       when "#delphoto"
         indices_to_delete = commands[1..-1].map {|photo| photo.to_i}
         photos = check_in_event.photos.where(:external_media_source.in => [nil, "ig"]).entries

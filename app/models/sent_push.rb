@@ -11,6 +11,7 @@
 #  message          :text
 #  facebook_user_id :string(255)
 #  udid             :string(255)
+#  user_count       :integer
 #
 
 class SentPush < ActiveRecord::Base
@@ -31,7 +32,7 @@ class SentPush < ActiveRecord::Base
       begin
 #        next if !(["1", "2", "359"].include?(fb_user.now_id))
         Rails.logger.info("notifying #{fb_user.now_id}")
-        fb_user.send_notification(message, event_id)
+        fb_user.send_notification(message, event_id.to_s)
         fb_users_notified.push(fb_user.id.to_s)
       rescue
       end
@@ -39,10 +40,14 @@ class SentPush < ActiveRecord::Base
 
     fb_users_notified.each do |fb_user_id|
       begin
-        SentPush.create(:facebook_user_id => fb_user_id, :event_id => event_id, :message => message, :sent_time => Time.now, :opened_event => false)
+        SentPush.create(:facebook_user_id => fb_user_id.to_s, :event_id => event_id.to_s, :message => message, :sent_time => Time.now, :opened_event => false)
       rescue
       end
     end
+  end
+
+  def self.batch_push(message, event_id, user_count)
+    SentPush.create(:message => message, :event_id => event_id.to_s, :user_count => user_count)
   end
 
   def self.user_opened(event_id, facebook_user_id)

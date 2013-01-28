@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130128061715) do
+ActiveRecord::Schema.define(:version => 20130128225522) do
 
   create_table "event_opens", :force => true do |t|
     t.string   "facebook_user_id"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(:version => 20130128061715) do
     t.text     "message"
     t.string   "facebook_user_id"
     t.string   "udid"
+    t.integer  "user_count"
   end
 
 end

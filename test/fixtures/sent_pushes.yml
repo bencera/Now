@@ -11,6 +11,7 @@
 #  message          :text
 #  facebook_user_id :string(255)
 #  udid             :string(255)
+#  user_count       :integer
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
