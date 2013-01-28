@@ -7,6 +7,17 @@ class NowCity
   BOUNDARY_MILES = 70
   BOUNDARY_KILOM = 110
 
+  
+  LATENIGHT = 2
+  MORNING = 6
+  LUNCH = 10
+  AFTERNOON = 14
+  EVENING = 18
+  NIGHT = 22
+
+  TIME_TITLES = {LATENIGHT => "late at night", MORNING => "in the morning", LUNCH => "around lunchtime", 
+                 AFTERNOON => "in the afternoon", EVENING => "in the evening", NIGHT => "at night"}
+
   field :name
   field :state
   field :country
@@ -69,6 +80,12 @@ class NowCity
     Time.new(year, month, day, hour, minute, second, self.get_tz_offset)
   end
 
+  def get_general_time(time)
+    local_time = time.nil? ? self.get_local_time : self.to_local_time(time)
+
+    return TIME_TITLES[NowCity.get_time_group_from_time(time)]
+  end
+
   def self.add_featured_city(name, latitude, longitude, radius, url)
     city_key = name.split(" ").join.upcase
 
@@ -91,5 +108,23 @@ class NowCity
     $redis.hset("#{city_key}_VALUES", :url, options[:url]) if options[:url]
 
   end
+
+  def self.get_time_group_from_time(time)
+
+    if time.hour < LATENIGHT || time.hour >= NIGHT
+      return :night
+    elsif time.hour >= LATENIGHT && time.hour < MORNING
+      return :latenight
+    elsif time.hour >= MORNING && time.hour < LUNCH
+      return :morning
+    elsif time.hour >= LUNCH && time.hour < AFTERNOON
+      return :lunch
+    elsif time.hour >= AFTERNOON && time.hour < EVENING
+      return :afternoon
+    elsif time.hour >= EVENING && time.hour < NIGHT
+      return :evening
+    end
+  end
+
 
 end

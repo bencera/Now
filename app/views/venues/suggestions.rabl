@@ -2,7 +2,7 @@ object false
 
 child :meta => "meta" do
   node(:text) do
-    {:title => "Recently Trending Nearby"}
+    {:title => @title }
   end
 end
 

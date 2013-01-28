@@ -107,9 +107,25 @@ module VenuesHelper
 
     result_venues = venue_echo_count.sort_by {|x| x[1]}.reverse.delete_if {|x| already_trending_venue_ids.include?(x[0])}.map {|x| x[0]}
 
-    return [] if result_venues.empty?
-    return Venue.find(result_venues[0..19])
+    return {:venues => []} if result_venues.empty?
 
+    now_city = nil
+
+    result_venue_objects =  Venue.find(result_venues[0..19])
+
+    result_venues_objects.each do |venue|
+      now_city = venue.now_city
+      break if venue.now_city
+    end
+
+    if now_city.nil?
+      now_city = NowCity.first(:conditions => {:coordinates => {"$near" => coordinates}})
+    end
+    
+    local_time = now_city.get_local_time
+    title_string = "Venues that trend " + now_city.get_get_general_time(Time.now) + " on a " + local_time.strftime("%A")
+
+    return {:venues => result_venue_objects, :title => title_string}
   end
 
   #options:

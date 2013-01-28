@@ -49,7 +49,10 @@ class VenuesController < ApplicationController
 #    end
 
     #@venues = events.map {|event| venue = event.venue; venue}
-    @venues = VenuesHelper.get_venue_suggestions(:coordinates => coordinates)
+    result = VenuesHelper.get_venue_suggestions(:coordinates => coordinates)
+
+    @venues = result[:venues]
+    @title = result[:title] || ""
 
   end
 
