@@ -27,3 +27,9 @@ drain_event_opens:
   class: DrainAnalytics
   args: 
   description: "Enter recent activity into the database"
+
+city_rank:
+  every: "10m"
+  class: CityRank
+  args:
+  description: "Count the events in cities"

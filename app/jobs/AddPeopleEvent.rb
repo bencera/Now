@@ -185,10 +185,6 @@ class AddPeopleEvent
 
         share_to_fs = true if params[:fs_token]
         share_to_fb = true if params[:fb_token]
-
-        #### notify us if a user creates a new event
-
-
         
         Rails.logger.info("AddPeopleEvent created a new event #{event.id} in venue #{venue.id} -- #{venue.name} with #{photos.count} photos")
       #elsif venue.last_event.status == "trending_people"
