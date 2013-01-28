@@ -1,21 +1,20 @@
 # == Schema Information
 #
-# Table name: sent_pushes
+# Table name: event_opens
 #
 #  id               :integer         not null, primary key
+#  facebook_user_id :string(255)
 #  event_id         :string(255)
-#  sent_time        :datetime
-#  opened_event     :boolean
+#  open_time        :datetime
+#  udid             :string(255)
+#  sent_push_id     :integer
 #  created_at       :datetime        not null
 #  updated_at       :datetime        not null
-#  message          :text
-#  facebook_user_id :string(255)
-#  udid             :string(255)
 #
 
 require 'test_helper'
 
-class SentPushTest < ActiveSupport::TestCase
+class EventOpenTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

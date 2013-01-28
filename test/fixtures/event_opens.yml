@@ -1,28 +1,29 @@
 # == Schema Information
 #
-# Table name: sent_pushes
+# Table name: event_opens
 #
 #  id               :integer         not null, primary key
+#  facebook_user_id :string(255)
 #  event_id         :string(255)
-#  sent_time        :datetime
-#  opened_event     :boolean
+#  open_time        :datetime
+#  udid             :string(255)
+#  sent_push_id     :integer
 #  created_at       :datetime        not null
 #  updated_at       :datetime        not null
-#  message          :text
-#  facebook_user_id :string(255)
-#  udid             :string(255)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
+  facebook_user_id: MyString
   event_id: MyString
-  user_id: MyString
-  sent_time: 2013-01-25 14:39:32
-  opened_event: false
+  open_time: 2013-01-28 01:17:18
+  udid: MyString
+  sent_push_id: 1
 
 two:
+  facebook_user_id: MyString
   event_id: MyString
-  user_id: MyString
-  sent_time: 2013-01-25 14:39:32
-  opened_event: false
+  open_time: 2013-01-28 01:17:18
+  udid: MyString
+  sent_push_id: 1

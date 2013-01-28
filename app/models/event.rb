@@ -835,8 +835,13 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.save if (n_views % 10 == 0)
   end
 
-  def add_click
+  def add_click(options={})
     n_clicks = $redis.incr("CLICK_COUNT:#{self.shortid}")
+    if options[:now_token] || options[:udid]
+      options[:event_id] = self.id.to_s
+      options[:click_time] = Time.now.to_i
+      $redis.sadd("EVENT_CLICK_LOG", options)
+    end
   end
 
   def update_reaction_count

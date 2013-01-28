@@ -28,7 +28,11 @@ class EventsController < ApplicationController
     end
 
     @event.add_view
-    @event.add_click
+
+    click_params = {}
+    click_params[:now_token] = params[:nowtoken] if params[:nowtoken]
+    #add udid if we have it to click_params
+    @event.add_click(click_params)
   end
   
   def showless

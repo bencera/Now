@@ -10,10 +10,13 @@
 #  updated_at       :datetime        not null
 #  message          :text
 #  facebook_user_id :string(255)
+#  udid             :string(255)
 #
 
 class SentPush < ActiveRecord::Base
   attr_accessible :event_id, :opened_event, :sent_time, :user_id, :facebook_user_id, :message
+
+  has_many :event_opens
   
   def self.notify_users(message, event_id, device_ids, fb_user_ids)
 
@@ -26,7 +29,7 @@ class SentPush < ActiveRecord::Base
 
     fb_users.each do |fb_user|
       begin
-        next if !(["1", "2", "359"].include?(fb_user.now_id))
+#        next if !(["1", "2", "359"].include?(fb_user.now_id))
         Rails.logger.info("notifying #{fb_user.now_id}")
         fb_user.send_notification(message, event_id)
         fb_users_notified.push(fb_user.id.to_s)
@@ -40,6 +43,22 @@ class SentPush < ActiveRecord::Base
       rescue
       end
     end
+  end
+
+  def self.user_opened(event_id, facebook_user_id)
+    sent_push = SentPush.first(:conditions => {:event_id => event_id, :facebook_user_id => facebook_user_id})
+
+    sent_push && (sent_push.opened_event = true) && sent_push.save!
+
+    sent_push
+  end
+
+  def self.udid_opened(event_id, udid)
+    sent_push = SentPush.first(:conditions => {:event_id => event_id, :udid => udid})
+
+    sent_push && (sent_push.opened_event = true) && sent_push.save!
+
+    sent_push
   end
 
   def facebook_user
