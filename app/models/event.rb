@@ -693,7 +693,14 @@ SCORE_HALF_LIFE       = 7.day.to_f
         venue_ig_id = self.venue.ig_venue_id
       end
 
-      response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => self.end_time)
+      random = [0..5].sample
+
+      if $redis.get("USE_OTHER_TOKENS") == "true" || ( $redis.get("SPREAD_IT_AROUND") == true && random != 0)
+        client = InstagramWrapper.get_random_token()
+        response = client.venue_media(venue_ig_id, :min_timestamp => self.end_time)
+      else
+        response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => self.end_time)
+      end
       
       begin
         venue_photos.push(*(response.data))
