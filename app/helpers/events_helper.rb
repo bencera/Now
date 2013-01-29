@@ -381,6 +381,7 @@ EOS
         return {:errors => ["Couldn't get venue info from instagram"]}
       end
     else
+      return :fake_event => nil if venue.blacklist || CategoriesHelper.black_list[venue.categories.last["id"]]
       venue_ig_id = venue.ig_venue_id
       venue_name = venue.name
       venue_lon_lat = venue.coordinates
