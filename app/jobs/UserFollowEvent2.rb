@@ -1,5 +1,7 @@
 class UserFollowEvent2
+  
   @queue = :user_follow2_queue
+
 
 
   def self.perform(in_params={})
