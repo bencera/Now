@@ -381,7 +381,6 @@ EOS
         return {:errors => ["Couldn't get venue info from instagram"]}
       end
     else
-      return :fake_event => nil if venue.blacklist || CategoriesHelper.black_list[venue.categories.last["id"]]
       venue_ig_id = venue.ig_venue_id
       venue_name = venue.name
       venue_lon_lat = venue.coordinates
@@ -428,7 +427,10 @@ EOS
       user_list << photo.user.id unless user_list.include? photo.user.id
     end
 
-    new_event = user_list.count >= 3
+    new_event = user_list.count >= 3 
+
+    new_event = false if venue && (venue.blacklist || CategoriesHelper.black_list[venue.categories.last["id"]])
+
 
     if user_list.count < 1
       description = "\u{1F4A4} No social activity now"
@@ -459,12 +461,12 @@ EOS
 
     if venue
       categories = CategoriesHelper.categories
-      category = categories[venue.categories.first["id"]] || "Misc"
+      category = categories[venue.categories.last["id"]] || "Misc"
     else
       category = "Misc"
     end
 
-    if new_event && (venue.nil? || !venue.blacklist)
+    if new_event
 
       event_params = {:photo_id_list => photo_ids.join(","),
                       :new_photos => true,
