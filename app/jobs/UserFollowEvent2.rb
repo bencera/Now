@@ -2,8 +2,6 @@ class UserFollowEvent2
   
   @queue = :user_follow2_queue
 
-
-
   def self.perform(in_params={})
 
     params = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
