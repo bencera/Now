@@ -1081,6 +1081,49 @@ SCORE_HALF_LIFE       = 7.day.to_f
     return replies
   end
 
+  def self.get_activity_message(options={})
+    
+    begin_time = options[:begin_time] || 3.hours.ago.to_i
+    min_users = options[:min_users] || 3
+    
+    user_list = []
+
+    if options[:ig_media_list]
+      options[:ig_media_list].each do |photo|
+        (user_list << photo.user.id) unless user_list.include? photo.user.id
+      end
+    elsif options[:photo_list]
+      options[:photo_list].each do |photo|
+        (user_list << photo.user_id) unless user_list.include? photo.user.id
+      end
+    else
+      raise
+    end
+    
+    if user_list.count < 1
+      description =  "No social activity now"
+      emoji = "\u{1F4A4}"
+    elsif user_list.count < 3
+      description = "Little social activity now"
+      emoji = "\u2728"
+    elsif user_list.count < 6
+      description = "Good social activity now"
+      emoji = "\u{1F31F}"
+    elsif user_list.count < 10
+      description = "Great social activity now"
+      emoji = "\u{1F4A5}"
+    else
+      description = "Insane social activity now"
+      emoji = "\u{1F525}"
+    end
+
+    if options[:separate_emoji]
+      return {:emoji => emoji, :description => description} 
+    else
+      return {:message => "#{emoji} #{description}"} 
+    end
+  end
+
   def destroy_reply(reply=nil)
     if reply
       #we can destroy it but we should see if any photos were created -- we will have to check other replies in case the photo is there

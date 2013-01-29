@@ -420,29 +420,11 @@ EOS
     #if 3 users in last 3 hours -- present it as an event
     #else, create photos and venue in db, give id FAKE and user must hit another endpoint to get to all photos as fake event
 
-    start_time = 3.hours.ago.to_i
-    user_list = []
-    response.data.each do |photo|
-      break if photo.created_time.to_i < start_time
-      user_list << photo.user.id unless user_list.include? photo.user.id
-    end
-
     new_event = user_list.count >= 3 
 
     new_event = false if venue && (venue.blacklist || CategoriesHelper.black_list[venue.categories.last["id"]])
-
-
-    if user_list.count < 1
-      description = "\u{1F4A4} No social activity now"
-    elsif user_list.count < 3
-      description = "\u2728 Little social activity now"
-    elsif user_list.count < 6
-      description = "\u{1F31F} Good social activity now"
-    elsif user_list.count < 10
-      description = "\u{1F4A5} Great social activity now"
-    else
-      description = "\u{1F525} Insane social activity now"
-    end
+  
+    description = Event.get_activity_message(:ig_media_list => response.data)[:message]
     
     photo_ids = []
     response.data[0..5].each do |photo|
