@@ -420,15 +420,18 @@ EOS
     #if 3 users in last 3 hours -- present it as an event
     #else, create photos and venue in db, give id FAKE and user must hit another endpoint to get to all photos as fake event
 
-    new_event = user_list.count >= 3 
+    activity = Event.get_activity_message(:ig_media_list => response.data)
+    description = activity[:message]
+    user_count = activity[:user_count]
+
+    new_event = user_count >= 3 
 
     new_event = false if venue && (venue.blacklist || CategoriesHelper.black_list[venue.categories.last["id"]])
   
-    description = Event.get_activity_message(:ig_media_list => response.data)[:message]
     
     photo_ids = []
     response.data[0..5].each do |photo|
-      break if (user_list.count >= 1 && photo.created_time.to_i < 3.hours.ago.to_i)
+      break if (user_count >= 1 && photo.created_time.to_i < 3.hours.ago.to_i)
       fake_photo = {:fake => true,
                     :url => [photo.images.low_resolution.url, photo.images.standard_resolution.url, photo.images.thumbnail.url],
                     :external_source => "ig",

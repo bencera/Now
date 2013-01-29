@@ -1120,9 +1120,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
 
     if options[:separate_emoji]
-      return {:emoji => emoji, :description => description} 
+      return {:emoji => emoji, :description => description, :user_count => user_list.count} 
     else
-      return {:message => "#{emoji} #{description}"} 
+      return {:message => "#{emoji} #{description}", :user_count => user_list.count} 
     end
   end
 
