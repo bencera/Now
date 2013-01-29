@@ -49,6 +49,8 @@ class Captionator
          "wonder", "would", "would", "wouldn't", "yes", "yet", "you", "you'd", "you'll", "you're", "you've",
           "your", "yours", "yourself", "yourselves", "zero",""]
 
+  
+  @@stop_hashtags = []
 
   def self.get_caption(event)
     #STOP WORDS
@@ -211,6 +213,122 @@ class Captionator
     end
 
     captions.first
+  end
 
+  def self.get_keyword_text(photos, venue)
+
+    #GET WORDS + HASHTAGS from captions
+    comments = ""
+    photos.each do |photo|
+      comments << photo.caption unless photo.caption.nil?
+      comments << " "
+    end
+
+    stop_characters.each do |c|
+      comments = comments.gsub(c, '')
+    end
+
+    comments = comments.downcase
+    words = comments.split(/ /)
+    real_words = words - stop_words
+
+
+    relevant_hashtags = []
+    relevant_mentions = []
+    relevant_words = []
+    relevant_words_hashtags_mentions = []
+
+    real_words.each do |r|
+    if r.first == "#"
+      relevant_hashtags << r
+      relevant_words_hashtags_mentions << r.gsub("#", "")
+    elsif r.first == "@"
+      relevant_mentions << r
+      relevant_words_hashtags_mentions << r.gsub("@", "")
+    else
+      relevant_words << r
+      relevant_words_hashtags_mentions << r
+    end
+    end
+
+    #TAKE OUT VENUE NAME
+
+    venue_words = venue.name.downcase.split(/ /)
+    relevant_words = relevant_words - venue_words
+
+    #GET KEYWORDS OUT OF WORDS
+
+    sorted_words = {}
+    relevant_words.each do |word|
+      if sorted_words.include?(word)
+        sorted_words[word] += 1
+      else
+        sorted_words[word] = 1
+      end
+    end
+
+    keywords = sorted_words.sort_by{|u,v| v}.reverse
+
+    keyword_used_most = []
+
+
+    continue = true
+
+    ## ADD KEYWORDS THAT APPEAR AT LEAST TWICE
+
+    keywords.each do |k|
+      if k[1] > 1
+        keyword_used_most << k[0]
+      end
+
+      if keyword_used_most.count == 3
+        continue = false
+        break
+      end
+
+    end
+
+    #IF LESS THAN 3 KEYWORDS, DIG INTO KEYWORDS AND MENTIONS 
+
+
+    if continue
+      sorted_words = {}
+      relevant_words_hashtags_mentions.each do |word|
+        if sorted_words.include?(word)
+          sorted_words[word] += 1
+        else
+          sorted_words[word] = 1
+        end
+      end
+
+      keywords = sorted_words.sort_by{|u,v| v}.reverse
+      keywords.each do |k|
+        if k[1] > 1
+          if relevant_words.include?(k[0]) && !keyword_used_most.include?(k[0])
+             keyword_used_most << k[0]
+          elsif relevant_hashtags.include?("#" + k[0])
+              keyword_used_most << "#" + k[0]
+          end
+        end
+
+        if keyword_used_most.count == 3
+          continue = false
+          break
+        end
+      end
+
+    end
+
+    #PUT IT INTO A SENTENCE
+
+    if keyword_used_most.count == 0
+      keyword_text = ""
+    elsif keyword_used_most.count == 1
+      keyword_text =  "People were talking about: " + "#{keyword_used_most.first}"
+    elsif keyword_used_most.count == 2
+      keyword_text =  "People were talking about: " + "#{keyword_used_most.first}, #{keyword_used_most.last}" 
+    elsif keyword_used_most.count == 3
+      keyword_text =  "People were talking about: " + "#{keyword_used_most.first}, #{keyword_used_most[1]}, #{keyword_used_most.last}" 
+    end  
   end
 end

@@ -506,9 +506,13 @@ class Venue
 
     trending_info = Event.get_activity_message(:separate_emoji => true, :photo_list => event.photos)
 
+    captionator_text = Captionator.get_keyword_text(event.photos, self)
+
+    message_text = "#{trending_info[:emoji]} #{self.name} has #{trending_info[:description]}"
+    message_text += ". #{captionator_text}"
+
     if trending_info[:user_count] >= 3
-      SentPush.notify_users("#{trending_info[:emoji]} #{self.name} has #{trending_info[:description]}", 
-                            event.id.to_s, device_subscribers, fb_user_subscribers)
+      SentPush.notify_users(, message_text, event.id.to_s, device_subscribers, fb_user_subscribers)
     end
 
   end
