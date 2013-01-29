@@ -82,7 +82,7 @@ class UserFollowEvent2
 
       venue ||= new_photo.venue
 
-      next if venue.blacklist || CategoriesHelper.blacklist[venue.categories.last["id"]]
+      next if venue.blacklist || CategoriesHelper.black_list[venue.categories.last["id"]]
 
       event_options = {}
 
