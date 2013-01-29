@@ -1103,19 +1103,19 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
     
     if user_list.count < 1
-      description =  "No social activity now"
+      description =  "No social activity"
       emoji = "\u{1F4A4}"
     elsif user_list.count < 3
-      description = "Little social activity now"
+      description = "Little social activity"
       emoji = "\u2728"
     elsif user_list.count < 6
-      description = "Good social activity now"
+      description = "Good social activity"
       emoji = "\u{1F31F}"
     elsif user_list.count < 10
-      description = "Great social activity now"
+      description = "Great social activity"
       emoji = "\u{1F4A5}"
     else
-      description = "Insane social activity now"
+      description = "Insane social activity"
       emoji = "\u{1F525}"
     end
 

@@ -2,6 +2,8 @@
 class Venue
   include Mongoid::Document
   include Mongoid::Timestamps
+
+  include ActionView::Helpers::TextHelper
  
   FOURSQUARE_CLIENT_ID = "RFBT1TT41OW1D22SNTR21BGSWN2SEOUNELL2XKGBFLVMZ5X2"
   FOURSQUARE_CLIENT_SECRET =  "W1FN2P3PR30DIKSWEKFEJVF51NJMZTBUY3KY3T0JNCG51QD0"
@@ -506,10 +508,7 @@ class Venue
 
     trending_info = Event.get_activity_message(:separate_emoji => true, :photo_list => event.photos)
 
-    captionator_text = Captionator.get_keyword_text(event.photos, self)
-
-    message_text = "#{trending_info[:emoji]} #{self.name} has #{trending_info[:description]}"
-    message_text += ". #{captionator_text}"
+    message_text = "#{trending_info[:emoji]} #{truncate(event.description, 40)} @ #{venue.name}"
 
     if trending_info[:user_count] >= 3
       SentPush.notify_users(message_text, event.id.to_s, device_subscribers, fb_user_subscribers)

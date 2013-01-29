@@ -57,8 +57,11 @@ class Captionator
     self.get_caption_from_photos(event.photos, event.venue)
   end
   
-  def self.get_caption_from_photos(photos, venue)
+  def self.get_caption_from_photos(in_photos, venue)
     #GET WORDS + HASHTAGS
+    
+    photos = in_photos.delete_if {|photo| is_offensive(photo.caption)}
+
     comments = ""
     photos.each do |photo|
       comments << photo.caption unless photo.caption.nil?
@@ -324,11 +327,17 @@ class Captionator
     if keyword_used_most.count == 0
       keyword_text = ""
     elsif keyword_used_most.count == 1
-      keyword_text =  "People were talking about: " + "#{keyword_used_most.first}"
+      keyword_text =  "People are talking about: " + "#{keyword_used_most.first}"
     elsif keyword_used_most.count == 2
-      keyword_text =  "People were talking about: " + "#{keyword_used_most.first}, #{keyword_used_most.last}" 
+      keyword_text =  "People are talking about: " + "#{keyword_used_most.first}, #{keyword_used_most.last}" 
     elsif keyword_used_most.count == 3
-      keyword_text =  "People were talking about: " + "#{keyword_used_most.first}, #{keyword_used_most[1]}, #{keyword_used_most.last}" 
+      keyword_text =  "People are talking about: " + "#{keyword_used_most.first}, #{keyword_used_most[1]}, #{keyword_used_most.last}" 
     end  
+  end
+
+  def self.is_offensive(caption)
+    clean = true
+    CaptionsHelper.bad_words.each {|word| clean = false if caption.include?(word)}
+    return !clean
   end
 end
