@@ -1103,26 +1103,26 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
     
     if user_list.count < 1
-      description =  "No social activity now"
+      description =  "no social activity now"
       emoji = "\u{1F4A4}"
     elsif user_list.count < 3
-      description = "Little social activity now"
+      description = "little social activity now"
       emoji = "\u2728"
     elsif user_list.count < 6
-      description = "Good social activity now"
+      description = "good social activity now"
       emoji = "\u{1F31F}"
     elsif user_list.count < 10
-      description = "Great social activity now"
+      description = "great social activity now"
       emoji = "\u{1F4A5}"
     else
-      description = "Insane social activity now"
+      description = "insane social activity now"
       emoji = "\u{1F525}"
     end
 
     if options[:separate_emoji]
       return {:emoji => emoji, :description => description, :user_count => user_list.count} 
     else
-      return {:message => "#{emoji} #{description}", :user_count => user_list.count} 
+      return {:message => "#{emoji} #{description.upcase}", :user_count => user_list.count} 
     end
   end
 

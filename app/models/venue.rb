@@ -507,7 +507,7 @@ class Venue
     trending_info = Event.get_activity_message(:separate_emoji => true, :photo_list => event.photos)
 
     if trending_info[:user_count] >= 3
-      SentPush.notify_users("#{trending_info[:emoji]} #{self.name} : #{trending_info[:description]}", 
+      SentPush.notify_users("#{trending_info[:emoji]} #{self.name} has #{trending_info[:description]}", 
                             event.id.to_s, device_subscribers, fb_user_subscribers)
     end
 
