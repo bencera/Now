@@ -1090,10 +1090,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     if options[:ig_media_list]
       options[:ig_media_list].each do |photo|
+        next if photo.created_time.to_i < begin_time
         (user_list << photo.user.id) unless user_list.include? photo.user.id
       end
     elsif options[:photo_list]
       options[:photo_list].each do |photo|
+        next if photo.time_taken < begin_time
         (user_list << photo.user_id) unless user_list.include? photo.user.id
       end
     else
