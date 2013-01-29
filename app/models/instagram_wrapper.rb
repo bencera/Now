@@ -117,6 +117,10 @@ class InstagramWrapper
 
   end
 
+  def self.get_random_token_emergency(options={})
+    $redis.srandmember("EMERGENCY_TOKENS")
+  end
+
 private
 
   def self.get_data(url, access_token)

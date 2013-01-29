@@ -695,8 +695,13 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
       random = [0..5].sample
 
-      if $redis.get("USE_OTHER_TOKENS") == "true" || ( $redis.get("SPREAD_IT_AROUND") == true && random != 0)
-        client = InstagramWrapper.get_random_token()
+      if  $redis.get("USE_EMERGENCY_TOKENS") == "true"
+        token = InstagramWrapper.get_random_token_emergency()
+        client = InstagramWrapper.get_client(:access_token => token)
+        response = client.venue_media(venue_ig_id, :min_timestamp => self.end_time)
+      elsif $redis.get("USE_OTHER_TOKENS") == "true" || ( $redis.get("SPREAD_IT_AROUND") == true && random != 0)
+        token = InstagramWrapper.get_random_token()
+        client = InstagramWrapper.get_client(:access_token => token)
         response = client.venue_media(venue_ig_id, :min_timestamp => self.end_time)
       else
         response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => self.end_time)

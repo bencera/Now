@@ -386,7 +386,9 @@ EOS
       venue_lon_lat = venue.coordinates
     end
 
-    if $redis.get("USE_OTHER_TOKENS") == "true"
+    if $redis.get("USE_EMERGENCY_TOKENS") == "true"
+      token = InstagramWrapper.get_random_token_emergency()
+    elsif $redis.get("USE_OTHER_TOKENS") == "true" || $redis.get("SPREAD_IT_AROUND") == "true"
       token = InstagramWrapper.get_best_token()
     else
       token = "44178321.f59def8.63f2875affde4de98e043da898b6563f"
