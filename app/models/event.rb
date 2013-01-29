@@ -844,7 +844,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     self.last_viewed = Time.now.to_i
 
-    self.save if (n_views % 10 == 0)
+    unless self.created_at.nil? || self.created_at < Time.new(2012, 12, 1, 0, 0, 0)
+      self.save if (n_views % 10 == 0)
+    end
   end
 
   def add_click(options={})
