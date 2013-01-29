@@ -40,7 +40,7 @@ class Instacrawl
 
         find_past_potential_events(user_id, :event_list => event_list, :user_stats => user_stats)
 
-        if event_list.count >= 1
+        if event_list.count >= 2
           entry_string = "http://instagram.com/#{user_info.data.username}\t#{user_stats[0]} Photos\t#{event_list.count} Events\n#{event_list.join("\n")}"
           puts "#{entry_string}"
           $redis.zadd("USERS_TO_LOOK_AT", event_list.count, entry_string) 
@@ -103,7 +103,7 @@ class Instacrawl
 
         find_past_potential_events(user_id, :event_list => event_list, :user_stats => user_stats)
 
-        if event_list.count >= 1
+        if event_list.count >= 2
           entry_string = "http://instagram.com/#{user_info.data.username}\t#{user_stats[0]} Photos\t#{event_list.count} Events\n#{event_list.join("\n")}"
           puts "#{entry_string}"
           $redis.zadd("#{city}_USERS_TO_LOOK_AT", event_list.count, entry_string) 
@@ -192,7 +192,7 @@ class Instacrawl
 
       venue = Venue.where(:ig_venue_id => photo.location.id).first
       if venue
-        next if venue.black_list || CategoriesHelper.black_list[venue.categories.last["id"]]
+        next if venue.black_list || CategoriesHelper.black_list[venue.categories.last["id"]] || CategoriesHelper.grey_list[venue.categories.last["id"]]
       end
 
       start_timestamp = photo.created_time.to_i - 3.hours.to_i
