@@ -190,6 +190,11 @@ class Instacrawl
 
     photos_of_interest.each do |photo|
 
+      venue = Venue.where(:ig_venue_id => photo.location.id).first
+      if venue
+        next if venue.black_list || CategoriesHelper.black_list[venue.categories.last["id"]]
+      end
+
       start_timestamp = photo.created_time.to_i - 3.hours.to_i
       end_timestamp = photo.created_time.to_i + 3.hours.to_i
 
