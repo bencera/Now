@@ -82,7 +82,7 @@ class UserFollowEvent2
 
       venue ||= new_photo.venue
 
-      next if venue.blacklist 
+      next if venue.blacklist || CategoriesHelper.blacklist[venue.categories.last["id"]]
 
       event_options = {}
 
@@ -208,10 +208,10 @@ class UserFollowEvent2
 
     if venue.autocategory
       category = venue.autocategory
-    elsif venue.categories.nil? || venue.categories.first.nil? || categories[venue.categories.first["id"]].nil?
+    elsif venue.categories.nil? || venue.categories.last.nil? || categories[venue.categories.last["id"]].nil?
       category = "Misc"
     else
-      category = categories[venue.categories.first["id"]]
+      category = categories[venue.categories.last["id"]]
     end
 
     event_params = {:photo_id_list => "ig|#{media.id}",
