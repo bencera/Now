@@ -512,7 +512,7 @@ class Venue
     message_text += ". #{captionator_text}"
 
     if trending_info[:user_count] >= 3
-      SentPush.notify_users(, message_text, event.id.to_s, device_subscribers, fb_user_subscribers)
+      SentPush.notify_users(message_text, event.id.to_s, device_subscribers, fb_user_subscribers)
     end
 
   end

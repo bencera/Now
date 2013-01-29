@@ -224,30 +224,30 @@ class Captionator
       comments << " "
     end
 
-    stop_characters.each do |c|
+    @@stop_characters.each do |c|
       comments = comments.gsub(c, '')
     end
 
     comments = comments.downcase
     words = comments.split(/ /)
-    real_words = words - stop_words
+    real_words = words - @@stop_words
 
 
-    relevant_hashtags = []
+    relevant_s = []
     relevant_mentions = []
     relevant_words = []
-    relevant_words_hashtags_mentions = []
+    relevant_words_s_mentions = []
 
     real_words.each do |r|
     if r.first == "#"
-      relevant_hashtags << r
-      relevant_words_hashtags_mentions << r.gsub("#", "")
+      relevant_s << r
+      relevant_words_s_mentions << r.gsub("#", "")
     elsif r.first == "@"
       relevant_mentions << r
-      relevant_words_hashtags_mentions << r.gsub("@", "")
+      relevant_words_s_mentions << r.gsub("@", "")
     else
       relevant_words << r
-      relevant_words_hashtags_mentions << r
+      relevant_words_s_mentions << r
     end
     end
 
@@ -293,7 +293,7 @@ class Captionator
 
     if continue
       sorted_words = {}
-      relevant_words_hashtags_mentions.each do |word|
+      relevant_words_s_mentions.each do |word|
         if sorted_words.include?(word)
           sorted_words[word] += 1
         else
@@ -306,7 +306,7 @@ class Captionator
         if k[1] > 1
           if relevant_words.include?(k[0]) && !keyword_used_most.include?(k[0])
              keyword_used_most << k[0]
-          elsif relevant_hashtags.include?("#" + k[0])
+          elsif relevant_s.include?("#" + k[0])
               keyword_used_most << "#" + k[0]
           end
         end
