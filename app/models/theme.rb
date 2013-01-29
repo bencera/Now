@@ -36,6 +36,16 @@ class Theme
     return theme_id
   end
 
+  def self.modify_theme(theme_id, options={})
+
+    $redis.hset("THEME_#{theme_id}_DATA", :name, options[:name]) if options[:name]
+    $redis.hset("THEME_#{theme_id}_DATA", :latitude, options[:latitude]) if options[:latitude]
+    $redis.hset("THEME_#{theme_id}_DATA", :longitude, options[:longitude]) if options[:longitude]
+    $redis.hset("THEME_#{theme_id}_DATA", :radius, options[:radius]) if options[:radius]
+    $redis.hset("THEME_#{theme_id}_DATA", :url, options[:url]) if options[:url]
+
+  end
+
   def self.destroy_theme(id)
     $redis.lrem("NOW_THEMES", 1, id)
     $redis.del("THEME_#{id}_DATA")
