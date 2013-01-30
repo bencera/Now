@@ -65,8 +65,8 @@ class Captionator
     return text
   end
 
-  def self.remove_stopwords(word_list, venue)
-    venue_stop_words = venue.split(/\s+/)
+  def self.remove_stopwords(word_list, venue_name)
+    venue_stop_words = venue_name.split(/\s+/)
     venue_name_combined = venue_stop_words.join
     venue_acronym = venue_stop_words.map {|word| word[0]}.join
     venue_acronym_2 = (venue_stop_words - @@stop_words).map {|word| word[0]}.join
