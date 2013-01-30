@@ -209,12 +209,13 @@ class Captionator
       comments << " "
     end
 
-    comments = remove_stopchars(comments)
+    @@stop_characters.each do |c|
+      comments = comments.gsub(c, '')
+    end
 
     comments = comments.downcase
-    words = comments.split(/\s+/)
-
-    real_words = remove_stopwords(words)
+    words = comments.split(/ /)
+    real_words = words - @@stop_words
 
 
     relevant_hashtags = []
@@ -230,6 +231,11 @@ class Captionator
         relevant_words << r
       end
     end
+
+    #TAKE OUT VENUE NAME
+
+    venue_words = venue.name.downcase.split(/ /)
+    relevant_words = relevant_words - venue_words
 
     #GET KEYWORDS OUT OF WORDS
 
