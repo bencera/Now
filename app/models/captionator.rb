@@ -157,7 +157,7 @@ class Captionator
     comments = comments.downcase
     words = comments.split(/\s+/)
 
-    real_words = remove_stopwords(words)
+    real_words = remove_stopwords(words, venue)
 
     relevant_hashtags = []
     relevant_mentions = []
