@@ -56,26 +56,108 @@ class Captionator
     #STOP WORDS
     self.get_caption_from_photos(event.photos, event.venue)
   end
+
+  def self.remove_stopchars(text)
+    @@stop_characters.each do |c|
+      text = text.gsub(c, '')
+    end
+
+    return text
+  end
+
+  def self.remove_stopwords(word_list, venue)
+    venue_stop_words = venue.split(/\s+/)
+    venue_name_combined = venue_stop_words.join
+    venue_acronym = venue_stop_words.map {|word| word[0]}.join
+    venue_acronym_2 = (venue_stop_words - @@stop_words).map {|word| word[0]}.join
+
+    venue_stop_words << venue_name_combined
+    venue_stop_words << venue_acronym
+    venue_stop_words << venue_acronym_2
+
+    word_list - (@@stop_words + venue_stop_words)
+  end
+
+  def self.get_word_counts(word_list, min_count = 2)
+    word_score = Hash.new(0)
+    word_list.each do |word|
+      word_score[word] += 1
+    end
+    word_score.delete_if{|k,v| v < min_count}
+  end
+
+  def self.remove_end_hashtags(captions)
+    #GET CAPTIONS WITHOUT END HASHTAGS (used in the end) or BEGINNING HASHTAGS
+
+    captions_new = []
+
+    captions.each do |caption|
+      unless caption.blank? || caption.first == "#"
+        while caption.split(/\s+/).last.first == "#"
+          caption = caption.gsub(c.split(/\s+/).last, "")
+        end
+        captions_new << caption
+      end
+    end
+    
+    captions_new.any? ? captions_new : captions
+  end
+
+
+  def self.remove_at_mentions(captions)
+    #GET CAPTIONS WITHOUT @MENTIONS
+
+    captions_new = []
+
+    captions.each do |caption|
+      unless caption.include?("@")
+        captions_new << caption
+      end
+    end
+
+    captions_new.any? ? captions_new : captions
+  end
+
   
-  def self.get_caption_from_photos(in_photos, venue)
+  def self.get_below_35_chars(captions)
+    captions_new = captions.delete_if {|caption| caption.length > 35 }
+    captions_new.any? ? captions_new : captions
+  end
+
+  def self.get_captions_scores(captions, word_counts)
+    caption_score = Hash.new(0)
+
+    captions.each do |caption|
+      word_counts.keys.each {|keyword| caption_score[caption] += word_counts[keyword] }
+    end
+
+    caption_score
+  end
+
+
+  def self.get_caption_from_photos_2(in_photos, venue)
     #GET WORDS + HASHTAGS
     
     photos = in_photos.delete_if {|photo| is_offensive(photo.caption)}
 
+    captions = []
     comments = ""
     photos.each do |photo|
-      comments << photo.caption unless photo.caption.nil?
-      comments << " "
+      unless photo.caption.blank?
+        comments << photo.caption 
+        comments << " "
+        captions << photo.caption 
+      end
     end
 
-    @@stop_characters.each do |c|
-      comments = comments.gsub(c, '')
-    end
+    captions = captions.uniq
+
+    comments = remove_stopchars(comments)
 
     comments = comments.downcase
-    words = comments.split(/ /)
-    real_words = words - @@stop_words
+    words = comments.split(/\s+/)
 
+    real_words = remove_stopwords(words)
 
     relevant_hashtags = []
     relevant_mentions = []
@@ -91,10 +173,56 @@ class Captionator
       end
     end
 
-    #TAKE OUT VENUE NAME
+    word_count = get_word_counts(relevant_words)
+    
+    captions = remove_end_hashtags(captions)
 
-    venue_words = venue.name.downcase.split(/ /)
-    relevant_words = relevant_words - venue_words
+    captions = remove_at_mentions(captions)
+
+    captions = get_below_35_chars(captions)
+
+    caption_scores = get_captions_scores(captions, word_count).sort
+
+    captions_sorted_by_score = caption_scores.sort_by {|k,v| v}.reverse.map {|v| v[0]}
+    captions_sorted_by_score.each do |caption|
+      return caption if caption.include?("ing")
+    end
+
+    return captions_sorted_by_score.first
+  end
+  
+  def self.get_caption_from_photos(in_photos, venue)
+    #GET WORDS + HASHTAGS
+    
+    photos = in_photos.delete_if {|photo| is_offensive(photo.caption)}
+
+    comments = ""
+    photos.each do |photo|
+      comments << photo.caption unless photo.caption.nil?
+      comments << " "
+    end
+
+    comments = remove_stopchars(comments)
+
+    comments = comments.downcase
+    words = comments.split(/\s+/)
+
+    real_words = remove_stopwords(words)
+
+
+    relevant_hashtags = []
+    relevant_mentions = []
+    relevant_words = []
+
+    real_words.each do |r|
+      if r.first == "#"
+        relevant_hashtags << r
+      elsif r.first == "@"
+        relevant_mentions << r
+      else
+        relevant_words << r
+      end
+    end
 
     #GET KEYWORDS OUT OF WORDS
 
