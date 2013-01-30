@@ -94,7 +94,7 @@ class Captionator
     captions.each do |caption|
       unless caption.blank? || caption.first == "#"
         while caption.split(/\s+/).last.first == "#"
-          caption = caption.gsub(c.split(/\s+/).last, "")
+          caption = caption.gsub(caption.split(/\s+/).last, "")
         end
         captions_new << caption
       end
