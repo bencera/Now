@@ -157,7 +157,7 @@ class Captionator
     comments = comments.downcase
     words = comments.split(/\s+/)
 
-    real_words = remove_stopwords(words, venue)
+    real_words = remove_stopwords(words, venue.name)
 
     relevant_hashtags = []
     relevant_mentions = []
@@ -182,6 +182,13 @@ class Captionator
     captions = get_below_35_chars(captions)
 
     caption_scores = get_captions_scores(captions, word_count).sort
+
+    if caption_scores.empty?
+      captions.each do |caption|
+        return caption if caption.include?("ing")
+      end
+      return captions.first
+    end
 
     captions_sorted_by_score = caption_scores.sort_by {|k,v| v}.reverse.map {|v| v[0]}
     captions_sorted_by_score.each do |caption|
