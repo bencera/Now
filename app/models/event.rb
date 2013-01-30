@@ -679,11 +679,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
     venue_photos = []
 
     begin
-      if self.venue.ig_venue_id.nil?
+      if self.venue.ig_venue_id.blank?
         location_reponse = Instagram.location_search(nil, nil, :foursquare_v2_id => self.venue.fs_venue_id)
     
         if location_reponse.empty?
-          venue_ig_id = nil
+          return false
         else
           self.venue.update_attribute(:ig_venue_id, location_reponse.first['id'])
           venue_ig_id = location_reponse.first['id']
