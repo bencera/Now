@@ -199,7 +199,7 @@ module VenuesHelper
         begin
           response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
         rescue
-          if rety_attempt < 5
+          if retry_attempt < 5
             sleep 0.1
             retry_attempt += 1
             retry
