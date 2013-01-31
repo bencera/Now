@@ -426,7 +426,7 @@ EOS
 
     new_event = user_count >= 3 
 
-    new_event = false if venue && (venue.blacklist || CategoriesHelper.black_list[venue.categories.last["id"]])
+    new_event = false if venue && (venue.blacklist || (venue.categories && venue.categories.any? && CategoriesHelper.black_list[venue.categories.last["id"]]))
   
     
     photo_ids = []
