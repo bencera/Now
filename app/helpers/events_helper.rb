@@ -444,7 +444,7 @@ EOS
     event_id = new_event ? Event.new.id : "FAKE"
     event_short_id = new_event ? Event.get_new_shortid : "FAKE"
 
-    if venue
+    if venue && venue.categories && venue.categories.any? && venue.categories.last
       categories = CategoriesHelper.categories
       category = categories[venue.categories.last["id"]] || "Misc"
     else
