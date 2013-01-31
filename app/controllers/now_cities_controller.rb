@@ -14,7 +14,7 @@ class NowCitiesController < ApplicationController
     unordered_cities = []
 
     closest_city = nil
-    closest_city_dist = NowCity::BOUNDARY_KILOM
+    closest_city_dist = 750 
 #    closest_city_dist = 110
 
     city_entries.each do |city_key|
