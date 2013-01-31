@@ -28,7 +28,10 @@ class SentPush < ActiveRecord::Base
 
     fb_users = FacebookUser.where(:_id.in => fb_user_ids).entries
 
+    event = Event.find(event_id)
+
     fb_users.each do |fb_user|
+      next if fb_user == event.facebook_user
       begin
 #        next if !(["1", "2", "359"].include?(fb_user.now_id))
         Rails.logger.info("notifying #{fb_user.now_id}")
@@ -39,6 +42,7 @@ class SentPush < ActiveRecord::Base
     end
 
     fb_users_notified.each do |fb_user_id|
+      next if fb_user == event.facebook_user
       begin
         SentPush.create(:facebook_user_id => fb_user_id.to_s, :event_id => event_id.to_s, :message => message, :sent_time => Time.now, :opened_event => false)
       rescue

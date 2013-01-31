@@ -87,15 +87,20 @@ class EventsController < ApplicationController
       end
 
       if params[:search]
-        #log the search in our postgres
-        Resque.enqueue(LogSearch, {:search_time => Time.now.to_i, 
-                                   :venue_id => params[:venue_id], 
-                                   :now_token => params[:nowtoken],
-                                   :udid => params[:deviceid]})
+        fake_event = nil
         if (@events.empty? || !Event::TRENDING_2_STATUSES.include?(@events.first.status))
           #create a fake event from venue activity -- and start creating it
           fake_event =  EventsHelper.get_fake_event(params[:venue_id])[:fake_event]
           @events.unshift(fake_event) unless fake_event.nil? 
+        end
+        begin
+        #log the search in our postgres
+          Resque.enqueue(LogSearch, {:search_time => Time.now.to_i, 
+                             :venue_id => params[:venue_id], 
+                             :now_token => params[:nowtoken],
+                             :udid => params[:deviceid], 
+                             :created_event => !(fake_event.nil?) && (fake_event.id != "FAKE")})
+        rescue
         end
       end
     elsif params[:liked_by]

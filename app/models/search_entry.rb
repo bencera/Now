@@ -9,6 +9,7 @@
 #  created_at       :datetime        not null
 #  updated_at       :datetime        not null
 #  udid             :string(255)
+#  created_event    :boolean
 #
 
 class SearchEntry < ActiveRecord::Base
