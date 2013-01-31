@@ -29,6 +29,12 @@ class CityRank
       closest_dist = 110
 
       locations.each do |location|
+        #special break for guangzhou so it doesn't get hong kong events
+        if location[0] == "GUANGZHOU"
+          closest_dist = 40
+        else
+          closest_dist = 110
+        end
         dist =  Geocoder::Calculations.distance_between(event.coordinates, location[1], :units => :km)
         if dist < closest_dist
           closest_location = location[0]
@@ -37,7 +43,9 @@ class CityRank
         end
       end
       (event_count[closest_location] += 1) unless closest_location.nil?
+      puts event.id unless  closest_location.nil?
     end
+
 
     city_entries.each {|city| $redis.set("#{city}_EXP", event_count[city])}
     
