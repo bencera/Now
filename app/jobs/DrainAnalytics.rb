@@ -60,14 +60,13 @@ class DrainAnalytics
     session_logs.each do |new_session|
       begin
         udid = new_session[:udid]
-#        UserSession.where("udid = ? AND active = true", udid).each do |old_session|
-#          old_session.active = false
-#
-#        end
+
         UserSession.create!(:session_token => new_session[:session_token],
                             :login_time => Time.at(new_session[:timestamp].to_i),
                             :active => true,
-                            :udid => new_session[:udid])
+                            :udid => udid)
+        
+        UserSession.deactivate_old_sessions(udid)
                             
       rescue
         $redis.sadd("NEW_SESSION_LOG_BAD", new_session[:orig_entry])

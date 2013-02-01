@@ -67,14 +67,13 @@ class NowUsersController < ApplicationController
       else
         device.inc(:visits, 1)
 
-        #set the session cookie
-        session_token = Digest::SHA1.hexdigest([Time.now, rand].join)    
+        #get session token, set the cookie
+        session_token = UserSession.queue_session_create(device.udid)
         cookies[:now_session] ={
            :value => session_token,
            :expires => 1.week.from_now,
            :domain =>  ENV['HOST_DOMAIN'] || "now-testing.herokuapp.com"
          }
-        NowUsersHelper.create_session(session_token, device.udid)
       end
       
 

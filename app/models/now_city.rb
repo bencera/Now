@@ -126,5 +126,28 @@ class NowCity
     end
   end
 
+  def self.find_nearest_featured_city(coordinates)
+    city_entries = $redis.smembers("NOW_CITY_KEYS")
+
+    unordered_cities = []
+
+    closest_city = nil
+    closest_city_dist = 20000
+#    closest_city_dist = 110
+
+    city_entries.each do |city_key|
+      city_hash = $redis.hgetall("#{city_key}_VALUES")
+      city_coords = [city_hash["longitude"].to_f, city_hash["latitude"].to_f]
+
+       dist = Geocoder::Calculations.distance_between(coordinates, city_coords, :units => :km)
+       if dist < closest_city_dist
+         closest_city_dist = dist
+         closest_city = [city_coords,  city_hash["radius"].to_f]
+       end
+    end
+
+    return closest_city 
+    
+  end
 
 end
