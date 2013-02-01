@@ -508,7 +508,7 @@ class Venue
 
     trending_info = Event.get_activity_message(:separate_emoji => true, :photo_list => event.photos)
 
-    description = event.description.blank? ? Captionator.get_caption_from_photos(event.photos, self)
+    description = event.description.blank? ? Captionator.get_caption_from_photos(event.photos, self) : event.description
 
     message_text = "#{trending_info[:emoji]} #{truncate(description, :length => 40,  :separator => " ")} @ #{self.name}"
 
