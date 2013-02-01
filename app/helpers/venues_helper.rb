@@ -107,8 +107,12 @@ module VenuesHelper
 
     result_venues = venue_echo_count.sort_by {|x| x[1]}.reverse.delete_if {|x| already_trending_venue_ids.include?(x[0])}.map {|x| x[0]}
 
-    return {:venues => []} if result_venues.empty?
-
+    #for testing
+#    if result_venues.empty?
+    if true
+      fs_results = Venue.get_near_fs_venues(coordinates[1], coordinates[0])
+      return {:foursquare_results => fs_results} 
+    end
     now_city = nil
 
     result_venue_objects =  Venue.find(result_venues[0..19])

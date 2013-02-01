@@ -248,6 +248,26 @@ class Venue
       client.venues.search(:ll => "#{lat}" + "," + "#{lng}", :query => name)
     end
   end
+
+  def self.get_nearest_venues(lat, lng)
+    url = "https://api.foursquare.com/v2/venues/search?ll=#{lat},#{long}&&intent=browse&client_id=#{FOURSQUARE_CLIENT_ID}&client_secret=#{FOURSQUARE_CLIENT_SECRET}"
+    http = Net::HTTP.new(parsed_url.host, parsed_url.port)
+    request = Net::HTTP::Get.new(parsed_url.request_uri)
+
+    http.use_ssl = true
+
+    retry_attempt = 0
+    begin
+      response = http.request(request)
+    rescue
+      retry_attempt += 1
+      sleep 0.2
+      retry if retry_attempt < 2
+    end
+
+    Hashie::Mash.new(JSON.parse(response.body))
+
+  end
   
   def self.autocomplete(name, lat, lng, browse)
     #changer la lat long en fonction de la ville choisie

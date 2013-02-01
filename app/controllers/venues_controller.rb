@@ -51,6 +51,7 @@ class VenuesController < ApplicationController
     #@venues = events.map {|event| venue = event.venue; venue}
     result = VenuesHelper.get_venue_suggestions(:coordinates => coordinates)
 
+    render {:json => result[:foursquare_results]} if result[:foursquare_results]
     @venues = result[:venues]
     @title = result[:title] || ""
 
