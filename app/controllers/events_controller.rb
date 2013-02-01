@@ -73,8 +73,7 @@ class EventsController < ApplicationController
         @events = EventsHelper.get_localized_results(coordinates, max_distance, params).entries
        
         #when a user opens the app, we really want them to see activity
-        #if session_token && UserSession.is_first_session_action(session_token) && @events.empty?
-        if session_token && @events.empty?
+        if session_token && UserSession.is_first_session_action(session_token) && @events.empty?
           #find the nearest featured city
           city_search_params = NowCity.find_nearest_featured_city(coordinates)
           @events = EventsHelper.get_localized_results(city_search_params[0], city_search_params[1].to_f / 111000, params) if city_search_params
