@@ -250,7 +250,9 @@ class Venue
   end
 
   def self.get_near_fs_venues(lat, lng)
-    url = "https://api.foursquare.com/v2/venues/search?ll=#{lat},#{long}&&intent=browse&client_id=#{FOURSQUARE_CLIENT_ID}&client_secret=#{FOURSQUARE_CLIENT_SECRET}"
+    url = "https://api.foursquare.com/v2/venues/search?ll=#{lat},#{lng}&&intent=browse&client_id=#{FOURSQUARE_CLIENT_ID}&client_secret=#{FOURSQUARE_CLIENT_SECRET}"
+    parsed_url = URI.parse(url)
+
     http = Net::HTTP.new(parsed_url.host, parsed_url.port)
     request = Net::HTTP::Get.new(parsed_url.request_uri)
 
