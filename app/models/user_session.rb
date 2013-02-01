@@ -35,7 +35,7 @@ class UserSession < ActiveRecord::Base
                    :udid => udid}
 
     $redis.sadd("NEW_SESSION_LOG", new_session)
-    $redis.hadd("SESSION_AGE", session_token, timestamp)
+    $redis.hset("SESSION_AGE", session_token, timestamp)
 
     return session_token
   end
