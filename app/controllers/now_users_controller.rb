@@ -74,6 +74,7 @@ class NowUsersController < ApplicationController
            :expires => 1.week.from_now,
            :domain =>  ENV['HOST_DOMAIN'] || "now-testing.herokuapp.com"
          }
+        NowUsersHelper.create_session(session_token, device.udid)
       end
       
 
