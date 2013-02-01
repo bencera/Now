@@ -24,7 +24,7 @@ class UserSession < ActiveRecord::Base
   end
 
   def self.is_first_session_action(session_token)
-    return $redis.hget("SESSION_AGE", session_token).to_i > 10.seconds.ago
+    return $redis.hget("SESSION_AGE", session_token).to_i > 10.seconds.ago.to_i
   end
 
   def self.queue_session_create(udid)
