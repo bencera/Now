@@ -51,7 +51,7 @@ class DrainAnalytics
     
 
     #log new sessions
-    sessions_logs =  $redis.smembers("NEW_SESSION_LOG").map do |entry| 
+    session_logs =  $redis.smembers("NEW_SESSION_LOG").map do |entry| 
       hash = eval(entry).inject({}) {|memo,(k,v)| memo[k.to_sym] = v; memo }
       hash[:orig_entry] = entry
       hash
@@ -59,6 +59,11 @@ class DrainAnalytics
 
     session_logs.each do |new_session|
       begin
+        udid = new_session[:udid]
+#        UserSession.where("udid = ? AND active = true", udid).each do |old_session|
+#          old_session.active = false
+#
+#        end
         UserSession.create!(:session_token => new_session[:session_token],
                             :login_time => Time.at(new_session[:timestamp].to_i),
                             :active => true,
