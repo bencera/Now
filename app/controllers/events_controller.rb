@@ -33,7 +33,6 @@ class EventsController < ApplicationController
     click_params[:now_token] = params[:nowtoken] if params[:nowtoken]
     click_params[:udid] = params[:device_id] if params[:deviceid]
     click_params[:session_token] = cookies[:now_session]
-    Rails.logger.info(click_params)
     @event.add_click(click_params)
   end
   
