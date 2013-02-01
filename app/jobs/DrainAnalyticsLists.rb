@@ -48,5 +48,28 @@ class DrainAnalytics
     end
 
     #can't put an assertion here that the event click log is empty because a click could have happened while this executed
+    
+
+    #log new sessions
+    sessions_logs =  $redis.smembers("NEW_SESSION_LOG").map do |entry| 
+      hash = eval(entry).inject({}) {|memo,(k,v)| memo[k.to_sym] = v; memo }
+      hash[:orig_entry] = entry
+      hash
+    end
+
+    session_logs.each do |new_session|
+      begin
+        UserSession.create!(:session_token => new_session[:session_token],
+                            :login_time => Time.at(new_session[:timestamp].to_i),
+                            :active => true,
+                            :udid => new_session[:udid])
+                            
+      rescue
+        $redis.sadd("NEW_SESSION_LOG_BAD", new_session[:orig_entry])
+      end
+      $redis.srem("NEW_SESSION_LOG", new_session[:orig_entry])
+    end
+
+    #go through old sessions and clear out what we don't need
   end
 end

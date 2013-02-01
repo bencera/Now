@@ -53,6 +53,8 @@ class NowUsersController < ApplicationController
   def login
 
     Rails.logger.info(params)
+    #session_id = CGI::Session.create_new_id
+
 
     begin
       return_hash = {} 
@@ -64,6 +66,14 @@ class NowUsersController < ApplicationController
         return render(:text => "432 Device Creation/Find Failed", :status => 432) 
       else
         device.inc(:visits, 1)
+
+        #set the session cookie
+        session_token = Digest::SHA1.hexdigest([Time.now, rand].join)    
+        cookies[:now_session] ={
+           :value => session_token,
+           :expires => 1.week.from_now,
+           :domain =>  ENV['HOST_DOMAIN'] || "now-testing.herokuapp.com"
+         }
       end
       
 

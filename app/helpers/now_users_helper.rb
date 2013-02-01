@@ -38,6 +38,14 @@ module NowUsersHelper
     return device
   end
 
+  def self.create_session(session_token, udid)
+    new_session = {:timestamp => Time.now.to_i,
+                   :session_token => session_token,
+                   :udid => udid}
+
+    $redis.sadd("NEW_SESSION_LOG", new_session)
+  end
+
   def self.set_super_user(email, params={})
     user = FacebookUser.where(:email => email).first
     

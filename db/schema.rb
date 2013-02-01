@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130131155924) do
+ActiveRecord::Schema.define(:version => 20130201175624) do
 
   create_table "event_opens", :force => true do |t|
     t.string   "facebook_user_id"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20130131155924) do
     t.integer  "sent_push_id"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.string   "session_token"
   end
 
   create_table "search_entries", :force => true do |t|
@@ -43,6 +44,16 @@ ActiveRecord::Schema.define(:version => 20130131155924) do
     t.string   "facebook_user_id"
     t.string   "udid"
     t.integer  "user_count"
+  end
+
+  create_table "user_sessions", :force => true do |t|
+    t.string   "session_token"
+    t.string   "udid"
+    t.datetime "login_time"
+    t.boolean  "active"
+    t.string   "facebook_user_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
 end
