@@ -52,7 +52,8 @@ class VenuesController < ApplicationController
     result = VenuesHelper.get_venue_suggestions(:coordinates => coordinates)
 
     if result[:foursquare_results]
-      result[:foursquare_results].meta.text = "Places Nearby"
+      
+      result[:foursquare_results].meta.text = {:title => "Places Nearby"}
       render :json => result[:foursquare_results]
     else
       @venues = result[:venues]
