@@ -378,7 +378,8 @@ EOS
         venue_retry += 1
         sleep 0.1
         retry if venue_retry < 2
-        return {:errors => ["Couldn't get venue info from instagram"]}
+        return {:fake_event => Event.make_fake_event("FAKE", "FAKE", venue_id, "", [0,0], :description => "No Activity Found Here" )}
+
       end
     else
       venue_ig_id = venue.ig_venue_id
@@ -406,7 +407,7 @@ EOS
         retry_attempt += 1
         retry
       else
-        return {:errors => ["Couldn't get venue info from instagram"]}
+        return {:fake_event => Event.make_fake_event("FAKE", "FAKE", venue_id, venue_name,  [0,0], :description => "No Activity Found Here" )}
       end
     end
 
@@ -414,7 +415,7 @@ EOS
     photos = []
 
     if response.data.count == 0
-      return :fake_event => nil
+      return :fake_event => Event.make_fake_event("FAKE", "FAKE", venue_id, venue_name,  [0,0], :description => "No Activity Found Here" )
     end
 
     #if 3 users in last 3 hours -- present it as an event
