@@ -23,7 +23,7 @@ class NowCitiesController < ApplicationController
       city_hash = $redis.hgetall("#{city_key}_VALUES")
 
       #for now we can't handle if url isn't blank
-      next if !city_hash["url"].blank?
+      next if !(city_hash["url"].blank?)
 
       city_coords = [city_hash["longitude"].to_f, city_hash["latitude"].to_f]
 
