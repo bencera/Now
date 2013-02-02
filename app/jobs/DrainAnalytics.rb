@@ -40,6 +40,7 @@ class DrainAnalytics
       eo.event_id = click[:event_id] 
       eo.open_time = click[:open_time]
       eo.sent_push_id = sp.id.to_s if sp 
+      eo.session_token = click[:session_token]
       eo.save!
       
       #remove the click from the evaluation queue

@@ -10,6 +10,7 @@
 #  sent_push_id     :integer
 #  created_at       :datetime        not null
 #  updated_at       :datetime        not null
+#  session_token    :string(255)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html

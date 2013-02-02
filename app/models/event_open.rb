@@ -10,10 +10,11 @@
 #  sent_push_id     :integer
 #  created_at       :datetime        not null
 #  updated_at       :datetime        not null
+#  session_token    :string(255)
 #
 
 class EventOpen < ActiveRecord::Base
-  attr_accessible :event_id, :facebook_user_id, :open_time, :sent_push_id, :udid
+  attr_accessible :event_id, :facebook_user_id, :open_time, :sent_push_id, :udid, :session_token
 
   belongs_to :sent_push
 

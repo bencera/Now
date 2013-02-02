@@ -10,6 +10,7 @@
 #  updated_at       :datetime        not null
 #  udid             :string(255)
 #  created_event    :boolean
+#  session_token    :string(255)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
