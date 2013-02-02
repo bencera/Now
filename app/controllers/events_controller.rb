@@ -74,9 +74,9 @@ class EventsController < ApplicationController
        
         #when a user opens the app, we really want them to see activity
 
-        first_session_action = UserSession.is_first_session_action(session_token)
+        first_session_action = session_token.nil? ? true : UserSession.is_first_session_action(session_token)
         Rails.logger.info("User session #{session_token} -- first action #{first_session_action}")
-        if session_token && first_session_action && @events.empty?
+        if first_session_action && @events.empty?
           #find the nearest featured city
           city_search_params = NowCity.find_nearest_featured_city(coordinates)
           @events = EventsHelper.get_localized_results(city_search_params[0], city_search_params[1].to_f / 111000, params) if city_search_params
