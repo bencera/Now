@@ -1,0 +1,47 @@
+# == Schema Information
+#
+# Table name: nearby_searches
+#
+#  id               :integer         not null, primary key
+#  udid             :string(255)
+#  session_token    :string(255)
+#  facebook_user_id :string(255)
+#  latitude         :decimal(, )
+#  longitude        :decimal(, )
+#  radius           :integer
+#  search_time      :datetime
+#  events_shown     :integer
+#  first_end_time   :integer
+#  last_end_time    :integer
+#  redirected       :boolean
+#  created_at       :datetime        not null
+#  updated_at       :datetime        not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  udid: MyString
+  session_token: MyString
+  facebook_user_id: MyString
+  latitude: 9.99
+  longitude: 9.99
+  radius: 1
+  search_time: 2013-02-02 11:45:45
+  events_shown: 1
+  first_end_time: 1
+  last_end_time: 1
+  redirected: false
+
+two:
+  udid: MyString
+  session_token: MyString
+  facebook_user_id: MyString
+  latitude: 9.99
+  longitude: 9.99
+  radius: 1
+  search_time: 2013-02-02 11:45:45
+  events_shown: 1
+  first_end_time: 1
+  last_end_time: 1
+  redirected: false

@@ -10,6 +10,8 @@
 #  facebook_user_id :string(255)
 #  created_at       :datetime        not null
 #  updated_at       :datetime        not null
+#  latitude         :decimal(, )
+#  longitude        :decimal(, )
 #
 
 class UserSession < ActiveRecord::Base
@@ -27,12 +29,14 @@ class UserSession < ActiveRecord::Base
     return $redis.hget("SESSION_AGE", session_token).to_i > 10.seconds.ago.to_i
   end
 
-  def self.queue_session_create(udid)
+  def self.queue_session_create(udid, latitude, longitude)
     session_token = Digest::SHA1.hexdigest([Time.now, rand].join)    
     timestamp = Time.now.to_i
     new_session = {:timestamp => timestamp,
                    :session_token => session_token,
-                   :udid => udid}
+                   :udid => udid, 
+                   :latitude => latitude,
+                   :longitude => longitude}
 
     $redis.sadd("NEW_SESSION_LOG", new_session)
     $redis.hset("SESSION_AGE", session_token, timestamp)

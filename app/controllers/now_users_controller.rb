@@ -139,6 +139,10 @@ class NowUsersController < ApplicationController
     if device && params[:latitude] && params[:longitude]
       device.coordinates = [params[:longitude].to_f,params[:latitude].to_f] 
       device.save
+      begin
+        UserLocation.log_location(cookies[:session_token], params[:deviceid], params[:latitude].to_f, params[:longitude].to_f)
+      rescue
+      end
     end
 
     return render :text => "OK", :status => :ok

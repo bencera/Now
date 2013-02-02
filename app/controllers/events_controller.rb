@@ -46,6 +46,9 @@ class EventsController < ApplicationController
 
   def index
 
+    session_token = cookies[:now_session]
+    redirected = false
+
     begin
       if params[:nowtoken]
         facebook_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
@@ -69,7 +72,6 @@ class EventsController < ApplicationController
       if params[:liked] && params[:nowtoken]
         @events = EventsHelper.get_localized_likes(coordinates, maxdistance, params[:nowtoken]).entries
       else
-        session_token = cookies[:now_session]
         @events = EventsHelper.get_localized_results(coordinates, max_distance, params).entries
        
         #when a user opens the app, we really want them to see activity
@@ -80,7 +82,9 @@ class EventsController < ApplicationController
           #find the nearest featured city
           city_search_params = NowCity.find_nearest_featured_city(coordinates)
           @events = EventsHelper.get_localized_results(city_search_params[0], city_search_params[1].to_f / 111000, params) if city_search_params
+          redirected = true
         end
+
       end
     elsif params[:theme]
       theme_id = params[:theme].to_s
@@ -140,6 +144,31 @@ class EventsController < ApplicationController
     @events.each {|event| event_ids << event.id.to_s}
 
     Resque.enqueue(AddView, event_ids.join(","))
+
+    Rails.logger.info("TEST: #{params[:search]}")
+    
+    #log the results unless it's a venue search
+    unless params[:search]
+      log_options = {}
+      log_options[:session_token] = session_token
+      log_options[:latitude] = coordinates[1] if coordinates.any?
+      log_options[:longitude] = coordinates[0] if coordinates.any?
+      log_options[:theme_id] = params[:theme_id]
+      log_options[:radius] = max_distance if max_distance
+      if @events.any?
+        log_options[:first_end_time] = @events.first.end_time
+        log_options[:last_end_time] = @events.last.end_time
+        log_options[:events_shown] = @events.count
+      else
+        log_options[:events_shown] = 0
+      end
+      log_options[:redirected] = redirected
+
+      Rails.logger.info("TEST: #{log_options}")
+
+      IndexSearch.queue_search_log(log_options)
+    end
+
     return @events
   end
 

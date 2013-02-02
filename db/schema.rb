@@ -11,7 +11,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130202161419) do
+ActiveRecord::Schema.define(:version => 20130202184053) do
+
+  create_table "event_creations", :force => true do |t|
+    t.string   "event_id"
+    t.string   "udid"
+    t.string   "facebook_user_id"
+    t.string   "session_token"
+    t.string   "instagram_user_id"
+    t.string   "instagram_user_name"
+    t.integer  "search_entry_id"
+    t.datetime "creation_time"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
 
   create_table "event_opens", :force => true do |t|
     t.string   "facebook_user_id"
@@ -22,6 +35,23 @@ ActiveRecord::Schema.define(:version => 20130202161419) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.string   "session_token"
+  end
+
+  create_table "index_searches", :force => true do |t|
+    t.string   "udid"
+    t.string   "session_token"
+    t.string   "facebook_user_id"
+    t.decimal  "latitude"
+    t.decimal  "longitude"
+    t.integer  "radius"
+    t.datetime "search_time"
+    t.integer  "events_shown"
+    t.integer  "first_end_time"
+    t.integer  "last_end_time"
+    t.boolean  "redirected"
+    t.string   "theme_id"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "search_entries", :force => true do |t|
@@ -47,6 +77,17 @@ ActiveRecord::Schema.define(:version => 20130202161419) do
     t.integer  "user_count"
   end
 
+  create_table "user_locations", :force => true do |t|
+    t.string   "session_token"
+    t.string   "facebook_user_id"
+    t.decimal  "latitude"
+    t.decimal  "longitude"
+    t.string   "udid"
+    t.datetime "time_received"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
   create_table "user_sessions", :force => true do |t|
     t.string   "session_token"
     t.string   "udid"
@@ -55,6 +96,8 @@ ActiveRecord::Schema.define(:version => 20130202161419) do
     t.string   "facebook_user_id"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+    t.decimal  "latitude"
+    t.decimal  "longitude"
   end
 
 end

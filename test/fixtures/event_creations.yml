@@ -1,0 +1,36 @@
+# == Schema Information
+#
+# Table name: event_creations
+#
+#  id                  :integer         not null, primary key
+#  event_id            :string(255)
+#  udid                :string(255)
+#  facebook_user_id    :string(255)
+#  session_token       :string(255)
+#  instagram_user_id   :string(255)
+#  instagram_user_name :string(255)
+#  search_entry_id     :integer
+#  creation_time       :datetime
+#  created_at          :datetime        not null
+#  updated_at          :datetime        not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  event_id: MyString
+  facebook_user_id: MyString
+  session_token: MyString
+  instagram_user_id: MyString
+  instagram_user_name: MyString
+  search_entry_id: 1
+  creation_time: 2013-02-02 11:29:04
+
+two:
+  event_id: MyString
+  facebook_user_id: MyString
+  session_token: MyString
+  instagram_user_id: MyString
+  instagram_user_name: MyString
+  search_entry_id: 1
+  creation_time: 2013-02-02 11:29:04

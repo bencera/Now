@@ -197,7 +197,7 @@ module VenuesHelper
       end
       if !do_nearby
         Rails.logger.info("asking ig for #{venue_ig_id} media")
-        rety_attempt = 0
+        retry_attempt = 0
         begin
           response = Instagram.location_recent_media(venue_ig_id, :min_timestamp => min_photo_time)
         rescue

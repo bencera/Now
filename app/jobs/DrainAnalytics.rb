@@ -17,31 +17,34 @@ class DrainAnalytics
       hash
     end
   
-    clicks_evaluated = []
     users = {}
     devices = {}
 
     clicks_done.each do |click|
       #see if this is from a push
-      user = users[click[:now_token]] || (users[click[:now_token]] = FacebookUser.find_by_nowtoken(click[:now_token]))
-      device = devices[click[:udid]] || (devices[click[:udid]] = APN::Device.where(:udid => click[:udid])).first
+      begin
+        user = users[click[:now_token]] || (users[click[:now_token]] = FacebookUser.find_by_nowtoken(click[:now_token]))
+        device = devices[click[:udid]] || (devices[click[:udid]] = APN::Device.where(:udid => click[:udid])).first
 
-      if user
-        sp = SentPush.user_opened(click[:event_id], user.id.to_s)
+        if user
+          sp = SentPush.user_opened(click[:event_id], user.id.to_s)
+        end
+
+        if device
+          sp ||= SentPush.udid_opened(click[:event_id], click[:udid])
+        end
+
+        eo = EventOpen.new
+        eo.facebook_user_id = user.id.to_s if user
+        eo.udid = click[:udid] if device
+        eo.event_id = click[:event_id] 
+        eo.open_time = click[:open_time]
+        eo.sent_push_id = sp.id.to_s if sp 
+        eo.session_token = click[:session_token]
+        eo.save!
+      rescue
+        $redis.sadd("EVENT_CLICK_LOG_BAD", click[:orig_entry])
       end
-
-      if device
-        sp ||= SentPush.udid_opened(click[:event_id], click[:udid])
-      end
-
-      eo = EventOpen.new
-      eo.facebook_user_id = user.id.to_s if user
-      eo.udid = click[:udid] if device
-      eo.event_id = click[:event_id] 
-      eo.open_time = click[:open_time]
-      eo.sent_push_id = sp.id.to_s if sp 
-      eo.session_token = click[:session_token]
-      eo.save!
       
       #remove the click from the evaluation queue
 
@@ -62,10 +65,12 @@ class DrainAnalytics
       begin
         udid = new_session[:udid]
 
-        UserSession.create!(:session_token => new_session[:session_token],
+        us = UserSession.new(:session_token => new_session[:session_token],
                             :login_time => Time.at(new_session[:timestamp].to_i),
                             :active => true,
                             :udid => udid)
+
+        us.save!
         
         UserSession.deactivate_old_sessions(udid)
                             
@@ -76,5 +81,82 @@ class DrainAnalytics
     end
 
     #go through old sessions and clear out what we don't need
+    #write this later -- should be taken care of whenever a new session is started by a user, but perhaps there will be a buildup
+    #if we have millions of one time users.
+
+
+    #log all nearby searches
+    
+    Rails.logger.info("Starting Index Search Log Drain")
+
+    index_searches_done =  $redis.smembers("INDEX_SEARCH_LOG").map do |entry| 
+      hash = eval(entry).inject({}) {|memo,(k,v)| memo[k.to_sym] = v; memo }
+      hash[:orig_entry] = entry
+      hash
+    end
+  
+    index_searches_done.each do |index_search|
+      
+      begin
+        #see if this is from a push
+        user = users[index_search[:now_token]] || (users[index_search[:now_token]] = FacebookUser.find_by_nowtoken(index_search[:now_token]))
+
+        is = IndexSearch.new
+        is.facebook_user_id = user.id.to_s if user
+        is.udid = index_search[:udid] 
+        is.search_time = index_search[:search_time]
+        is.session_token = index_search[:session_token]
+        is.latitude = index_search[:latitude]
+        is.longitude = index_search[:longitude]
+        is.radius = index_search[:radius]
+        is.events_shown = index_search[:events_shown]
+        is.first_end_time = index_search[:first_end_time]
+        is.last_end_time = index_search[:last_end_time]
+        is.redirected = index_search[:redirected]
+        is.theme_id = index_search[:theme_id]
+
+        is.save!
+      rescue
+         $redis.sadd("INDEX_SEARCH_LOG_BAD", index_search[:orig_entry])
+      end
+        
+        #remove the index_search from the evaluation queue
+
+      $redis.srem("INDEX_SEARCH_LOG", index_search[:orig_entry])
+    end
+
+
+    
+    #log all user locations
+    
+    Rails.logger.info("Starting User Location Log Drain")
+
+    user_locations_done =  $redis.smembers("USER_LOCATION_LOG").map do |entry| 
+      hash = eval(entry).inject({}) {|memo,(k,v)| memo[k.to_sym] = v; memo }
+      hash[:orig_entry] = entry
+      hash
+    end
+  
+    user_locations_done.each do |user_location|
+      
+      begin
+        #see if this is from a push
+        ul = UserLocation.new
+        ul.udid = user_location[:udid] 
+        ul.time_received = Time.at(user_location[:time_received])
+        ul.session_token = user_location[:session_token]
+        ul.latitude = user_location[:latitude]
+        ul.longitude = user_location[:longitude]
+
+        ul.save!
+      rescue
+         $redis.sadd("USER_LOCATION_LOG_BAD", user_location[:orig_entry])
+      end
+        
+        #remove the user_location from the evaluation queue
+
+      $redis.srem("USER_LOCATION_LOG", user_location[:orig_entry])
+    end
+
   end
 end
