@@ -33,7 +33,7 @@ class TrendingPeople
           event.reached_velocity = true
           event.save!
 
-          FacebookUser.where(:now_id.in => ["1", "2", "359"]).each {|admin_user| admin_user.send_notification("\u{1F525}: #{event.description} @ #{event.venue.name}", event.id)}
+          FacebookUser.where(:now_id.in => ["2", "359"]).each {|admin_user| admin_user.send_notification("\u{1F525}: #{event.description} @ #{event.venue.name}", event.id)}
 
         end
       end
