@@ -155,7 +155,7 @@ class EventsController < ApplicationController
         log_options[:session_token] = session_token
         log_options[:latitude] = coordinates[1] if coordinates && coordinates.any?
         log_options[:longitude] = coordinates[0] if coordinates && coordinates.any?
-        log_options[:theme_id] = params[:theme_id]
+        log_options[:theme_id] = params[:theme]
         log_options[:radius] = max_distance if max_distance
         if @events.any?
           log_options[:first_end_time] = @events.first.end_time
