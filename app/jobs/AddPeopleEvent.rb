@@ -154,7 +154,7 @@ class AddPeopleEvent
         end
   
         #just want to make sure i clean up any mistakes
-        Resque.enqueue_in(3.seconds, RepairSimultaneousEvents, venue.id.to_s)
+        Resque.enqueue_in(15.seconds, RepairSimultaneousEvents, venue.id.to_s)
       else
         Rails.logger.info("AddPeopleEvent: creating new event")
         event = venue.get_new_event("trending_people", photos, params[:id])
@@ -191,6 +191,7 @@ class AddPeopleEvent
         #this should only happen if there was a failure
       #  event = venue.last_event
       #  event.photos.push(*photos)
+        Resque.enqueue_in(15.seconds, RepairSimultaneousEvents, venue.id.to_s)
       end
     rescue Exception => e
           
