@@ -147,27 +147,31 @@ class EventsController < ApplicationController
     Resque.enqueue(AddView, event_ids.join(","))
 
     Rails.logger.info("TEST: #{params[:search]}")
-    
+   
+    begin
     #log the results unless it's a venue search
-    unless params[:search]
-      log_options = {}
-      log_options[:session_token] = session_token
-      log_options[:latitude] = coordinates[1] if coordinates.any?
-      log_options[:longitude] = coordinates[0] if coordinates.any?
-      log_options[:theme_id] = params[:theme_id]
-      log_options[:radius] = max_distance if max_distance
-      if @events.any?
-        log_options[:first_end_time] = @events.first.end_time
-        log_options[:last_end_time] = @events.last.end_time
-        log_options[:events_shown] = @events.count
-      else
-        log_options[:events_shown] = 0
+      unless params[:search]
+        log_options = {}
+        log_options[:session_token] = session_token
+        log_options[:latitude] = coordinates[1] if coordinates && coordinates.any?
+        log_options[:longitude] = coordinates[0] if coordinates && coordinates.any?
+        log_options[:theme_id] = params[:theme_id]
+        log_options[:radius] = max_distance if max_distance
+        if @events.any?
+          log_options[:first_end_time] = @events.first.end_time
+          log_options[:last_end_time] = @events.last.end_time
+          log_options[:events_shown] = @events.count
+        else
+          log_options[:events_shown] = 0
+        end
+        log_options[:redirected] = redirected
+
+        Rails.logger.info("TEST: #{log_options}")
+
+        IndexSearch.queue_search_log(log_options)
       end
-      log_options[:redirected] = redirected
-
-      Rails.logger.info("TEST: #{log_options}")
-
-      IndexSearch.queue_search_log(log_options)
+    rescue
+      #fails silently for now -- not good, but we can't push to prod otherwise
     end
 
     return @events
