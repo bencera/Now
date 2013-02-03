@@ -125,7 +125,7 @@ class NowUsersController < ApplicationController
     begin
       Resque.enqueue_in(30.seconds, VerifyNewUser, params)
    
-      Resque.enqueue_in(1.minutes, NewUserNotification, fb_user.id) if fb_user && return_hash[:new_fb_user]
+#      Resque.enqueue_in(1.minutes, NewUserNotification, fb_user.id) if fb_user && return_hash[:new_fb_user]
     rescue
       #just so we don't crash for a stupid reason here
     end

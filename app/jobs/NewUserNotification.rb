@@ -13,6 +13,6 @@ class NewUserNotification
       message = "New User #{fb_user.now_profile.name} in #{device.city}, #{device.state}, #{device.country}" 
     end
 
-    FacebookUser.where(:now_id.in => ["1"]).each {|user| user.send_notification(message, nil)}
+    #FacebookUser.where(:now_id.in => ["1"]).each {|user| user.send_notification(message, nil)}
   end
 end
