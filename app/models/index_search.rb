@@ -14,6 +14,7 @@
 #  first_end_time   :integer
 #  last_end_time    :integer
 #  redirected       :boolean
+#  theme_id         :string(255)
 #  created_at       :datetime        not null
 #  updated_at       :datetime        not null
 #

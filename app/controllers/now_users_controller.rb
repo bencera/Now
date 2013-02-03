@@ -140,7 +140,7 @@ class NowUsersController < ApplicationController
       device.coordinates = [params[:longitude].to_f,params[:latitude].to_f] 
       device.save
       begin
-        UserLocation.log_location(cookies[:session_token], params[:deviceid], params[:latitude].to_f, params[:longitude].to_f)
+        UserLocation.log_location(cookies[:now_session], params[:deviceid], params[:latitude].to_f, params[:longitude].to_f)
       rescue
       end
     end

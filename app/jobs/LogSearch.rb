@@ -22,8 +22,8 @@ class LogSearch
     search_entry = SearchEntry.create(:venue_id => venue_id.to_s, 
                                    :facebook_user_id => user_id.to_s,
                                    :udid => udid,
-                                   :search_time => search_time) # ,
-                                   #:created_event => created_event) # had to remove bc unknown attribute error -- so annoying
+                                   :search_time => search_time,
+                                   :created_event => created_event) # had to remove bc unknown attribute error -- so annoying
 
     #set the user up to get a push next time venue trends
 

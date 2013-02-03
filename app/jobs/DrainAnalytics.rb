@@ -140,7 +140,6 @@ class DrainAnalytics
     user_locations_done.each do |user_location|
       
       begin
-        #see if this is from a push
         ul = UserLocation.new
         ul.udid = user_location[:udid] 
         ul.time_received = Time.at(user_location[:time_received])
