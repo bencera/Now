@@ -71,7 +71,7 @@ class NowUsersController < ApplicationController
         session_token = UserSession.queue_session_create(device.udid)
         cookies[:now_session] ={
            :value => session_token,
-           :expires => 1.week.from_now,
+           :expires => 2.month.from_now,
            :domain =>  ENV['HOST_DOMAIN'] || "now-testing.herokuapp.com"
          }
       end
