@@ -15,6 +15,7 @@
 
 class SearchEntry < ActiveRecord::Base
   # attr_accessible :title, :body
+  #
  
 
   def facebook_user
@@ -23,6 +24,10 @@ class SearchEntry < ActiveRecord::Base
 
   def venue
     Venue.first(conditions: {:_id => self.venue_id})
+  end
+
+  def event
+    Event.where(:_id => self.event_id).first
   end
 
   def set_facebook_user(facebook_user)

@@ -115,7 +115,7 @@ class EventsController < ApplicationController
                              :venue_id => params[:venue_id], 
                              :now_token => params[:nowtoken],
                              :udid => params[:deviceid], 
-                             :created_event => !(fake_event.nil?) && (fake_event.id != "FAKE")})
+                             :event_id => (fake_event.id != "FAKE") ? fake_event.id : nil })
         rescue
         end
       end
