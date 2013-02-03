@@ -23,7 +23,7 @@ class LogSearch
     search_entry = SearchEntry.new(:venue_id => venue_id.to_s, 
                                    :facebook_user_id => user_id.to_s,
                                    :udid => udid,
-                                   :search_time => search_timei)
+                                   :search_time => search_time)
 
     
     created_event = !(event_id.nil?)

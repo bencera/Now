@@ -27,7 +27,7 @@ class SearchEntry < ActiveRecord::Base
   end
 
   def event
-    Event.where(:_id => self.event_id).first
+    Event.first(conditions: {:_id => self.event_id})
   end
 
   def set_facebook_user(facebook_user)

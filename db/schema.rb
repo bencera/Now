@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130202184053) do
+ActiveRecord::Schema.define(:version => 20130203171417) do
 
   create_table "event_creations", :force => true do |t|
     t.string   "event_id"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(:version => 20130202184053) do
     t.string   "udid"
     t.boolean  "created_event"
     t.string   "session_token"
+    t.string   "event_id"
   end
 
   create_table "sent_pushes", :force => true do |t|
