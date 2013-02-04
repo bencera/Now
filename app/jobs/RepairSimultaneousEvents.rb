@@ -16,7 +16,7 @@ class RepairSimultaneousEvents
 
     if events.any?
       events.each do |event|
-        if event.facebook_user.now_id == "0"
+        if event.facebook_user.nil? || event.facebook_user.now_id == "0"
           event.destroy
           next
         elsif main_fb_user.now_id == "0"
