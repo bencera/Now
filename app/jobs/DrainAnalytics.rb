@@ -104,7 +104,7 @@ class DrainAnalytics
         is = IndexSearch.new
         is.facebook_user_id = user.id.to_s if user
         is.udid = index_search[:udid] 
-        is.search_time = index_search[:search_time]
+        is.search_time = Time.at(index_search[:search_time].to_i)
         is.session_token = index_search[:session_token]
         is.latitude = index_search[:latitude]
         is.longitude = index_search[:longitude]
