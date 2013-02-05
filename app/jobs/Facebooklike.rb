@@ -29,7 +29,6 @@ class Facebooklike
     
     ll = LikeLog.new
     ll.session_token = session_token
-    ll.short_id = event_shortid
     ll.event_id = event._id.to_s unless event.nil?
     ll.facebook_user_id = fb_user_id
     ll.creator_now_id = event.facebook_user.now_id if event.facebook_user
