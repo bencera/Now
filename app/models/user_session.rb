@@ -33,6 +33,7 @@ class UserSession < ActiveRecord::Base
         first_action = $redis.hget("SESSION_AGE", session_token).to_i > 20.seconds.ago.to_i
       end
     rescue
+      Rails.logger.error("Problem identifying first session action")
       return true
     end
     if $redis.hget("SESSION_AGE", session_token).nil?
