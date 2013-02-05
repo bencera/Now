@@ -38,7 +38,7 @@ class DrainAnalytics
         eo.facebook_user_id = user.id.to_s if user
         eo.udid = click[:udid] if device
         eo.event_id = click[:event_id] 
-        eo.open_time = click[:open_time]
+        eo.open_time = Time.at(click[:open_time])
         eo.sent_push_id = sp.id.to_s if sp 
         eo.session_token = click[:session_token]
         eo.save!
