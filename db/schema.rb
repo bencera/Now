@@ -11,7 +11,62 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130203171417) do
+ActiveRecord::Schema.define(:version => 20130205000508) do
+
+  create_table "archive_events", :force => true do |t|
+    t.string   "coordinates"
+    t.integer  "start_time"
+    t.integer  "end_time"
+    t.text     "description"
+    t.string   "category"
+    t.string   "shortid"
+    t.string   "link"
+    t.string   "super_user"
+    t.string   "status"
+    t.string   "city"
+    t.integer  "n_photos"
+    t.text     "keywords"
+    t.integer  "likes"
+    t.string   "illustration"
+    t.boolean  "featured"
+    t.boolean  "su_renamed"
+    t.boolean  "su_deleted"
+    t.boolean  "reached_velocity"
+    t.string   "ig_creator"
+    t.text     "photo_card"
+    t.string   "venue_fsq_id"
+    t.integer  "n_reactions"
+    t.string   "venue_id"
+    t.string   "facebook_user_id"
+    t.text     "photo_ids"
+    t.text     "checkin_ids"
+    t.text     "reaction_ids"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  create_table "archive_photos", :force => true do |t|
+    t.string   "mongo_id"
+    t.string   "ig_media_id"
+    t.string   "external_media_source"
+    t.string   "low_resolution_url"
+    t.string   "high_resolution_url"
+    t.string   "thumbnail_url"
+    t.string   "now_version"
+    t.text     "caption"
+    t.integer  "time_taken"
+    t.text     "coordinates"
+    t.string   "status"
+    t.string   "tag"
+    t.string   "category"
+    t.boolean  "answered"
+    t.string   "city"
+    t.string   "neighborhood"
+    t.string   "user_id"
+    t.text     "event_ids"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
+  end
 
   create_table "event_creations", :force => true do |t|
     t.string   "event_id"

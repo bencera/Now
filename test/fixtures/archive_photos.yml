@@ -1,0 +1,68 @@
+# == Schema Information
+#
+# Table name: archive_photos
+#
+#  id                    :integer         not null, primary key
+#  mongo_id              :string(255)
+#  ig_media_id           :string(255)
+#  external_media_source :string(255)
+#  low_resolution_url    :string(255)
+#  high_resolution_url   :string(255)
+#  thumbnail_url         :string(255)
+#  now_version           :string(255)
+#  caption               :text
+#  time_taken            :integer
+#  coordinates           :text
+#  status                :string(255)
+#  tag                   :string(255)
+#  category              :string(255)
+#  answered              :boolean
+#  city                  :string(255)
+#  neighborhood          :string(255)
+#  user_id               :string(255)
+#  event_ids             :text
+#  created_at            :datetime        not null
+#  updated_at            :datetime        not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  mongo_id: MyString
+  ig_media_id: MyString
+  external_media_source: MyString
+  low_resolution_url: MyString
+  high_resolution_url: MyString
+  thumbnail_url: MyString
+  now_version: MyString
+  caption: MyString
+  time_taken: 1
+  coordinates: 
+  status: MyString
+  tag: MyString
+  category: MyString
+  answered: false
+  city: MyString
+  neighborhood: MyString
+  user_id: MyString
+  event_ids: 
+
+two:
+  mongo_id: MyString
+  ig_media_id: MyString
+  external_media_source: MyString
+  low_resolution_url: MyString
+  high_resolution_url: MyString
+  thumbnail_url: MyString
+  now_version: MyString
+  caption: MyString
+  time_taken: 1
+  coordinates: 
+  status: MyString
+  tag: MyString
+  category: MyString
+  answered: false
+  city: MyString
+  neighborhood: MyString
+  user_id: MyString
+  event_ids: 
