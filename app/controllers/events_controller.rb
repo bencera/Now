@@ -507,6 +507,9 @@ class EventsController < ApplicationController
   end
 
   def like
+
+    session_token = cookies[:now_session]
+
     if params[:cmd] == "like"
       user = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
@@ -514,7 +517,7 @@ class EventsController < ApplicationController
         return render :text => "ERROR", :status => :error
       else
         if params[:like] == "like"
-          user.like_event(params[:shortid], params[:access_token])
+          user.like_event(params[:shortid], params[:access_token], session_token)
           return render :text => "OK", :status => :ok
         elsif params[:like] == "unlike"
           user.unlike_event(params[:shortid], params[:access_token])
