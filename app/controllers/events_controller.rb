@@ -82,7 +82,7 @@ class EventsController < ApplicationController
           #find the nearest featured city
           city_search_params = NowCity.find_nearest_featured_city(coordinates)
           @events = EventsHelper.get_localized_results(city_search_params[0], city_search_params[1].to_f / 111000, params) if city_search_params
-          redirected = true
+          redirected = true unless city_search_params.nil?
         end
 
       end
@@ -163,6 +163,11 @@ class EventsController < ApplicationController
           log_options[:events_shown] = @events.count
         else
           log_options[:events_shown] = 0
+        end
+
+        if city_search_params
+          log_options[:redirect_lon] = city_search_params[0][0]
+          log_options[:redirect_lat] = city_search_params[0][1]
         end
         log_options[:redirected] = redirected
         log_options[:search_time] = search_time

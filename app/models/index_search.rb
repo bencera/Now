@@ -17,10 +17,13 @@
 #  theme_id         :string(255)
 #  created_at       :datetime        not null
 #  updated_at       :datetime        not null
+#  redirect_lat     :string(255)
+#  redirect_lon     :string(255)
+#  redirect_dist    :integer
 #
 
 class IndexSearch < ActiveRecord::Base
-  attr_accessible :events_shown, :facebook_user_id, :first_end_time, :last_end_time, :latitude, :longitude, :radius, :redirected, :search_time, :session_token, :udidi, :theme_id
+  attr_accessible :events_shown, :facebook_user_id, :first_end_time, :last_end_time, :latitude, :longitude, :radius, :redirected, :search_time, :session_token, :udidi, :theme_id, :redirect_lat, :redirect_lon, :redirect_dist
 
   def self.queue_search_log(options)
     $redis.sadd("INDEX_SEARCH_LOG", options)
