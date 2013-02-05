@@ -48,7 +48,7 @@ class EventsController < ApplicationController
 
     session_token = cookies[:now_session]
     redirected = false
-
+    search_time = Time.now.to_i
     begin
       if params[:nowtoken]
         facebook_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
@@ -76,7 +76,7 @@ class EventsController < ApplicationController
        
         #when a user opens the app, we really want them to see activity
 
-        first_session_action = session_token.nil? ? true : UserSession.is_first_session_action(session_token)
+        first_session_action = session_token.nil? ? true : UserSession.is_first_session_action(session_token, :search_time => search_time)
         Rails.logger.info("User session #{session_token} -- first action #{first_session_action}")
         if first_session_action && @events.empty?
           #find the nearest featured city
@@ -111,7 +111,7 @@ class EventsController < ApplicationController
         end
         begin
         #log the search in our postgres
-          Resque.enqueue(LogSearch, {:search_time => Time.now.to_i, 
+          Resque.enqueue(LogSearch, {:search_time => search_time, 
                              :venue_id => params[:venue_id], 
                              :now_token => params[:nowtoken],
                              :udid => params[:deviceid], 
@@ -165,7 +165,7 @@ class EventsController < ApplicationController
           log_options[:events_shown] = 0
         end
         log_options[:redirected] = redirected
-        log_options[:search_time] = Time.now.to_i
+        log_options[:search_time] = search_time
 
         Rails.logger.info("TEST: #{log_options}")
 
