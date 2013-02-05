@@ -117,10 +117,10 @@ class DrainAnalytics
 
         if index_search[:redirect_lat] && index_search[:redirect_lon]
           is.redirect_lat = index_search[:redirect_lat].to_s
-          is.redirect_lon = index_search[:redirect_lat].to_s
+          is.redirect_lon = index_search[:redirect_lon].to_s
           redirect_coords = [index_search[:redirect_lon].to_f, index_search[:redirect_lat].to_f]
           orig_coords = [index_search[:longitude].to_f,index_search[:latitude].to_f]
-          is.redirect_dist = Geocoder::Calculations.distance_between(orig_coords, redirect_coords).to_i
+          is.redirect_dist = (1000 * Geocoder::Calculations.distance_between(orig_coords, redirect_coords, :units => :km)).to_i
         end
 
         is.save!
