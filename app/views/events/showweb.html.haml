@@ -1,87 +1,53 @@
-.background{:style => "background-image: url('#{@photos.all[rand(@photos.count)].url[1]}')"}
-.dimmer
-.view.view-moments_show
-  .timeline-line
-  .moment
-    .map_container{:style => "position: relative"}
-      = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]+0.03},#{@venue.coordinates[0]}&zoom=10&size=680x225&maptype=roadmap&markers=icon:http://www.ubimachine.com/assets/map_pin.png%7Clabel:Sa%7C#{@venue.coordinates[1]},#{@venue.coordinates[0]}&sensor=true&scale=2", :width => '680px', :height => '225px', :class => 'map-block photo-image'
-      %b.photo-border{:style => "width:680px; height: 225px"}
-    .tooltip-block
-      .tooltip-container
-        %span.tooltip-text=@venue.name
-        %span.tooltip-pointer
+%script{:type=>"text/javascript"}
+    mixpanel.track("Show:loaded")
+    mixpanel.track_links("#nowlogo a", "Show:logo")
+    mixpanel.track_links("#downloadlogo a", "Show:download")
+    mixpanel.track_links("#content a", "Show:photo")
+#header-container
+    #header{:style => "height: 250px"}
+        #map_canvas{:style => "width: 680px; height: 250px;"}
+        #map_now_logo{:style => "position:absolute; top: 15px; left: 15px"}
+            = image_tag "http://s3.amazonaws.com/now_assets/now-web-logo.png", :width => "43px", :height => "35px"
+        #map_shadow{:style => "position:absolute; top: 240px"}
+            = image_tag "http://s3.amazonaws.com/now_assets/map_shadow.png", :width => "680px", :height => "7px"
+
+#content
+    .profile_pic{:style => "float:left; margin-top: 10px"}=image_tag "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/c19.19.240.240/s160x160/547069_10151752536545314_1906932109_n.jpg", :width => "50px", :height => "50px"
+    .title{:style => "font-size:16px;text-align:left; font-weight:bold; margin-left:60px;"}
+        = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "9px", :height => "13px"
+        = @venue.name
+    .time_place{:style => "font-size:16px;text-align:left; margin-left:60px;"}= @event.description
+    - @photos.each do |p|
+        = image_tag p.url[0], :width => '210px', :style => "margin:0 5px 5px 0"
 
 
+%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
+%script{:src=>"http://srobbin.github.com/chosen/chosen.jquery.min.js"}
+%script{:src=>"http://srobbin.github.com/intelligist/jquery.intelligist.min.js"}
+%script{:src=>"http://srobbin.github.com/backstretch/jquery.backstretch.min.js"}
+:javascript
+    $.backstretch("#{@photos.all[rand(@photos.count)].url[1]}");
+:javascript
+    function initialize() {
+      var centerLatlng = new google.maps.LatLng(#{@venue.coordinates[1]+ 0.02},#{@venue.coordinates[0]});
+      var myLatlng = new google.maps.LatLng(#{@venue.coordinates[1]},#{@venue.coordinates[0]});
+      var myOptions = {
+        center: centerLatlng,
+        disableDefaultUI: true,
+        zoom: 12,
+        scrollwheel: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(document.getElementById("map_canvas"),
+          myOptions);
+      var image = 'http://s3.amazonaws.com/now_assets/concert_web.png';
+      var marker = new google.maps.Marker({
+            position: myLatlng,
+            title:"#{@venue.name}",
+            icon: image,
+            map: map
+            });
+            marker.setMap(map);
 
-.timeline
-  %ol
-    - i = 0
-    - @reposts.each do |repost|
-      %li{:style => "height: #{@reposts_position[i][0]}px;"}
-        - if @reposts_position[i][2]
-          .moment-block.leftblock{:style => "height: #{@reposts_position[i][1]}px"}
-            .leftarrow
-            .moments_feedback
-              .profile-pic
-                = image_tag "#{repost.get_fb_user_photo}", :width => '35px', :height => '35px'
-              .username
-                %p= repost.get_fb_user_name
-              .timestamp
-                %p 2h
-              .text
-                - if repost.description.empty?
-                  %p= "."
-                - else
-                  %p=repost.description
-              - if repost.new_photos
-                .images-block
-                  - j = 0
-                  - repost.checkin_card_list.each do |photo|
-                    = image_tag "#{photo.url[1]}", :width => "#{@photo_positions[i][j][0]}px", :height => "#{@photo_positions[i][j][1]}px", :style => "left:#{@photo_positions[i][j][2]}px; top:#{@photo_positions[i][j][3]}px", :class => "image-timeline"
-                    - j = j + 1
-        - else
-          .moment-block.rightblock{:style => "height: #{@reposts_position[i][1]}px"}
-            .timeline-arrow
-            .moments_feedback
-              .profile-pic
-                = image_tag "#{repost.get_fb_user_photo}", :width => '35px', :height => '35px'
-              .username
-                %p= repost.get_fb_user_name
-              .timestamp
-                %p 2h
-              .text
-                - if repost.description.empty?
-                  %p= "."
-                - else
-                  %p=repost.description
-              - if repost.new_photos
-                .images-block
-                  - j = 0
-                  - repost.checkin_card_list.each do |photo|
-                    = image_tag "#{photo.url[1]}", :width => "#{@photo_positions[i][j][0]}px", :height => "#{@photo_positions[i][j][1]}px", :style => "left:#{@photo_positions[i][j][2]}px; top:#{@photo_positions[i][j][3]}px", :class => "image-timeline"
-                    - j = j + 1
-      - i = i + 1
-
-/ .moment-block{:style => "height: 1000px; width: 100%; margin-top: 100px; background: #fc4a6f;"}
-/   #wrapper
-/     .left
-/       =image_tag "iphone_landing.png", :width => "400px", :id => "iphone"
-      
-
-/     .right
-/       #content
-/         =image_tag "logo_landing.png", :width => "260px"
-/         %p.tagline Experience your city.
-/         %p.question What is happening in your city?
-/         %p.description{:style => "width: 360px"} Now detects events in your city and shows you photos taken by others there. Finally be in the know.
-/         %a{:href => "http://itunes.apple.com/app/now./id525956360", :target => "_blank"}
-/           %p.download_btn Get the free app
-/         %p{:style => "font-size: 14px; margin-top: 68px", :class => "instagram"} Photos powered by the Instagram API
-/     .footer
-/       %a{:href => "http://checkthis.com/aboutnow"} About
-/       ·
-/       %a{:href => "http://checkthis.com/nowhelpcenter"} Help
-/       ·
-/       %a{:href => "http://checkthis.com/nowtermsofservice"} Terms
-/       ·
-/       %a{:href => "http://checkthis.com/nowprivacy"} Privacy
+        }
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
