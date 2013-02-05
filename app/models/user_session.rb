@@ -28,12 +28,15 @@ class UserSession < ActiveRecord::Base
   def self.is_first_session_action(session_token, options={})
     begin
       if options[:search_time]
-        first_action =  $redis.hget("SESSION_AGE", session_token).to_i > (search_time - 20.seconds)
+        first_action =  $redis.hget("SESSION_AGE", session_token).to_i > (options[:search_time].to_i - 20.seconds)
       else
         first_action = $redis.hget("SESSION_AGE", session_token).to_i > 20.seconds.ago.to_i
       end
     rescue
       return true
+    end
+    if $redis.hget("SESSION_AGE", session_token).nil?
+      $redis.hset("SESSION_AGE", session_token, options[:search_time] || Time.now.to_i).nil?
     end
     return first_action
   end
