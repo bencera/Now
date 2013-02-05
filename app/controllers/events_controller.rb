@@ -165,6 +165,7 @@ class EventsController < ApplicationController
           log_options[:events_shown] = 0
         end
         log_options[:redirected] = redirected
+        log_options[:search_time] = Time.now.to_i
 
         Rails.logger.info("TEST: #{log_options}")
 
