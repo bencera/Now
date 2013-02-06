@@ -13,6 +13,7 @@ class Reengagement
 
     devices = APN::Device.where(:updated_at.lt => 8.days.ago).entries; puts ""
 
+    Rails.logger.info("Reengagement: found #{devices.count} devices to reengage")
     #find facebook_users
 
     facebook_users = devices.map{|x| x.facebook_user}.uniq.compact; puts ""
@@ -24,12 +25,19 @@ class Reengagement
 
     devices = devices.delete_if {|device| device.facebook_user_id && !primary_devices.include?(device.id)}; puts ""
 
+    Rails.logger.info("Reengagement: #{devices.count} devices after exlcuding facebook_users non-primary devices")
+
     already_notified_udids = SentPush.where("reengagement = ? AND sent_time > ?", true, 12.hours.ago).map{|sp| sp.udid}.uniq
+
+    Rails.logger.info("Reengagement: #{already_notified_udids.count} devices already notified")
 
     devices_to_notify = devices.delete_if {|device| device.coordinates.nil? || already_notified_udids.include?(device.udid) || ( device.coordinates[0] == 0.0 && device.coordinates[1] == 0.0 )}; puts ""
 
+    Rails.logger.info("Reengagement: #{devices.count} devices after excluding devices we already notified")
+
     events = Event.where(:category.in => ["Concert", "Party"], :status.in => Event::TRENDING_STATUSES, :reached_velocity => true).entries; puts ""
 
+    Rails.logger.info("Reengagement: examining #{events.count} events for reengagement")
     dev_distance = Hash.new(5)
     dev_entry = {}
 
@@ -52,6 +60,8 @@ class Reengagement
       event_device_list[dev_entry[device_id]] << device_id
     end
 
+    Rails.logger.info("REENGAGEMENT: #{event_device_list.keys.count} events will be sent to reengage")
+
     params = ""
     events.each do |event|
       if event_device_list[event._id.to_s] && event_device_list[event._id.to_s].any?
@@ -65,7 +75,7 @@ class Reengagement
                   :message => message}.inspect
 
          
-        Rescue.enqueue(SendBatchPush2, params)
+        Resque.enqueue(SendBatchPush2, params)
       end
     end
 
