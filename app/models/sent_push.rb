@@ -17,7 +17,7 @@
 #
 
 class SentPush < ActiveRecord::Base
-  attr_accessible :event_id, :opened_event, :sent_time, :user_id, :facebook_user_id, :message, :user_count, :reenagement, :failed
+  attr_accessible :event_id, :opened_event, :sent_time, :user_id, :facebook_user_id, :message, :user_count, :udid, :reengagement, :failed
 
   has_many :event_opens
   

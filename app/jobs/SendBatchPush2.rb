@@ -25,6 +25,7 @@ class SendBatchPush2
       next if device.subscriptions.first.nil?
       if test
         success_devs << device
+        sent_times[device.udid] = Time.now
         next
       end
 
