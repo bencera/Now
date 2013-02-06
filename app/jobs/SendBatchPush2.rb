@@ -9,6 +9,7 @@ class SendBatchPush2
     device_ids = params[:device_ids]
     message = params[:message]
     reengagement = params[:reengagement]
+    test = params[:test]
     
     event = Event.find(event_id)
     devices = APN::Device.find(device_ids)
@@ -22,6 +23,10 @@ class SendBatchPush2
     devices.each do |device|
 
       next if device.subscriptions.first.nil?
+      if test
+        success_devs << device
+        next
+      end
 
       begin
         device.subscriptions.each do |sub|
@@ -46,24 +51,30 @@ class SendBatchPush2
 
     SentPush.transaction do
       success_devs.each do |device|
-        SentPush.create(:event_id => event_id.to_s,
-                        :sent_time => sent_times[device.udid],
-                        :opened_event => false,
-                        :message => message,
-                        :facebook_user_id => device.facebook_user_id.to_s,
-                        :udid => device.udid,
-                        :reengagement => true)
+
+        sp = SentPush.new(:event_id => event_id.to_s,
+                          :sent_time => sent_times[device.udid],
+                          :opened_event => false,
+                          :message => message,
+                          :facebook_user_id => device.facebook_user_id.to_s,
+                          :udid => device.udid,
+                          :reengagement => true)
+        sp.user_count = -1 if test
+        sp.save
       end
 
       failed_devs.each do |device|
-        SentPush.create(:event_id => event_id.to_s,
-                        :sent_time => sent_times[device.udid],
-                        :opened_event => false,
-                        :message => message,
-                        :facebook_user_id => device.facebook_user_id.to_s,
-                        :udid => device.udid,
-                        :reengagement => true,
-                        :failed => true)
+        sp = SentPush.new(:event_id => event_id.to_s,
+                          :sent_time => sent_times[device.udid],
+                          :opened_event => false,
+                          :message => message,
+                          :facebook_user_id => device.facebook_user_id.to_s,
+                          :udid => device.udid,
+                          :reengagement => true,
+                          :failed => true)
+        sp.user_count = -1 if test
+        sp.save
+
       end
     end
   end
