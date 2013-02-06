@@ -12,10 +12,12 @@
 #  facebook_user_id :string(255)
 #  udid             :string(255)
 #  user_count       :integer
+#  reengagement     :boolean
+#  failed           :boolean
 #
 
 class SentPush < ActiveRecord::Base
-  attr_accessible :event_id, :opened_event, :sent_time, :user_id, :facebook_user_id, :message, :user_count
+  attr_accessible :event_id, :opened_event, :sent_time, :user_id, :facebook_user_id, :message, :user_count, :reenagement, :failed
 
   has_many :event_opens
   

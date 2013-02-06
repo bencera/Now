@@ -28,16 +28,16 @@ class UserSession < ActiveRecord::Base
   def self.is_first_session_action(session_token, options={})
     begin
       if options[:search_time]
-        first_action =  $redis.hget("SESSION_AGE", session_token).to_i > (options[:search_time].to_i - 20.seconds)
+        first_action =  $redis.hget("SESSION_AGE", session_token).to_i > (options[:search_time].to_i - 40.seconds)
       else
-        first_action = $redis.hget("SESSION_AGE", session_token).to_i > 20.seconds.ago.to_i
+        first_action = $redis.hget("SESSION_AGE", session_token).to_i > 40.seconds.ago.to_i
       end
     rescue
       Rails.logger.error("Problem identifying first session action")
       return true
     end
     if $redis.hget("SESSION_AGE", session_token).nil?
-      $redis.hset("SESSION_AGE", session_token, options[:search_time] || Time.now.to_i).nil?
+      $redis.hset("SESSION_AGE", session_token, options[:search_time] || Time.now.to_i)
     end
     return first_action
   end

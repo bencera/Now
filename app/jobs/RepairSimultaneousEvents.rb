@@ -20,9 +20,9 @@ class RepairSimultaneousEvents
           event.destroy
           next
         elsif main_fb_user.now_id == "0"
+          main_fb_user = event.facebook_user
           main_event.destroy
           main_event = event
-          main_fb_user = event.facebook_user
           next
         end
         new_checkin = Checkin.new_from_event(event, main_event)

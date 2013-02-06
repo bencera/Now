@@ -12,6 +12,8 @@
 #  facebook_user_id :string(255)
 #  udid             :string(255)
 #  user_count       :integer
+#  reengagement     :boolean
+#  failed           :boolean
 #
 
 require 'test_helper'
