@@ -77,6 +77,8 @@ class SendBatchPush2
         sp.save
 
       end
+
+      FacebookUser.where(:now_id => "2").first.send_notification("#{"test" if test} Reengagement Push to #{success_devs.count} users, failed #{failed_devs.count}", event_id)
     end
   end
 end
