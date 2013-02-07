@@ -9,9 +9,28 @@ class Reengagement
   end
 
   def self.perform(in_params="{}")
-    # get all devices that haven't changed in 8+ days
 
-    devices = APN::Device.where(:updated_at.lt => 8.days.ago).entries; puts ""
+    Rails.logger.info("Beginning Reengagement")
+
+    events = Event.where(:category.in => ["Concert", "Party"], :status.in => Event::TRENDING_STATUSES, :end_time.gt => 1.hour.ago.to_i).entries; puts ""
+    events = events.delete_if do |event|
+      current_local_time = event.venue.now_city.get_local_time
+      current_local_time.wday < 3 || current_local_time.hour < 17 || event.photos.count < 6
+    end; puts ""
+
+    return if events.empty?
+
+    Rails.logger.info("Reengagement: examining #{events.count} events for reengagement")
+
+  
+    # get all devices that haven't changed in 8+ days -- should do this as a local search for those events...
+
+    devices = []
+    max_distance = 8 / 111.0
+    events.each do |event|
+      devices.push(*(APN::Device.where(:updated_at.lt => 8.days.ago, :coordinates.within => {"$center" => [event.coordinates, max_distance]}).entries))
+    end; puts ""
+
 
     Rails.logger.info("Reengagement: found #{devices.count} devices to reengage")
     #find facebook_users
@@ -35,9 +54,6 @@ class Reengagement
 
     Rails.logger.info("Reengagement: #{devices.count} devices after excluding devices we already notified")
 
-    events = Event.where(:category.in => ["Concert", "Party"], :status.in => Event::TRENDING_STATUSES, :reached_velocity => true).entries; puts ""
-
-    Rails.logger.info("Reengagement: examining #{events.count} events for reengagement")
     dev_distance = Hash.new(5)
     dev_entry = {}
 

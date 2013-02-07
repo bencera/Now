@@ -33,3 +33,9 @@ city_rank:
   class: CityRank
   args:
   description: "Count the events in cities"
+
+reengagement:
+  every: "15m"
+  class: Reengagement
+  args:
+  description: "Send Reengagement Pushes"

@@ -23,25 +23,21 @@ class SendBatchPush2
     devices.each do |device|
 
       next if device.subscriptions.first.nil?
-      if test
-        success_devs << device
-        sent_times[device.udid] = Time.now
-        next
-      end
+      if !test
+        begin
+          device.subscriptions.each do |sub|
 
-      begin
-        device.subscriptions.each do |sub|
-
-          n = APN::Notification.new
-          n.subscription = sub
-          n.alert = message 
-          n.event = event.id
-          n.deliver
+            n = APN::Notification.new
+            n.subscription = sub
+            n.alert = message 
+            n.event = event.id
+            n.deliver
+          end
+        rescue
+          failed_devs << device
+          sent_times[device.udid] = Time.now
+          next
         end
-      rescue
-        failed_devs << device
-        sent_times[device.udid] = Time.now
-        next
       end
 
       sent_times[device.udid] = Time.now
