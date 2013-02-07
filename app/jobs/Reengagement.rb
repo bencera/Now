@@ -84,9 +84,12 @@ class Reengagement
         device_ids =  event_device_list[event._id.to_s]
         message = "#{Event.get_activity_message(:photo_list => event.photos)[:message]} @ #{event.venue.name}"
         event_id = event._id.to_s
+
+        test = $redis.get("TEST_REENGAGEMENT") == "true"
+
         params = {:event_id => event_id,
                   :device_ids => device_ids,
-                  :test => true,
+                  :test => test,
                   :reengagement => true,
                   :message => message}.inspect
 
