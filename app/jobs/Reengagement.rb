@@ -82,7 +82,7 @@ class Reengagement
     events.each do |event|
       if event_device_list[event._id.to_s] && event_device_list[event._id.to_s].any?
         device_ids =  event_device_list[event._id.to_s]
-        message = "#{Event.get_activity_message(:photo_list => event.photos)} @ #{event.venue.name}"
+        message = "#{Event.get_activity_message(:photo_list => event.photos)[:message]} @ #{event.venue.name}"
         event_id = event._id.to_s
         params = {:event_id => event_id,
                   :device_ids => device_ids,
