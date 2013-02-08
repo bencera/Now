@@ -20,7 +20,7 @@ class Reengagement
       now_city = event.venue.now_city || NowCity.where(:coordinates => {"$near" => event.coordinates}).first
       current_local_time = event.venue.now_city.get_local_time
       user_count = Event.get_activity_message(:photo_list => event.photos)[:user_count]
-      current_local_time.wday < 3 || current_local_time.hour < 17 || event.photos.count < 6 || user_count < 3
+      current_local_time.wday < 3 || current_local_time.hour < 20 || event.photos.count < 6 || user_count < 3
     end; puts ""
 
     return if events.empty?
