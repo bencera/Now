@@ -47,7 +47,7 @@ class Reengagement
 
     Rails.logger.info("Reengagement: #{devices.count} devices after exlcuding facebook_users non-primary devices")
 
-    already_notified_udids = SentPush.where("reengagement = ? AND sent_time > ?", true, 12.hours.ago).map{|sp| sp.udid}.uniq
+    already_notified_udids = SentPush.where("reengagement = ? AND sent_time > ?", true, 12.hours.ago).map{|sp| sp.udid}.uniq ; puts ""
 
     Rails.logger.info("Reengagement: #{already_notified_udids.count} devices already notified")
 
@@ -82,20 +82,35 @@ class Reengagement
     params = ""
     events.each do |event|
       if event_device_list[event._id.to_s] && event_device_list[event._id.to_s].any?
+
+        device_groups = []
+        device_groups << []
         device_ids =  event_device_list[event._id.to_s]
+        device_ids.each do |device_id|
+          if device_groups.last.count >= 100
+            device_groups << []
+          end
+          device_groups.last << device_id
+        end
+
         message = "#{Event.get_activity_message(:photo_list => event.photos)[:message]} @ #{event.venue.name}"
         event_id = event._id.to_s
 
         test = $redis.get("TEST_REENGAGEMENT") == "true"
 
-        params = {:event_id => event_id,
-                  :device_ids => device_ids,
-                  :test => test,
-                  :reengagement => true,
-                  :message => message}.inspect
+        first_batch = true
+        device_groups.each do |device_list|
+          params = {:event_id => event_id,
+                    :device_ids => device_list,
+                    :test => test,
+                    :reengagement => true,
+                    :message => message,
+                    :first_batch => first_batch,
+                    :total_count => device_ids.count}.inspect
 
-         
-        Resque.enqueue(SendBatchPush2, params)
+          Resque.enqueue(SendBatchPush2, params)
+          first_batch = false
+        end
       end
     end
 

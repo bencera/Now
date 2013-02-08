@@ -10,6 +10,8 @@ class SendBatchPush2
     message = params[:message]
     reengagement = params[:reengagement]
     test = params[:test]
+    first_batch = params[:first_batch]
+    total_count = params[:total_count]
     
     event = Event.find(event_id)
     devices = APN::Device.find(device_ids)
@@ -71,11 +73,10 @@ class SendBatchPush2
                           :failed => true)
         sp.user_count = -1 if test
         sp.save
-
       end
-
-      FacebookUser.where(:now_id.in => ["1","2"]).each {|user| user.send_notification("#{"TEST " if test}Reengagement Push to #{success_devs.count}: #{message},", event_id)}
     end
+
+    FacebookUser.where(:now_id.in => ["1","2"]).each {|user| user.send_notification("#{"TEST " if test}Reengagement Push to #{total_count}: #{message},", event_id)} if first_batch
   end
 end
     
