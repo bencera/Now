@@ -17,7 +17,7 @@ people_trending:
   description: "updating events created by members of Now community"
 
 auto_ig_events:
-  every: "1m"
+  every: "30s"
   class: UserFollowEvent2
   args: 
   description: "pull recent instagram photos from our tastemakers -- create an event if its good"
