@@ -12,7 +12,10 @@ class Reengagement
 
     Rails.logger.info("Beginning Reengagement")
 
-    events = Event.where(:category.in => ["Concert", "Party"], :status.in => Event::TRENDING_STATUSES, :end_time.gt => 1.hour.ago.to_i).entries; puts ""
+    events = Event.where(:category.in => ["Concert", "Party"], 
+                         :status.in => Event::TRENDING_STATUSES, 
+                         :end_time.gt => 1.hour.ago.to_i, 
+                         :start_time.gt => 3.hours.ago.to_i).entries; puts ""
     events = events.delete_if do |event|
       current_local_time = event.venue.now_city.get_local_time
       user_count = Event.get_activity_message(:photo_list => event.photos)[:user_count]
