@@ -18,7 +18,7 @@ class Reengagement
                          :start_time.gt => 3.hours.ago.to_i).entries; puts ""
     events = events.delete_if do |event|
       now_city = event.venue.now_city || NowCity.where(:coordinates => {"$near" => event.coordinates}).first
-      current_local_time = event.venue.now_city.get_local_time
+      current_local_time = now_city.get_local_time
       user_count = Event.get_activity_message(:photo_list => event.photos)[:user_count]
       current_local_time.wday < 3 || current_local_time.hour < 20 || event.photos.count < 6 || user_count < 3
     end; puts ""
