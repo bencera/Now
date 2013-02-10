@@ -406,6 +406,7 @@ class AddPeopleEvent
       #users adding events to the carnival theme
       theme_id = "6"
       Theme.add_experience(theme_id, check_in_event.id.to_s)
+      check_in_event.facebook_user = fb_user if check_in_event.facebook_user.nil? || check_in_event.facebook_user.now_id == "0"
       check_in_event.save!
     end
 
