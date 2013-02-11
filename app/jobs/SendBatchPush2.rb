@@ -76,7 +76,7 @@ class SendBatchPush2
       end
     end
 
-    FacebookUser.where(:now_id.in => ["1","2"]).each {|user| user.send_notification("#{"TEST " if test}Reengagement Push to #{total_count}: #{message},", event_id)} if first_batch
+    FacebookUser.where(:now_id.in => ["2"]).each {|user| user.send_notification("#{"TEST " if test}Reengagement Push to #{total_count}: #{message},", event_id)} if first_batch
   end
 end
     
