@@ -16,7 +16,8 @@
     %meta{:property=>"fb:app_id", :content=>"174358702691912"}
     %meta{:property=>"og:type", :content=>"getnowapp:experience"}
     %meta{:property=>"og:url", :content=>"http://www.getnowapp.com/#{@event.shortid}"}
-    %meta{:property=>"og:image", :content=>@photos.all[rand(@photos.count)].url[0]}
+    - if @photos.count != 0
+        %meta{:property=>"og:image", :content=>@photos.all[rand(@photos.count)].url[0]}
     %meta{:property=>"og:site_name", :content=>"Now"}
     %meta{:property=>"fb:admins", :content=>"571905313"}
     %script{:type=>"text/javascript"}

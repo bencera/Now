@@ -6,27 +6,94 @@
 #header-container
     #header{:style => "height: 250px"}
         #map_canvas{:style => "width: 680px; height: 250px;"}
-        #map_now_logo{:style => "position:absolute; top: 15px; left: 15px"}
-            = image_tag "http://s3.amazonaws.com/now_assets/now-web-logo.png", :width => "43px", :height => "35px"
         #map_shadow{:style => "position:absolute; top: 240px"}
             = image_tag "http://s3.amazonaws.com/now_assets/map_shadow.png", :width => "680px", :height => "7px"
+    %a{:href => "http://getnowapp.com/"}
+        #map_now_logo{:style => "position:absolute; top: 15px; left: 15px;font-weight:bold; color:white;opacity:0.7;font-size:26px"}
+            = image_tag "http://s3.amazonaws.com/now_assets/now-web-logo.png", :width => "43px", :height => "35px"
+            Now
+    %a{:href => "http://getnowapp.com/download"}
+        %p.download_btn{:style => "float:right;"} Get the free app
 
 #content
-    .profile_pic{:style => "float:left; margin-top: 10px"}=image_tag "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/c19.19.240.240/s160x160/547069_10151752536545314_1906932109_n.jpg", :width => "50px", :height => "50px"
+    .profile_pic{:style => "float:left; margin-top: 10px"}
+        - if true#@event.facebook_user.nil?
+            = image_tag "http://s3.amazonaws.com/now_assets/icon.png", :width => "50px", :height => "50px"
+        - else
+            = image_tag "#{@event.facebook_user.now_profile.profile_photo_url}", :width => "50px", :height => "50px"
+
     .title{:style => "font-size:16px;text-align:left; font-weight:bold; margin-left:60px;"}
         = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "9px", :height => "13px"
         = @venue.name
+        #time_ago{:style => "float:right; color:gray"}= "#{time_ago_in_words(Time.at @event.end_time.to_i)} ago"
     .time_place{:style => "font-size:16px;text-align:left; margin-left:60px;"}= @event.description
-    - @photos.each do |p|
-        = image_tag p.url[0], :width => '210px', :style => "margin:0 5px 5px 0"
+    - @reposts.each do |repost|
+        - if repost.checkin_card_list.count == 1
+            //1
+            .photo_card{:style => "overflow:hidden; width: 640px; height: 425px; margin-bottom: 10px"}
+                //= image_tag p.url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
+                = image_tag repost.checkin_card_list.first.url[1], :width => '640px', :height => '640px', :style => "margin:-107px 0 0 0;"
+        - elsif repost.checkin_card_list.count == 2
+            //2
+            .photo_card{:style => "overflow:hidden; width: 640px; height: 425px; margin-bottom: 10px; position:relative"}
+                = image_tag repost.checkin_card_list[0].url[1], :width => '425px', :height => '425px', :style => "margin: 0 0 0 -110px;float:left"
+                = image_tag repost.checkin_card_list[1].url[1], :width => '425px', :height => '425px', :style => "margin: 0 0 0 10px; position: absolute"
+        - elsif repost.checkin_card_list.count == 3
+            //3
+            .photo_card{:style => "margin-bottom:5px"}
+                = image_tag repost.checkin_card_list[0].url[1], :width => '425px', :height => '425px', :style => "margin-right: 5px"
+                = image_tag repost.checkin_card_list[1].url[1], :width => '210px', :height => '210px', :style => "position: absolute;"
+                = image_tag repost.checkin_card_list[2].url[1], :width => '210px', :height => '210px'
+        - elsif repost.checkin_card_list.count == 4
+            //4
+            .photo_card{:style => "overflow:hidden; width: 640px; height: 210px; margin-bottom: 10px; position:relative"}
+                = image_tag repost.checkin_card_list[0].url[1], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
+                = image_tag repost.checkin_card_list[1].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
+            .photo_card{:style => "overflow:hidden; width: 640px; height: 210px; margin-bottom: 10px; position:relative"}
+                = image_tag repost.checkin_card_list[2].url[1], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
+                = image_tag repost.checkin_card_list[3].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
+        - elsif repost.checkin_card_list.count == 5
+            //5
+            .photo_card
+                = image_tag repost.checkin_card_list[0].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
+                = image_tag repost.checkin_card_list[1].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
+                = image_tag repost.checkin_card_list[2].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
+            .photo_card{:style => "overflow:hidden; width: 640px; height: 210px; margin-bottom: 10px; position:relative"}
+                = image_tag repost.checkin_card_list[3].url[1], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
+                = image_tag repost.checkin_card_list[4].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
+        - elsif repost.checkin_card_list.count == 6
+            //6
+            .photo_card
+                = image_tag repost.checkin_card_list[0].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
+                = image_tag repost.checkin_card_list[1].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
+                = image_tag repost.checkin_card_list[2].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
+                = image_tag repost.checkin_card_list[3].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
+                = image_tag repost.checkin_card_list[4].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
+                = image_tag repost.checkin_card_list[5].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
+
+        / = image_tag @photos[1].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
+        / = image_tag @photos[3].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
+    / .more_events
+    /     %h2 More events trending in Now app
+    /     - for i in 0..3 
+    /         .event_plus
+    /             .profile{:style => "margin: 10px 0 0 10px; float:left"}
+    /                 = image_tag "http://s3.amazonaws.com/now_assets/icon.png", :width => "25px", :height => "25px"
+    /             .title{:style => "font-size:14px;text-align:left; font-weight:bold; margin-left:40px;"}
+    /                 = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "9px", :height => "13px"
+    /                 = @venue.name
+    /             .photos{:style => "margin-left:10px"}
+    /                 - @photos[0..5].each do |p|
+    /                     = image_tag p.url[0], :width => '95px', :style => "margin:0 2px 2px 0"
 
 
 %script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
 %script{:src=>"http://srobbin.github.com/chosen/chosen.jquery.min.js"}
 %script{:src=>"http://srobbin.github.com/intelligist/jquery.intelligist.min.js"}
 %script{:src=>"http://srobbin.github.com/backstretch/jquery.backstretch.min.js"}
-:javascript
-    $.backstretch("#{@photos.all[rand(@photos.count)].url[1]}");
+- if @photos.count != 0
+    :javascript
+        $.backstretch("#{@photos.all[rand(@photos.count)].url[1]}");
 :javascript
     function initialize() {
       var centerLatlng = new google.maps.LatLng(#{@venue.coordinates[1]+ 0.02},#{@venue.coordinates[0]});
@@ -40,7 +107,7 @@
       };
       var map = new google.maps.Map(document.getElementById("map_canvas"),
           myOptions);
-      var image = 'http://s3.amazonaws.com/now_assets/concert_web.png';
+      var image = "http://s3.amazonaws.com/now_assets/#{@category}_web.png";
       var marker = new google.maps.Marker({
             position: myLatlng,
             title:"#{@venue.name}",

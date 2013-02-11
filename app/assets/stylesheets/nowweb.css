@@ -118,17 +118,25 @@
 
     }
 
+  .event_plus{
+    width: 320px;
+    height:250px;
+    background-color:white;
+    float:left;
+
+  }
+
     #header-container p.download_btn {
-  margin: 5px 0 0 14px;
+  margin: 15px 15px 0 14px;
   text-align: center;
-  padding: 16px 10px;
+  padding: 15px 10px 20px;
   color: #666;
   font-size: 16px;
   text-shadow: 0px 1px #f0f0f0;
   font-weight: bold;
-  height: 25px;
-  width: 90px;
-  border: 2px solid #e31254;
+  height: 15px;
+  width: 150px;
+  border: 3px solid #e31254;
   border-radius: 8px;
   background-image: -webkit-gradient(linear, center top, center bottom, from(white), to(#b5b5b5));
   background-image: -webkit-linear-gradient(top, white, #b5b5b5);
@@ -145,7 +153,7 @@
       width: 655px; 
       margin: 0 auto; padding: 1px 10px 10px 15px;
       background: #FFF;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 1);
       margin-top: 250px;
     }
     
