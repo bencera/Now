@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130206175712) do
+ActiveRecord::Schema.define(:version => 20130211210541) do
 
   create_table "archive_events", :force => true do |t|
     t.string   "coordinates"
@@ -135,6 +135,7 @@ ActiveRecord::Schema.define(:version => 20130206175712) do
     t.boolean  "created_event"
     t.string   "session_token"
     t.string   "event_id"
+    t.integer  "activity_level"
   end
 
   create_table "sent_pushes", :force => true do |t|
