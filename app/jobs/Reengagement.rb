@@ -31,9 +31,9 @@ class Reengagement
     # get all devices that haven't changed in 8+ days -- should do this as a local search for those events...
 
     devices = []
-    max_distance = 8 / 111.0
+    max_distance = 32 / 111.0
     events.each do |event|
-      devices.push(*(APN::Device.where(:updated_at.lt => 8.days.ago, :coordinates.within => {"$center" => [event.coordinates, max_distance]}).entries))
+      devices.push(*(APN::Device.where(:updated_at.lt => 5.days.ago, :coordinates.within => {"$center" => [event.coordinates, max_distance]}).entries))
     end; puts ""
 
 
@@ -59,7 +59,7 @@ class Reengagement
 
     Rails.logger.info("Reengagement: #{devices.count} devices after excluding devices we already notified")
 
-    dev_distance = Hash.new(5)
+    dev_distance = Hash.new(20)
     dev_entry = {}
 
     events.each do |event|
