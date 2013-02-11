@@ -30,6 +30,7 @@ class LogSearch
     search_entry.created_event = created_event
     search_entry.event_id = event_id if created_event
     search_entry.session_token = params[:session_token]
+    search_entry.activity_level = params[:user_count]
     search_entry.save!
 
     #set the user up to get a push next time venue trends

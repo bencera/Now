@@ -378,7 +378,7 @@ EOS
         venue_retry += 1
         sleep 0.1
         retry if venue_retry < 2
-        return {:fake_event => Event.make_fake_event("FAKE", "FAKE", venue_id, "", [0,0], :description => "No Activity Found Here" )}
+        return {:fake_event => Event.make_fake_event("FAKE", "FAKE", venue_id, "", [0,0], :description => "No Activity Found Here", :user_count => 0 )}
 
       end
     else
@@ -407,7 +407,7 @@ EOS
         retry_attempt += 1
         retry
       else
-        return {:fake_event => Event.make_fake_event("FAKE", "FAKE", venue_id, venue_name,  [0,0], :description => "No Activity Found Here" )}
+        return {:fake_event => Event.make_fake_event("FAKE", "FAKE", venue_id, venue_name,  [0,0], :description => "No Activity Found Here", :user_count => 0)}
       end
     end
 
@@ -415,7 +415,7 @@ EOS
     photos = []
 
     if response.data.count == 0
-      return :fake_event => Event.make_fake_event("FAKE", "FAKE", venue_id, venue_name,  [0,0], :description => "No Activity Found Here" )
+      return :fake_event => Event.make_fake_event("FAKE", "FAKE", venue_id, venue_name,  [0,0], :description => "No Activity Found Here", :user_count => 0)
     end
 
     #if 3 users in last 3 hours -- present it as an event
@@ -474,7 +474,7 @@ EOS
       Resque.enqueue(CreatePhotos, venue_id, body)
     end
 
-    return :fake_event => Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos, :description => description )
+    return :fake_event => Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos, :description => description, :user_count => user_count )
 
   end
 end

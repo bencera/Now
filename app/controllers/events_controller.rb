@@ -106,7 +106,9 @@ class EventsController < ApplicationController
         fake_event = nil
         if (@events.empty? || !Event::TRENDING_2_STATUSES.include?(@events.first.status))
           #create a fake event from venue activity -- and start creating it
-          fake_event =  EventsHelper.get_fake_event(params[:venue_id])[:fake_event]
+          fake_event_results = EventsHelper.get_fake_event(params[:venue_id])
+          fake_event = fake_event_results[:fake_event]
+          fake_event_activity = fake_event_results[:user_count]
           @events.unshift(fake_event) unless fake_event.nil? 
         end
         begin
@@ -115,6 +117,7 @@ class EventsController < ApplicationController
                              :venue_id => params[:venue_id], 
                              :now_token => params[:nowtoken],
                              :udid => params[:deviceid], 
+                             :user_count => fake_event_activity,
                              :event_id => (fake_event.id != "FAKE") ? fake_event.id : nil,
                              :session_token => session_token})
         rescue
