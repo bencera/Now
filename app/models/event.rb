@@ -175,7 +175,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
     #take this out so it won't fail silently later
     begin
       self.venue.notify_subscribers(self) if Event::TRENDING_STATUSES.include?(self.status)
-    rescue
+    rescue Exception => e
+      FacebookUser.where(:now_id => "2").first.send_notification("ERROR WITH PUSH #{e.message}", nil)
     end
   end
 
