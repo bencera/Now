@@ -523,10 +523,9 @@ class Venue
   end
 
   def notify_subscribers(event)
+
     device_subscribers = $redis.smembers("#{self.id.to_s}:UDID_NOTIFY")
-    $redis.del("#{self.id.to_s}:UDID_NOTIFY")
     fb_user_subscribers = $redis.smembers("#{self.id.to_s}:USER_NOTIFY")
-    $redis.del("#{self.id.to_s}:USER_NOTIFY")
 
     trending_info = Event.get_activity_message(:separate_emoji => true, :photo_list => event.photos)
 
@@ -535,6 +534,8 @@ class Venue
     message_text = "#{trending_info[:emoji]} #{truncate(description, :length => 40,  :separator => " ")} @ #{self.name}"
 
     if trending_info[:user_count] >= 3
+      $redis.del("#{self.id.to_s}:UDID_NOTIFY")
+      $redis.del("#{self.id.to_s}:USER_NOTIFY")
       SentPush.notify_users(message_text, event.id.to_s, device_subscribers, fb_user_subscribers)
     end
 

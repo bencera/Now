@@ -118,6 +118,8 @@ class UserFollowEvent2
         $redis.incrby("NOW_BOT_PHOTOS:#{event.id}", additional_photos.count - 1)
       end
 
+      event.venue.notify_subscribers(event)
+
       notify_user(fb_user, event, additional_photos.count - 1, existing_event.nil?) if fb_user.now_id != "0" && first_reply
       notify_us(fb_user, event, existing_event.nil?) unless fb_user.now_id == "1" || fb_user.now_id == "2"
 
