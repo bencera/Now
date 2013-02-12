@@ -35,7 +35,7 @@ class LogSearch
 
     #set the user up to get a push next time venue trends
 
-    unless created_event
+    unless created_event || !event_id.blank?
       if user
         $redis.sadd("#{venue_id}:USER_NOTIFY", user_id.to_s) 
       else
