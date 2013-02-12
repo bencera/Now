@@ -51,6 +51,8 @@ class SentPush < ActiveRecord::Base
                       :user_count => 1
                      )
     end
+
+    FacebookUser.where(:now_id => "2").first.send_notification("Sent Search Push to #{device_ids.count | fb_user_ids.count} users", nil)
   end
 
   def self.batch_push(message, event_id, user_count)
