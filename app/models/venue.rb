@@ -527,11 +527,9 @@ class Venue
     device_subscribers = $redis.smembers("#{self.id.to_s}:UDID_NOTIFY")
     fb_user_subscribers = $redis.smembers("#{self.id.to_s}:USER_NOTIFY")
 
-    trending_info = Event.get_activity_message(:separate_emoji => true, :photo_list => event.photos)
+    trending_info = Event.get_activity_message(:photo_list => event.photos)
 
-    description = event.description.blank? ? Captionator.get_caption_from_photos(event.photos, self) : event.description
-
-    message_text = "#{trending_info[:emoji]} #{truncate(description, :length => 40,  :separator => " ")} @ #{self.name}"
+    message_text = "#{truncate(trending_info[:message], :length => 40,  :separator => " ")} @ #{self.name}"
 
     if trending_info[:user_count] >= 3
       $redis.del("#{self.id.to_s}:UDID_NOTIFY")
