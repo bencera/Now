@@ -35,14 +35,49 @@ class SentPush < ActiveRecord::Base
     fb_users.each do |fb_user|
       next if fb_user == event.facebook_user
 #        next if !(["1", "2", "359"].include?(fb_user.now_id))
-      Rails.logger.info("notifying #{fb_user.now_id}")
-      fb_user.send_notification(message, event_id.to_s)
-      fb_users_notified.push(fb_user.id.to_s)
+      begin 
+        Rails.logger.info("notifying #{fb_user.now_id}")
+        fb_user.send_notification(message, event_id.to_s)
+        fb_users_notified.push(fb_user.id.to_s)
+      rescue
+        next
+      end
+    end
+
+    devices = APN::Device.where(:udid.in => device_ids).entries
+
+    devices.each do |device|
+      begin 
+        Rails.logger.info("notifying #{device.udid}")
+
+        device.subscriptions.each do |subscription|
+          n = APN::Notification.new
+          n.subscription = subscription
+          n.alert = message
+          n.event = event_id 
+          n.deliver
+        end
+        devices_notified.push(device.udid)
+      rescue
+        next
+      end
+
     end
 
     fb_users_notified.each do |fb_user_id|
       next if fb_user_id == event.facebook_user.id.to_s
       SentPush.create(:facebook_user_id => fb_user_id.to_s, 
+                      :event_id => event_id.to_s, 
+                      :message => message, 
+                      :sent_time => Time.now, 
+                      :opened_event => false, 
+                      :reengagement => false, 
+                      :user_count => 1
+                     )
+    end
+
+    devices_notified.each do |device_id|
+      SentPush.create(:udid => device_id.to_s, 
                       :event_id => event_id.to_s, 
                       :message => message, 
                       :sent_time => Time.now, 
