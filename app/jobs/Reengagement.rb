@@ -66,7 +66,7 @@ class Reengagement
       devices_to_notify.each do |device|
         now_city = event.venue.now_city
         current_local_time = now_city.get_local_time
-        next if current_local_time.wday < 3 || current_local_time.hour < 17
+        next if current_local_time.hour < 20
         distance = Geocoder::Calculations.distance_between(device.coordinates, event.coordinates)
         if distance < dev_distance[device.id.to_s]
           dev_distance[device.id.to_s] = distance
