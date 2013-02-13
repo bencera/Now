@@ -223,7 +223,7 @@ class EventsController < ApplicationController
         render :text => "Not a valid Now Url"
       end
     end
-    @photos = @event.photos.order_by([[:time_taken, :desc]]).take(100)
+    @photos = @event.photos.order_by([[:time_taken, :desc]]).entries
     @reposts = @event.make_reply_array(@photos)
     EventsHelper.build_photo_list(@event, @reposts, @photos, :version => 2)
     @category = @event.category.downcase
