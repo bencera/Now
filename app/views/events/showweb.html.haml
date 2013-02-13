@@ -1,3 +1,34 @@
+%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
+%script{:src=>"http://srobbin.github.com/chosen/chosen.jquery.min.js"}
+%script{:src=>"http://srobbin.github.com/intelligist/jquery.intelligist.min.js"}
+%script{:src=>"http://srobbin.github.com/backstretch/jquery.backstretch.min.js"}
+/     :javascript
+/         $.backstretch("#{@photos.all[rand(@photos.count)].url[1]}");
+:javascript
+    function initialize() {
+      var centerLatlng = new google.maps.LatLng(#{@venue.coordinates[1]+ 0.02},#{@venue.coordinates[0]});
+      var myLatlng = new google.maps.LatLng(#{@venue.coordinates[1]},#{@venue.coordinates[0]});
+      var myOptions = {
+        center: centerLatlng,
+        disableDefaultUI: true,
+        zoom: 12,
+        scrollwheel: false,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+      var map = new google.maps.Map(document.getElementById("map_canvas"),
+          myOptions);
+      var image = "http://s3.amazonaws.com/now_assets/#{@category}_web.png";
+      var marker = new google.maps.Marker({
+            position: myLatlng,
+            title:"#{@venue.name}",
+            icon: image,
+            map: map
+            });
+            marker.setMap(map);
+
+        }
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+
 - if @photos.count != 0
     .background_image{:style => "background-size: cover;background-position: 50% 50%;position: fixed;top: 0;left: 0;width: 100%;height: 100%; background-image:url('#{@photos[rand(@photos.count)].url[1]}')"}
 .dimmer{:style =>"background: rgba(0,0,0,0.25);position: fixed;top: 0;left: 0;width: 100%;height: 100%;"}
@@ -124,35 +155,3 @@
 
         / = image_tag @photos[1].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
         / = image_tag @photos[3].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
-
-
-%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
-%script{:src=>"http://srobbin.github.com/chosen/chosen.jquery.min.js"}
-%script{:src=>"http://srobbin.github.com/intelligist/jquery.intelligist.min.js"}
-%script{:src=>"http://srobbin.github.com/backstretch/jquery.backstretch.min.js"}
-/     :javascript
-/         $.backstretch("#{@photos.all[rand(@photos.count)].url[1]}");
-:javascript
-    function initialize() {
-      var centerLatlng = new google.maps.LatLng(#{@venue.coordinates[1]+ 0.02},#{@venue.coordinates[0]});
-      var myLatlng = new google.maps.LatLng(#{@venue.coordinates[1]},#{@venue.coordinates[0]});
-      var myOptions = {
-        center: centerLatlng,
-        disableDefaultUI: true,
-        zoom: 12,
-        scrollwheel: false,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      var map = new google.maps.Map(document.getElementById("map_canvas"),
-          myOptions);
-      var image = "http://s3.amazonaws.com/now_assets/#{@category}_web.png";
-      var marker = new google.maps.Marker({
-            position: myLatlng,
-            title:"#{@venue.name}",
-            icon: image,
-            map: map
-            });
-            marker.setMap(map);
-
-        }
-    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
