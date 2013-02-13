@@ -47,6 +47,7 @@
                 - else
                     = "Now"
 
+        .punch_line= "Find events near you happening now"
         %a{:href => "http://getnowapp.com/download"}
             %p.download_btn{:style => "float:right;"} Get the free app
 
@@ -55,7 +56,7 @@
         %ul
             %li{:style => "margin-bottom: 10px"}
                 - if @theme
-                    %div{:class=>"fb-like", 'data-send'=>"false", :'data-href'=>"http://now-testing.herokuapp.com/fashionweek", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
+                    %div{:class=>"fb-like", 'data-send'=>"false", :'data-href'=>"http://getnowapp.com/fashionweek", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
                 - else
                     %div{:class=>"fb-like", 'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
             %li{:style => "margin-left: -10px"}
@@ -75,13 +76,18 @@
                         - url = "#{@theme}?event=#{@more_events[i].id}"
                     - else
                         - url = "#{@more_events[i].shortid}"
-                    %a{:href => "http://now-testing.herokuapp.com/#{url}"}
+                    %a{:href => "http://getnowapp.com/#{url}"}
                         .event_plus{:style => "height:150px"}
                             .profile{:style => "margin: 10px 0 0 10px; float:left"}
                                 = image_tag "http://s3.amazonaws.com/now_assets/icon.png", :width => "25px", :height => "25px"
-                            .title{:style => "font-size:14px;text-align:left; font-weight:bold; margin-left:40px;"}
+                            .title{:style => "font-size:10px;text-align:left; font-weight:bold; margin-left:40px;width: 270px"}
                                 = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "9px", :height => "13px"
                                 = @more_events[i].venue_name
+                                #time_ago{:style => "float:right; color:gray; margin-right: 0px"}
+                                    - if @more_events[i].end_time.to_i > 1.hour.ago.to_i
+                                        = "now"
+                                    - else
+                                        = "#{time_ago_in_words(Time.at @more_events[i].end_time.to_i)}"
                             .photos{:style => "margin-left:10px"}
                                 - @more_events[i].preview_photos[0..2].each do |p|
                                     = image_tag p.url[0], :width => '95px', :style => "margin:0 2px 2px 0"
