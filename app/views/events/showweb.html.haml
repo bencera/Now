@@ -89,7 +89,7 @@
                                         = "#{time_ago_in_words(Time.at @more_events[i].end_time.to_i)}"
                             .photos{:style => "margin-left:10px"}
                                 - @more_events[i].preview_photos[0..2].each do |p|
-                                    = image_tag p.url[0], :width => '95px', :style => "margin:0 2px 2px 0"
+                                    = image_tag p.url[2], :width => '95px', :style => "margin:0 2px 2px 0"
 
 .main_content
     #header-container
@@ -123,22 +123,22 @@
             - elsif repost.checkin_card_list.count == 2
                 //2
                 .photo_card{:style => "width: 640px; height: 315px; margin-bottom: 10px; position:relative"}
-                    = image_tag repost.checkin_card_list[0].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 -3px;float:left"
-                    = image_tag repost.checkin_card_list[1].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
+                    = image_tag repost.checkin_card_list[0].url[0], :width => '315px', :height => '315px', :style => "margin: 0 0 0 -3px;float:left"
+                    = image_tag repost.checkin_card_list[1].url[0], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
             - elsif repost.checkin_card_list.count == 3
                 //3
                 .photo_card{:style => "margin-bottom:5px"}
-                    = image_tag repost.checkin_card_list[0].url[1], :width => '425px', :height => '425px', :style => "margin-right: 5px"
-                    = image_tag repost.checkin_card_list[1].url[1], :width => '210px', :height => '210px', :style => "position: absolute;"
-                    = image_tag repost.checkin_card_list[2].url[1], :width => '210px', :height => '210px'
+                    = image_tag repost.checkin_card_list[0].url[0], :width => '425px', :height => '425px', :style => "margin-right: 5px"
+                    = image_tag repost.checkin_card_list[1].url[0], :width => '210px', :height => '210px', :style => "position: absolute;"
+                    = image_tag repost.checkin_card_list[2].url[0], :width => '210px', :height => '210px'
             - elsif repost.checkin_card_list.count == 4
                 //4
                 .photo_card{:style => "overflow:hidden; width: 640px; height: 210px; margin-bottom: 10px; position:relative"}
-                    = image_tag repost.checkin_card_list[0].url[1], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
-                    = image_tag repost.checkin_card_list[1].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
+                    = image_tag repost.checkin_card_list[0].url[0], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
+                    = image_tag repost.checkin_card_list[1].url[0], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
                 .photo_card{:style => "overflow:hidden; width: 640px; height: 210px; margin-bottom: 10px; position:relative"}
-                    = image_tag repost.checkin_card_list[2].url[1], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
-                    = image_tag repost.checkin_card_list[3].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
+                    = image_tag repost.checkin_card_list[2].url[0], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
+                    = image_tag repost.checkin_card_list[3].url[0], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
             - elsif repost.checkin_card_list.count == 5
                 //5
                 .photo_card
@@ -146,8 +146,8 @@
                     = image_tag repost.checkin_card_list[1].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
                     = image_tag repost.checkin_card_list[2].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
                 .photo_card{:style => "overflow:hidden; width: 640px; height: 210px; margin-bottom: 10px; position:relative"}
-                    = image_tag repost.checkin_card_list[3].url[1], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
-                    = image_tag repost.checkin_card_list[4].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
+                    = image_tag repost.checkin_card_list[3].url[0], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
+                    = image_tag repost.checkin_card_list[4].url[0], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
             - elsif repost.checkin_card_list.count == 6
                 //6
                 .photo_card
