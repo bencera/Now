@@ -76,6 +76,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :keywords
   field :likes, :default => 0
   field :illustration
+  field :venue_name
 
   field :fake, :type => Boolean, :default => false
   
@@ -166,6 +167,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
 #this should only affect trending_people events for now, but will need to be there for all eventually
   before_create do
+    self.venue_name = self.venue.name
     current_time = Time.now.to_i
     self.last_update = current_time
     self.next_update = current_time
