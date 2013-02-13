@@ -141,28 +141,29 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
 #Conall added this callback
   before_save do 
-    if self.photos.any?
-      self.n_photos = self.photos.count
-      last_photo_time = self.photos.first.time_taken
-      self.end_time = (self.end_time && self.end_time > last_photo_time) ? self.end_time : last_photo_time if TRENDING_STATUSES.include? self.status
-      #don't want to do the same with start time since people created events won't line up with first photo
-    end
-
-    if self.photo_card.count > 6
-      self.photo_card = self.photo_card[0..(5)]
-    end
-
-    self.calculate_score
-    self.update_reaction_count
+#    if self.photos.any?
+#      self.n_photos = self.photos.count
+#      last_photo_time = self.photos.first.time_taken
+#      self.end_time = (self.end_time && self.end_time > last_photo_time) ? self.end_time : last_photo_time if TRENDING_STATUSES.include? self.status
+#      #don't want to do the same with start time since people created events won't line up with first photo
+#    end
+#
+#    if self.photo_card.count > 6
+#      self.photo_card = self.photo_card[0..(5)]
+#    end
+#
+#    self.calculate_score
+#    self.update_reaction_count
 
     return true
   end
 
   ### don't necessarily want to make this call on every save since it could be costly
   after_save do
-    if self.venue
-      self.venue.reconsider_top_event
-    end
+#    if self.venue
+#      self.venue.reconsider_top_event
+#    end
+     return true
   end
 
 #this should only affect trending_people events for now, but will need to be there for all eventually
@@ -171,6 +172,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     current_time = Time.now.to_i
     self.last_update = current_time
     self.next_update = current_time
+    return true
   end
 
   after_create do
@@ -180,6 +182,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     rescue Exception => e
       FacebookUser.where(:now_id => "2").first.send_notification("ERROR WITH PUSH #{e.message}", nil)
     end
+    return true
   end
 
 
