@@ -47,7 +47,11 @@ class NowCity
     now_city.coordinates = [fs_venue_data.location['lng'], fs_venue_data.location['lat']]
 
     #except timezone gem -- that uses lat,long order
-    now_city.time_zone = Timezone::Zone.new(:latlon => now_city.coordinates.reverse).zone
+    begin
+      now_city.time_zone = Timezone::Zone.new(:latlon => now_city.coordinates.reverse).zone
+    rescue
+      return NowCity.where(:coordinates => {"$near" => now_city.coordinates}).first
+    end
 
     now_city.name = fs_venue_data.location['city']
     now_city.state = fs_venue_data.location['state']
