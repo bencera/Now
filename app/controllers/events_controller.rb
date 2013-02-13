@@ -223,7 +223,7 @@ class EventsController < ApplicationController
         render :text => "Not a valid Now Url"
       end
     end
-    @photos = @event.photos.entries[0..99]
+    @photos = @event.photos.order_by([[:time_taken,:asc]]).entries
     @reposts = @event.make_reply_array(@photos)
     EventsHelper.build_photo_list(@event, @reposts, @photos, :version => 2)
     @category = @event.category.downcase
@@ -231,15 +231,15 @@ class EventsController < ApplicationController
     if theme_id
       @more_events = events[0..19]
     else
-     twenty_events = Event.where(:status.in => ["trending", "trending_people"], :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).shuffle.entries
-     @more_events = twenty_events[0..19]
+    # twenty_events = Event.where(:status.in => ["trending", "trending_people"], :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).shuffle.entries
+     #@more_events = twenty_events[0..19]
     end
-   # @more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
+    @more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
 
     EventsHelper.get_event_cards(@more_events)
-    @event.add_view
+    #@event.add_view
     #raise "#{@more_events}"
-    @event.add_click
+   # @event.add_click
   end
   
   def cities
