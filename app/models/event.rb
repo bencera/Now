@@ -148,8 +148,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
       #don't want to do the same with start time since people created events won't line up with first photo
     end
 
-    if self.photo_card.count > PHOTO_CARD_PHOTOS
-      self.photo_card = self.photo_card[0..(PHOTO_CARD_PHOTOS -1)]
+    if self.photo_card.count > 6
+      self.photo_card = self.photo_card[0..(5)]
     end
 
     self.calculate_score
