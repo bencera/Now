@@ -55,9 +55,11 @@
         %ul
             %li{:style => "margin-bottom: 10px"}
                 - if @theme
-                    %div{:class=>"fb-like", 'data-send'=>"false", :'data-href'=>"http://getnowapp.com/fashionweek", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
+                    %div{:class=>"fb-like", :'data-send'=>"false", :'data-href'=>"http://getnowapp.com/#{@theme}", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
                 - else
-                    %div{:class=>"fb-like", 'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
+                    %div{:class=>"fb-like", :'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
+
+
             %li{:style => "margin-left: -10px"}
                 - if @theme
                     %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button",:'data-url'=>"http://getnowapp.com/#{@theme}",:'data-text'=>"See what's happening now at #{@theme_title}",:'data-via'=>"nowapp_", :'data-lang'=>"en"} Tweet
