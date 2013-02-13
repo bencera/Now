@@ -11,8 +11,8 @@ gem 'rails', '3.2.11'
 
 #gem 'sqlite3'
 gem "pg"
-gem "mongoid", "~> 2.3"
-gem "bson_ext", "~> 1.4"
+gem "mongoid", "~> 2.4"
+gem "bson_ext", "~> 1.8.1"
 gem 'unicorn'
 
 #gem instagram .. wait for it to be resolved
