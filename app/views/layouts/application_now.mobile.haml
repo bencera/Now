@@ -1,56 +1,39 @@
 !!! Strict
 %html
 %head
-	%script{:type=>"text/javascript"}
-		var _sf_startpt=(new Date()).getTime()
-	%title= "Now - #{@event.description}"
-	= csrf_meta_tag
-	%meta{:name => "viewport", :content => "width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;"}
-	%meta{:name => "description", :content => "Now is a free iphone app that let's you know in real time about events happening in your city."}
-	%meta{:name => "keywords", :content => "realtime, photos, events, trending, iphone, explore, discover, things to do, news, city"}
-	%link{:rel=>"shortcut icon", :href=>"/assets/favicon.ico"}
-	%meta{:name => "apple-mobile-web-app-capable", :content =>"yes"}
-	%meta{:name => "apple-mobile-web-app-status-bar-style", :content=>"black"}
-	= stylesheet_link_tag "mobile/mobile_now.css"
-	%meta{:property=>"og:title", :content=>@event.description}
-	%meta{:property=>"og:description", :content=>"at #{@venue.name} in #{@city}"}
-	%meta{:property=>"og:determiner", :content=>"a"}
-	%meta{:property=>"fb:app_id", :content=>"174358702691912"}
-	%meta{:property=>"og:type", :content=>"activity"}
-	%meta{:property=>"og:url", :content=>"http://www.getnowapp.com/#{@event.shortid}"}
-	%meta{:property=>"og:image", :content=>@photos.all[rand(@photos.count)].url[0]}
-	%meta{:property=>"og:site_name", :content=>"Now"}
-	%meta{:property=>"fb:admins", :content=>"571905313"}
-	%script{:type=>"text/javascript"}
-		(function(d,c){var a,b,g,e;a=d.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===d.location.protocol?"https:":"http:")+'//api.mixpanel.com/site_media/js/api/mixpanel.2.js';b=d.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b);c._i=[];c.init=function(a,d,f){var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";g="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config".split(" ");
-		for(e=0;e<g.length;e++)(function(a){b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,0)))}})(g[e]);c._i.push([a,d,f])};window.mixpanel=c})(document,[]);
-		mixpanel.init("d348c310c9be8fc5e6f522e5792b13da");
-%body
-	#fb-root
-	:javascript
-		(function(d, s, id) {
-		var js, fjs = d.getElementsByTagName(s)[0];
-		if (d.getElementById(id)) return;
-		js = d.createElement(s); js.id = id;
-		js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=174358702691912";
-		fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));
-	= yield
+    %script{:type=>"text/javascript"}
+        var _sf_startpt=(new Date()).getTime()
+    %title= "Now - #{@event.description}"
+    = csrf_meta_tag
+    %meta{:name=>"viewport",:content=>"width=1024"}
+    %meta{:name => "description", :content => "Now is a free iphone app that let's you know in real time about events happening in your city."}
+    %meta{:name => "keywords", :content => "realtime, photos, events, trending, iphone, explore, discover, things to do, news, city"}
+    %link{:rel=>"shortcut icon", :href=>"/assets/favicon.ico"}
+    = stylesheet_link_tag "nowweb"
+    %script{:type=>"text/javascript",:src=>"http://maps.googleapis.com/maps/api/js?key=AIzaSyDaB7Lbgnwfni3jrzOephB8HW7_6tJf-Es&sensor=false"}
+    %meta{:property=>"og:title", :content=>@event.description}
+    %meta{:property=>"og:description", :content=>"at #{@venue.name} in #{@city}"}
+    %meta{:property=>"fb:app_id", :content=>"174358702691912"}
+    %meta{:property=>"og:type", :content=>"getnowapp:experience"}
+    %meta{:property=>"og:url", :content=>"http://www.getnowapp.com/#{@event.shortid}"}
+    - if @photos.count != 0
+        %meta{:property=>"og:image", :content=>@photos[rand(@photos.count)].url[0]}
+    %meta{:property=>"og:site_name", :content=>"Now"}
+    %meta{:property=>"fb:admins", :content=>"571905313"}
+    %script{:type=>"text/javascript"}
+        (function(d,c){var a,b,g,e;a=d.createElement("script");a.type="text/javascript";a.async=!0;a.src=("https:"===d.location.protocol?"https:":"http:")+'//api.mixpanel.com/site_media/js/api/mixpanel.2.js';b=d.getElementsByTagName("script")[0];b.parentNode.insertBefore(a,b);c._i=[];c.init=function(a,d,f){var b=c;"undefined"!==typeof f?b=c[f]=[]:f="mixpanel";g="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config".split(" ");
+        for(e=0;e<g.length;e++)(function(a){b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,0)))}})(g[e]);c._i.push([a,d,f])};window.mixpanel=c})(document,[]);
+        mixpanel.init("d348c310c9be8fc5e6f522e5792b13da");
+%body{:onload=>"initialize()"}
+    #fb-root
+    :javascript
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=174358702691912";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    = yield
 
-	.footer
-		%script{:type=>"text/javascript"}
-			var _sf_async_config={uid:32112,domain:"getnowapp.com"};
-			(function(){
-			function loadChartbeat() {
-			window._sf_endpt=(new Date()).getTime();
-			var e = document.createElement('script');
-			e.setAttribute('language', 'javascript');
-			e.setAttribute('type', 'text/javascript');
-			e.setAttribute('src',
-			(("https:" == document.location.protocol) ? "https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" : "http://static.chartbeat.com/") + "js/chartbeat.js");
-			document.body.appendChild(e);
-			}
-			var oldonload = window.onload;
-			window.onload = (typeof window.onload != 'function') ?
-			loadChartbeat : function() { oldonload(); loadChartbeat(); };
-			})();
+    .footer

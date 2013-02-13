@@ -126,15 +126,15 @@
 
   }
 
-    #header-container p.download_btn {
-  margin: 15px 15px 0 14px;
+    #permalink_wrapper p.download_btn {
+  margin: -40px 5px 0 0px;
   text-align: center;
-  padding: 15px 10px 20px;
+  padding: 11px 3px 12px;
   color: #666;
   font-size: 16px;
   text-shadow: 0px 1px #f0f0f0;
   font-weight: bold;
-  height: 15px;
+  height: 19px;
   width: 150px;
   border: 3px solid #e31254;
   border-radius: 8px;
@@ -151,10 +151,10 @@
 
     #content { 
       width: 655px; 
-      margin: 0 auto; padding: 1px 10px 10px 15px;
+      margin: 0 auto; padding: 70px 10px 10px 15px;
       background: #FFF;
       background: rgba(255, 255, 255, 1);
-      margin-top: 250px;
+      margin-top: 311px;
     }
     
       #content h2#demo-header { height: 24px; }

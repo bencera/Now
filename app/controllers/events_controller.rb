@@ -199,117 +199,46 @@ class EventsController < ApplicationController
 
 
   def showweb
-    @event = Event.where(:shortid => params[:shortid]).first
-    photos = @event.photos.order_by([[:time_taken, :asc]]).entries
-    @reposts = @event.make_reply_array(photos)
-    EventsHelper.build_photo_list(@event, @reposts, photos, :version => params[:version].to_i)
-
+    if params[:shortid].length == 6
+      @event = Event.where(:shortid => params[:shortid]).first
+      @theme = nil
+      @theme_title = nil
+    else
+      theme_id = $redis.hget("THEME_NAME_TO_ID", params[:shortid].downcase).to_s
+      if theme_id
+        @theme_title = $redis.hget("THEME_#{theme_id}_DATA", "name")
+        @theme = params[:shortid].downcase
+        event_ids = Theme.get_exp_list(theme_id).shuffle
+        if params[:event]
+          main_id = params[:event]
+          event_ids.delete(main_id)
+          event_ids.unshift(main_id)
+          events = Event.where(:_id.in => event_ids[0..19]).sort_by {|event| event.end_time}.reverse
+          events.each {|event| @event = event if event._id.to_s == main_id}
+        else
+          events = Event.where(:_id.in => event_ids).entries.sort_by {|event| event.end_time}.reverse
+          @event = events.first
+        end
+      else
+        render :text => "Not a valid Now Url"
+      end
+    end
+    @photos = @event.photos.order_by([[:time_taken, :asc]]).entries
+    @reposts = @event.make_reply_array(@photos)
+    EventsHelper.build_photo_list(@event, @reposts, @photos, :version => 2)
+    @category = @event.category.downcase
     @venue = @event.venue
-    @photos = @event.photos
-
-    @reposts_position = []
-    @photo_positions = []
-    i = 0
-    min_H = 30
-    left_H = 0
-    right_H = 0
-    @reposts.each do |repost|
-      #determine if left or right
-      if i == 0
-        left = true
-      else
-        if left_H <= right_H
-          left = true
-        else
-          left = false
-        end
-      end
-
-      #determine height of card
-      if repost.checkin_card_list.count == 0
-        card_H = 44
-      elsif repost.checkin_card_list.count == 1
-        card_H = 44 + 330
-      elsif repost.checkin_card_list.count == 2
-        card_H = 44 + 165
-      elsif repost.checkin_card_list.count == 3
-        card_H = 44 + 220
-      elsif repost.checkin_card_list.count == 4
-        card_H = 44 + 330
-      elsif repost.checkin_card_list.count == 5
-        card_H = 44 + 275
-      elsif repost.checkin_card_list.count == 6
-        card_H = 44 + 220
-      end
-
-      if left
-        left_H = left_H + card_H + min_H
-      else
-        right_H = right_H + card_H + min_H
-      end
-      Rails.logger.info("#{left_H}" "  -  " "#{right_H}")
-
-      #determine height of li
-      if i == 0
-        li_H = min_H
-      else
-        if left_H >= right_H && left
-          li_H = card_H + 2*min_H - (left_H - right_H)
-        elsif left
-          li_H = card_H + min_H
-        elsif left_H <= right_H
-          li_H = card_H - (right_H - left_H)
-        else
-          li_H = card_H + min_H
-        end
-      end
-      Rails.logger.info("#{li_H}")
-
-
-      #addit to repost_postiions
-      @reposts_position << [li_H, card_H, left]
-      #determine position of photos
-      if repost.checkin_card_list.count == 0
-        photos_position = []
-      elsif repost.checkin_card_list.count == 1
-        photos_position = [[330, 330, -1, -1]]
-      elsif repost.checkin_card_list.count == 2
-        photos_position = [[166, 165,-1,-1], [165, 165, 164, -1]]
-      elsif repost.checkin_card_list.count == 3
-        photos_position = [[220,220,-1,-1],[110,110,219,-1],[110,110,219,109]]
-      elsif repost.checkin_card_list.count == 4
-        photos_position = [[166,165,-1,-1],[165,165,164,-1],[166,165,-1,164],[165,165,165,164]]
-      elsif repost.checkin_card_list.count == 5
-        photos_position = [[110,110,-1,-1],[110,110,109,-1],[110,110,219,-1],[165,165,-1,110],[165,165,164,110]]
-      elsif repost.checkin_card_list.count == 6
-        photos_position = [[110,110,-1,-1],[110,110,109,-1],[110,110,219,-1],[110,110,-1,110],[110,110,109,110],[110,110,219,110]]
-      end
-
-      @photo_positions << photos_position
-
-      i = i + 1
-
-      @event.add_view
-      @event.add_click
+    if theme_id
+      @more_events = events[0..19]
+    else
+     twenty_events = Event.where(:status.in => ["trending", "trending_people"], :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).shuffle.entries
+     @more_events = twenty_events[0..19]
     end
 
-
-    # @reposts_position = [ [30, 65, false], 
-    #                       [50, 374, true], 
-    #                       [227, 209, false], 
-    #                       [106, 265, false],
-    #                       [182,375,true],
-    #                       [210,319,false],
-    #                       [230,264,true]
-    #                       ]
-    # @photo_positions = [[], 
-    #                     [[330, 330, -1, -1]], 
-    #                     [[166, 165,-1,-1], [165, 165, 164, -1]],
-    #                     [[220,220,-1,-1],[110,110,219,-1],[110,110,219,109]],
-    #                     [[166,165,-1,-1],[165,165,164,-1],[166,165,-1,164],[165,165,165,164]],
-    #                     [[110,110,-1,-1],[110,110,109,-1],[110,110,219,-1],[165,165,-1,110],[165,165,164,110]],
-    #                     [[110,110,-1,-1],[110,110,109,-1],[110,110,219,-1],[110,110,-1,110],[110,110,109,110],[110,110,219,110]]
-    #                     ]
+    EventsHelper.get_event_cards(@more_events)
+    #@more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
+    @event.add_view
+    @event.add_click
   end
   
   def cities
