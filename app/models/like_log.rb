@@ -17,4 +17,16 @@
 
 class LikeLog < ActiveRecord::Base
   attr_accessible :creator_now_id, :event_id, :facebook_user_id, :like_time, :session_token, :shared_to_timeline, :venue_id
+
+  def event
+    Event.first(:conditions => {:id => self.event_id})
+  end
+
+  def facebook_user
+    FacebookUser.first(:conditions => {:id => self.facebook_user_id})
+  end
+
+  def venue
+    Venue.first(:conditions => {:id => self.venue_id})
+  end
 end
