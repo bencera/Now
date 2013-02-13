@@ -22,8 +22,8 @@ child :preview_photos => "photos" do
   attributes :url, :external_source, :external_id
 end
 
-child :venue => "venue" do
-  attributes :name, :id
+node :venue do |u|
+  attributes :id => u.venue_id, :name => u.venue_name
 end
 
 node(:like) { |event| event.fake ? false : event.liked_by_user(@user_id) }
