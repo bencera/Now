@@ -50,7 +50,7 @@
                                 = image_tag "http://s3.amazonaws.com/now_assets/icon.png", :width => "25px", :height => "25px"
                             .title{:style => "font-size:14px;text-align:left; font-weight:bold; margin-left:40px;"}
                                 = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "9px", :height => "13px"
-                                = @more_events[i].venue.name
+                                = @more_events[i].venue_name
                             .photos{:style => "margin-left:10px"}
                                 - @more_events[i].preview_photos[0..2].each do |p|
                                     = image_tag p.url[0], :width => '95px', :style => "margin:0 2px 2px 0"
