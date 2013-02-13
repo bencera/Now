@@ -55,9 +55,11 @@
         %ul
             %li{:style => "margin-bottom: 10px"}
                 - if @theme
-                    %div{:class=>"fb-like", 'data-send'=>"false", :'data-href'=>"http://getnowapp.com/fashionweek", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
+                    %div{:class=>"fb-like", :'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
                 - else
-                    %div{:class=>"fb-like", 'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
+                    %div{:class=>"fb-like", :'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
+
+
             %li{:style => "margin-left: -10px"}
                 - if @theme
                     %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button",:'data-url'=>"http://getnowapp.com/#{@theme}",:'data-text'=>"See what's happening now at #{@theme_title}",:'data-via'=>"nowapp_", :'data-lang'=>"en"} Tweet
@@ -83,10 +85,20 @@
                                 = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "9px", :height => "13px"
                                 = @more_events[i].venue_name
                                 #time_ago{:style => "float:right; color:gray; margin-right: 0px"}
-                                    - if @more_events[i].end_time.to_i > 1.hour.ago.to_i
+                                    - t = Time.now.to_i - @more_events[i].end_time.to_i 
+                                    - if t < 3600
                                         = "now"
+                                    - elsif t < 86400
+                                        = "#{(t / 60 / 60).round}h"
+                                    - elsif t < 604800
+                                        = "#{(t / 60 / 60 / 24).round}d"
+                                    - elsif t < 2592000
+                                        = "#{(t / 60 / 60 / 24 / 7).round}w"
+                                    - elsif t < 31536000
+                                        = "#{(t / 60 / 60 / 24 / 30).round}mo"
                                     - else
-                                        = "#{time_ago_in_words(Time.at @more_events[i].end_time.to_i)}"
+                                        = "#{(t / 60 / 60 / 24 / 365).round}y"
+
                             .photos{:style => "margin-left:10px"}
                                 - @more_events[i].preview_photos[0..2].each do |p|
                                     = image_tag p.url[2], :width => '95px', :style => "margin:0 2px 2px 0"
@@ -98,7 +110,7 @@
             #map_shadow{:style => "position:absolute; top: 240px"}
                 = image_tag "http://s3.amazonaws.com/now_assets/map_shadow.png", :width => "680px", :height => "7px"
             .profile_pic{:style => "float:left; margin: 10px 0 0 10px"}
-                - if true#@event.facebook_user.nil?
+                - if @event.facebook_user.nil?
                     = image_tag "http://s3.amazonaws.com/now_assets/icon.png", :width => "50px", :height => "50px"
                 - else
                     = image_tag "#{@event.facebook_user.now_profile.profile_photo_url}", :width => "50px", :height => "50px"

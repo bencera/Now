@@ -12,7 +12,7 @@
     = stylesheet_link_tag "nowweb"
     %script{:type=>"text/javascript",:src=>"http://maps.googleapis.com/maps/api/js?key=AIzaSyDaB7Lbgnwfni3jrzOephB8HW7_6tJf-Es&sensor=false"}
     %meta{:property=>"og:title", :content=>@event.description}
-    %meta{:property=>"og:description", :content=>"at #{@venue.name} in #{@city}"}
+    %meta{:property=>"og:description", :content=>"at #{@venue.name}"}
     %meta{:property=>"fb:app_id", :content=>"174358702691912"}
     %meta{:property=>"og:type", :content=>"getnowapp:experience"}
     %meta{:property=>"og:url", :content=>"http://www.getnowapp.com/#{@event.shortid}"}
