@@ -95,7 +95,7 @@
                                     - elsif t < 31536000
                                         = "#{(t / 60 / 60 / 24 / 30).round}mo"
                                     - else
-                                        = "#{(t / 60 / 60 / 24 / 365)/round}y"
+                                        = "#{(t / 60 / 60 / 24 / 365).round}y"
 
                             .photos{:style => "margin-left:10px"}
                                 - @more_events[i].preview_photos[0..2].each do |p|
