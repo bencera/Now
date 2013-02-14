@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130211210541) do
+ActiveRecord::Schema.define(:version => 20130213232646) do
 
   create_table "archive_events", :force => true do |t|
     t.string   "coordinates"
@@ -150,6 +150,8 @@ ActiveRecord::Schema.define(:version => 20130211210541) do
     t.integer  "user_count"
     t.boolean  "reengagement"
     t.boolean  "failed"
+    t.string   "ab_test_id"
+    t.boolean  "is_a"
   end
 
   create_table "user_locations", :force => true do |t|
@@ -171,8 +173,6 @@ ActiveRecord::Schema.define(:version => 20130211210541) do
     t.string   "facebook_user_id"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
-    t.decimal  "latitude"
-    t.decimal  "longitude"
   end
 
 end

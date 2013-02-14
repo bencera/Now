@@ -12,6 +12,8 @@ class SendBatchPush2
     test = params[:test]
     first_batch = params[:first_batch]
     total_count = params[:total_count]
+    ab_test_id = params[:ab_test_id]
+    is_a = params[:is_a]
     
     event = Event.find(event_id)
     devices = APN::Device.find(device_ids)
@@ -57,8 +59,13 @@ class SendBatchPush2
                           :message => message,
                           :facebook_user_id => device.facebook_user_id.to_s,
                           :udid => device.udid,
-                          :reengagement => true)
+                          :reengagement => true,
+                          :a_or_b => a_or_b)
         sp.user_count = -1 if test
+        if ab_test_id
+          sp.ab_test_id = ab_test_id
+          sp.is_a = is_a
+        end
         sp.save
       end
 
@@ -72,6 +79,10 @@ class SendBatchPush2
                           :reengagement => true,
                           :failed => true)
         sp.user_count = -1 if test
+        if ab_test_id
+          sp.ab_test_id = ab_test_id
+          sp.is_a = is_a
+        end
         sp.save
       end
     end

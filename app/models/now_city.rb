@@ -97,7 +97,7 @@ class NowCity
     $redis.set("#{city_key}_EXP", 0)
 
     modify_city(city_key, :name => name, :latitude => latitude, :longitude => longitude, :radius => radius, :url => url)
-
+    $redis.hset("#{city_key}_VALUES", :a_or_b, rand(2))
   end
 
   def self.modify_city(city_key, options={})

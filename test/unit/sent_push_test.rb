@@ -14,6 +14,8 @@
 #  user_count       :integer
 #  reengagement     :boolean
 #  failed           :boolean
+#  ab_test_id       :string(255)
+#  is_a             :boolean
 #
 
 require 'test_helper'

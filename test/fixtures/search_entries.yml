@@ -12,6 +12,7 @@
 #  created_event    :boolean
 #  session_token    :string(255)
 #  event_id         :string(255)
+#  activity_level   :integer
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html

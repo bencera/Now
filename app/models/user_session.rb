@@ -10,8 +10,6 @@
 #  facebook_user_id :string(255)
 #  created_at       :datetime        not null
 #  updated_at       :datetime        not null
-#  latitude         :decimal(, )
-#  longitude        :decimal(, )
 #
 
 class UserSession < ActiveRecord::Base
