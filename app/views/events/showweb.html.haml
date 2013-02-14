@@ -45,7 +45,7 @@
                 - if @theme_title
                     = "Now : #{@theme_title}"
                 - else
-                    = "Now"
+                    = "Now : #{@venue.name}"
         %a{:href => "http://getnowapp.com/download"}
             .download{:style => "float:right; margin:-39px 12px"}
                 = image_tag "https://d3422saexnbpnl.cloudfront.net/static/images/appstorebadge2x.png", :width => "150px"
