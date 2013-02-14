@@ -2,7 +2,7 @@ object false
 
 child :meta => "meta" do
   node(:text) do
-    {:title => "Top 5 Cities This Week"}
+    {:title => "Most Active Cities Now"}
   end
 end
 
