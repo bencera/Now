@@ -48,6 +48,8 @@ class SendBatchPush2
       success_devs << device
     end
 
+    Rails.logger.info("SENDPUSH SUCCESS DEVS #{success_devs.count}")
+
     #log the successes and failures
 
     SentPush.transaction do
