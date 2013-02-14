@@ -55,9 +55,11 @@ class Reengagement
     devices = devices.delete_if {|device| device.facebook_user_id && !primary_devices.include?(device.id)} #; puts ""
 
     Rails.logger.info("Reengagement: #{devices.count} devices after exlcuding facebook_users non-primary devices")
-
-    
     Rails.logger.info("Reengagement: #{already_notified_udids.count} devices already notified")
+
+    devices = devices.delete_if {|device| device.subscriptions.nil? || device.subscriptions.empty?}
+    Rails.logger.info("Reengagement: #{devices.count} devices after exlcuding devices without subscription")
+
 
     devices_to_notify = devices.delete_if {|device| device.coordinates.nil? || already_notified_udids.include?(device.udid) || ( device.coordinates[0] == 0.0 && device.coordinates[1] == 0.0 )} #; puts ""
 
@@ -146,7 +148,7 @@ class Reengagement
       push_devs = APN::Device.where(:updated_at.lt => 5.days.ago, 
                                      :coordinates.within => {"$center" => [location, 50.0 /111]}).entries #; puts ""
 
-      push_devs = push_devs.delete_if{|device| already_notified_udids.include? device.udid} #; puts ""
+      push_devs = push_devs.delete_if{|device| device.subscriptions.nil? || device.subscriptions.first.nil? || (already_notified_udids.include? device.udid)} #; puts ""
 
       #put them on the list of already notified so we don't send them 2 pushes
       already_notified_udids.push(*(push_devs.map{|device| device.udid}))
