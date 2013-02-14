@@ -151,6 +151,8 @@ class Reengagement
       #put them on the list of already notified so we don't send them 2 pushes
       already_notified_udids.push(*(push_devs.map{|device| device.udid}))
 
+      next if push_devs.empty?
+
       if city_events.count >= 3
         #push to all users that this city has events  
         device_groups = []
