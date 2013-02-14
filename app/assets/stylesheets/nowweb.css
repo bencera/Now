@@ -162,7 +162,7 @@
     .footer { clear: both; text-align: left; color: #999; font-size: 14px; }
       .footer hr { margin-top: 40px; margin-bottom: 10px; }
       .footer span { float: right; }
-      .footer a { color: #999; text-decoration: none; border-bottom: 1px dotted #999; }
+      .footer a { color: #999; text-decoration: none; }
       .footer a:hover { border-style: solid; color: #666; }
     
     .snippet { 
@@ -402,4 +402,19 @@ display: block;
 margin-left: 20px;
 width: 50px;
 height: 60px;
+}
+
+.footer{
+  padding: 35px 0;
+  color: #ac2e48;
+  text-shadow: 0 1px #ff7591;
+  margin-left:140px;
+}
+
+.footer a:link, .footer a:visited, .footer a:active {
+color: #B92644;
+font-size: 14px;
+margin-right: 15px;
+font-weight: bold;
+text-shadow: 0px 1px #F77892;
 }
