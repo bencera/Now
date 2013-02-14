@@ -46,9 +46,9 @@
                     = "Now : #{@theme_title}"
                 - else
                     = "Now"
-
         %a{:href => "http://getnowapp.com/download"}
-            %p.download_btn{:style => "float:right;"} Get the free app
+            .download{:style => "float:right; margin:-39px 12px"}
+                = image_tag "https://d3422saexnbpnl.cloudfront.net/static/images/appstorebadge2x.png", :width => "150px"
 
 .CloseupLeft{:style => "position: fixed;top: 60px;left: 50%;width: 222px;margin-left: -425px;"}
     #SocialShare{:style => "position: fixed;left: 50%;top: 115px;width: 350px;margin-left: 185px;"}
@@ -71,17 +71,17 @@
             - else
                 - text = "Happening now"
             %h2{:style => "color:white; font-size: 20px; margin-top:10px"}= text
-            #events_box{:style => "box-shadow: 0 1px 3px rgba(34,25,25,0.4);-moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);-webkit-box-shadow: 0 1px 3px rgba(34,25,25,0.4);height:200px;width:320px;background-color:white;overflow-y: scroll; overflow-x: hidden;"}
+            #events_box{:style => "box-shadow: 0 1px 3px rgba(34,25,25,0.4);-moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);-webkit-box-shadow: 0 1px 3px rgba(34,25,25,0.4);height:265px;width:320px;background-color:white;overflow-y: scroll; overflow-x: hidden;"}
                 - for i in 0..19
                     - if @theme
                         - url = "#{@theme}?event=#{@more_events[i].id}"
                     - else
                         - url = "#{@more_events[i].shortid}"
                     %a{:href => "http://getnowapp.com/#{url}"}
-                        .event_plus{:style => "height:150px"}
+                        .event_plus{:style => "height:240px"}
                             .profile{:style => "margin: 10px 0 0 10px; float:left"}
                                 = image_tag "http://s3.amazonaws.com/now_assets/icon.png", :width => "25px", :height => "25px"
-                            .title{:style => "font-size:10px;text-align:left; font-weight:bold; margin-left:40px;width: 270px"}
+                            .title{:style => "font-size:10px;text-align:left; font-weight:bold; margin-left:42px;width: 270px"}
                                 = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "9px", :height => "13px"
                                 = @more_events[i].venue_name
                                 #time_ago{:style => "float:right; color:gray; margin-right: 0px"}
@@ -100,7 +100,7 @@
                                         = "#{(t / 60 / 60 / 24 / 365).round}y"
 
                             .photos{:style => "margin-left:10px"}
-                                - @more_events[i].preview_photos[0..2].each do |p|
+                                - @more_events[i].preview_photos[0..5].each do |p|
                                     = image_tag p.url[2], :width => '95px', :style => "margin:0 2px 2px 0"
         .more_events
             %h2{:style => "color:white; font-size: 20px; margin-top:20px"} Cities & Themes
