@@ -60,7 +60,7 @@ class SendBatchPush2
                           :facebook_user_id => device.facebook_user_id.to_s,
                           :udid => device.udid,
                           :reengagement => true,
-                          :a_or_b => a_or_b)
+                          :failed => false)
         sp.user_count = -1 if test
         if ab_test_id
           sp.ab_test_id = ab_test_id
