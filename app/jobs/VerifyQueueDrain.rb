@@ -15,7 +15,7 @@ class VerifyQueueDrain
 
       VerifyURL2.perform(event_id, 0, false)
       fixed += 1
-      break if fixed > 5
+      break if fixed > 5 
     end
   end
 end

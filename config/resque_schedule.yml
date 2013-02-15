@@ -39,3 +39,9 @@ reengagement:
   class: Reengagement
   args:
   description: "Send Reengagement Pushes"
+
+verify_drain:
+  every: "1m"
+  class: VerifyQueueDrain
+  args:
+  description: "Clean bad photos in events that are getting lots of views"
