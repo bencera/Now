@@ -114,10 +114,10 @@
         .more_events
             %h2{:style => "color:white; font-size: 20px; margin-top:20px"} Cities & Themes
             #events_box{:style => "box-shadow: 0 1px 3px rgba(34,25,25,0.4);-moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);-webkit-box-shadow: 0 1px 3px rgba(34,25,25,0.4);height:265px;width:320px;background-color:white;overflow-y: scroll; overflow-x: hidden;"}
-                - for i in 0..19
+                - for entry in @themes_and_cities 
                     #theme{:style => "height:114px"}
-                        %a{:href => "http://getnowapp.com/test"}
-                            = image_tag "http://s3.amazonaws.com/now_assets/carnival.jpg", :width => "320px"
+                        %a{:href => "http://getnowapp.com/#{entry.name}"}
+                            = image_tag entry.url, :width => "320px"
 
 .main_content
     #header-container

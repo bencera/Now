@@ -231,18 +231,14 @@ class EventsController < ApplicationController
     end
     #@more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
 
+    @themes_and_cities = [*(Theme.get_themes_for_web), *(NowCity.get_cities_for_web)]
     EventsHelper.get_event_cards(@more_events)
     @event.add_view
     @event.add_click
   end
   
   def cities
-    @cities = [{"name" => "New York", "url" => "url1"}, 
-               {"name" => "San Francisco", "url" => "url1"},
-              {"name" => "Paris", "url" => "url1"},
-              {"name" => "London", "url" => "url1"},
-              {"name" => "Los Angeles", "url" => "http://s3.amazonaws.com/now_assets/LosAngeles_high.jpg"}
-              ]
+    @cities = NowCity.get_cities_for_web 
     render :json => @cities
   end
 
