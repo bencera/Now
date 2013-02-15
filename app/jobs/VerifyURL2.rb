@@ -20,7 +20,7 @@ class VerifyURL2
 
     event.repair_photo_cards(repair_photos) if repair_photos.any?
 
-    event.last_verify = Time.now.to_i
+    event.last_verify = Time.now
     event.save!
 
     $redis.zrem("VERIFY_QUEUE", event_id)
