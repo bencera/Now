@@ -177,6 +177,6 @@ class NowCity
       unordered_cities << city_entry
     end
 
-    unordered_cities.sort_by {|city| city.experiences}.reverse 
+    unordered_cities.sort_by {|city| city.experiences.to_i}.reverse 
   end
 end
