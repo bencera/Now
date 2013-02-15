@@ -72,13 +72,13 @@
                 - text = "Happening now"
             %h2{:style => "color:white; font-size: 20px; margin-top:10px"}= text
             #events_box{:style => "box-shadow: 0 1px 3px rgba(34,25,25,0.4);-moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);-webkit-box-shadow: 0 1px 3px rgba(34,25,25,0.4);height:265px;width:320px;background-color:white;overflow-y: scroll; overflow-x: hidden;"}
-                - for i in 0..19
+                - for event in @more_events
                     - if @theme
-                        - url = "#{@theme}?event=#{@more_events[i].id}"
+                        - url = "#{@theme}?event=#{event.id}"
                     - else
-                        - url = "#{@more_events[i].shortid}"
+                        - url = "#{event.shortid}"
                     %a{:href => "http://getnowapp.com/#{url}"}
-                        - if @more_events[i].preview_photos.count > 5
+                        - if event.preview_photos.count > 5
                             - event_height = "height:240px"
                         - else
                             - event_height = "height:138px"
@@ -87,9 +87,9 @@
                                 = image_tag "http://s3.amazonaws.com/now_assets/icon.png", :width => "25px", :height => "25px"
                             .title{:style => "font-size:10px;text-align:left; font-weight:bold; margin-left:42px;width: 270px"}
                                 = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "9px", :height => "13px"
-                                = @more_events[i].venue_name
+                                = event.venue_name
                                 #time_ago{:style => "float:right; color:gray; margin-right: 0px"}
-                                    - t = Time.now.to_i - @more_events[i].end_time.to_i 
+                                    - t = Time.now.to_i - event.end_time.to_i 
                                     - if t < 3600
                                         = "now"
                                     - elsif t < 86400
@@ -104,11 +104,11 @@
                                         = "#{(t / 60 / 60 / 24 / 365).round}y"
 
                             .photos{:style => "margin-left:10px"}
-                                - if @more_events[i].preview_photos.count > 5
-                                    - @more_events[i].preview_photos[0..5].each do |p|
+                                - if event.preview_photos.count > 5
+                                    - event.preview_photos[0..5].each do |p|
                                         = image_tag p.url[2], :width => '95px', :style => "margin:0 2px 2px 0"
                                 - else
-                                    - @more_events[i].preview_photos[0..2].each do |p|
+                                    - event].preview_photos[0..2].each do |p|
                                         = image_tag p.url[2], :width => '95px', :style => "margin:0 2px 2px 0"
 
         .more_events
