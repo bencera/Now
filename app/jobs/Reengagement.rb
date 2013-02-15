@@ -141,7 +141,8 @@ class Reengagement
       now_city = NowCity.where(:coordinates => {"$near" => location}).first
       current_local_time = now_city.get_local_time
 
-      next if city_hash["a_or_b"] == "0" || current_local_time.hour < 20 
+      test_day = (1 + current_local_time.day) % 2
+      next if city_hash["a_or_b"].to_i == test_day || current_local_time.hour < 20 
 
       city_events = Event.where(:coordinates.within => {"$center" => [location, 50.0 /111]}, :status.in => Event::TRENDING_STATUSES).entries.sort{|event| event.n_reactions}.reverse #; puts ""
       
