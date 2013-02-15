@@ -28,7 +28,6 @@ class Theme
 
     $redis.lpush("NOW_THEMES", theme_id)
     $redis.hset("THEME_#{theme_id}_DATA", :name, name)
-    $redis.hset("THEME_#{theme_id}_DATA", :webname, name.downcase.split(/\W/).join
     $redis.hset("THEME_#{theme_id}_DATA", :latitude, latitude)
     $redis.hset("THEME_#{theme_id}_DATA", :longitude, longitude)
     $redis.hset("THEME_#{theme_id}_DATA", :radius, radius)
@@ -39,12 +38,18 @@ class Theme
 
   def self.modify_theme(theme_id, options={})
 
+    old_name = $redis.hget("THEME#{theme_id}_DATA", :name)
+
     $redis.hset("THEME_#{theme_id}_DATA", :name, options[:name]) if options[:name]
-    $redis.hset("THEME_#{theme_id}_DATA", :webname, name.downcase.split(/\W/).join if  options[:name]
     $redis.hset("THEME_#{theme_id}_DATA", :latitude, options[:latitude]) if options[:latitude]
     $redis.hset("THEME_#{theme_id}_DATA", :longitude, options[:longitude]) if options[:longitude]
     $redis.hset("THEME_#{theme_id}_DATA", :radius, options[:radius]) if options[:radius]
     $redis.hset("THEME_#{theme_id}_DATA", :url, options[:url]) if options[:url]
+
+    if options[:name] && old_name
+      #maintain link with webname
+      
+    end
 
   end
 
@@ -71,7 +76,7 @@ class Theme
     theme_ids.each do |id|
       
       entry = $redis.hgetall("THEME_#{id}_DATA")
-      themes << OpenStruct.new({:name => entry["webname"],
+      themes << OpenStruct.new({:name => entry["name"].downcase.split(/\W/).join,
                                 :url => entry["url"]})
     end
 
