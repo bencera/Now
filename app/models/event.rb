@@ -841,6 +841,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def add_view
     n_views = $redis.incr("VIEW_COUNT:#{self.shortid}")
+    $redis.zincrby("VERIFY_QUEUE", 1, self.id.to_s)
     if Reaction::VIEW_MILESTONES.include? n_views.to_i
       Resque.enqueue(ViewReaction, self.id, n_views)
     end
