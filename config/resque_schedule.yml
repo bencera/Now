@@ -45,3 +45,9 @@ verify_drain:
   class: VerifyQueueDrain
   args:
   description: "Clean bad photos in events that are getting lots of views"
+
+update_city_cache:
+  every: "10m"
+  class: CacheCityEvents
+  args:
+  description: "Cache events in city search for faster access"
