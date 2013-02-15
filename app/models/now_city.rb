@@ -100,6 +100,8 @@ class NowCity
 
     modify_city(city_key, :name => name, :latitude => latitude, :longitude => longitude, :radius => radius, :url => url, :url_web => url_web)
     $redis.hset("#{city_key}_VALUES", :a_or_b, rand(2))
+
+    WebNameMatcher.update_theme("city|#{city_key}", city_key.downcase)
   end
 
   def self.modify_city(city_key, options={})

@@ -12,7 +12,7 @@ class CacheCityEvents
 
       events =  EventsHelper.get_localized_results(coordinates, radius, :num_events => 21)
   
-      event_ids = events.map{|event| event.id}
+      event_ids = events.map{|event| event.id.to_s}
 
       $redis.multi do
         $redis.del("#{city_key}_EXP_LIST")

@@ -38,7 +38,7 @@ class WebNameMatcher
         results[:events] = events
         results[:title] = city_hash["name"]
       else
-        events = EventsHelper.get_localized_results(coordinates, radius, :num_events => 21)
+        events = Event.where(:_id.in => event_ids).sort_by {|event| event.end_time}.reverse; puts ""
         results[:main_event] = events.shift
         results[:events] = events
         results[:title] = city_hash["name"]
