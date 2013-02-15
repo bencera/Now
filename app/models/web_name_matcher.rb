@@ -81,7 +81,15 @@ class WebNameMatcher
   end
 
   def self.update_theme(theme_id, name)
+    all_themes = $redis.hgetall("THEME_NAME_TO_ID")
 
+    if all_themes.values.include?(theme_id.to_s)
+      del_key = nil
+      all_themes.keys.each {|key| del_key = key if all_themes[key] == theme_id.to_s}
+      $redis.hdel("THEME_NAME_TO_ID", del_key)
+    end
+
+    $redis.hset("THEME_NAME_TO_ID", name.downcase, theme_id)
   end
 
 end
