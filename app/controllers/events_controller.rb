@@ -199,30 +199,25 @@ class EventsController < ApplicationController
 
 
   def showweb
-    if params[:shortid].length == 6
+
+    if params[:event]
+      theme_results = WebNameMatcher.load_from_webname(params[:shortid], :main_event_id => params[:event])
+    else
+      theme_results = WebNameMatcher.load_from_webname(params[:shortid])
+    end
+    
+    if theme_results.nil?
       @event = Event.where(:shortid => params[:shortid]).first
       @theme = nil
       @theme_title = nil
     else
-      theme_id = $redis.hget("THEME_NAME_TO_ID", params[:shortid].downcase).to_s
-      if theme_id
-        @theme_title = $redis.hget("THEME_#{theme_id}_DATA", "name")
-        @theme = params[:shortid].downcase
-        event_ids = Theme.get_exp_list(theme_id).shuffle
-        if params[:event]
-          main_id = params[:event]
-          event_ids.delete(main_id)
-          event_ids.unshift(main_id)
-          events = Event.where(:_id.in => event_ids[0..19]).sort_by {|event| event.end_time}.reverse
-          events.each {|event| @event = event if event._id.to_s == main_id}
-        else
-          events = Event.where(:_id.in => event_ids).entries.sort_by {|event| event.end_time}.reverse
-          @event = events.first
-        end
-      else
-        render :text => "Not a valid Now Url"
-      end
+      theme_id = theme_results[:theme]
+      @theme_title = theme_results[:title]
+      @theme = params[:shortid].downcase
+      events = theme_results[:events]
+      @event = theme_results[:main_event]
     end
+
     @photos = @event.photos.order_by([[:time_taken,:asc]]).entries
     @reposts = @event.make_reply_array(@photos)
     EventsHelper.build_photo_list(@event, @reposts, @photos, :version => 2)
