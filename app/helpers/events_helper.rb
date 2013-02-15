@@ -491,8 +491,8 @@ EOS
       city_coords = [city_hash["longitude"].to_f, city_hash["latitude"].to_f]
 
       city_entry =  OpenStruct.new({:name => city_key.downcase,
-                                    :image_url => city_hash["url"]},
-                                    :expriences => exp_count)
+                                    :image_url => city_hash["url"],
+                                    :expriences => exp_count})
 
       unordered_cities << city_entry
     end
