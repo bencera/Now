@@ -275,6 +275,8 @@ module EventsHelper
 
   def self.get_localized_results(lon_lat, max_dist, options={})
 
+    num_events = options[:num_events] || 20
+
     event_query = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]})
     if options[:category]
       event_query = event_query.where(:category => options[:category])
@@ -295,7 +297,7 @@ module EventsHelper
         venues[event.venue_id] = event.id
       end
     end
-    return events[0..19]
+    return events[0..(num_events - 1)]
 
     #this is commented out because we're just using event end_time to rank events for now so the above code is faster
 #
