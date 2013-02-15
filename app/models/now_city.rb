@@ -168,6 +168,8 @@ class NowCity
       exp_count = $redis.get("#{city_key}_EXP")
       city_hash = $redis.hgetall("#{city_key}_VALUES")
 
+      next if city_hash["url_web"].blank?
+
       city_coords = [city_hash["longitude"].to_f, city_hash["latitude"].to_f]
 
       city_entry =  OpenStruct.new({:name => city_key.downcase,
