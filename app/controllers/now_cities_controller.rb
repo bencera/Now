@@ -59,7 +59,5 @@ class NowCitiesController < ApplicationController
     #now pull themes and append them to the list
 
     @themes = Theme.index
-   
-
   end
 end

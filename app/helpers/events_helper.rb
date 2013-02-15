@@ -478,25 +478,4 @@ EOS
 
   end
 
-  def self.get_cities_for_web
-    city_entries = $redis.smembers("NOW_CITY_KEYS")
-
-    unordered_cities = []
-
-    city_entries.each do |city_key|
-
-      exp_count = $redis.get("#{city_key}_EXP")
-      city_hash = $redis.hgetall("#{city_key}_VALUES")
-
-      city_coords = [city_hash["longitude"].to_f, city_hash["latitude"].to_f]
-
-      city_entry =  OpenStruct.new({:name => city_key.downcase,
-                                    :image_url => city_hash["url_web"],
-                                    :experiences => exp_count})
-
-      unordered_cities << city_entry
-    end
-
-    unordered_cities.sort_by {|city| city.experiences}.reverse 
-  end
 end

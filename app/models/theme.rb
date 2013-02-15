@@ -28,6 +28,7 @@ class Theme
 
     $redis.lpush("NOW_THEMES", theme_id)
     $redis.hset("THEME_#{theme_id}_DATA", :name, name)
+    $redis.hset("THEME_#{theme_id}_DATA", :webname, name.downcase.split(/\W/).join
     $redis.hset("THEME_#{theme_id}_DATA", :latitude, latitude)
     $redis.hset("THEME_#{theme_id}_DATA", :longitude, longitude)
     $redis.hset("THEME_#{theme_id}_DATA", :radius, radius)
@@ -39,6 +40,7 @@ class Theme
   def self.modify_theme(theme_id, options={})
 
     $redis.hset("THEME_#{theme_id}_DATA", :name, options[:name]) if options[:name]
+    $redis.hset("THEME_#{theme_id}_DATA", :webname, name.downcase.split(/\W/).join if  options[:name]
     $redis.hset("THEME_#{theme_id}_DATA", :latitude, options[:latitude]) if options[:latitude]
     $redis.hset("THEME_#{theme_id}_DATA", :longitude, options[:longitude]) if options[:longitude]
     $redis.hset("THEME_#{theme_id}_DATA", :radius, options[:radius]) if options[:radius]
@@ -59,5 +61,21 @@ class Theme
 
   def self.add_experience(theme_id, event_id)
     $redis.sadd("THEME_#{theme_id}_EXP_LIST", event_id)
+  end
+
+  def self.get_themes_for_web
+    theme_ids = $redis.lrange("NOW_THEMES",0,4)
+
+    themes = []
+
+    theme_ids.each do |id|
+      
+      entry = $redis.hgetall("THEME_#{id}_DATA")
+      themes << OpenStruct.new({:name => entry["webname"],
+                                :url => entry["url"]})
+    end
+
+    return themes
+
   end
 end
