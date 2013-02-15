@@ -81,6 +81,17 @@ class InstagramWrapper
     response = http.request(request)
   end
 
+  def like_media(media_id, options={})
+    url = "https://api.instagram.com/v1/media/#{media_id}/likes?access_token=#{@access_token}"
+    parsed_url = URI.parse(url)
+    http = Net::HTTP.new(parsed_url.host, parsed_url.port)
+    request = Net::HTTP::Post.new(parsed_url.request_uri)
+    
+    http.use_ssl = true
+
+    response = http.request(request)
+
+  end
 
   def pull_pagination(url, options={})
     if(options[:text])
