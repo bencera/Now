@@ -19,23 +19,21 @@ class WebNameMatcher
       coordinates = [city_hash["longitude"].to_f, city_hash["latitude"].to_f]
       radius = city_hash["radius"].to_f / 111000
 
+      event_ids = $redis.smembers("#{city_key}_EXP_LIST")
+
       if options[:main_event_id]
         main_event_id = options[:main_event_id]
-        events =  EventsHelper.get_localized_results(coordinates, radius, :num_events => 21, :inject_id => main_event_id)
-        
+        event_ids.unshift(main_event_id)
+        events = Event.where(:_id.in => event_ids).sort_by {|event| event.end_time}.reverse; puts ""
         main_event = nil
         events.each do |event|
           if main_event_id == event.id.to_s
             main_event = event
             break
           end
-        end
+        end; puts ""
 
-        if main_event
-          events.delete(main_event)
-        else
-          main_event = Event.first(:conditions => {:_id => :main_event_id})
-        end
+        events.delete(main_event)
         results[:main_event] = main_event
         results[:events] = events
         results[:title] = city_hash["name"]
