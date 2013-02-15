@@ -31,7 +31,7 @@
 
 - if @photos.count != 0
     .background_image{:style => "background-size: cover;background-position: 50% 50%;position: fixed;top: 0;left: 0;width: 100%;height: 100%; background-image:url('#{@photos[rand(@photos.count)].url[1]}')"}
-.dimmer{:style =>"background: rgba(0,0,0,0.25);position: fixed;top: 0;left: 0;width: 100%;height: 100%;"}
+.dimmer{:style =>"background: rgba(252, 74, 111, 0.5);position: fixed;top: 0;left: 0;width: 100%;height: 100%;"}
 %script{:type=>"text/javascript"}
     mixpanel.track("Show:loaded")
     mixpanel.track_links("#nowlogo a", "Show:logo")
@@ -45,13 +45,13 @@
                 - if @theme_title
                     = "Now : #{@theme_title}"
                 - else
-                    = "Now"
-
+                    = "Now : #{@venue.name}"
         %a{:href => "http://getnowapp.com/download"}
-            %p.download_btn{:style => "float:right;"} Get the free app
+            .download{:style => "float:right; margin:-39px 12px"}
+                = image_tag "https://d3422saexnbpnl.cloudfront.net/static/images/appstorebadge2x.png", :width => "150px"
 
 .CloseupLeft{:style => "position: fixed;top: 60px;left: 50%;width: 222px;margin-left: -425px;"}
-    #SocialShare{:style => "position: fixed;left: 50%;top: 263px;width: 350px;margin-left: 185px;"}
+    #SocialShare{:style => "position: fixed;left: 50%;top: 115px;width: 350px;margin-left: 185px;"}
         %ul
             %li{:style => "margin-bottom: 10px"}
                 - if @theme
@@ -69,19 +69,23 @@
             - if @theme_title
                 - text = "More events from #{@theme_title}"
             - else
-                - text = "More events trending now"
-            %h2{:style => "color:white; font-size: 20px"}= text
-            #events_box{:style => "box-shadow: 0 1px 3px rgba(34,25,25,0.4);-moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);-webkit-box-shadow: 0 1px 3px rgba(34,25,25,0.4);height:500px;width:320px;background-color:white;overflow-y: scroll; overflow-x: hidden;"}
+                - text = "Happening now"
+            %h2{:style => "color:white; font-size: 20px; margin-top:10px"}= text
+            #events_box{:style => "box-shadow: 0 1px 3px rgba(34,25,25,0.4);-moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);-webkit-box-shadow: 0 1px 3px rgba(34,25,25,0.4);height:265px;width:320px;background-color:white;overflow-y: scroll; overflow-x: hidden;"}
                 - for i in 0..19
                     - if @theme
                         - url = "#{@theme}?event=#{@more_events[i].id}"
                     - else
                         - url = "#{@more_events[i].shortid}"
                     %a{:href => "http://getnowapp.com/#{url}"}
-                        .event_plus{:style => "height:150px"}
+                        - if @more_events[i].preview_photos.count > 5
+                            - event_height = "height:240px"
+                        - else
+                            - event_height = "height:138px"
+                        .event_plus{:style => event_height}
                             .profile{:style => "margin: 10px 0 0 10px; float:left"}
                                 = image_tag "http://s3.amazonaws.com/now_assets/icon.png", :width => "25px", :height => "25px"
-                            .title{:style => "font-size:10px;text-align:left; font-weight:bold; margin-left:40px;width: 270px"}
+                            .title{:style => "font-size:10px;text-align:left; font-weight:bold; margin-left:42px;width: 270px"}
                                 = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "9px", :height => "13px"
                                 = @more_events[i].venue_name
                                 #time_ago{:style => "float:right; color:gray; margin-right: 0px"}
@@ -100,8 +104,20 @@
                                         = "#{(t / 60 / 60 / 24 / 365).round}y"
 
                             .photos{:style => "margin-left:10px"}
-                                - @more_events[i].preview_photos[0..2].each do |p|
-                                    = image_tag p.url[2], :width => '95px', :style => "margin:0 2px 2px 0"
+                                - if @more_events[i].preview_photos.count > 5
+                                    - @more_events[i].preview_photos[0..5].each do |p|
+                                        = image_tag p.url[2], :width => '95px', :style => "margin:0 2px 2px 0"
+                                - else
+                                    - @more_events[i].preview_photos[0..2].each do |p|
+                                        = image_tag p.url[2], :width => '95px', :style => "margin:0 2px 2px 0"
+
+        .more_events
+            %h2{:style => "color:white; font-size: 20px; margin-top:20px"} Cities & Themes
+            #events_box{:style => "box-shadow: 0 1px 3px rgba(34,25,25,0.4);-moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);-webkit-box-shadow: 0 1px 3px rgba(34,25,25,0.4);height:265px;width:320px;background-color:white;overflow-y: scroll; overflow-x: hidden;"}
+                - for i in 0..19
+                    #theme{:style => "height:114px"}
+                        %a{:href => "http://getnowapp.com/test"}
+                            = image_tag "http://s3.amazonaws.com/now_assets/carnival.jpg", :width => "320px"
 
 .main_content
     #header-container
