@@ -90,13 +90,15 @@ class NowCity
     return TIME_TITLES[NowCity.get_time_group_from_time(local_time)]
   end
 
-  def self.add_featured_city(name, latitude, longitude, radius, url)
+  def self.add_featured_city(name, latitude, longitude, radius, url, url_web)
     city_key = name.split(" ").join.upcase
 
     $redis.sadd("NOW_CITY_KEYS", city_key)
     $redis.set("#{city_key}_EXP", 0)
 
-    modify_city(city_key, :name => name, :latitude => latitude, :longitude => longitude, :radius => radius, :url => url)
+    url_web ||= url
+
+    modify_city(city_key, :name => name, :latitude => latitude, :longitude => longitude, :radius => radius, :url => url, :url_web => url_web)
     $redis.hset("#{city_key}_VALUES", :a_or_b, rand(2))
   end
 
@@ -110,6 +112,7 @@ class NowCity
     $redis.hset("#{city_key}_VALUES", :longitude, options[:longitude]) if options[:longitude]
     $redis.hset("#{city_key}_VALUES", :radius, options[:radius]) if options[:radius]
     $redis.hset("#{city_key}_VALUES", :url, options[:url]) if options[:url]
+    $redis.hset("#{city_key}_VALUES", :url_web, options[:url_web]) if options[:url_web]
 
   end
 
@@ -168,7 +171,7 @@ class NowCity
       city_coords = [city_hash["longitude"].to_f, city_hash["latitude"].to_f]
 
       city_entry =  OpenStruct.new({:name => city_key.downcase,
-                                    :image_url => city_hash["url_web"],
+                                    :url => city_hash["url_web"],
                                     :experiences => exp_count})
 
       unordered_cities << city_entry
