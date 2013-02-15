@@ -54,11 +54,11 @@ class Reengagement
 
     devices = devices.delete_if {|device| device.facebook_user_id && !primary_devices.include?(device.id)} #; puts ""
 
-    Rails.logger.info("Reengagement: #{devices.count} devices after exlcuding facebook_users non-primary devices")
+    Rails.logger.info("Reengagement: #{devices.count} devices after excluding facebook_users non-primary devices")
     Rails.logger.info("Reengagement: #{already_notified_udids.count} devices already notified")
 
     devices = devices.delete_if {|device| device.subscriptions.nil? || device.subscriptions.empty?}
-    Rails.logger.info("Reengagement: #{devices.count} devices after exlcuding devices without subscription")
+    Rails.logger.info("Reengagement: #{devices.count} devices after excluding devices without subscription")
 
 
     devices_to_notify = devices.delete_if {|device| device.coordinates.nil? || already_notified_udids.include?(device.udid) || ( device.coordinates[0] == 0.0 && device.coordinates[1] == 0.0 )} #; puts ""
@@ -131,7 +131,7 @@ class Reengagement
     city_entries = $redis.smembers("NOW_CITY_KEYS")
     current_events = {}
     city_push_devices = []
-    test = true
+    test = $redis.get("TEST_REENGAGEMENT") == "true"
 
     city_entries.each do |city|
       city_hash = $redis.hgetall("#{city}_VALUES")
