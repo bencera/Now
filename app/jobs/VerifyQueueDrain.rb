@@ -11,7 +11,7 @@ class VerifyQueueDrain
 
     events.each do |event_id|
       event = Event.find(event_id)
-      next if event.last_verify > 20.minutes.ago
+      next if event.last_verify && event.last_verify > 20.minutes.ago
 
       VerifyURL2.perform(event_id, 0, false)
       fixed += 1
