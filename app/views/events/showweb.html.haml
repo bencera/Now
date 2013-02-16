@@ -62,7 +62,7 @@
 
             %li{:style => "margin-left: -10px"}
                 - if @theme
-                  %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button",:'data-url'=>"http://getnowapp.com/#{@theme}",:'data-text'=>"See what's happening now #{@is_city ? "in" : "at"} #{@theme_title}",:'data-via'=>"nowapp_", :'data-lang'=>"en"} Tweet
+                    %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button",:'data-url'=>"http://getnowapp.com/#{@theme}",:'data-text'=>"See what's happening now #{@is_city ? "in" : "at"} #{@theme_title}",:'data-via'=>"nowapp_", :'data-lang'=>"en"} Tweet
                 - else
                     %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button", :'data-lang'=>"en"} Tweet                         
         .more_events
