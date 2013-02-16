@@ -210,12 +210,14 @@ class EventsController < ApplicationController
       @event = Event.where(:shortid => params[:shortid]).first
       @theme = nil
       @theme_title = nil
+      @is_city = false
     else
       theme_id = theme_results[:theme]
       @theme_title = theme_results[:title]
       @theme = params[:shortid].downcase
       events = theme_results[:events]
       @event = theme_results[:main_event]
+      @is_city = theme_results[:city]
     end
 
     @photos = @event.photos.order_by([[:time_taken,:asc]]).entries

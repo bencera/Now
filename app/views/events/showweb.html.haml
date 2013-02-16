@@ -45,7 +45,7 @@
                 - if @theme_title
                     = "Now : #{@theme_title}"
                 - else
-                    = "Now"
+                    = "Now : #{@venue.name}"
         %a{:href => "http://getnowapp.com/download"}
             .download{:style => "float:right; margin:-39px 12px"}
                 = image_tag "https://d3422saexnbpnl.cloudfront.net/static/images/appstorebadge2x.png", :width => "150px"
@@ -62,7 +62,7 @@
 
             %li{:style => "margin-left: -10px"}
                 - if @theme
-                    %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button",:'data-url'=>"http://getnowapp.com/#{@theme}",:'data-text'=>"See what's happening now at #{@theme_title}",:'data-via'=>"nowapp_", :'data-lang'=>"en"} Tweet
+                  %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button",:'data-url'=>"http://getnowapp.com/#{@theme}",:'data-text'=>"See what's happening now #{@is_city ? "in" : "at"} #{@theme_title}",:'data-via'=>"nowapp_", :'data-lang'=>"en"} Tweet
                 - else
                     %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button", :'data-lang'=>"en"} Tweet                         
         .more_events
