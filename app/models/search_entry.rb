@@ -18,7 +18,8 @@
 class SearchEntry < ActiveRecord::Base
   # attr_accessible :title, :body
   #
- 
+
+  has_one :event_creation
 
   def facebook_user
     FacebookUser.first(conditions: {:_id => self.facebook_user_id})

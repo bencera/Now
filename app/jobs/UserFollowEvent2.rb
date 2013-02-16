@@ -82,7 +82,20 @@ class UserFollowEvent2
 
       venue ||= new_photo.venue
 
-      next if venue.blacklist || (venue.categories && venue.categories.any? && CategoriesHelper.black_list[venue.categories.last["id"]])
+      if venue.blacklist || (venue.categories && venue.categories.any? && CategoriesHelper.black_list[venue.categories.last["id"]])
+
+              EventCreation.create(:facebook_user_id => fb_user.id.to_s,
+                                   :instagram_user_id =>  media.user.id,
+                                   :instagram_user_name =>  media.user.name,
+                                   :creation_time => Time.now,
+                                   :blacklist => true,
+                                   :greylist => false,
+                                   :ig_media_id => media.id,
+                                   :venue_id => venue.nil? ? nil : venue.id.to_s)
+      end
+
+      greylist = (venue.categories && venue.categories.any? && CategoriesHelper.grey_list[venue.categories.last["id"]])
+
 
       event_options = {}
 
@@ -116,6 +129,20 @@ class UserFollowEvent2
         
         event.save!
         $redis.incrby("NOW_BOT_PHOTOS:#{event.id}", additional_photos.count - 1)
+      end
+
+      #log the event creation
+
+      if !existing_event
+        EventCreation.create(:event_id => event.id.to_s,
+                             :facebook_user_id => fb_user.id.to_s,
+                             :instagram_user_id =>  media.user.id,
+                             :instagram_user_name =>  media.user.name,
+                             :creation_time => Time.now,
+                             :blacklist => false,
+                             :greylist => greylist,
+                             :ig_media_id => media.id,
+                             :venue_id => event.venue.id.to_s)
       end
 
       event.venue.notify_subscribers(event)
@@ -160,6 +187,9 @@ class UserFollowEvent2
     FacebookUser.where(:ig_username => media.user.username).first || FacebookUser.where(:ig_user_id => media.user.id.to_s).first  || FacebookUser.where(:now_id => "0").first
   end
 
+
+  def self.get_ignore_media()
+  end
 
   def self.get_existing_event(media)
     venue = Venue.where(:ig_venue_id => media.location.id.to_s).first

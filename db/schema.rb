@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130213232646) do
+ActiveRecord::Schema.define(:version => 20130216165325) do
 
   create_table "archive_events", :force => true do |t|
     t.string   "coordinates"
@@ -79,6 +79,10 @@ ActiveRecord::Schema.define(:version => 20130213232646) do
     t.datetime "creation_time"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
+    t.boolean  "blacklist"
+    t.boolean  "greylist"
+    t.string   "ig_media_id"
+    t.string   "venue_id"
   end
 
   create_table "event_opens", :force => true do |t|

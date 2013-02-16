@@ -13,8 +13,14 @@
 #  creation_time       :datetime
 #  created_at          :datetime        not null
 #  updated_at          :datetime        not null
+#  blacklist           :boolean
+#  greylist            :boolean
+#  ig_media_id         :string(255)
+#  venue_id            :string(255)
 #
 
 class EventCreation < ActiveRecord::Base
-  attr_accessible :creation_time, :event_id, :facebook_user_id, :instagram_user_id, :instagram_user_name, :search_entry_id, :session_token, :udid
+  attr_accessible :creation_time, :event_id, :facebook_user_id, :instagram_user_id, :instagram_user_name, :search_entry_id, :session_token, :udid, :blacklist, :greylist, :ig_media_id, :venue_id
+
+  belongs_to :search_entry
 end
