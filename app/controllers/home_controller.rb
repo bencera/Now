@@ -12,9 +12,14 @@ class HomeController < ApplicationController
   end
 
   def index_now_2
-    @event = Event.find("4f7005a8de10c5000400002c")
-    twenty_events = Event.where(:status.in => ["trending", "trending_people"], :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).shuffle.entries
-    @more_events = twenty_events[0..19]
+    #@event = Event.find("4f7005a8de10c5000400002c")
+    #twenty_events = Event.where(:status.in => ["trending", "trending_people"], :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).shuffle.entries
+    #@more_events = twenty_events[0..19]
+    theme_results = WebNameMatcher.load_from_webname("newyork")
+    events = theme_results[:events]
+    @more_events = events[0..19]
+    @themes_and_cities = [*(Theme.get_themes_for_web), *(NowCity.get_cities_for_web)]
+
     #@themes = Theme.index
     #@more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
 
