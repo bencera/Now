@@ -17,6 +17,8 @@ class UserFollowEvent2
     response = ig_client.feed
     media_list = response.data
 
+    ignore_media = get_ignore_media()
+
     last_deep_look = $redis.hget("LAST_DEEP_LOOK", token).to_i
     if last_deep_look < 30.minutes.ago.to_i
       #go 5 searches deep or 3.hours deep
@@ -46,7 +48,7 @@ class UserFollowEvent2
     media_list.each do |media|
 
 #      Rails.logger.info("Examining photo #{media.id}")
-      next if media.location.nil? || media.location.id.nil? || (media.created_time.to_i < since_time) || media.caption.nil? 
+      next if media.location.nil? || media.location.id.nil? || (media.created_time.to_i < since_time) || media.caption.nil? || ignore_media.include?(media.id)
 
       venue = Venue.where(:ig_venue_id => media.location.id.to_s).first
 
@@ -84,14 +86,15 @@ class UserFollowEvent2
 
       if venue.blacklist || (venue.categories && venue.categories.any? && CategoriesHelper.black_list[venue.categories.last["id"]])
 
-              EventCreation.create(:facebook_user_id => fb_user.id.to_s,
-                                   :instagram_user_id =>  media.user.id,
-                                   :instagram_user_name =>  media.user.name,
-                                   :creation_time => Time.now,
-                                   :blacklist => true,
-                                   :greylist => false,
-                                   :ig_media_id => media.id,
-                                   :venue_id => venue.nil? ? nil : venue.id.to_s)
+        EventCreation.create(:facebook_user_id => fb_user.id.to_s,
+                             :instagram_user_id =>  media.user.id,
+                             :instagram_user_name =>  media.user.username,
+                             :creation_time => Time.now,
+                             :blacklist => true,
+                             :greylist => false,
+                             :ig_media_id => media.id,
+                             :venue_id => venue.nil? ? nil : venue.id.to_s)
+        next
       end
 
       greylist = (venue.categories && venue.categories.any? && CategoriesHelper.grey_list[venue.categories.last["id"]])
@@ -137,7 +140,7 @@ class UserFollowEvent2
         EventCreation.create(:event_id => event.id.to_s,
                              :facebook_user_id => fb_user.id.to_s,
                              :instagram_user_id =>  media.user.id,
-                             :instagram_user_name =>  media.user.name,
+                             :instagram_user_name =>  media.user.username,
                              :creation_time => Time.now,
                              :blacklist => false,
                              :greylist => greylist,
@@ -189,6 +192,10 @@ class UserFollowEvent2
 
 
   def self.get_ignore_media()
+    ignore_media = []
+    EventCreation.where("creation_time > ?", 6.hours.ago).each {|ec| ignore_media << ec.ig_media_id unless ec.ig_media_id.nil?}
+
+    return ignore_media
   end
 
   def self.get_existing_event(media)
