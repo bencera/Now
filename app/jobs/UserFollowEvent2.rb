@@ -143,7 +143,7 @@ class UserFollowEvent2
                              :instagram_user_name =>  media.user.username,
                              :creation_time => Time.now,
                              :blacklist => false,
-                             :greylist => greylist,
+                             :greylist => greylist || false,
                              :ig_media_id => media.id,
                              :venue_id => event.venue.id.to_s)
       end
