@@ -894,6 +894,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
                   :get_fb_user_id => "0",
                   :get_fb_user_photo => "https://s3.amazonaws.com/now_assets/icon.png",
                   :venue => venue,
+                  :venue_id => venue.id,
+                  :venue_name => venue_name,
                   :preview_photos => options[:photo_list] || []
     
         }
