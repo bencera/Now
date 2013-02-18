@@ -700,7 +700,7 @@ class Venue
       return
     end
 
-    if self.top_event_id.nil? || Event.where(_id => self.top_event_id).first.nil?
+    if self.top_event_id.nil? || Event.where(:_id => self.top_event_id).first.nil?
       self.calculate_top_event
     end
 
