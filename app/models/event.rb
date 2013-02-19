@@ -855,6 +855,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def add_click(options={})
     n_clicks = $redis.incr("CLICK_COUNT:#{self.shortid}")
+    $redis.zincrby("VERIFY_OPENED_QUEUE", 1, self.id.to_s)
     if options[:now_token] || options[:udid]
       options[:event_id] = self.id.to_s
       options[:click_time] = Time.now.to_i
