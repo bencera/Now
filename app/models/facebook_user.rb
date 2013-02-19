@@ -15,6 +15,7 @@ class FacebookUser
 
   field :now_token
   field :fb_accesstoken
+  field :ig_accesstoken
   field :fb_details, type: Hash
   field :whitelist_cities, type: Array, default: []
 
@@ -66,6 +67,36 @@ class FacebookUser
 
     def find_by_now_id(id)
       FacebookUser.first(conditions: { now_id: id})
+    end
+
+    def find_or_create_by_ig_token(token, options={})
+      user = FacebookUser.where(:ig_accesstoken => token).first
+
+      if !user
+        client = InstagramWrapper.get_client(:access_token => token)
+        user_info = client.user_info("self")
+
+        if user_info
+          user = FacebookUser.new
+          user.ig_accesstoken = token
+          user.ig_username = user_info.data.username
+          user.ig_user_id = user_info.data.id
+          user.udid = options[:udid] if options[:udid]
+          
+          user.now_profile ||= NowProfile.new
+          fullname = user_info.data.full_name
+          user.now_profile.name = fullname
+          user.now_profile.first_name = fullname.split(" ").first
+          user.now_profile.last_name = fullname.split(" ")[1..-1].join(" ")
+          user.now_profile.profile_photo_url = user_info.data.profile_picture
+
+          user.save!
+
+        end
+      end
+
+      return user
+
     end
 
     def find_or_create_by_facebook_token(token, options={})
@@ -152,7 +183,7 @@ class FacebookUser
 
   def set_profile
     self.now_profile ||= NowProfile.new
-    self.now_profile.set_from_fb_details(self.fb_details)
+    self.now_profile.set_from_fb_details(self.fb_details) if self.fb_details
   end
 
   def get_now_profile(requested_by)
