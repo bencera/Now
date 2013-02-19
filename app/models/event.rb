@@ -105,6 +105,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   #this is used to keep verifying live photos for events that are getting viewed
   field :last_verify
+  field :last_photo_card_verify
+
 
  # not using a has_many relationship because i don't think this is how the model will end up looking
  # chances are, a checkin will have description and photo_list, then an event will have a main checkin

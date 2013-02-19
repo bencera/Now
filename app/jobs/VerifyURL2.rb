@@ -25,6 +25,7 @@ class VerifyURL2
     event.repair_photo_cards(repair_photos) if repair_photos.any?
 
     $redis.zrem("VERIFY_QUEUE", event_id)
+    event.last_photo_card_verify = Time.now
 
     if !options[:photo_card]
       event.last_verify = Time.now
