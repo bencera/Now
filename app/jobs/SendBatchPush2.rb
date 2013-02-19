@@ -26,7 +26,7 @@ class SendBatchPush2
 
     devices.each do |device|
 
-      next if device.subscriptions.first.nil?
+      next if device.subscriptions.first.nil? || (device.facebook_user && device.facebook_user.now_profile.notify_local == false)
       if !test
         begin
           device.subscriptions.each do |sub|
