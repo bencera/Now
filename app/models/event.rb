@@ -730,10 +730,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
         #debug
 
         #Rails.logger.info("Event Model created or identified photo #{photo.id}")
+      rescue Mongoid::Errors::Validations
+        next
       rescue
         Rails.logger.error("Event Model failed to load photo")
         raise
-        end
+      end
     end
 
     last_update = self.end_time
