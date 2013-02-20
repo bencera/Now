@@ -28,6 +28,8 @@ Ubimachine::Application.routes.draw do
   match "/now_users_login" => "now_users#login"
   match "/now_users_location" => "now_users#location"
 
+  match "/photos/:id/like" => "photos#like"
+
   match "/now_cities/index" => "now_cities#index"
 
   match "/event_report" => "events#report"

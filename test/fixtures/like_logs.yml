@@ -13,6 +13,7 @@
 #  unliked            :boolean         default(FALSE)
 #  created_at         :datetime        not null
 #  updated_at         :datetime        not null
+#  photo_id           :string(255)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html

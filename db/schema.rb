@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130216165325) do
+ActiveRecord::Schema.define(:version => 20130220155452) do
 
   create_table "archive_events", :force => true do |t|
     t.string   "coordinates"
@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(:version => 20130216165325) do
     t.boolean  "unliked",            :default => false
     t.datetime "created_at",                            :null => false
     t.datetime "updated_at",                            :null => false
+    t.string   "photo_id"
   end
 
   create_table "search_entries", :force => true do |t|

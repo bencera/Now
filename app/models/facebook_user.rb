@@ -91,6 +91,8 @@ class FacebookUser
           user.now_profile.profile_photo_url = user_info.data.profile_picture
 
           user.save!
+          
+          options[:return_hash][:new_fb_user] = true unless options[:return_hash].nil?
 
         end
       end
@@ -164,6 +166,26 @@ class FacebookUser
     $redis.srem("event_likes:#{event_shortid}", facebook_id)
     $redis.srem("liked_events:#{facebook_id}",event_shortid)
     Resque.enqueue(Facebookunlike, access_token, event_shortid, self.id.to_s)
+  end
+
+  def like_photo(photo_id, event_id, fb_access_token, session_token)
+    $redis.sadd("photo_likes:#{photo_id}", self.now_id)
+    params = {:fb_access_token => fb_access_token, 
+              :session_token => session_token, 
+              :user_id => self.id.to_s, 
+              :event_id => event_id.to_s, 
+              :like_time => Time.now.to_i}.inspect
+    Resque.enqueue(PhotoLike, photo_id.to_s, params)
+  end
+
+  def unlike_photo(photo_id, event_id, fb_access_token, session_token)
+    $redis.srem("photo_likes:#{photo_id}", self.now_id)
+    params = {:fb_access_token => fb_access_token, 
+              :session_token => session_token, 
+              :user_id => self.id.to_s, 
+              :event_id => event_id.to_s, 
+              :unlike => true}.inspect
+    Resque.enqueue(PhotoLike, photo_id.to_s, params)
   end
 
   def is_white_listed

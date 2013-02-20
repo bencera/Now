@@ -13,6 +13,7 @@
 #  unliked            :boolean         default(FALSE)
 #  created_at         :datetime        not null
 #  updated_at         :datetime        not null
+#  photo_id           :string(255)
 #
 
 class LikeLog < ActiveRecord::Base

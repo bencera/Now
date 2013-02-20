@@ -30,6 +30,7 @@ class Photo
 # this is for the phase-out of old code
   field :now_version, :default => 1
 
+  field :now_likes, :type => Integer, :default => 0
   field :url, :type => Array
   field :caption, :default => " "
   field :time_taken, :type => Integer
