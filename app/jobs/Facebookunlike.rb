@@ -23,6 +23,14 @@ class Facebookunlike
     existing_like = LikeLog.where("event_id = ? AND photo_id is NULL AND unliked = ? AND facebook_user_id = ?", 
                                   event.id.to_s, false, fb_user.id.to_s).first
 
+    if existing_like.nil?
+      sleep 5
+
+      existing_like = LikeLog.where("event_id = ? AND photo_id is NULL AND unliked = ? AND facebook_user_id = ?", 
+                                  event.id.to_s, false, fb_user.id.to_s).first
+      return if existing_like.nil?
+    end
+
     existing_like.unliked = true
     existing_like.save!
 
