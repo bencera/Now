@@ -73,11 +73,24 @@ class FacebookUser
       user = FacebookUser.where(:ig_accesstoken => token).first
 
       if !user
-        client = InstagramWrapper.get_client(:access_token => token)
-        user_info = client.user_info("self")
+        if params[:nowtoken]
+          user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+          if user.nil?
+            user = FacebookUser.new
+          end
+        else
+          user = FacebookUser.new
+        end
+
+        begin
+          client = InstagramWrapper.get_client(:access_token => token)
+          user_info = client.user_info("self")
+        rescue
+          options[:return_hash][:existing_user] = user unless user.nil? || options[:return_hash].nil?
+          return nil 
+        end
 
         if user_info
-          user = FacebookUser.new
           user.ig_accesstoken = token
           user.ig_username = user_info.data.username
           user.ig_user_id = user_info.data.id
@@ -102,6 +115,8 @@ class FacebookUser
     end
 
     def find_or_create_by_facebook_token(token, options={})
+
+      ### have to handle creating an account when an ig account already exists
       retry_attempt = 0
       begin
 
@@ -110,10 +125,20 @@ class FacebookUser
         if user = FacebookUser.find_by_facebook_id(facebook_client.user_id)
           user.fb_accesstoken = token
         else
+          
+          if params[:nowtoken]
+            user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+            if user.nil?
+              user = FacebookUser.new
+            end
+          else
+            user = FacebookUser.new
+          end
           while facebook_client.get_errors
             
             if retry_attempt > 5
               options[:return_hash][:errors] =  facebook_client.get_errors unless options[:return_hash].nil?
+              options[:return_hash][:existing_user] = user unless user.nil? || options[:return_hash].nil?
               return nil
             end
 
@@ -123,7 +148,6 @@ class FacebookUser
             facebook_client = FacebookClient.new(token: token)
           end
 
-          user = FacebookUser.new
           user.fb_accesstoken = token
           user.facebook_id = facebook_client.user_id
           user.email = facebook_client.email

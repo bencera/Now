@@ -7,6 +7,9 @@ class RetryFacebookCreate
 
     device_id = params[:deviceid]
     fb_accesstoken = params[:fb_accesstoken]
+    ig_accesstoken = params[:ig_accesstoken]
+    now_token = params[:nowtoken]
+
 
     device = APN::Device.where(:udid => device_id).first
     if device.nil? || !device.valid?
@@ -14,8 +17,20 @@ class RetryFacebookCreate
     end
     
     return_hash = {}
-    fb_user = FacebookUser.find_or_create_by_facebook_token(fb_accesstoken, :return_hash => return_hash)
+    if fb_accesstoken
+      fb_user = FacebookUser.find_or_create_by_facebook_token(fb_accesstoken, 
+                                                              :nowtoken => now_token, 
+                                                              :udid => device_id,
+                                                              :return_hash => return_hash)
 
+    end
+
+    if ig_accesstoken
+      fb_user = FacebookUser.find_or_create_by_ig_token(ig_accesstoken, 
+                                                        :nowtoken => now_token, 
+                                                        :udid => device_id,
+                                                        :return_hash => return_hash)
+    end
 
     retry_attempt = params[:retry_attempt] || 0
     params[:retry_attempt] = retry_attempt + 1

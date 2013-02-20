@@ -78,7 +78,10 @@ class NowUsersController < ApplicationController
       
 
       if(!params[:fb_accesstoken].blank?)
-        fb_user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken], :udid => params[:udid], :return_hash => return_hash)
+        fb_user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken], 
+                                                                :udid => params[:udid], 
+                                                                :nowtoken => params[:nowtoken], 
+                                                                :return_hash => return_hash)
         if fb_user.nil?
 
 
@@ -87,21 +90,51 @@ class NowUsersController < ApplicationController
           Resque.enqueue(LogBadFbCreate, params)
           
           if params[:return_hash][:errors]["code"] == 190
-            Resque.enqueue_in(1.minute, RetryFacebookCreate, {:deviceid => params[:deviceid], :fb_accesstoken => params[:fb_accesstoken]})
+            Resque.enqueue_in(1.minute, RetryFacebookCreate, {:deviceid => params[:deviceid],
+                                                              :nowtoken => params[:nowtoken],
+                                                              :fb_accesstoken => params[:fb_accesstoken],
+                                                              :ig_accesstoken => params[:ig_accesstoken]})
           end
-          
-          return render(:text => "433 Facebook Access Failed errors: #{return_hash[:errors]}", :status => 433) 
+
+          if return_hash[:existing_user]
+            fb_user = return_hash[:existing_user]
+          else 
+            return render(:text => "433 Facebook Access Failed errors: #{return_hash[:errors]}", :status => 433) 
+          end
         end
 
+        return_hash.delete(:existing_user)
         return_hash[:now_token] = fb_user.now_token
         return_hash[:user_id] = fb_user.now_id
       end
 
       if(!params[:ig_accesstoken].blank?)
-        ig_user = FacebookUser.find_or_created_by_ig_token(params[:ig_accesstoken], :udid => params[:udid], :return_hash => return_hash)
+        fb_user = FacebookUser.find_or_created_by_ig_token(params[:ig_accesstoken], 
+                                                           :udid => params[:udid], 
+                                                           :nowtoken => params[:nowtoken], 
+                                                           :return_hash => return_hash)
+
+        if fb_user.nil?
+          params[:breakpoint] = 5
+          params[:return_hash] = return_hash
+          Resque.enqueue(LogBadFbCreate, params)
+
+          Resque.enqueue_in(1.minute, RetryFacebookCreate, {:deviceid => params[:deviceid], 
+                                                              :nowtoken => params[:nowtoken],
+                                                              :fb_accesstoken => params[:fb_accesstoken],
+                                                              :ig_accesstoken => params[:ig_accesstoken]})
+
+               
+          if return_hash[:existing_user]
+            fb_user = return_hash[:existing_user]
+          else 
+            return render(:text => "433 Instagram Access Failed errors: #{return_hash[:errors]}", :status => 433) 
+          end
+        end
 
         #put some error checking stuff here later
 
+        return_hash.delete(:existing_user)
         return_hash[:now_token] = fb_user.now_token
         return_hash[:user_id] = fb_user.now_id
       end
