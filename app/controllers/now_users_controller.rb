@@ -101,6 +101,9 @@ class NowUsersController < ApplicationController
         ig_user = FacebookUser.find_or_created_by_ig_token(params[:ig_accesstoken], :udid => params[:udid], :return_hash => return_hash)
 
         #put some error checking stuff here later
+
+        return_hash[:now_token] = fb_user.now_token
+        return_hash[:user_id] = fb_user.now_id
       end
 
       if fb_user.nil? && params[:nowtoken]

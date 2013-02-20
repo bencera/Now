@@ -23,7 +23,7 @@ class Facebookunlike
     existing_like = LikeLog.where("event_id = ? AND photo_id is NULL AND unliked = ? AND facebook_user_id = ?", 
                                   event.id.to_s, false, fb_user.id.to_s).first
 
-    existing_like.unlike = true
+    existing_like.unliked = true
     existing_like.save!
 
   end

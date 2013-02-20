@@ -23,6 +23,7 @@ class NowProfile
   field :notify_local, type: Boolean, default: true
 
   field :share_to_fb_timeline, type: Boolean, default: false
+  field :pull_ig_friend_events, type: Boolean, default: false
 
   #sharing settings -- don't know what this will look like yet
   #field :facebook
