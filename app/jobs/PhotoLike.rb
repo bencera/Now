@@ -12,8 +12,8 @@ class PhotoLike
 
     if params[:unlike]
       photo.inc(:likes,-1)
-      existing_like_log = LikeLog.where("photo_id = ? AND facebook_user_id = ?", photo_id, params[:user_id]).first
-      existing_like_log.unlike = true
+      existing_like_log = LikeLog.where("photo_id = ? AND facebook_user_id = ? AND unliked = ?", photo_id, params[:user_id], false).first
+      existing_like_log.unliked = true
       existing_like_log.save!
     else
       photo.inc(:likes, 1)
