@@ -19,7 +19,7 @@ child @other_photos => :photos do
     u.user.ig_details
   end
   node (:liked) do |u|
-    false
+    false  
   end
 end
 child :venue do

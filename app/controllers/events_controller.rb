@@ -19,7 +19,8 @@ class EventsController < ApplicationController
     #this is to put the event's photo card at creation at the top
     begin
     if params[:nowtoken]
-      @user_id = FacebookUser.find_by_nowtoken(params[:nowtoken]).facebook_id
+      @requesting_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+      @user_id = @requesting_user.facebook_id
     end
     rescue
     end

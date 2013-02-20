@@ -178,6 +178,10 @@ class FacebookUser
     Resque.enqueue(PhotoLike, photo_id.to_s, params)
   end
 
+  def likes_photo?(photo_id)
+    $redis.sismember("photo_likes:#{photo_id}", self.now_id)
+  end
+
   def unlike_photo(photo_id, event_id, fb_access_token, session_token)
     $redis.srem("photo_likes:#{photo_id}", self.now_id)
     params = {:fb_access_token => fb_access_token, 
