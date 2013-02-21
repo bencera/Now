@@ -1029,7 +1029,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def make_reply_array(photos_orig)
     replies = []
-    photos = photos_orig.dup
+    liked_photos = photos_orig.keep_if {|photo| photo.now_likes > 0}.sort {|photo| photo.now_likes}.reverse
+    photos = (photos_orig - liked_photos).sort {|photo| photo.time_taken}
+
 
     max_rand = (photos.count > 20) ? 5 : 2
 
@@ -1039,22 +1041,31 @@ SCORE_HALF_LIFE       = 7.day.to_f
     first_card = true
     after_reply = false
 
-    if self.photo_card.any? && !(self.facebook_user && self.facebook_user.now_id == "0")
-      #need to make the fake first reply
-      initial_reply = make_fake_reply(self.photo_card, self.description, self.start_time, false)
-      replies << initial_reply
-      remove_ids.push(*self.photo_card)
-      after_reply = true
-      first_card = false
-    end
+#    if self.photo_card.any? && !(self.facebook_user && self.facebook_user.now_id == "0")
+#      #need to make the fake first reply
+#      initial_reply = make_fake_reply(self.photo_card, self.description, self.start_time, false)
+#      replies << initial_reply
+#      remove_ids.push(*self.photo_card)
+#      after_reply = true
+#      first_card = false
+#    end
 
     checkins.each do |checkin|
       remove_ids.push(*checkin.photo_card) if checkin.new_photos
     end
 
-    photos.delete_if {|photo| remove_ids.include? photo.id}
+    photos = photos.delete_if {|photo| remove_ids.include? photo.id}
+
+    while liked_photos.any?
+      description_text = first_card ? self.description : ""
+      photo = liked_photos.shift
+      replies << make_fake_reply([photo.id], description_text, photo.time_taken)
+      first_card = false
+    end
     
     while photos.any?
+      Rails.logger.info("DEBUGGGGGG #{photos.count}")
+
       timestamp = photos.first.time_taken < self.start_time ? self.start_time : photos.first.time_taken
 
       num_photos = rand(max_rand) + 1
@@ -1067,6 +1078,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
         new_photo_card << photos.shift.id
       end
       
+      Rails.logger.info("DEBUG new_photo_card #{new_photo_card.count}")
       if new_photo_card.any?
 
         description_text = first_card ? self.description : (after_reply ? "I found more photos" : "")

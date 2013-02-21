@@ -14,7 +14,8 @@ child @checkins =>:reposts do
 end
 
 child @other_photos => :photos do
-  attributes :url, :caption, :time_taken, :ig_media_id, :now_likes
+    #should probably just make this inherit from photo/showless
+  attributes :id, :url, :caption, :time_taken, :ig_media_id, :now_likes
   node (:user_details) do |u|
     u.user.ig_details
   end

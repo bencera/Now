@@ -10,6 +10,9 @@ class EventsController < ApplicationController
     params[:version] ||= 0
     if params[:version].to_i > 1
       photos = @event.photos.order_by([[:time_taken, :asc]]).entries
+      #DEBUG -- adding likes to photos for testing:
+      photos.each {|photo| photo.now_likes = [*0..5].sample}
+      #END DEBUG
       @checkins = @event.make_reply_array(photos)
       @other_photos = EventsHelper.build_photo_list(@event, @checkins, photos, :version => params[:version].to_i)
     end
