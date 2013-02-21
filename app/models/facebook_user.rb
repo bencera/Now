@@ -192,28 +192,28 @@ class FacebookUser
     Resque.enqueue(Facebookunlike, access_token, event_shortid, self.id.to_s)
   end
 
-  def like_photo(photo_id, event_id, fb_access_token, session_token)
-    $redis.sadd("photo_likes:#{photo_id}", self.now_id)
+  def like_photo(photo, event_id, fb_access_token, session_token)
+    $redis.sadd("photo_likes:#{photo.id.to_s}", self.now_id)
     params = {:fb_access_token => fb_access_token, 
               :session_token => session_token, 
               :user_id => self.id.to_s, 
               :event_id => event_id.to_s, 
               :like_time => Time.now.to_i}.inspect
-    Resque.enqueue(PhotoLike, photo_id.to_s, params)
+    Resque.enqueue(PhotoLike, photo.id.to_s, params)
   end
 
   def likes_photo?(photo_id)
     $redis.sismember("photo_likes:#{photo_id}", self.now_id)
   end
 
-  def unlike_photo(photo_id, event_id, fb_access_token, session_token)
-    $redis.srem("photo_likes:#{photo_id}", self.now_id)
+  def unlike_photo(photo, event_id, fb_access_token, session_token)
+    $redis.srem("photo_likes:#{photo.id.to_s}", self.now_id)
     params = {:fb_access_token => fb_access_token, 
               :session_token => session_token, 
               :user_id => self.id.to_s, 
               :event_id => event_id.to_s, 
               :unlike => true}.inspect
-    Resque.enqueue(PhotoLike, photo_id.to_s, params)
+    Resque.enqueue(PhotoLike, photo.id.to_s, params)
   end
 
   def is_white_listed

@@ -1,5 +1,21 @@
 # -*- encoding : utf-8 -*-
 class PhotosController < ApplicationController
+
+
+  def like
+    photo = Photo.first(:conditions => {:id => params[:id]})
+    fb_user = FacebookUser.first(:conditions => {:now_token => params[:nowtoken]})
+    
+    if fb_user && photo
+      if params[:unlike]
+        fb_user.unlike_photo(photo, params[:fb_accesstoken], cookies[:now_session])
+      else
+        fb_user.like_photo(photo, params[:fb_accesstoken], cookies[:now_session])
+      end
+    end
+
+    render :status => :ok
+  end
   
   #deprecated
   def index
