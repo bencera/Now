@@ -73,8 +73,8 @@ class FacebookUser
       user = FacebookUser.where(:ig_accesstoken => token).first
 
       if !user
-        if params[:nowtoken]
-          user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+        if options[:nowtoken]
+          user = FacebookUser.find_by_nowtoken(options[:nowtoken])
           if user.nil?
             user = FacebookUser.new
           end
@@ -126,8 +126,8 @@ class FacebookUser
           user.fb_accesstoken = token
         else
           
-          if params[:nowtoken]
-            user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+          if options[:nowtoken]
+            user = FacebookUser.find_by_nowtoken(options[:nowtoken])
             if user.nil?
               user = FacebookUser.new
             end
