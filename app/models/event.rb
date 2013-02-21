@@ -1029,8 +1029,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def make_reply_array(photos_orig)
     replies = []
-    liked_photos = photos_orig.keep_if {|photo| photo.now_likes > 0}.sort {|photo| photo.now_likes}.reverse
-    photos = (photos_orig - liked_photos).sort {|photo| photo.time_taken}
+    liked_photos = photos_orig.keep_if {|photo| photo.now_likes > 0}.sort_by {|photo| photo.now_likes.to_i}.reverse
+    photos = (photos_orig - liked_photos).sort_by {|photo| photo.time_taken}
 
 
     max_rand = (photos.count > 20) ? 5 : 2
@@ -1050,12 +1050,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
 #      first_card = false
 #    end
 
-    checkins.each do |checkin|
-      remove_ids.push(*checkin.photo_card) if checkin.new_photos
-    end
-
-    photos = photos.delete_if {|photo| remove_ids.include? photo.id}
-
     while liked_photos.any?
       description_text = first_card ? self.description : ""
       photo = liked_photos.shift
@@ -1063,44 +1057,37 @@ SCORE_HALF_LIFE       = 7.day.to_f
       first_card = false
     end
     
-    while photos.any?
-      Rails.logger.info("DEBUGGGGGG #{photos.count}")
+    checkins.each do |checkin|
+      remove_ids.push(*checkin.photo_card) if checkin.new_photos
+      replies << checkin
+      first_card = false
+      after_reply = true
+    end
 
-      timestamp = photos.first.time_taken < self.start_time ? self.start_time : photos.first.time_taken
+    photos = photos.delete_if {|photo| remove_ids.include? photo.id}
+    
+    while photos.any?
+
+      timestamp = photos.last.time_taken < self.start_time ? self.start_time : photos.last.time_taken
 
       num_photos = rand(max_rand) + 1
 
-      next_checkin = checkins.first.nil? ? photos.last.time_taken : checkins.first.created_at.to_i
-
       new_photo_card = []
 
-      while photos.any? && photos.first.time_taken <= next_checkin && new_photo_card.count < num_photos
-        new_photo_card << photos.shift.id
+      while photos.any? && new_photo_card.count < num_photos
+        photo = photos.shift
+        new_photo_card << photo.id
       end
-      
-      Rails.logger.info("DEBUG new_photo_card #{new_photo_card.count}")
+ 
       if new_photo_card.any?
-
-        description_text = first_card ? self.description : (after_reply ? "I found more photos" : "")
-
+        description_text = first_card ? self.description : (after_reply ? "More photos" : "")
         replies << make_fake_reply(new_photo_card, description_text, timestamp)
         after_reply = false
-      else
-        if checkins.count == 0
-          Rails.logger.error("MAKE_REPLY_ARRAY: somehow we didn't add photos -- something messed up.")
-          return replies
-        end
-        replies << checkins.shift
-        after_reply = true
       end
       first_card = false
     end
 
     #in case there are more replies after last photo
-    while checkins.any?
-      replies << checkins.shift
-    end
-
     return replies
   end
 
