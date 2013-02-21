@@ -114,7 +114,7 @@ class NowUsersController < ApplicationController
           params[:nowtoken] = fb_user.nowtoken
         end
         Rails.logger("creating ig user")
-        fb_user = FacebookUser.find_or_created_by_ig_token(params[:ig_accesstoken], 
+        fb_user = FacebookUser.find_or_create_by_ig_token(params[:ig_accesstoken], 
                                                            :udid => params[:udid], 
                                                            :nowtoken => params[:nowtoken], 
                                                            :return_hash => return_hash)
