@@ -108,10 +108,12 @@ class NowUsersController < ApplicationController
         return_hash[:user_id] = fb_user.now_id
       end
 
+      Rails.logger.info("ig access token = #{params[:ig_accesstoken]} and nowtoken = #{params[:nowtoken]}") if params[:ig_accesstoken]
       if(!params[:ig_accesstoken].blank?)
         if fb_user
           params[:nowtoken] = fb_user.nowtoken
         end
+        Rails.logger("creating ig user")
         fb_user = FacebookUser.find_or_created_by_ig_token(params[:ig_accesstoken], 
                                                            :udid => params[:udid], 
                                                            :nowtoken => params[:nowtoken], 
@@ -137,6 +139,7 @@ class NowUsersController < ApplicationController
 
         #put some error checking stuff here later
 
+        Rails.logger("creating ig user #{return_hash}")
         return_hash.delete(:existing_user)
         return_hash[:now_token] = fb_user.now_token
         return_hash[:user_id] = fb_user.now_id
