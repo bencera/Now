@@ -1029,8 +1029,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def make_reply_array(photos_orig)
     replies = []
-    liked_photos = photos_orig.keep_if {|photo| photo.now_likes > 0}.sort_by {|photo| photo.now_likes.to_i}.reverse
-    photos = (photos_orig - liked_photos).sort_by {|photo| photo.time_taken}
+    liked_photos = photos_orig.clone.keep_if {|photo| photo.now_likes > 0}.sort_by {|photo| photo.now_likes.to_i}.reverse
+    photos = (photos_orig.clone - liked_photos).sort_by {|photo| photo.time_taken}
 
 
     max_rand = (photos.count > 20) ? 5 : 2

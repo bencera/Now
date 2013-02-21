@@ -14,7 +14,10 @@ class EventsController < ApplicationController
       photos.each {|photo| photo.now_likes = [*0..5].sample}
       #END DEBUG
       @checkins = @event.make_reply_array(photos)
+      Rails.logger.info("Created #{@checkins.count if @checkins} replies")
       @other_photos = EventsHelper.build_photo_list(@event, @checkins, photos, :version => params[:version].to_i)
+
+      @checkins.each {|ci| Rails.logger.info("#{ci.checkin_card_list.count} photos"); ci.checkin_card_list.each {|photo| Rails.logger.info("#{photo.now_likes} likes")}}
     end
 
     @other_photos ||= @event.photos
