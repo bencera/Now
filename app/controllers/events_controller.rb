@@ -11,7 +11,7 @@ class EventsController < ApplicationController
     if params[:version].to_i > 1
       photos = @event.photos.order_by([[:time_taken, :asc]]).entries
       #DEBUG -- adding likes to photos for testing:
-      photos.each {|photo| photo.now_likes = [*0..5].sample}
+      photos.each {|photo| photo.now_likes = [*0..3].sample}
       #END DEBUG
       @checkins = @event.make_reply_array(photos)
       Rails.logger.info("Created #{@checkins.count if @checkins} replies")
