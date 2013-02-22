@@ -73,6 +73,12 @@ class PhotoLike
         end
       end
     end
+
+    event_photos = event.photos.where(:now_likes.gt => 0).order_by([[:now_likes, :desc]]).entries.map {|photo| photo.id}
+    if event_photos.count > 0
+      event.photo_card = event_photos
+      event.save!
+    end
   end
    
 end
