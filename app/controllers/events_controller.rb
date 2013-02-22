@@ -35,6 +35,8 @@ class EventsController < ApplicationController
     click_params[:udid] = params[:device_id] if params[:deviceid]
     click_params[:session_token] = cookies[:now_session]
     @event.add_click(click_params)
+
+    @event.anonymous = true
   end
   
   def showless

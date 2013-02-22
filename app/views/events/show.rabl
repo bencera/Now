@@ -1,8 +1,12 @@
 object @event => "event"
 attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :venue_category, :n_photos, :start_time, :keywords, :city_fullname, :main_photos, :status
 
-node(:personalized) do
-  0
+node(:personalized) do |u|
+  if u.anonymous
+    -1
+  else
+    0
+  end
 end
 
 node(:n_reactions) do |u|
@@ -47,7 +51,11 @@ node(:now_name) do |u|
 end
 
 node(:now_id) do |u|
-  u.get_fb_user_id unless  u.anonymous 
+  if u.anonymous
+    "-1"
+  else
+    u.get_fb_user_id unless  u.anonymous 
+  end
 end
 
 node(:profile_photo) do |u|

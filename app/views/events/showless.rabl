@@ -42,7 +42,7 @@ end
 
 node(:now_id) do |u|
   if u.anonymous
-    -1
+    "-1"
   else
     u.get_fb_user_id
   end
