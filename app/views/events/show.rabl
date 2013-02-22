@@ -3,7 +3,7 @@ attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :venu
 
 node(:personalized) do |u|
   if u.anonymous
-    1
+    -1
   else
     0
   end
@@ -51,11 +51,7 @@ node(:now_name) do |u|
 end
 
 node(:now_id) do |u|
-  if u.anonymous
-    "-1"
-  else
-    u.get_fb_user_id unless  u.anonymous 
-  end
+  u.get_fb_user_id unless  u.anonymous 
 end
 
 node(:profile_photo) do |u|
