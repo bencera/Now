@@ -6,6 +6,10 @@ node (:user_details) do |u|
 end
 
 node (:liked) do |u|
-  @requesting_user.likes_photo?(u.id.to_s) if @requesting_user
+  if @requesting_user
+    @requesting_user.likes_photo?(u.id.to_s) 
+  else
+    false
+  end
 end
 
