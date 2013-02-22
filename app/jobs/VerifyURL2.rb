@@ -5,24 +5,33 @@ class VerifyURL2
 
     repair_photos = []
 
-    event = Event.find(event_id)
-     
-    if options[:photo_card]
-      unverified = Photo.find(event.get_preview_photo_ids)
-    else
-      unverified = event.photos.where(:time_taken.gt => since_time)
-    end
-    unverified.each do |photo|
-      response = HTTParty.get(photo.url[0])
-      if response.code == 403 && response.message == "Forbidden"
-        repair_photos << [photo.id, nil]
-        photo.destroy
-        $redis.incr(immediate ? "MAINT_dup_events_imm" : "MAINT_dup_events_late")
-        puts "destroyed photo #{photo.id}"
+    begin
+      event = Event.find(event_id)
+       
+      if options[:photo_card]
+        unverified = Photo.find(event.get_preview_photo_ids)
+      else
+        unverified = event.photos.where(:time_taken.gt => since_time)
       end
-    end  
+      unverified.each do |photo|
+        response = HTTParty.get(photo.url[0])
+        if response.code == 403 && response.message == "Forbidden"
+          repair_photos << [photo.id, nil]
+          photo.destroy
+          $redis.incr(immediate ? "MAINT_dup_events_imm" : "MAINT_dup_events_late")
+          puts "destroyed photo #{photo.id}"
+        end
+      end  
 
-    event.repair_photo_cards(repair_photos) if repair_photos.any?
+      event.repair_photo_cards(repair_photos) if repair_photos.any?
+
+    rescue
+      $redis.zrem("VERIFY_QUEUE", event_id)
+      if !options[:photo_card]
+        $redis.zrem("VERIFY_OPENED_QUEUE", event_id)
+      end
+      raise
+    end
 
     $redis.zrem("VERIFY_QUEUE", event_id)
     event.last_photo_card_verify = Time.now
