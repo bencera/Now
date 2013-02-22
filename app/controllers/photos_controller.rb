@@ -15,7 +15,7 @@ class PhotosController < ApplicationController
       end
     end
 
-    render :status => :ok
+    render :status => :ok, :text => "OK"
   end
   
   #deprecated
