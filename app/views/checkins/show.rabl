@@ -7,7 +7,7 @@ end
 
 node(:now_id) do |u|
   #u.get_fb_user_id
-  -1
+  "-1"
 end
 
 node(:profile_photo) do |u|
