@@ -184,6 +184,10 @@ class EventsController < ApplicationController
       #fails silently for now -- not good, but we can't push to prod otherwise
     end
 
+    #for debugging the -1 thing for personalized events
+    @events.first.anonymous = true
+    @events.first.facebook_user = FacebookUser.where(:now_id => "2").first
+    ####
     return @events
   end
 
