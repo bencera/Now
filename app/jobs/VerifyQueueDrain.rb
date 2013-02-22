@@ -12,7 +12,7 @@ class VerifyQueueDrain
     fixed = 0
 
     events.each do |event_id|
-      event = Event.find(event_id)
+      event = Event.first(:conditions => {:id => event_id})
       if event.nil?
         $redis.zrem("VERIFY_QUEUE", event_id)
         next
