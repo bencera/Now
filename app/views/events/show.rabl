@@ -3,7 +3,7 @@ attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :venu
 
 node(:personalized) do |u|
   if u.anonymous
-    -1
+    1
   else
     0
   end
