@@ -102,6 +102,7 @@ class FacebookUser
           user.ig_username = user_info.data.username
           user.ig_user_id = user_info.data.id
           user.udid = options[:udid] if options[:udid]
+          user.now_profile.personalize_ig_feed = options[:personalize] 
           
           unless existing_user
             user.now_profile ||= NowProfile.new
