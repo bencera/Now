@@ -13,7 +13,10 @@ class VerifyQueueDrain
 
     events.each do |event_id|
       event = Event.find(event_id)
-      next if event.last_photo_card_verify && event.last_photo_card_verify > 20.minutes.ago
+      if event.nil?
+        $redis.zrem("VERIFY_QUEUE", event_id)
+      end
+      next if  event.nil? || event.last_photo_card_verify && event.last_photo_card_verify > 20.minutes.ago
 
       VerifyURL2.perform(event_id, 0, false, :photo_card => true)
       fixed += 1
@@ -28,8 +31,11 @@ class VerifyQueueDrain
     fixed = 0
 
     events.each do |event_id|
-      event = Event.find(event_id)
-      next if event.last_verify && event.last_verify > 20.minutes.ago
+      event = Event.first(:conditions => {:id => event_id})
+      if event.nil?
+        $redis.zrem("VERIFY_OPENED_QUEUE", event_id)
+      end
+      next if event.nil? || event.last_verify && event.last_verify > 20.minutes.ago
 
       VerifyURL2.perform(event_id, 0, false)
       fixed += 1
