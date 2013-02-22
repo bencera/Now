@@ -24,7 +24,7 @@ class PhotoLike
     if params[:unlike]
 
       unless params[:retries] > 0
-        photo.inc(:likes,-1) 
+        photo.inc(:now_likes,-1) 
         existing_like_log = LikeLog.where("photo_id = ? AND facebook_user_id = ? AND unliked = ?", photo_id, params[:user_id], false).first
         if existing_like_log.nil?
           sleep 1
@@ -51,7 +51,7 @@ class PhotoLike
     else
 
       unless params[:retries] > 0
-        photo.inc(:likes, 1)       
+        photo.inc(:now_likes, 1)       
         like_log = LikeLog.new
         like_log.photo_id = photo_id
         like_log.event_id = params[:event_id]
