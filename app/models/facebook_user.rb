@@ -203,12 +203,13 @@ class FacebookUser
     Resque.enqueue(Facebookunlike, access_token, event_shortid, self.id.to_s)
   end
 
-  def like_photo(photo, event_id, fb_access_token, session_token)
+  def like_photo(photo, event_id, shortid fb_access_token, session_token)
     $redis.sadd("photo_likes:#{photo.id.to_s}", self.now_id)
     params = {:fb_access_token => fb_access_token, 
               :session_token => session_token, 
               :user_id => self.id.to_s, 
               :event_id => event_id.to_s, 
+              :shortid => shortid,
               :like_time => Time.now.to_i}.inspect
     Resque.enqueue(PhotoLike, photo.id.to_s, params)
   end
@@ -217,12 +218,13 @@ class FacebookUser
     $redis.sismember("photo_likes:#{photo_id}", self.now_id)
   end
 
-  def unlike_photo(photo, event_id, fb_access_token, session_token)
+  def unlike_photo(photo, event_id, shortid, fb_access_token, session_token)
     $redis.srem("photo_likes:#{photo.id.to_s}", self.now_id)
     params = {:fb_access_token => fb_access_token, 
               :session_token => session_token, 
               :user_id => self.id.to_s, 
-              :event_id => event_id.to_s, 
+              :event_id => event_id.to_s,
+              :shortid => shortid,
               :unlike => true}.inspect
     Resque.enqueue(PhotoLike, photo.id.to_s, params)
   end

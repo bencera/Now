@@ -8,7 +8,16 @@ class PhotoLike
     photo = Photo.find(photo_id)
     facebook_user = FacebookUser.find(params[:user_id])
     session_token = params[:session_token]
-    event = Event.find(params[:event_id])
+    short_id = params[:shortid]
+    event_id = params[:event_id]
+
+    if event_id
+      event = Event.find(params[:event_id])
+    elsif short_id
+      event = Event.where(:shortid => shortid).first
+    else
+      event = photo.events.first
+    end
           
     params[:retries] ||= 0
 
