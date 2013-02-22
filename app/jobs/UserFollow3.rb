@@ -73,7 +73,7 @@ class UserFollow3
   end
 
   def self.users_to_update
-    FacebookUser.where(:last_ig_update.lt => 1.hour.ago.to_i, :ig_accesstoken.ne => nil).entries
+    FacebookUser.where(:last_ig_update.lt => 15.minutes.ago.to_i, :ig_accesstoken.ne => nil).entries
   end
 
   def self.get_ignores(options={})
