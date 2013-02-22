@@ -72,11 +72,15 @@ class FacebookUser
     def find_or_create_by_ig_token(token, options={})
       user = FacebookUser.where(:ig_accesstoken => token).first
 
+      existing_user = false
+
       if !user
         if options[:nowtoken]
           user = FacebookUser.find_by_nowtoken(options[:nowtoken])
           if user.nil?
             user = FacebookUser.new
+          else
+            existing_user = true
           end
         else
           user = FacebookUser.new
@@ -96,12 +100,14 @@ class FacebookUser
           user.ig_user_id = user_info.data.id
           user.udid = options[:udid] if options[:udid]
           
-          user.now_profile ||= NowProfile.new
-          fullname = user_info.data.full_name
-          user.now_profile.name = fullname
-          user.now_profile.first_name = fullname.split(" ").first
-          user.now_profile.last_name = fullname.split(" ")[1..-1].join(" ")
-          user.now_profile.profile_photo_url = user_info.data.profile_picture
+          unless existing_user
+            user.now_profile ||= NowProfile.new
+            fullname = user_info.data.full_name
+            user.now_profile.name = fullname 
+            user.now_profile.first_name = fullname.split(" ").first
+            user.now_profile.last_name = fullname.split(" ")[1..-1].join(" ")
+            user.now_profile.profile_photo_url = user_info.data.profile_picture
+          end
 
           user.save!
           
@@ -130,6 +136,8 @@ class FacebookUser
             user = FacebookUser.find_by_nowtoken(options[:nowtoken])
             if user.nil?
               user = FacebookUser.new
+            else
+              existing_user = true
             end
           else
             user = FacebookUser.new
