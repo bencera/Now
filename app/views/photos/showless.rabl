@@ -6,7 +6,6 @@ node (:user_details) do |u|
 end
 
 node (:liked) do |u|
-#  @requesting_user.likes_photo?(u.id.to_s) if @requesting_user
-  u.now_likes > 0 ? [true,false].sample : false
+  @requesting_user.likes_photo?(u.id.to_s) if @requesting_user
 end
 

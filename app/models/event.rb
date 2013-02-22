@@ -1070,8 +1070,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
       timestamp = photos.last.time_taken < self.start_time ? self.start_time : photos.last.time_taken
 
-#      num_photos = rand(max_rand) + 1
-      num_photos = [3,4,5].sample
+      num_photos = rand(max_rand) + 1
+#      num_photos = [3,4,5].sample
 
       new_photo_card = []
 

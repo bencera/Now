@@ -1,6 +1,10 @@
 object @event => "event"
 attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :venue_category, :n_photos, :start_time, :keywords, :city_fullname, :main_photos, :status
 
+node(:personalized) do
+  0
+end
+
 node(:n_reactions) do |u|
   u.n_reactions || 0
 end
@@ -20,7 +24,7 @@ child @other_photos => :photos do
     u.user.ig_details
   end
   node (:liked) do |u|
-    false  
+    @requesting_user.likes_photo?(u.id.to_s) if @requesting_user
   end
 end
 child :venue do

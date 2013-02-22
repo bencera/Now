@@ -10,6 +10,10 @@ node(:fake) do |u|
 
 end
 
+node(:personalized) do
+  0
+end
+
 node(:n_reactions) do |u|
   u.n_reactions || 0
 end
