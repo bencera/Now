@@ -15,14 +15,14 @@ class UserFollow3
     ignore_venues = []
 
     get_ignores(:ignore_media => ignore_media, :ignore_venues => ignore_venues)
-    
-    #pull all photos since last update
+   
+    updates = 0
 
     users.each do |ig_user|
       token = ig_user.ig_accesstoken
       client = InstagramWrapper.get_client(:access_token => token)
 
-      last_pull = $redis.hget("LAST_FEED_PULL", ig_user_id).to_i
+      last_pull = $redis.hget("LAST_FEED_PULL", ig_user.ig_user_id).to_i
       begin
         media_list = client.feed_since(last_pull)
         current_pull = media_list.first.created_time
@@ -30,22 +30,26 @@ class UserFollow3
 
         media_list.each do |media|
           
-          next if media.location.nil? || media.location.id.nil? || ignore_media.include?(media.id.to_s) || ignore_venues.include(media.location.id.to_s)
+          next if media.location.nil? || media.location.id.nil? || ignore_media.include?(media.id.to_s) || ignore_venues.include?(media.location.id.to_s)
           
+
           venue_ig_id = media.location.id.to_s
           media_id = media.id.to_s
+
+          Rails.logger.info("Media id: #{media_id} venue_ig_id #{venue_ig_id}")
+
 
           ignore_venues << venue_ig_id
           ignore_media << media_id
 
           photo = add_photo(media)
-          venue = photo.venue
+          venue = photo.venue if photo #some photos have locations that dont correspond to fsq -- skip for now
 
           next if photo.nil? || venue.nil?
 
           venue_watch = VenueWatch.new(:venue_id => venue.id.to_s,
-                                       :start_time => media.created_time.to_i,
-                                       :end_time => (media.created_time.to_i + 3.hours.to_i),
+                                       :start_time => Time.at(media.created_time.to_i),
+                                       :end_time => Time.at(media.created_time.to_i + 3.hours.to_i),
                                        :venue_ig_id => venue_ig_id,
                                        :user_now_id => ig_user.now_id,
                                        :trigger_media_id => photo.id.to_s,
@@ -55,16 +59,21 @@ class UserFollow3
           venue_watch.save!
         end
         
-        $redis.hset("LAST_FEED_PULL", ig_user_id, current_pull)
+        $redis.hset("LAST_FEED_PULL", ig_user.ig_user_id, current_pull)
+
+        ig_user.last_ig_update = Time.now.to_i
+        updates += 1
+        break if updates > max_updates
 
       rescue
+        raise
       end
 
     end
   end
 
   def self.users_to_update
-    FacebookUser.where(:last_ig_update.lt => 1.hour.ago, :ig_accesstoken.ne => nil).entries
+    FacebookUser.where(:last_ig_update.lt => 1.hour.ago.to_i, :ig_accesstoken.ne => nil).entries
   end
 
   def self.get_ignores(options={})
