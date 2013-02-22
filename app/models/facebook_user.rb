@@ -19,6 +19,9 @@ class FacebookUser
   field :fb_details, type: Hash
   field :whitelist_cities, type: Array, default: []
 
+  #if the user gets ig personalizations
+  field :last_ig_update
+
   field :super_user, type: Boolean, default: false
   field :admin_user, type: Boolean, default: false
 

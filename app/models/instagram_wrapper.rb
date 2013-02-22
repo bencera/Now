@@ -16,6 +16,30 @@ class InstagramWrapper
     end
   end
 
+  def feed_since(last_pull=0, options={})
+    response = self.feed
+    media_list = response.data
+
+    done_pulling = false
+
+    while !done_pulling && response && response.pagination && response.pagination.next_url && 
+      (response = self.pull_pagination(response.pagination.next_url))
+
+      break if !response || !response.data || response.data.empty? 
+
+      done_pulling = true
+      response.data.each do |media|
+        if media.created_time.to_i > last_pull
+          done_pulling = false
+          media_list << media
+        end
+      end
+    end
+
+    return media_list
+  
+  end
+
   def user_media(user_id, options={})
     url = "https://api.instagram.com/v1/users/#{user_id}/media/recent/?access_token=#{@access_token}"
     url += "&min_timestamp=#{options[:min_timestamp]}" if options[:min_timestamp]

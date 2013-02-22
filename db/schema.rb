@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130220155452) do
+ActiveRecord::Schema.define(:version => 20130222153743) do
 
   create_table "archive_events", :force => true do |t|
     t.string   "coordinates"
@@ -178,6 +178,27 @@ ActiveRecord::Schema.define(:version => 20130220155452) do
     t.string   "facebook_user_id"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
+  end
+
+  create_table "venue_watches", :force => true do |t|
+    t.string   "venue_id"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.string   "venue_ig_id"
+    t.string   "user_now_id"
+    t.string   "trigger_media_id"
+    t.string   "trigger_media_ig_id"
+    t.string   "trigger_media_user_id"
+    t.boolean  "blacklist"
+    t.boolean  "greylist"
+    t.boolean  "event_created"
+    t.string   "event_id"
+    t.integer  "event_creation_id"
+    t.integer  "activity_score"
+    t.boolean  "ignore"
+    t.datetime "last_examination"
+    t.datetime "created_at",            :null => false
+    t.datetime "updated_at",            :null => false
   end
 
 end

@@ -1,0 +1,62 @@
+# == Schema Information
+#
+# Table name: venue_watches
+#
+#  id                    :integer         not null, primary key
+#  venue_id              :string(255)
+#  start_time            :datetime
+#  end_time              :datetime
+#  venue_ig_id           :string(255)
+#  user_now_id           :string(255)
+#  trigger_media_id      :string(255)
+#  trigger_media_ig_id   :string(255)
+#  trigger_media_user_id :string(255)
+#  blacklist             :boolean
+#  greylist              :boolean
+#  event_created         :boolean
+#  event_id              :string(255)
+#  event_creation_id     :integer
+#  activity_score        :integer
+#  ignore                :boolean
+#  last_examination      :datetime
+#  created_at            :datetime        not null
+#  updated_at            :datetime        not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  venue_id: MyString
+  start_time: 2013-02-22 10:37:43
+  end_time: 2013-02-22 10:37:43
+  venue_ig_id: MyString
+  user_now_id: MyString
+  trigger_media_id: MyString
+  trigger_media_ig_id: MyString
+  trigger_media_user_id: MyString
+  blacklist: false
+  greylist: false
+  event_created: false
+  event_id: MyString
+  event_creation_id: 1
+  activity_score: 1
+  ignore: false
+  last_examination: 2013-02-22 10:37:43
+
+two:
+  venue_id: MyString
+  start_time: 2013-02-22 10:37:43
+  end_time: 2013-02-22 10:37:43
+  venue_ig_id: MyString
+  user_now_id: MyString
+  trigger_media_id: MyString
+  trigger_media_ig_id: MyString
+  trigger_media_user_id: MyString
+  blacklist: false
+  greylist: false
+  event_created: false
+  event_id: MyString
+  event_creation_id: 1
+  activity_score: 1
+  ignore: false
+  last_examination: 2013-02-22 10:37:43
