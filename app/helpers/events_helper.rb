@@ -277,7 +277,7 @@ module EventsHelper
 
     num_events = options[:num_events] || 20
 
-    event_query = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]})
+    event_query = Event.limit(100).where(:coordinates.within => {"$center" => [lon_lat, max_dist]})
     if options[:category]
       event_query = event_query.where(:category => options[:category])
     elsif options[:waiting]
@@ -287,7 +287,7 @@ module EventsHelper
     else
       event_query = event_query.where(:status.in => Event::TRENDED_OR_TRENDING)
     end
-    event_list = event_query.order_by([[:end_time, :desc]]).take(20).entries
+    event_list = event_query.order_by([[:end_time, :desc]]).entries
 
     venues = {}
     events = []
