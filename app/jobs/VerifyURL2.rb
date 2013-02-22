@@ -9,7 +9,6 @@ class VerifyURL2
     if !options[:photo_card]
       $redis.zrem("VERIFY_OPENED_QUEUE", event_id)
     end
-    raise
 
     event = Event.find(event_id)
      
