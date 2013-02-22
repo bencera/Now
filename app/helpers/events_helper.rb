@@ -287,7 +287,7 @@ module EventsHelper
     else
       event_query = event_query.where(:status.in => Event::TRENDED_OR_TRENDING)
     end
-    event_list = event_query.order_by([[:end_time, :desc]]).take(200).entries
+    event_list = event_query.order_by([[:end_time, :desc]]).take(20).entries
 
     venues = {}
     events = []
