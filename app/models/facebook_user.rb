@@ -203,7 +203,7 @@ class FacebookUser
     Resque.enqueue(Facebookunlike, access_token, event_shortid, self.id.to_s)
   end
 
-  def like_photo(photo, event_id, shortid fb_access_token, session_token)
+  def like_photo(photo, event_id, shortid, fb_access_token, session_token)
     $redis.sadd("photo_likes:#{photo.id.to_s}", self.now_id)
     params = {:fb_access_token => fb_access_token, 
               :session_token => session_token, 
