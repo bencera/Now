@@ -73,53 +73,49 @@ class FacebookUser
     end
 
     def find_or_create_by_ig_token(token, options={})
-      user = FacebookUser.where(:ig_accesstoken => token).first unless token.blank?
-
-      existing_user = false
+      user = FacebookUser.find_by_nowtoken(options[:nowtoken]) if options[:nowtoken]
 
       if !user
-        if options[:nowtoken]
-          user = FacebookUser.find_by_nowtoken(options[:nowtoken])
-          if user.nil?
-            user = FacebookUser.new
-          else
-            existing_user = true
-          end
-        else
+        user = FacebookUser.where(:ig_accesstoken => token).first unless token.blank?
+        if user.nil?
+          existing_user = false
           user = FacebookUser.new
+        else
+          existing_user = true
         end
-
-        begin
-          client = InstagramWrapper.get_client(:access_token => token)
-          user_info = client.user_info("self")
-        rescue
-          options[:return_hash][:existing_user] = user unless user.nil? || options[:return_hash].nil?
-          return nil 
-        end
-
-        if user_info
-          user.ig_accesstoken = token
-          user.ig_username = user_info.data.username
-          user.ig_user_id = user_info.data.id
-          user.udid = options[:udid] if options[:udid]
-           
-          unless existing_user
-            user.now_profile ||= NowProfile.new
-            fullname = user_info.data.full_name
-            user.now_profile.name = fullname 
-            user.now_profile.first_name = fullname.split(" ").first
-            user.now_profile.last_name = fullname.split(" ")[1..-1].join(" ")
-            user.now_profile.profile_photo_url = user_info.data.profile_picture
-            user.now_profile.personalize_ig_feed = options[:personalize]
-            user.pass_ig_likes = options[:ig_like]
-          end
-
-          user.save!
-          
-          options[:return_hash][:new_fb_user] = true unless options[:return_hash].nil?
-
-        end
+      else
+        existing_user = true
       end
+
+      begin
+        client = InstagramWrapper.get_client(:access_token => token)
+        user_info = client.user_info("self")
+      rescue
+        options[:return_hash][:existing_user] = user unless user.nil? || options[:return_hash].nil?
+        return nil 
+      end
+
+      user.ig_accesstoken = token
+      user.udid = options[:udid] if options[:udid]
+         
+      if user_info
+        user.ig_username = user_info.data.username
+        user.ig_user_id = user_info.data.id
+        unless existing_user
+          user.now_profile ||= NowProfile.new
+          fullname = user_info.data.full_name
+          user.now_profile.name = fullname 
+          user.now_profile.first_name = fullname.split(" ").first
+          user.now_profile.last_name = fullname.split(" ")[1..-1].join(" ")
+          user.now_profile.profile_photo_url = user_info.data.profile_picture
+          user.now_profile.personalize_ig_feed = options[:personalize]
+          user.pass_ig_likes = options[:ig_like]
+        end
+        options[:return_hash][:new_fb_user] = true unless options[:return_hash].nil?
+      end
+
+      
+      user.save!
 
       return user
 
