@@ -23,7 +23,7 @@ class NowProfile
   field :notify_local, type: Boolean, default: true
 
   field :share_to_fb_timeline, type: Boolean, default: false
-  field :pass_ig_likes, type: Boolean, default: false
+  field :pass_ig_likes, type: Boolean, default: true
   field :personalize_ig_feed, type: Boolean, default: false
 
   #sharing settings -- don't know what this will look like yet

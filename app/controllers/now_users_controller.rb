@@ -25,6 +25,9 @@ class NowUsersController < ApplicationController
       new_values[:notify_photos] = params[:notify_photos] if params[:notify_photos]
       new_values[:notify_local] = params[:notify_local] if params[:notify_local]
       new_values[:share_to_fb_timeline] = params[:share_to_fb_timeline] if params[:share_to_fb_timeline]
+      new_values[:pass_ig_likes] = params[:pass_ig_likes] if params[:pass_ig_likes]
+      new_values[:personalize_ig_feed] = params[:personalize_ig_feed] if params[:personalize_ig_feed]
+
 
       @now_user.update_now_profile(new_values)
     else
