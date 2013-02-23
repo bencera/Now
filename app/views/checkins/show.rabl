@@ -6,8 +6,7 @@ node(:now_name) do |u|
 end
 
 node(:now_id) do |u|
-  #u.get_fb_user_id
-  "-1"
+  u.get_fb_user_id
 end
 
 node(:profile_photo) do |u|

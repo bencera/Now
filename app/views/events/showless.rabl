@@ -11,11 +11,7 @@ node(:fake) do |u|
 end
 
 node(:personalized) do |u|
-  if u.anonymous
-    1
-  else
     0
-  end
 end
 
 node(:n_reactions) do |u|
@@ -41,11 +37,7 @@ node(:now_name) do |u|
 end
 
 node(:now_id) do |u|
-  if u.anonymous
-    "-1"
-  else
-    u.get_fb_user_id
-  end
+  u.get_fb_user_id
 end
 
 node(:profile_photo) do |u|

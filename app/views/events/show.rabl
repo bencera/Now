@@ -2,11 +2,7 @@ object @event => "event"
 attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :venue_category, :n_photos, :start_time, :keywords, :city_fullname, :main_photos, :status
 
 node(:personalized) do |u|
-  if u.anonymous
-    1
-  else
-    0
-  end
+  0
 end
 
 node(:n_reactions) do |u|
