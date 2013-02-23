@@ -12,7 +12,7 @@ class WatchVenue
 
     update = 0
 
-    vws = VenueWatch.where("end_time > ? AND last_examination < ? AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true)
+    vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true)
 
     vws.each do |vw|
 
@@ -54,16 +54,16 @@ class WatchVenue
       next if ignore_venues.include?(venue_ig_id)
       ignore_venues << venue_ig_id
       
-      client = InstagramWrapper.get_client(:token => ig_user.ig_accesstoken) 
+      client = InstagramWrapper.get_client(:access_token => ig_user.ig_accesstoken) 
       update += 1
 
       begin
-        response = ig_client.venue_media(venue_ig_id, 3.hours.ago.to_i)
+        response = client.venue_media(venue_ig_id, :max_timestamp => 3.hours.ago.to_i)
         vw.last_examination = Time.now; 
 
         additional_photos = []
 
-        if check_media(response.data, :additional_photos => additional_photos)
+        if check_media(response, :additional_photos => additional_photos)
           Rails.logger.info("WatchVenues Will create new event")
          
           event_id = create_event_or_reply(venue, creating_user, vw.trigger_media_ig_id) 
@@ -98,7 +98,7 @@ class WatchVenue
   end
 
 
-  def self.get_media_user(user_id)
+  def self.get_creating_user(user_id)
     FacebookUser.where(:ig_user_id => user_id.to_s).first  || FacebookUser.where(:now_id => "0").first
   end
 
@@ -148,8 +148,8 @@ class WatchVenue
                     :new_photos => true,
                     :illustration_index => 0,
                     :venue_id => venue.id,
-                    :facebook_user_id => fb_user.id,
-                    :id => event_id,
+                    :facebook_user_id => fb_user.id.to_s,
+                    :id => event_id.to_s,
                     :short_id => event_short_id,
                     :description => "",
                     :category => category}

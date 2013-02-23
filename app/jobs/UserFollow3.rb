@@ -23,6 +23,7 @@ class UserFollow3
       client = InstagramWrapper.get_client(:access_token => token)
 
       last_pull = $redis.hget("LAST_FEED_PULL", ig_user.ig_user_id).to_i
+      last_pull = [last_pull, 3.hours.ago.to_i].max
       begin
         media_list = client.feed_since(last_pull)
         current_pull = media_list.first.created_time
@@ -36,7 +37,7 @@ class UserFollow3
           venue_ig_id = media.location.id.to_s
           media_id = media.id.to_s
 
-          Rails.logger.info("Media id: #{media_id} venue_ig_id #{venue_ig_id}")
+          #Rails.logger.info("Media id: #{media_id} venue_ig_id #{venue_ig_id}")
 
 
           ignore_venues << venue_ig_id
@@ -73,7 +74,7 @@ class UserFollow3
   end
 
   def self.users_to_update
-    FacebookUser.where(:last_ig_update.lt => 15.minutes.ago.to_i, :ig_accesstoken.ne => nil).entries
+    FacebookUser.where(:last_ig_update.lt => 15.minutes.ago.to_i, :ig_accesstoken.ne => nil, "now_profile.personalize_ig_feed" => true).entries
   end
 
   def self.get_ignores(options={})
