@@ -40,7 +40,7 @@ class PhotoLike
       if facebook_user.ig_accesstoken
         ig_client =  InstagramWrapper.get_client(:access_token => facebook_user.ig_accesstoken)
         begin
-          ig_client.unlike_media(photo.ig_media_id)
+          ig_client.unlike_media(photo.ig_media_id) if facebook_user.now_profile.pass_ig_likes
         rescue
           params[:retries] += 1
           Resque.enqueue_in(30.seconds, PhotoLike, photo_id, params.inspect) unless params[:retries] > 4
@@ -65,7 +65,7 @@ class PhotoLike
       if facebook_user.ig_accesstoken
         ig_client =  InstagramWrapper.get_client(:access_token => facebook_user.ig_accesstoken)
         begin
-          ig_client.like_media(photo.ig_media_id)
+          ig_client.like_media(photo.ig_media_id) if facebook_user.now_profile.pass_ig_likes
         rescue
           params[:retries] += 1
           Resque.enqueue_in(30.seconds, PhotoLike, photo_id, params.inspect) unless params[:retries] > 4
