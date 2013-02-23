@@ -111,6 +111,7 @@ class FacebookUser
             user.now_profile.last_name = fullname.split(" ")[1..-1].join(" ")
             user.now_profile.profile_photo_url = user_info.data.profile_picture
             user.now_profile.personalize_ig_feed = options[:personalize]
+            user.pass_ig_likes = options[:ig_like]
           end
 
           user.save!

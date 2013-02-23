@@ -115,11 +115,14 @@ class NowUsersController < ApplicationController
         end
         Rails.logger.info("creating ig user")
         personalize = (params[:personalize] == true || params[:personalize] == "true")
+        ig_like = (params[:ig_like] == true || params[:ig_like] == "true")
+
         fb_user = FacebookUser.find_or_create_by_ig_token(params[:ig_accesstoken], 
                                                            :udid => params[:udid], 
                                                            :nowtoken => params[:nowtoken], 
                                                            :return_hash => return_hash,
-                                                           :personalize => personalize)
+                                                           :personalize => personalize,
+                                                           :ig_like => ig_like)
 
         if fb_user.nil?
           params[:breakpoint] = 5
