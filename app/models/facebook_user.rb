@@ -103,6 +103,7 @@ class FacebookUser
         user.unverified = false
         user.ig_username = user_info.data.username
         user.ig_user_id = user_info.data.id
+        user.now_profile.personalize_ig_feed = options[:personalize]
         unless existing_user
           user.now_profile ||= NowProfile.new
           fullname = user_info.data.full_name
@@ -110,8 +111,6 @@ class FacebookUser
           user.now_profile.first_name = fullname.split(" ").first
           user.now_profile.last_name = fullname.split(" ")[1..-1].join(" ")
           user.now_profile.profile_photo_url = user_info.data.profile_picture
-          user.now_profile.personalize_ig_feed = options[:personalize]
-          user.now_profile.pass_ig_likes = options[:ig_like]
         end
         options[:return_hash][:new_fb_user] = true unless options[:return_hash].nil?
       else
