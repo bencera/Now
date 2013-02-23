@@ -111,7 +111,7 @@ class FacebookUser
           user.now_profile.last_name = fullname.split(" ")[1..-1].join(" ")
           user.now_profile.profile_photo_url = user_info.data.profile_picture
         end
-        user.now_profile.personalize_ig_feed = options[:personalize] unless now_profile.nil?
+        user.now_profile.personalize_ig_feed = options[:personalize] unless user.now_profile.nil?
         options[:return_hash][:new_fb_user] = true unless options[:return_hash].nil?
       else
         user.unverified = true
