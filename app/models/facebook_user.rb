@@ -12,6 +12,7 @@ class FacebookUser
   field :email
   field :ig_username
   field :ig_user_id
+  field :unverified
 
   field :now_token
   field :fb_accesstoken
@@ -99,6 +100,7 @@ class FacebookUser
       user.udid = options[:udid] if options[:udid]
          
       if user_info
+        user.unverified = false
         user.ig_username = user_info.data.username
         user.ig_user_id = user_info.data.id
         unless existing_user
@@ -112,6 +114,8 @@ class FacebookUser
           user.pass_ig_likes = options[:ig_like]
         end
         options[:return_hash][:new_fb_user] = true unless options[:return_hash].nil?
+      else
+        user.unverified = true
       end
 
       
