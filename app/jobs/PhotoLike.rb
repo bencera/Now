@@ -11,9 +11,9 @@ class PhotoLike
     short_id = params[:shortid]
     event_id = params[:event_id]
 
-    if event_id
+    if event_id && event_id != "FAKE"
       event = Event.find(params[:event_id])
-    elsif short_id
+    elsif short_id && short_id != "FAKE"
       event = Event.where(:shortid => shortid).first
     else
       event = photo.events.first
