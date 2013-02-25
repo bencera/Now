@@ -63,6 +63,7 @@ class UserFollow3
         $redis.hset("LAST_FEED_PULL", ig_user.ig_user_id, current_pull)
 
         ig_user.last_ig_update = Time.now.to_i
+        ig_user.save!
         updates += 1
         break if updates > max_updates
 

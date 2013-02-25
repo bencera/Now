@@ -20,6 +20,8 @@ class InstagramWrapper
     response = self.feed
     media_list = response.data
 
+    return_media = []
+
     done_pulling = false
 
     while !done_pulling && response && response.pagination && response.pagination.next_url && 
@@ -31,12 +33,12 @@ class InstagramWrapper
       response.data.each do |media|
         if media.created_time.to_i > last_pull
           done_pulling = false
-          media_list << media
+          return_media << media
         end
       end
     end
 
-    return media_list
+    return return_media
   
   end
 
