@@ -32,8 +32,8 @@ class WatchVenue
       end
 
       if venue.nil? || venue.get_live_event
-        vws.ignore = true;
-        vws.save!
+        vw.ignore = true;
+        vw.save!
         next
       end
 
@@ -91,6 +91,7 @@ class WatchVenue
           vw.event_creation_id = ec.id
           vw.event_created = true;
           vw.greylist = greylist == true
+          vw.ignore = true
           
           vw.save!
 
@@ -180,4 +181,64 @@ class WatchVenue
     return event_id
   end
 
+    
+  def self.notify_user(fb_user, event, nowbot_photo_count, is_new_event)
+    if is_new_event
+      message = "\u2728 Now bot created an event for you at #{event.venue.name}!"
+    else
+      message = "\u2728 Now bot added your instagram photo to an event at #{event.venue.name}!"
+    end
+    
+    ## send notifications to the user to tell him about the completion!
+    
+    ######DEBUG
+    event.facebook_user.send_notification(message, event.id) unless fb_user.now_id == "0"
+
+    Rails.logger.info("Will notify user #{fb_user.now_profile.name}: \"#{message}\"")
+    
+    if nowbot_photo_count > 0
+      message = "\u{1F4F7} Now bot added #{nowbot_photo_count} photos"
+      #######DEBUG
+      event.facebook_user.send_notification(message, event.id)
+      Rails.logger.info("Will notify user #{fb_user.now_profile.name}: \"#{message}\"")
+    end
+    
+  end
+
+  def self.notify_us(fb_user, event, is_new_event)
+
+    super_users_to_notify = []
+
+    if !is_new_event 
+      message = "Instagram reply created for #{fb_user.now_profile.name}"
+    elsif fb_user.now_id == "0"
+      #check if it's near sao paulo and let pietro know
+      
+      location = event.venue.coordinates.reverse
+
+      super_users = FacebookUser.where(:super_user => true)
+
+      super_users.each do |su|
+        dist = su.event_dist || 20
+        (super_users_to_notify << su.now_id) if Geocoder::Calculations.distance_between(su.coordinates, event.coordinates) < dist
+      end
+#      sao_paulo = [-46.638818,-23.548943].reverse
+#      notify_pietro = (Geocoder::Calculations.distance_between(location, sao_paulo) < 20)
+
+      message = "Instagram event created at #{event.venue.name}: #{event.description}"
+    else
+      message = "Instagram event created for #{fb_user.now_profile.name}"
+    end
+
+    ids_to_notify = []
+    if super_users_to_notify.any?
+      ids_to_notify.push(*super_users_to_notify)
+    end
+
+    #####DEBUG
+    FacebookUser.where(:now_id.in => ids_to_notify).each {|admin_user| admin_user.send_notification(message, event.id)}
+
+    Rails.logger.info("WILL NOTIFY US: #{message}")
+
+  end
 end
