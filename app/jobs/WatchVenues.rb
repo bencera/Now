@@ -104,6 +104,11 @@ class WatchVenue
 
           #notify superusers that the event was created
           #notify user that their friend is at the venue
+          
+          if creating_user != ig_user
+            ig_user.send_notification("#{vw.trigger_media_user_name} is at #{venue.name}!", event_id)
+          end
+
 
           event_creation_count += 1
         end
