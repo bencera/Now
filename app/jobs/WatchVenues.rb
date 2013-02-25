@@ -90,7 +90,7 @@ class WatchVenue
           vw.event_id = event_id.to_s
           vw.event_creation_id = ec.id
           vw.event_created = true;
-          vw.greylist = greylist
+          vw.greylist = greylist == true
           
           vw.save!
 
@@ -140,7 +140,7 @@ class WatchVenue
       if Photo.where(:ig_media_id => photo.id).first
         new_photo = Photo.where(:ig_media_id => photo.id).first
       else
-        new_photo = Photo.create_photo("ig", media, nil)
+        new_photo = Photo.create_photo("ig", photo, nil)
       end
       additional_photos << new_photo
     end
