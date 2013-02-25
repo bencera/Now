@@ -48,7 +48,7 @@ class UserFollow3
           photo = add_photo(media)
           venue = photo.venue if photo #some photos have locations that dont correspond to fsq -- skip for now
 
-          next if photo.nil? || venue.nil?
+          next if photo.nil? || venue.nil? || media.created_time.to_i < 3.hours.ago.to_i
 
           venue_watch = VenueWatch.new(:venue_id => venue.id.to_s,
                                        :start_time => Time.at(media.created_time.to_i),
