@@ -102,6 +102,9 @@ class WatchVenue
 
           event.venue.notify_subscribers(event)
 
+          #notify superusers that the event was created
+          #notify user that their friend is at the venue
+
           event_creation_count += 1
         end
       rescue

@@ -51,3 +51,15 @@ update_city_cache:
   class: CacheCityEvents
   args:
   description: "Cache events in city search for faster access"
+
+user_follow3:
+  every: "1m"
+  class: UserFollow3
+  args: 
+  description: "Pull venue watches from user feeds"
+
+venue_watch:
+  every: "1m"
+  class: WatchVenue
+  args:
+  description: "examine venues we're watching"
