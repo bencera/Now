@@ -111,7 +111,7 @@ class WatchVenue
     end
 
     FacebookUser.where(:now_id => "2").first.send_notification(
-      "WatchVenues created #{event_creation_count} new events.  Skipped #{event_skip_count}", nil) unless event_creation_count == 1
+      "WatchVenues created #{event_creation_count} new events.  Skipped #{event_skip_count}", nil) unless event_creation_count < 1
     
   end
 
