@@ -65,7 +65,7 @@ class WatchVenue
       update += 1
 
       begin
-        response = client.venue_media(venue_ig_id, :max_timestamp => 3.hours.ago.to_i)
+        response = client.venue_media(venue_ig_id, :min_timestamp => 3.hours.ago.to_i)
         vw.last_examination = Time.now; 
 
         additional_photos = []
