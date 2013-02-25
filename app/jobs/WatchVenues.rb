@@ -14,6 +14,10 @@ class WatchVenue
 
     vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true)
 
+    event_creation_count = 0
+    event_skip_count = 0
+
+
     vws.each do |vw|
 
       ig_user = FacebookUser.first(:conditions => {:now_id => vw.user_now_id})
@@ -33,6 +37,10 @@ class WatchVenue
         next
       end
 
+      venue_ig_id = venue.ig_venue_id
+      next if ignore_venues.include?(venue_ig_id)
+      ignore_venues << venue_ig_id
+
       #blacklist -- log it
       if venue.blacklist || (venue.categories && venue.categories.any? && CategoriesHelper.black_list[venue.categories.last["id"]])
 
@@ -42,17 +50,16 @@ class WatchVenue
                              :blacklist => true,
                              :greylist => false,
                              :ig_media_id => vw.trigger_media_ig_id,
-                             :venue_id => venue.id.to_s)
+                             :venue_id => venue.id.to_s) 
+
+        vw.ignore = true
+        vw.blacklist = true
+        vw.save!
+
+        event_skip_count += 1
         next
       end
       greylist = (venue.categories && venue.categories.any? && CategoriesHelper.grey_list[venue.categories.last["id"]])
-
-
-
-
-      venue_ig_id = venue.ig_venue_id
-      next if ignore_venues.include?(venue_ig_id)
-      ignore_venues << venue_ig_id
       
       client = InstagramWrapper.get_client(:access_token => ig_user.ig_accesstoken) 
       update += 1
@@ -77,16 +84,24 @@ class WatchVenue
                                :ig_media_id => vw.trigger_media_ig_id,
                                :venue_id => venue.id.to_s) 
           
+          
+          Rails.logger.info("Created Event #{event_id}")
+          
           vw.event_id = event_id.to_s
           vw.event_creation_id = ec.id
           vw.event_created = true;
+          vw.greylist = greylist
+          
           vw.save!
+
 
           event = Event.find(event_id)
 
           event.insert_photos_safe(additional_photos)
 
           event.venue.notify_subscribers(event)
+
+          event_creation_count += 1
         end
       rescue
         vw.save if vw.changed?
@@ -94,6 +109,9 @@ class WatchVenue
 
       break if update > max_updates
     end
+
+    FacebookUser.where(:now_id => "2").first.send_notification(
+      "WatchVenues created #{event_creation_count} new events.  Skipped #{event_skip_count}", nil) unless event_creation_count == 1
     
   end
 
