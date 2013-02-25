@@ -21,7 +21,7 @@ class VerifyQueueDrain
 
       VerifyURL2.perform(event_id, 0, false, :photo_card => true)
       fixed += 1
-      break if fixed > 5 
+      break if fixed > 25 
     end
 
 
