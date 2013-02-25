@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130225191318) do
+ActiveRecord::Schema.define(:version => 20130225200741) do
 
   create_table "archive_events", :force => true do |t|
     t.string   "coordinates"
@@ -197,8 +197,9 @@ ActiveRecord::Schema.define(:version => 20130225191318) do
     t.integer  "activity_score"
     t.boolean  "ignore"
     t.datetime "last_examination"
-    t.datetime "created_at",            :null => false
-    t.datetime "updated_at",            :null => false
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+    t.string   "trigger_media_user_name"
   end
 
   add_index "venue_watches", ["trigger_media_ig_id"], :name => "index_venue_watches_on_trigger_media_ig_id", :unique => true
