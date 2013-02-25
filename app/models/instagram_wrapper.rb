@@ -20,7 +20,8 @@ class InstagramWrapper
     response = self.feed
     media_list = response.data
 
-    return_media = []
+    #get at least one page
+    return_media = response.data
 
     done_pulling = false
 

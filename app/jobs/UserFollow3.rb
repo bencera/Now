@@ -26,8 +26,10 @@ class UserFollow3
       last_pull = [last_pull, 3.hours.ago.to_i].max
       begin
         media_list = client.feed_since(last_pull)
-        current_pull = media_list.first.created_time
-        $redis.hset("LAST_FEED_PULL", ig_user.ig_user_id, current_pull)
+        if media_list.any?
+          current_pull = media_list.first.created_time
+          $redis.hset("LAST_FEED_PULL", ig_user.ig_user_id, current_pull)
+        end
 
         media_list.each do |media|
           
