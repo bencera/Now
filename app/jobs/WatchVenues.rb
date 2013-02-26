@@ -31,8 +31,21 @@ class WatchVenue
         next
       end
 
-      if venue.nil? || venue.get_live_event
+      if venue.nil?
+
         vw.ignore = true;
+        vw.save!
+        next
+      end
+
+      existing_event = venue.get_live_event  
+      if existing_event
+        existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name)
+        existing_event.save!
+        vw.ignore = true;
+        vw.event_created = false;
+        vw.personalized = true
+        vw.event_id = existing_event.id.to_s
         vw.save!
         next
       end
@@ -91,6 +104,7 @@ class WatchVenue
           vw.event_creation_id = ec.id
           vw.event_created = true;
           vw.greylist = greylist == true
+          vw.personalized = true
           vw.ignore = true
           
           vw.save!
@@ -100,7 +114,11 @@ class WatchVenue
 
           event.insert_photos_safe(additional_photos)
 
+          event.add_to_personalization(ig_user, vw.trigger_media_user_name)
+
+
           event.venue.notify_subscribers(event)
+          event.save!
 
           #notify superusers that the event was created
           #notify user that their friend is at the venue
