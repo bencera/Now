@@ -22,7 +22,9 @@ class WatchVenue
 
       ig_user = FacebookUser.first(:conditions => {:now_id => vw.user_now_id})
       venue = Venue.first(:conditions => {:id => vw.venue_id})
-      trigger_photo = Photo.find(vw.trigger_media_id)
+      trigger_photo = Photo.first(:conditions => {:id => vw.trigger_media_id})
+
+      next if trigger_photo.nil?
 
       creating_user = get_creating_user(vw.trigger_media_user_id)
 
