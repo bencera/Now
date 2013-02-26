@@ -41,17 +41,24 @@ class WatchVenue
 
       existing_event = venue.get_live_event  
       if existing_event
-        existing_event.photos.push(trigger_photo) if !existing_event.photos.include?(trigger_photo)
-        existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name)
-        existing_event.save!
+        #see if user already has a personalization and dont notify if so
+        notify = VenueWatch.where("event_id = ? AND facebook_user_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.id.to_s, true).empty?
+        
+        if notify
+          existing_event.fetch_and_add_photos(Time.now) if !existing_event.photos.include?(trigger_photo)
+          existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name)
+          existing_event.save!
+        end
+
         vw.ignore = true;
         vw.event_created = false;
         vw.personalized = true
         vw.event_id = existing_event.id.to_s
         vw.save!
         
-        unless ig_user.ig_user_id == vw.trigger_media_user_id
-          ig_user.send_notification("#{vw.trigger_media_user_name} is at #{venue.name}!", existing_event.id.to_s)
+        unless (ig_user.ig_user_id == vw.trigger_media_user_id) && notify
+          message = "#{vw.trigger_media_user_name} is at #{venue.name}!"
+          SentPush.notify_users(message, existing_event.id.to_s, [], [ig_user.id.to_s])
         end
 
         next
@@ -131,9 +138,9 @@ class WatchVenue
           #notify user that their friend is at the venue
           
           if creating_user != ig_user
-            ig_user.send_notification("#{vw.trigger_media_user_name} is at #{venue.name}!", event_id)
+            message = "#{vw.trigger_media_user_name} is at #{venue.name}!"
+            SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s])
           end
-
 
           event_creation_count += 1
         end
