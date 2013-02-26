@@ -40,6 +40,7 @@ class WatchVenue
 
       existing_event = venue.get_live_event  
       if existing_event
+        event.photos.push(photo) if !event.photos.include?(photo)
         existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name)
         existing_event.save!
         vw.ignore = true;
