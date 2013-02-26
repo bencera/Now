@@ -132,6 +132,7 @@ class WatchVenue
         end
       rescue
         vw.save if vw.changed?
+        raise
       end
 
       break if update > max_updates
