@@ -11,7 +11,11 @@ node(:fake) do |u|
 end
 
 node(:personalized) do |u|
-    0
+    if u.fake || u.personalized.nil?
+      0
+    else
+      u.personalized + 1
+    end
 end
 
 node(:n_reactions) do |u|

@@ -59,7 +59,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 #####
 
 # this is here to allow for caching of photos on index pulls -- only use overriding repost in the index view!
-  attr_accessor :event_card_list, :overriding_repost, :overriding_description
+  attr_accessor :event_card_list, :overriding_repost, :overriding_description, :personalized
     
   field :coordinates, :type => Array
   field :start_time
@@ -107,6 +107,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :last_verify
   field :last_photo_card_verify
 
+  #fields related to showing personalized event
+  field :personalizations, :type => Array, :default => []
+  field :personalize_for, :type => Hash, :default => {}
 
  # not using a has_many relationship because i don't think this is how the model will end up looking
  # chances are, a checkin will have description and photo_list, then an event will have a main checkin
@@ -299,7 +302,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def get_fb_user_name
-    if self.overriding_repost.nil? && self.anonymous
+    if self.overriding_repost.nil? 
       fb_user = nil
     else
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
@@ -313,7 +316,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def get_fb_user_photo
-    if self.overriding_repost.nil? && self.anonymous
+    if self.overriding_repost.nil? 
       fb_user = nil
     else
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
@@ -327,7 +330,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def get_fb_user_id
-    if self.overriding_repost.nil? && self.anonymous
+    if self.overriding_repost.nil? 
       fb_user = nil
     else
       fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
@@ -345,7 +348,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def get_description
-    return overriding_description || self.description || " "
+    return self.overriding_description || self.description || " "
   end
 
   def previous_events
@@ -881,6 +884,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.n_reactions = photo_count + reply_count + self.likes.to_i + (view_reactions / 10) 
   end
 
+
   def self.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, options={})
    
     end_time = options[:photo_list] ? options[:photo_list].first.time_taken : Time.now.to_i
@@ -1029,8 +1033,18 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def make_reply_array(photos_orig)
     replies = []
-    liked_photos = photos_orig.clone.keep_if {|photo| photo.now_likes > 0}.sort_by {|photo| photo.now_likes.to_i}.reverse
-    photos = (photos_orig.clone - liked_photos).sort_by {|photo| photo.time_taken}
+
+    friend_photos = []
+    if !self.personalized.nil?
+      pers_settings = self.personalizations[self.personalized]
+
+      photos_orig.each do |photo|
+        friend_photos << photo if pers_settings["friend_names"].include?(photo.user_details[0])
+      end
+    end
+
+    liked_photos = (photos_orig.clone - friend_photos) .keep_if {|photo| photo.now_likes > 0}.sort_by {|photo| photo.now_likes.to_i}.reverse
+    photos = ((photos_orig.clone - liked_photos) - friend_photos).sort_by {|photo| photo.time_taken}
 
 
     max_rand = (photos.count > 20) ? 5 : 2
@@ -1049,6 +1063,13 @@ SCORE_HALF_LIFE       = 7.day.to_f
 #      after_reply = true
 #      first_card = false
 #    end
+
+    while friend_photos.any?
+      description_text = first_card ? self.description : ""
+      photo = friend_photos.shift
+      replies << make_fake_reply([photo.id], description_text, photo.time_taken, !first_card)
+      first_card = false
+    end
 
     while liked_photos.any?
       description_text = first_card ? self.description : ""
@@ -1091,6 +1112,129 @@ SCORE_HALF_LIFE       = 7.day.to_f
     #in case there are more replies after last photo
     return replies
   end
+
+  def set_personalization(facebook_user)
+    
+    personalization = self.personalize_for[facebook_user.now_id] 
+    return if personalization.nil?
+
+    pers_settings = self.personalizations[personalization]
+    friend_names = pers_settings["friend_names"]
+   
+    if friend_names.count > 1
+      self.overriding_description = "You have #{friend_names.count} friends here!"
+    else
+      self.overriding_description = "#{friend_names.first} is here!"
+    end
+
+    fake_user = pers_settings["friend_info"]
+    friend_name = fake_user[0]
+    friend_url = fake_user[1]
+    friend_now_id = fake_user[2]
+    
+    fake_repost = Hashie::Mash.new({:photo_card => pers_settings["friend_photos"][0..5],
+                                    :facebook_user => FacebookUser.fake(friend_name, friend_url, friend_now_id)})
+
+    self.overriding_repost = fake_repost
+  end
+
+  ################################################################################ 
+  # personalization has: 
+  #   friend_names => [ig_usernames]
+  #   friend_photos => [photo_ids]
+  #   friend_info => [first name, photo_url, now_id (-1 if not on Now)]
+  ################################################################################ 
+  def update_personalization(facebook_user, friend_user_names, options={})
+    #see if previous personalization exists or same friend list exists
+
+    existing_personalization = nil
+
+    previous_personalization_index = self.personalize_for[facebook_user.now_id]
+    if !previous_personalization_index.nil?
+      #does anyone else use this personalization?
+      if self.personalize_for.values.count {|x| x == previous_personalization_index} == 1
+        existing_personalization = previous_personalization_index
+      end
+    end
+
+
+    if !existing_personalization
+      self.personalizations.each_with_index do |personalization, index|
+        if personalization["friend_names"].uniq.sort == friend_user_names.uniq.sort
+          existing_personalization = index
+          break
+        end
+      end
+    end
+
+    if existing_personalization
+      self.personalize_for[facebook_user.now_id] = existing_personalization
+      self.personalizations[existing_personalization] = self.make_personalization(friend_user_names)
+    else
+      self.personalizations << self.make_personalization(friend_user_names)
+      self.personalize_for[facebook_user.now_id] = self.personalizations.count - 1
+    end
+
+    #prune dead personalization if necessary
+
+    if previous_personalization_index && existing_personalization != previous_personalization_index && 
+        self.personalize_for.values.count {|x| x == previous_personalization_index} == 0
+
+      self.personalizations.delete_at(previous_personalization_index)
+      self.personalize_for.keys.each do |now_id|
+        self.personalize_for[now_id] -= 1 if self.personalize_for[now_id] > previous_personalization_index
+      end
+    end
+
+    self.save! if options[:save]
+  end
+
+  def add_to_personalization(facebook_user, friend_user_name)
+
+    previous_friend_list = []
+    if self.personalize_for[facebook_user.now_id]
+      existing_entry = self.personalizations[self.personalize_for[facebook_user.now_id]]
+      previous_friend_list =  existing_entry ? existing_entry["friend_names"] : []
+    end
+    
+    if !previous_friend_list.include?(friend_user_name)
+      previous_friend_list << friend_user_name
+      self.update_personalization(facebook_user, previous_friend_list)
+    end
+  end
+
+  def make_personalization(friend_user_names)
+    # make photo cards for each personalization
+
+    return_hash = {"friend_names" => friend_user_names}
+
+    main_user_details = []
+    is_now_user = {}
+    waiting_for_non_user = true
+    top_photos = []
+
+    #we don't want the main user to be already on now -- we want someone they can invite
+    self.photos.each do |photo|
+      top_photos << photo.id if friend_user_names.include?(photo.user_details[0]) && top_photos.count < 6
+      if waiting_for_non_user && !is_now_user[photo.user_details[0]]
+
+        main_user_details = [photo.user_details[2], photo.user_details[1], -1]
+        fb_user = FacebookUser.where(:ig_username => photo.user_details[0]).first
+        if fb_user
+          main_user_details[2] = fb_user.now_id
+          is_now_user[photo.user_details[0]] = true
+        else
+          waiting_for_non_user = false
+        end
+      end
+    end
+
+    return_hash["friend_photos"] = top_photos
+    return_hash["friend_info"] = main_user_details
+
+    return_hash
+  end
+
 
   def self.get_activity_message(options={})
     

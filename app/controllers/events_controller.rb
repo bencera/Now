@@ -7,6 +7,16 @@ class EventsController < ApplicationController
   
   def show
     @event = Event.find(params[:id])
+
+    begin
+    if params[:nowtoken]
+      @requesting_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+      @user_id = @requesting_user.facebook_id
+    end
+    rescue
+    end
+
+    EventsHelper.personalize_event_detail(@event, @requesting_user) unless @requesting_user.nil?
     params[:version] ||= 0
     if params[:version].to_i > 1
       photos = @event.photos.order_by([[:time_taken, :asc]]).entries
@@ -17,13 +27,7 @@ class EventsController < ApplicationController
     @other_photos ||= @event.photos
 
     #this is to put the event's photo card at creation at the top
-    begin
-    if params[:nowtoken]
-      @requesting_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
-      @user_id = @requesting_user.facebook_id
-    end
-    rescue
-    end
+
     if params[:more] == "yes"
       @more = "yes"
     end
@@ -35,6 +39,7 @@ class EventsController < ApplicationController
     click_params[:udid] = params[:device_id] if params[:deviceid]
     click_params[:session_token] = cookies[:now_session]
     @event.add_click(click_params)
+
   end
   
   def showless
@@ -142,7 +147,7 @@ class EventsController < ApplicationController
       end
     end
 
-
+    EventsHelper.personalize_events(@events, facebook_user) if facebook_user
     EventsHelper.get_event_cards(@events)
 
     event_ids = []

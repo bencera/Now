@@ -226,15 +226,15 @@ module EventsHelper
       photo_id_list.push(*photo_ids)
       photo_id_hash[event.id] = photo_ids
     end
+    
+    all_photos = Photo.where(:_id.in => photo_id_list).entries
 
-     all_photos = Photo.where(:_id.in => photo_id_list).entries
-
-     events.each do |event|
-       next if event.fake
-       photo_ids = photo_id_hash[event.id]
-       event.event_card_list = all_photos.find_all {|photo| photo_ids.include? photo._id}.
-         sort {|a,b| photo_ids.index(a._id) <=> photo_ids.index(b.id)} 
-     end
+    events.each do |event|
+      next if event.fake
+      photo_ids = photo_id_hash[event.id]
+      event.event_card_list = all_photos.find_all {|photo| photo_ids.include? photo._id}.
+        sort {|a,b| photo_ids.index(a._id) <=> photo_ids.index(b.id)} 
+    end
 
   end
 
@@ -478,6 +478,21 @@ EOS
 
     return :fake_event => Event.make_fake_event(event_id, event_short_id, venue_id, venue_name, venue_lon_lat, :photo_list => photos, :description => description, :user_count => user_count )
 
+  end
+
+  def self.personalize_events(events, facebook_user)
+    
+    events.each do |event|
+      next if event.fake
+      event.set_personalization(facebook_user)
+    end
+
+  end
+
+  def self.personalize_event_detail(event, facebook_user)
+    return if event.fake || facebook_user.nil?
+    Rails.logger.info("PERSONALIZE, #{event.id} #{facebook_user.now_id}")
+    event.personalized = event.personalize_for[facebook_user.now_id] 
   end
 
 end

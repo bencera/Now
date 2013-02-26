@@ -310,6 +310,11 @@ class FacebookUser
     end
   end
 
+  def self.fake(name, photo_url, fake_now_id=-1) 
+
+    Hashie::Mash.new({:now_id => fake_now_id, :now_profile => {:first_name => name, :profile_photo_url => photo_url}})
+  end
+
 #  def do_redis_checkin(event)
 #    $redis.sadd("checked_in_event_pending#{event.shortid}", self.facebook_id)
 #    $redis.sadd("checked_in_user_pending#{self.facebook_id}", event.shortid)
