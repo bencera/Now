@@ -47,6 +47,7 @@ class WatchVenue
         vw.personalized = true
         vw.event_id = existing_event.id.to_s
         vw.save!
+        ig_user.send_notification("#{vw.trigger_media_user_name} is at #{venue.name}!", existing_event.id.to_s)
         next
       end
 
