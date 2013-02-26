@@ -46,7 +46,7 @@ class WatchVenue
         
         if notify
           existing_event.fetch_and_add_photos(Time.now) if !existing_event.photos.include?(trigger_photo)
-          existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name)
+          existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name) 
           existing_event.save!
         end
 
@@ -56,7 +56,7 @@ class WatchVenue
         vw.event_id = existing_event.id.to_s
         vw.save!
         
-        unless (ig_user.ig_user_id == vw.trigger_media_user_id) && notify
+        unless (ig_user.ig_user_id == vw.trigger_media_user_id) || !notify
           message = "#{vw.trigger_media_user_name} is at #{venue.name}!"
           SentPush.notify_users(message, existing_event.id.to_s, [], [ig_user.id.to_s])
         end
