@@ -42,7 +42,7 @@ class WatchVenue
       existing_event = venue.get_live_event  
       if existing_event
         #see if user already has a personalization and dont notify if so
-        notify = VenueWatch.where("event_id = ? AND facebook_user_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.id.to_s, true).empty?
+        notify = VenueWatch.where("event_id = ? AND user_now_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.now_id.to_s, true).empty?
         
         if notify
           existing_event.fetch_and_add_photos(Time.now) if !existing_event.photos.include?(trigger_photo)
