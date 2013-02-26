@@ -1099,6 +1099,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
         else
           replies << make_fake_reply([photo.id], "", photo.time_taken, !first_card)
         end
+        first_card = false
         after_reply = true
       end
     end
@@ -1110,21 +1111,15 @@ SCORE_HALF_LIFE       = 7.day.to_f
 #      first_card = false
 #    end
 
+
     while liked_photos.any?
-      if after_reply
-        description_text = "Here are the most popular photos"
-      else
-        description_text = first_card ? self.description : ""
-      end
+      description_text = first_card ? self.description : (after_reply ? "I found more photos" : "")
       photo = liked_photos.shift
       replies << make_fake_reply([photo.id], description_text, photo.time_taken, !first_card)
       first_card = false
+      after_reply = false
     end
     
-
-    after_reply = liked_photos.any? || friend_photos.any?
-
-
     checkins.each do |checkin|
       remove_ids.push(*checkin.photo_card) if checkin.new_photos
       replies << checkin
