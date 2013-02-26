@@ -1217,16 +1217,18 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     #we don't want the main user to be already on now -- we want someone they can invite
     self.photos.each do |photo|
-      top_photos << photo.id if friend_user_names.include?(photo.user_details[0]) && top_photos.count < 6
-      if waiting_for_non_user && !is_now_user[photo.user_details[0]]
+      if friend_user_names.include?(photo.user_details[0])
+        top_photos << photo.id if top_photos.count < 6
+        if waiting_for_non_user && !is_now_user[photo.user_details[0]]
 
-        main_user_details = [photo.user_details[2], photo.user_details[1], -1]
-        fb_user = FacebookUser.where(:ig_username => photo.user_details[0]).first
-        if fb_user
-          main_user_details[2] = fb_user.now_id
-          is_now_user[photo.user_details[0]] = true
-        else
-          waiting_for_non_user = false
+          main_user_details = [photo.user_details[2], photo.user_details[1], -1]
+          fb_user = FacebookUser.where(:ig_username => photo.user_details[0]).first
+          if fb_user
+            main_user_details[2] = fb_user.now_id
+            is_now_user[photo.user_details[0]] = true
+          else
+            waiting_for_non_user = false
+          end
         end
       end
     end
@@ -1247,16 +1249,18 @@ SCORE_HALF_LIFE       = 7.day.to_f
       main_user_details = []
 
       self.photos.each do |photo|
-        top_photos << photo.id if friend_user_names.include?(photo.user_details[0]) && top_photos.count < 6
-        if waiting_for_non_user && !is_now_user[photo.user_details[0]]
+        if friend_user_names.include?(photo.user_details[0])
+          top_photos << photo.id if top_photos.count < 6
+          if waiting_for_non_user && !is_now_user[photo.user_details[0]]
 
-          main_user_details = [photo.user_details[2], photo.user_details[1], -1]
-          fb_user = FacebookUser.where(:ig_username => photo.user_details[0]).first
-          if fb_user
-            main_user_details[2] = fb_user.now_id
-            is_now_user[photo.user_details[0]] = true
-          else
-            waiting_for_non_user = false
+            main_user_details = [photo.user_details[2], photo.user_details[1], -1]
+            fb_user = FacebookUser.where(:ig_username => photo.user_details[0]).first
+            if fb_user
+              main_user_details[2] = fb_user.now_id
+              is_now_user[photo.user_details[0]] = true
+            else
+              waiting_for_non_user = false
+            end
           end
         end
       end
