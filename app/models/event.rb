@@ -1097,7 +1097,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
         
           new_friend = false
         else
-          replies << make_fake_reply([photo.id], description_text, photo.time_taken, !first_card)
+          replies << make_fake_reply([photo.id], "", photo.time_taken, !first_card)
         end
       end
       first_card = false
