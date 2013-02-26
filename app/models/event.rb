@@ -1092,7 +1092,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
           description = friend_captions[friend] || ""
           
           replies << Event.make_fake_reply(self.id, self.category, photo.user_details[2], 
-                                           now_user_map[friend] || -1, photo.user_details[1],
+                                           now_user_map[friend] || "-1", photo.user_details[1],
                                            [photo.id], description, photo.time_taken, false)
         
           new_friend = false
