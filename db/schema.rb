@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130225200741) do
+ActiveRecord::Schema.define(:version => 20130226185810) do
 
   create_table "archive_events", :force => true do |t|
     t.string   "coordinates"
@@ -130,6 +130,22 @@ ActiveRecord::Schema.define(:version => 20130225200741) do
     t.string   "photo_id"
   end
 
+  create_table "personalize_logs", :force => true do |t|
+    t.string   "event_id"
+    t.string   "facebook_user_id"
+    t.string   "ig_username"
+    t.string   "ig_user_id"
+    t.datetime "action_time"
+    t.string   "trigger_media_id"
+    t.string   "venue_id"
+    t.boolean  "pushed"
+    t.boolean  "trigger_user_is_now_user"
+    t.string   "trigger_user_facebook_user_id"
+    t.integer  "sent_push_id"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
   create_table "search_entries", :force => true do |t|
     t.datetime "search_time"
     t.string   "facebook_user_id"
@@ -197,9 +213,10 @@ ActiveRecord::Schema.define(:version => 20130225200741) do
     t.integer  "activity_score"
     t.boolean  "ignore"
     t.datetime "last_examination"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
     t.string   "trigger_media_user_name"
+    t.boolean  "personalized",            :default => false
   end
 
   add_index "venue_watches", ["trigger_media_ig_id"], :name => "index_venue_watches_on_trigger_media_ig_id", :unique => true

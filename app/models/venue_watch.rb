@@ -22,10 +22,11 @@
 #  created_at              :datetime        not null
 #  updated_at              :datetime        not null
 #  trigger_media_user_name :string(255)
+#  personalized            :boolean         default(FALSE)
 #
 
 class VenueWatch < ActiveRecord::Base
-  attr_accessible :activity_score, :blacklist, :end_time, :event_created, :event_creation_id, :event_id, :greylist, :ignore, :last_examination, :start_time, :trigger_media_id, :trigger_media_ig_id, :trigger_media_user_id, :user_now_id, :venue_id, :venue_ig_id, :trigger_media_user_name
+  attr_accessible :activity_score, :blacklist, :end_time, :event_created, :event_creation_id, :event_id, :greylist, :ignore, :last_examination, :start_time, :trigger_media_id, :trigger_media_ig_id, :trigger_media_user_id, :user_now_id, :venue_id, :venue_ig_id, :trigger_media_user_name, :personalized
 
   validates_presence_of :venue_id
 
