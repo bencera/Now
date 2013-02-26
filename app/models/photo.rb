@@ -217,6 +217,7 @@ class Photo
                 media.user.profile_picture, media.user.bio, media.user.website)
 
     photo.user = user
+    photo.user_details = [user.ig_username, user.ig_details[1], user.ig_details[0]]
 
     photo.city = venue.city
 
