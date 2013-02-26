@@ -311,6 +311,26 @@ class FacebookUser
     end
   end
 
+  def add_to_personalized_events(event_id)
+    $redis.lpush("PERSONALIZED:#{self.now_id}", event_id.to_s)
+  end
+
+  def set_all_personalized_events
+    vws = VenueWatch.where("user_now_id = ? AND personalized = ?", self.now_id.to_s, true).order("end_time DESC")
+
+    personalized_events = []
+
+    vws.each do |vw|
+      personalized_events << vw.event_id unless vw.event_id.nil? || personalized_events.include?(vw.event_id)
+      break if personalized_events > 20
+    end
+
+    $redis.del("PERSONALIZED:#{self.now_id}")
+    personalized_events.each do |pe|
+      $redis.lpush("PERSONALIZED:#{self.now_id}", pe)
+    end
+  end
+
   def self.fake(name, photo_url, fake_now_id=-1) 
 
     Hashie::Mash.new({:now_id => fake_now_id, :now_profile => {:first_name => name, :profile_photo_url => photo_url}})

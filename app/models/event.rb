@@ -1037,11 +1037,19 @@ SCORE_HALF_LIFE       = 7.day.to_f
     replies = []
 
     friend_photos = []
+    photos_by_friend = Hash.new {|h,k| h[k] = []}
+    friend_captions = {}
+
     if !self.personalized.nil?
       pers_settings = self.personalizations[self.personalized]
+      friend_list = pers_settings["friend_names"]
 
       photos_orig.each do |photo|
-        friend_photos << photo if pers_settings["friend_names"].include?(photo.user_details[0])
+        if friend_list.include?(photo.user_details[0])
+          friend_photos << photo 
+          photos_by_friend[photo.user_details[0]] << photo
+          friend_captions[photo.user_details[0]] = photo.caption unless photo.caption.blank?
+        end
       end
     end
 
@@ -1065,13 +1073,42 @@ SCORE_HALF_LIFE       = 7.day.to_f
 #      after_reply = true
 #      first_card = false
 #    end
+    
+    #need to pull now ids for your friends
 
-    while friend_photos.any?
-      description_text = first_card ? self.description : ""
-      photo = friend_photos.shift
-      replies << make_fake_reply([photo.id], description_text, photo.time_taken, !first_card)
+    if friend_photos.any?
+      now_user_map = {}
+      FacebookUser.where(:ig_username.in => friend_list).each do |now_ig_user|
+        now_user_map[now_ig_user.ig_username] = now_ig_user.now_id
+      end
+    end
+
+
+    photos_by_friend.keys.each do |friend|
+      new_friend = true
+      Rails.logger.info("friend #{friend} photos: #{photos_by_friend[friend].count}")
+      photos_by_friend[friend].each do |photo|
+        if new_friend
+          description = friend_captions[friend] || ""
+          
+          replies << Event.make_fake_reply(self.id, self.category, photo.user_details[2], 
+                                           now_user_map[friend] || -1, photo.user_details[1],
+                                           [photo.id], description, photo.time_taken, false)
+        
+          new_friend = false
+        else
+          replies << make_fake_reply([photo.id], description_text, photo.time_taken, !first_card)
+        end
+      end
       first_card = false
     end
+
+#    while friend_photos.any?
+#      description_text = first_card ? self.description : ""
+#      photo = friend_photos.shift
+#      replies << make_fake_reply([photo.id], description_text, photo.time_taken, !first_card)
+#      first_card = false
+#    end
 
     while liked_photos.any?
       description_text = first_card ? self.description : ""
@@ -1121,9 +1158,13 @@ SCORE_HALF_LIFE       = 7.day.to_f
     return if personalization.nil?
 
     pers_settings = self.personalizations[personalization]
+    photo_count = pers_settings["friend_photos"].count
     friend_names = pers_settings["friend_names"]
    
-    if friend_names.count > 1
+    min_count = [photo_count, friend_names.count].min
+    return if min_count < 1
+
+    if min_count > 1
       self.overriding_description = "You have #{friend_names.count} friends here!"
     else
       self.overriding_description = "#{friend_names.first} is here!"

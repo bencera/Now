@@ -47,6 +47,7 @@ class WatchVenue
         if notify
           existing_event.fetch_and_add_photos(Time.now) if !existing_event.photos.include?(trigger_photo)
           existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name) 
+          ig_user.add_to_personalized_events(existing_event.id.to_s)
           existing_event.save!
         end
 
@@ -129,6 +130,8 @@ class WatchVenue
           event.insert_photos_safe(additional_photos)
 
           event.add_to_personalization(ig_user, vw.trigger_media_user_name)
+          
+          ig_user.add_to_personalized_events(event.id.to_s)
 
 
           event.venue.notify_subscribers(event)
