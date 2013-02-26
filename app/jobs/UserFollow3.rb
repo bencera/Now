@@ -12,9 +12,7 @@ class UserFollow3
     
     users = users_to_update() 
     ignore_media = []
-    ignore_venues = []
 
-    get_ignores(:ignore_media => ignore_media, :ignore_venues => ignore_venues)
    
     updates = 0
 
@@ -24,6 +22,10 @@ class UserFollow3
 
       last_pull = $redis.hget("LAST_FEED_PULL", ig_user.ig_user_id).to_i
       last_pull = [last_pull, 3.hours.ago.to_i].max
+    
+      ignore_media = []
+      get_ignores(:ignore_media => ignore_media, :user_now_id => ig_user.now_id.to_s)
+
       begin
         media_list = client.feed_since(last_pull)
         if media_list.any?
@@ -33,22 +35,20 @@ class UserFollow3
 
         media_list.each do |media|
           
-          next if media.location.nil? || media.location.id.nil? || ignore_media.include?(media.id.to_s) || ignore_venues.include?(media.location.id.to_s)
-          
+          next if media.location.nil? || media.location.id.nil? 
 
           venue_ig_id = media.location.id.to_s
           media_id = media.id.to_s
 
           #Rails.logger.info("Media id: #{media_id} venue_ig_id #{venue_ig_id}")
 
-
-          ignore_venues << venue_ig_id
-          ignore_media << media_id
-
+          
           photo = add_photo(media)
           venue = photo.venue if photo #some photos have locations that dont correspond to fsq -- skip for now
 
-          next if photo.nil? || venue.nil? || media.created_time.to_i < 3.hours.ago.to_i
+          next if photo.nil? || venue.nil?           
+
+          next if ignore_media.include?(media.id.to_s) || media.created_time.to_i < 3.hours.ago.to_i
 
           venue_watch = VenueWatch.new(:venue_id => venue.id.to_s,
                                        :start_time => Time.at(media.created_time.to_i),
@@ -62,7 +62,9 @@ class UserFollow3
 
           venue_watch.save!
         end
+
         
+
         $redis.hset("LAST_FEED_PULL", ig_user.ig_user_id, current_pull)
 
         ig_user.last_ig_update = Time.now.to_i
@@ -83,14 +85,11 @@ class UserFollow3
 
   def self.get_ignores(options={})
     ignore_media = options[:ignore_media] || []
-    ignore_venues = options[:ignore_venues] || []
-
-    VenueWatch.where("end_time > ?", Time.now).each do |venue_watch|
-      ignore_venues << venue_watch.venue_ig_id if venue_watch.venue_ig_id
+    user_now_id = options[:user_now_id] || "0"
+    VenueWatch.where("end_time > ? AND user_now_id = ?", Time.now, user_now_id).each do |venue_watch|
       ignore_media << venue_watch.trigger_media_ig_id if venue_watch.trigger_media_ig_id
     end
 
-    ignore_venues = ignore_venues.uniq
     ignore_media = ignore_media.uniq
   end
 

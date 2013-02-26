@@ -743,6 +743,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     last_update = self.end_time
     #since photos could have been added in subscription fetch or elsewhere, need to get from venue
+    #might want to add some safeguards to make sure no photos are missed...
     new_photos = self.venue.photos.where(:time_taken.gt => self.end_time).entries
 
     insert_photos_safe(new_photos)
