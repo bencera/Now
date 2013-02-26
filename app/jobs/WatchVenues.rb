@@ -40,7 +40,7 @@ class WatchVenue
 
       existing_event = venue.get_live_event  
       if existing_event
-        event.photos.push(photo) if !event.photos.include?(photo)
+        existing_event.photos.push(photo) if !existing_event.photos.include?(photo)
         existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name)
         existing_event.save!
         vw.ignore = true;
@@ -48,7 +48,11 @@ class WatchVenue
         vw.personalized = true
         vw.event_id = existing_event.id.to_s
         vw.save!
-        ig_user.send_notification("#{vw.trigger_media_user_name} is at #{venue.name}!", existing_event.id.to_s)
+        
+        unless ig_user.ig_user_id == vw.trigger_media_user_id
+          ig_user.send_notification("#{vw.trigger_media_user_name} is at #{venue.name}!", existing_event.id.to_s)
+        end
+
         next
       end
 
