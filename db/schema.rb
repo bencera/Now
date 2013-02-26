@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130226185810) do
+ActiveRecord::Schema.define(:version => 20130226201101) do
 
   create_table "archive_events", :force => true do |t|
     t.string   "coordinates"
@@ -218,7 +218,5 @@ ActiveRecord::Schema.define(:version => 20130226185810) do
     t.string   "trigger_media_user_name"
     t.boolean  "personalized",            :default => false
   end
-
-  add_index "venue_watches", ["trigger_media_ig_id"], :name => "index_venue_watches_on_trigger_media_ig_id", :unique => true
 
 end

@@ -30,8 +30,6 @@ class VenueWatch < ActiveRecord::Base
 
   validates_presence_of :venue_id
 
-  validates :trigger_media_ig_id, :uniqueness => true
-
   before_create do
     self.ignore ||= false
     self.event_created ||= false
