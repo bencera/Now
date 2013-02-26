@@ -313,6 +313,7 @@ class FacebookUser
 
   def add_to_personalized_events(event_id)
     $redis.lpush("PERSONALIZED:#{self.now_id}", event_id.to_s)
+
   end
 
   def set_all_personalized_events
