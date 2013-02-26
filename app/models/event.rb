@@ -1238,9 +1238,13 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def do_all_personalizations(options={})
+    is_now_user = {}
+
     self.personalizations.each do |personalization|
       friend_user_names = personalization["friend_names"]
       top_photos = []
+      waiting_for_non_user = true
+      main_user_details = []
 
       self.photos.each do |photo|
         top_photos << photo.id if friend_user_names.include?(photo.user_details[0]) && top_photos.count < 6
