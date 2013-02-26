@@ -777,6 +777,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.last_update = current_time.to_i
     self.next_update = current_time.to_i + self.update_interval
     begin
+      self.do_all_personalizations
       self.save!
     rescue
       repair_photo_list
@@ -1235,6 +1236,30 @@ SCORE_HALF_LIFE       = 7.day.to_f
     return_hash
   end
 
+  def do_all_personalizations(options={})
+    self.personalizations.each do |personalization|
+      friend_user_names = personalization["friend_names"]
+
+      self.photos.each do |photo|
+        top_photos << photo.id if friend_user_names.include?(photo.user_details[0]) && top_photos.count < 6
+        if waiting_for_non_user && !is_now_user[photo.user_details[0]]
+
+          main_user_details = [photo.user_details[2], photo.user_details[1], -1]
+          fb_user = FacebookUser.where(:ig_username => photo.user_details[0]).first
+          if fb_user
+            main_user_details[2] = fb_user.now_id
+            is_now_user[photo.user_details[0]] = true
+          else
+            waiting_for_non_user = false
+          end
+        end
+      end
+
+      personalization["friend_photos"] = top_photos
+      personalization["friend_info"] = main_user_details
+    end
+    self.save! if options[:save]
+  end
 
   def self.get_activity_message(options={})
     
