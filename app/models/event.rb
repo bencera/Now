@@ -1100,7 +1100,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
           replies << make_fake_reply([photo.id], "", photo.time_taken, !first_card)
         end
       end
-      first_card = false
     end
 
 #    while friend_photos.any?
