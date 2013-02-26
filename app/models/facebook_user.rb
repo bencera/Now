@@ -97,6 +97,7 @@ class FacebookUser
       end
 
       user.ig_accesstoken = token
+      user.last_ig_update ||= Time.now.to_i
       user.udid = options[:udid] if options[:udid]
          
       if user_info
