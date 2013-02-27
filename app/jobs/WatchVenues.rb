@@ -51,7 +51,7 @@ class WatchVenue
         
         if notify
           existing_event.fetch_and_add_photos(Time.now) if !existing_event.photos.include?(trigger_photo)
-          existing_event.add_to_personalization(ig_user, vw) 
+          existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name) 
           ig_user.add_to_personalized_events(existing_event.id.to_s)
           existing_event.save!
           vw.personalized = true
@@ -139,7 +139,7 @@ class WatchVenue
 
           event.insert_photos_safe(additional_photos)
 
-          event.add_to_personalization(ig_user, vw)
+          event.add_to_personalization(ig_user,  vw.trigger_media_user_name)
           
           ig_user.add_to_personalized_events(event.id.to_s)
 
@@ -153,7 +153,7 @@ class WatchVenue
           
           if notify && creating_user != ig_user
             message = "#{vw.trigger_media_user_name} is at #{venue.name}!"
-           SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s])
+            SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s])
           end
 
           event_creation_count += 1
