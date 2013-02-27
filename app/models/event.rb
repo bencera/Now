@@ -294,8 +294,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
 
     #if 1 personalized photo -- make a 3 photo card
-    if main_photo_ids && main_photo_ids.count == 1 && !self.personalized.nil?
-      main_photo_ids.push(*self.photo_ids[0..1])
+    if main_photo_ids.any? && !self.personalized.nil?
+      main_photo_ids.push(*self.photo_ids[0..1]) if main_photo_ids.count == 1
       return main_photo_ids[0..(PHOTO_CARD_PHOTOS - 1)]
     end
 
