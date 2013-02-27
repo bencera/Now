@@ -308,7 +308,7 @@ module EventsHelper
 
       if personalized_events.count < 5
         #we need to do another search
-        more_events = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :id.in => (personalized_event_ids - found_event_ids)[0..50] )
+        more_events = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :id.in => (personalized_event_ids - found_event_ids)[0..50] ).entries
       end
 
       personalized_events.push(*(more_events[0..(5 - personalized_events.count)]))

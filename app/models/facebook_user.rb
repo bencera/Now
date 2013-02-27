@@ -312,7 +312,8 @@ class FacebookUser
   end
 
   def add_to_personalized_events(event_id)
-    $redis.lpush("PERSONALIZED:#{self.now_id}", event_id.to_s)
+    already_there = self.get_personalized_event_ids
+    $redis.lpush("PERSONALIZED:#{self.now_id}", event_id.to_s) unless  already_there.include(event_id.to_s)
 
   end
 
@@ -323,7 +324,6 @@ class FacebookUser
 
     vws.each do |vw|
       personalized_events << vw.event_id unless vw.event_id.nil? || personalized_events.include?(vw.event_id)
-      break if personalized_events > 20
     end
 
     $redis.del("PERSONALIZED:#{self.now_id}")
