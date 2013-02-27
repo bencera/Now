@@ -23,6 +23,7 @@
 #  updated_at              :datetime        not null
 #  trigger_media_user_name :string(255)
 #  personalized            :boolean         default(FALSE)
+#  trigger_media_fullname  :string(255)
 #
 
 require 'test_helper'
