@@ -297,7 +297,25 @@ module EventsHelper
         venues[event.venue_id] = event.id
       end
     end
-    return events[0..(num_events - 1)]
+    
+    if options[:facebook_user]
+      facebook_user = options[:facebook_user]
+      personalized_event_ids = facebook_user.get_personalized_event_ids()
+      personalized_events = []
+      event_list.each {|event| personalized_events << event unless event.personalize_for[facebook_user.now_id].nil?}
+      
+      found_event_ids = personalized_events.map{|event| event.id}
+
+      if personalized_events.count < 5
+        #we need to do another search
+        more_events = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :id.in => (personalized_event_ids - found_event_ids)[0..50] )
+      end
+
+      personalized_events.push(*(more_events[0..(5 - personalized_events.count)]))
+      return [*events[0..(num_events -1)], *personalized_events]
+    else
+      return events[0..(num_events - 1)]
+    end
 
     #this is commented out because we're just using event end_time to rank events for now so the above code is faster
 #

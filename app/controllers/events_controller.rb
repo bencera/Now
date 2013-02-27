@@ -78,7 +78,9 @@ class EventsController < ApplicationController
       if params[:liked] && params[:nowtoken]
         @events = EventsHelper.get_localized_likes(coordinates, maxdistance, params[:nowtoken]).entries
       else
-        @events = EventsHelper.get_localized_results(coordinates, max_distance, params).entries
+        search_params = params.clone
+        search_params[:facebook_user] = facebook_user
+        @events = EventsHelper.get_localized_results(coordinates, max_distance, search_params).entries
        
         #when a user opens the app, we really want them to see activity
 

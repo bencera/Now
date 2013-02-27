@@ -332,6 +332,12 @@ class FacebookUser
     end
   end
 
+  def get_personalized_event_ids(options = {})
+    count = options[:count] || $redis.llen("PERSONALIZED:#{self.now_id}")
+
+    $redis.lrange("PERSONALIZED:#{self.now_id}",0,count)
+  end
+
   def self.fake(name, photo_url, fake_now_id=-1) 
 
     Hashie::Mash.new({:now_id => fake_now_id, :now_profile => {:first_name => name, :profile_photo_url => photo_url}})
