@@ -309,6 +309,7 @@ module EventsHelper
       event_list.each {|event| personalized_events << event unless already_personalized.include?(event.id) || event.personalize_for[facebook_user.now_id].nil?}
       
       found_event_ids = personalized_events.map{|event| event.id}
+      found_event_ids += already_personalized
 
       if (already_personalized.count + personalized_events.count) < 5
         #we need to do another search
