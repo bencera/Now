@@ -55,7 +55,7 @@ class PhotoLike
         like_log = LikeLog.new
         like_log.photo_id = photo_id
         like_log.event_id = params[:event_id]
-        like_log.venue_id = event.venue.id.to_s
+        like_log.venue_id = event.venue.id.to_s unless event.nil? || event.venue.nil?
         like_log.like_time = Time.at(params[:like_time].to_i)
         like_log.facebook_user_id = facebook_user.id.to_s
         like_log.save!
@@ -74,6 +74,7 @@ class PhotoLike
       end
     end
 
+    return if event.nil?
     event_photos = event.photos.where(:now_likes.gt => 0).order_by([[:now_likes, :desc]]).entries.map {|photo| photo.id}
     if event_photos.count > 0
       event.photo_card = event_photos
