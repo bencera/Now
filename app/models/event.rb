@@ -1161,6 +1161,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
     personalization = self.personalize_for[facebook_user.now_id] 
     return if personalization.nil?
 
+    self.personalized = personalization
+
     pers_settings = self.personalizations[personalization]
     photo_count = pers_settings["friend_photos"].count
     friend_names = pers_settings["friend_names"]
