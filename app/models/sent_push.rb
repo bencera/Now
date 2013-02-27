@@ -23,7 +23,7 @@ class SentPush < ActiveRecord::Base
 
   has_many :event_opens
   
-  def self.notify_users(message, event_id, device_ids, fb_user_ids)
+  def self.notify_users(message, event_id, device_ids, fb_user_ids, options={})
 
     #ideally find all devices and fb_users we've pushed to already today and ignore
 
@@ -74,7 +74,9 @@ class SentPush < ActiveRecord::Base
                       :sent_time => Time.now, 
                       :opened_event => false, 
                       :reengagement => false, 
-                      :user_count => 1
+                      :user_count => 1,
+                      :ab_test_id => options[:ab_test_id],
+                      :is_a => options[:is_a]
                      )
     end
 
@@ -85,11 +87,13 @@ class SentPush < ActiveRecord::Base
                       :sent_time => Time.now, 
                       :opened_event => false, 
                       :reengagement => false, 
-                      :user_count => 1
+                      :user_count => 1,
+                      :ab_test_id => options[:ab_test_id],
+                      :is_a => options[:is_a]
                      )
     end
 
-    FacebookUser.where(:now_id => "2").first.send_notification("Sent Push to #{device_ids.count + fb_user_ids.count} users", event_id) unless (device_ids.count + fb_user_ids.count) == 0
+    FacebookUser.where(:now_id => "2").first.send_notification("#{options[:ab_test_id]}: Sent Push to #{device_ids.count + fb_user_ids.count} users", event_id) unless (device_ids.count + fb_user_ids.count) == 0
   end
 
   def self.batch_push(message, event_id, user_count)
