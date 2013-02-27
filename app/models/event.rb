@@ -1054,7 +1054,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
 
     liked_photos = (photos_orig.clone - friend_photos) .keep_if {|photo| photo.now_likes > 0}.sort_by {|photo| photo.now_likes.to_i}.reverse
-    photos = ((photos_orig.clone - liked_photos) - friend_photos).sort_by {|photo| photo.time_taken}
+    photos = ((photos_orig.clone - liked_photos) - friend_photos).sort_by {|photo| photo.time_taken}.reverse
 
 
     max_rand = (photos.count > 20) ? 5 : 2
@@ -1080,6 +1080,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       now_user_map = {}
       FacebookUser.where(:ig_username.in => friend_list).each do |now_ig_user|
         now_user_map[now_ig_user.ig_username] = now_ig_user.now_id
+
       end
     end
 
