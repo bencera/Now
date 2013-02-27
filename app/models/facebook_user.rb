@@ -313,7 +313,7 @@ class FacebookUser
 
   def add_to_personalized_events(event_id)
     already_there = self.get_personalized_event_ids
-    $redis.lpush("PERSONALIZED:#{self.now_id}", event_id.to_s) unless  already_there.include(event_id.to_s)
+    $redis.lpush("PERSONALIZED:#{self.now_id}", event_id.to_s) unless  already_there.include?(event_id.to_s)
 
   end
 
