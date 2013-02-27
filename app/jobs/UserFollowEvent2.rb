@@ -187,7 +187,9 @@ class UserFollowEvent2
   end
 
   def self.get_media_user(media)
-    FacebookUser.where(:ig_username => media.user.username).first || FacebookUser.where(:ig_user_id => media.user.id.to_s).first  || FacebookUser.where(:now_id => "0").first
+    user = FacebookUser.where(:ig_username => media.user.username).first || FacebookUser.where(:ig_user_id => media.user.id.to_s).first 
+    user = FacebookUser.where(:now_id => "0").first if user.nil? || !user.now_profile.personalize_ig_feed
+    return user
   end
 
 
