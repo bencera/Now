@@ -23,6 +23,8 @@ class WatchVenue
       ig_user = FacebookUser.first(:conditions => {:now_id => vw.user_now_id})
       venue = Venue.first(:conditions => {:id => vw.venue_id})
       trigger_photo = Photo.first(:conditions => {:id => vw.trigger_media_id})
+  
+      client = InstagramWrapper.get_client(:access_token => ig_user.ig_accesstoken) 
 
       next if trigger_photo.nil?
 
@@ -44,18 +46,19 @@ class WatchVenue
       existing_event = venue.get_live_event  
       if existing_event
         #see if user already has a personalization and dont notify if so
-        notify = VenueWatch.where("event_id = ? AND user_now_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.now_id.to_s, true).empty?
+        notify = VenueWatch.where("event_id = ? AND user_now_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.now_id.to_s, true).empty? &&
+          client.follow_back?(vw.trigger_media_user_id)
         
         if notify
           existing_event.fetch_and_add_photos(Time.now) if !existing_event.photos.include?(trigger_photo)
-          existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name) 
+          existing_event.add_to_personalization(ig_user, vw) 
           ig_user.add_to_personalized_events(existing_event.id.to_s)
           existing_event.save!
+          vw.personalized = true
         end
 
         vw.ignore = true;
         vw.event_created = false;
-        vw.personalized = true
         vw.event_id = existing_event.id.to_s
         vw.save!
         
@@ -91,7 +94,7 @@ class WatchVenue
       end
       greylist = (venue.categories && venue.categories.any? && CategoriesHelper.grey_list[venue.categories.last["id"]])
       
-      client = InstagramWrapper.get_client(:access_token => ig_user.ig_accesstoken) 
+      
       update += 1
 
       begin
@@ -121,17 +124,22 @@ class WatchVenue
           vw.event_creation_id = ec.id
           vw.event_created = true;
           vw.greylist = greylist == true
-          vw.personalized = true
+
+          notify = client.follow_back?(vw.trigger_media_user_id)
+
+          vw.personalized = notify
           vw.ignore = true
           
           vw.save!
+
+          
 
 
           event = Event.find(event_id)
 
           event.insert_photos_safe(additional_photos)
 
-          event.add_to_personalization(ig_user, vw.trigger_media_user_name)
+          event.add_to_personalization(ig_user, vw)
           
           ig_user.add_to_personalized_events(event.id.to_s)
 
@@ -139,12 +147,13 @@ class WatchVenue
           event.venue.notify_subscribers(event)
           event.save!
 
+
           #notify superusers that the event was created
           #notify user that their friend is at the venue
           
-          if creating_user != ig_user
+          if notify && creating_user != ig_user
             message = "#{vw.trigger_media_user_name} is at #{venue.name}!"
-            SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s])
+           SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s])
           end
 
           event_creation_count += 1
