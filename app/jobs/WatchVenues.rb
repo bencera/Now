@@ -63,7 +63,7 @@ class WatchVenue
         vw.save!
         
         unless (ig_user.ig_user_id == vw.trigger_media_user_id) || !notify
-          message = "#{vw.trigger_media_fullname} is at #{venue.name}!"
+          message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}!"
           SentPush.notify_users(message, existing_event.id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION")
         end
 
@@ -152,7 +152,7 @@ class WatchVenue
           #notify user that their friend is at the venue
           
           if notify && creating_user != ig_user
-            message = "#{vw.trigger_media_fullname} is at #{venue.name}!"
+            message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}!"
             SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION")
           end
 
