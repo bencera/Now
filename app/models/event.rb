@@ -1170,10 +1170,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     if min_count > 1
       verb = LIVE_STATUSES.include?(self.status) ? "have" : "had"
-      self.overriding_description = "You #{verb} #{friend_names.count} friends here."
+      self.overriding_description = "You #{verb} #{friend_names.count} friends here"
     else
       verb = LIVE_STATUSES.include?(self.status) ? "is" : "was"
-      self.overriding_description = "#{friend_names.first} #{verb} here."
+      self.overriding_description = "#{friend_names.first} #{verb} here"
     end
 
     fake_user = pers_settings["friend_info"]
