@@ -95,7 +95,7 @@ class InstagramWrapper
   end
 
   def follow_back?(user_id)
-    respone = self.get_relationship(user_id)
+    response = self.get_relationship(user_id)
     return (response.data.incoming_status == "followed_by") && (response.data.outgoing_status == "follows")
   end
 
