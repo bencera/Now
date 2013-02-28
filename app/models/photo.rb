@@ -170,10 +170,11 @@ class Photo
           fs_venue_id = venue.id unless media.location.name != venue.name
           break if fs_venue_id != nil
         end
-        venue = (Venue.first(conditions: {:id => fs_venue_id}) || Venue.create_venue(fs_venue_id)) unless fs_venue_id.nil?
-        if venue
-          venue.ig_venue_id = media.location.id
-          venue.save!
+        begin
+          venue = Venue.create_venue(fs_venue_id) unless fs_venue_id.nil?
+        rescue
+          #error log this
+          return 
         end
       end
     else
