@@ -17,6 +17,8 @@
 #  greylist            :boolean
 #  ig_media_id         :string(255)
 #  venue_id            :string(255)
+#  venue_watch_id      :integer
+#  no_fs_data          :boolean
 #
 
 require 'test_helper'
