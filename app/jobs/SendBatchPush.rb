@@ -29,6 +29,8 @@ class SendBatchPush
       emoji = ["E301".to_i(16)].pack("U")
     when "Performance"
       emoji = ["E503".to_i(16)].pack("U")
+    when "Shopping"
+      emoji = "\u{1F460}"
     end
 
     alert = ""
