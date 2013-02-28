@@ -198,7 +198,30 @@ class Venue
       Instagram.location_search(nil, nil, :foursquare_v2_id => self.fs_venue_id).first
     end
   end
-  
+ 
+  def self.create_venue_from_ig_info(ig_location_id, name, latitude, longitude, options={})
+    #does the venue already exist? -- maybe check location & name to be sure
+    existing_venue = Venue.first(:conditions => {:ig_venue_id => ig_location_id})
+    new_venue = nil
+    
+    if existing_venue.nil?
+      possible_venues = Venue.search(name, latitude, longitude, false)  
+      fs_venue_id = nil
+        
+      possible_venues.each do |venue_json|
+        if existing_venue = Venue.first(:conditions => {:_id => venue_json.id})
+          new_venue = existing_venue
+        elsif name == venue_json.name
+          new_venue = Venue.create_venue(venue_json.id)
+        end
+        break if new_venue
+      end
+    else
+      new_venue = existing_venue
+    end
+
+    return new_venue
+  end
 
   ######################################
   # This is called before saving.  we are phasing this code out, so only call this if venue
