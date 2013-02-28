@@ -58,7 +58,7 @@ class UserFollow3
                                        :end_time => Time.at(media.created_time.to_i + 3.hours.to_i),
                                        :venue_ig_id => venue_ig_id,
                                        :user_now_id => ig_user.now_id,
-                                       :trigger_media_id => phota && photo.id.to_s,
+                                       :trigger_media_id => photo && photo.id.to_s,
                                        :trigger_media_ig_id => media.id,
                                        :trigger_media_user_id => media.user.id, 
                                        :trigger_media_user_name => media.user.username,
