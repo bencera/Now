@@ -686,11 +686,13 @@ SCORE_HALF_LIFE       = 7.day.to_f
   # instagram, but we may want to stop if the venue has already
   # gotten updates from one of our city subscriptions
   ##############################################################
-  def fetch_and_add_photos(current_time)
+  def fetch_and_add_photos(current_time, options={})
 
     #TODO: don't use self.end_time -- use the timestamp of the last ig photo 
 
     venue_photos = []
+
+    override_token = options[:override_token]
 
     begin
       if self.venue.ig_venue_id.blank?
@@ -709,7 +711,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
       random = [0..5].sample
 
-      if  $redis.get("USE_EMERGENCY_TOKENS") == "true"
+      if override_token
+        client = InstagramWrapper.get_client(:access_token => override_token)
+        response = client.venue_media(venue_ig_id, :min_timestamp => self.end_time)
+      elsif $redis.get("USE_EMERGENCY_TOKENS") == "true"
         token = InstagramWrapper.get_random_token_emergency()
         client = InstagramWrapper.get_client(:access_token => token)
         response = client.venue_media(venue_ig_id, :min_timestamp => self.end_time)
