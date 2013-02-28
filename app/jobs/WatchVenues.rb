@@ -13,13 +13,17 @@ class WatchVenue
 
     update = 0
 
-    vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true)
+    vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true).entries
+
+    Rails.logger.info("#{vws.count} vws")
 
     event_creation_count = 0
     event_skip_count = 0
 
 
     vws.each do |vw|
+
+      Rails.logger.info("XXXX #{vw.user_now_id} #{vw.venue_ig_id} #{vw.trigger_media_user_name}")
 
       ig_user = FacebookUser.first(:conditions => {:now_id => vw.user_now_id})
 
@@ -28,6 +32,8 @@ class WatchVenue
       trigger_photo = Photo.first(:conditions => {:id => vw.trigger_media_id})
   
       creating_user = get_creating_user(vw.trigger_media_user_id)
+
+
 
       #quick escapes
       if ig_user.nil? || ig_user.ig_accesstoken.nil?
@@ -67,12 +73,15 @@ class WatchVenue
       end
 
       venue_ig_id = vw.venue_ig_id
-      next if ignore_venues.include?(venue_ig_id)
+      if ignore_venues.include?(venue_ig_id)
+        vw.last_examination = Time.now;
+        vw.save
+      end
       ignore_venues << venue_ig_id
 
       #blacklist -- log it
 
-      if venue && check_blacklist(venue, vw)
+      if venue && check_blacklist(venue, vw, creating_user)
         event_skip_count += 1
         next
       end
@@ -81,12 +90,14 @@ class WatchVenue
       
       update += 1
 
+      Rails.logger.info("MADE IT TO THIS POINT")
       begin
         response = client.venue_media(venue_ig_id, :min_timestamp => 3.hours.ago.to_i)
         vw.last_examination = Time.now; 
 
         if check_media(response)
 
+          Rails.logger.info("Media checked out ok")
           #check if the venue already exists -- if so try creating
 
           if venue.nil?
@@ -115,7 +126,7 @@ class WatchVenue
             end
           end
 
-          if check_blacklist(venue, vw)
+          if check_blacklist(venue, vw, creating_user)
             event_skip_count += 1
             next
           end
@@ -195,8 +206,10 @@ class WatchVenue
         raise
       end
 
+      vw.save if vw.changed?
       break if update > max_updates
     end
+
 
     FacebookUser.where(:now_id => "2").first.send_notification(
       "WatchVenues created #{event_creation_count} new events.  Skipped #{event_skip_count}", nil) unless event_creation_count < 1
@@ -225,7 +238,7 @@ class WatchVenue
     return true
   end
 
-  def self.check_blacklist(venue, vw)
+  def self.check_blacklist(venue, vw, creating_user)
     if venue.blacklist || (venue.categories && venue.categories.any? && CategoriesHelper.black_list[venue.categories.last["id"]])
 
       EventCreation.create(:facebook_user_id => creating_user.id.to_s,
