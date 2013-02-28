@@ -8,7 +8,7 @@ class WatchVenue
 
     max_updates = params[:max_updates] || 10
 
-    ignore_venues = []
+    ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
 
     update = 0
 
@@ -21,36 +21,31 @@ class WatchVenue
     vws.each do |vw|
 
       ig_user = FacebookUser.first(:conditions => {:now_id => vw.user_now_id})
-      venue = Venue.first(:conditions => {:id => vw.venue_id})
+
+      #these might both be nil now
+      venue = Venue.first(:conditions => {:ig_venue_id => vw.venue_ig_id})
       trigger_photo = Photo.first(:conditions => {:id => vw.trigger_media_id})
   
-      client = InstagramWrapper.get_client(:access_token => ig_user.ig_accesstoken) 
-
-      next if trigger_photo.nil?
-
       creating_user = get_creating_user(vw.trigger_media_user_id)
 
       #quick escapes
-      if ig_user.ig_accesstoken.nil?
-        vw.destroy
-        next
-      end
-
-      if venue.nil?
-
-        vw.ignore = true;
+      if ig_user.nil? || ig_user.ig_accesstoken.nil?
+        #should probably note that it's a bad venue watch
+        vw.ignore = true
         vw.save!
         next
       end
 
-      existing_event = venue.get_live_event  
-      if existing_event
+      client = InstagramWrapper.get_client(:access_token => ig_user.ig_accesstoken) 
+
+
+      if venue && (existing_event = venue.get_live_event)
         #see if user already has a personalization and dont notify if so
         notify = VenueWatch.where("event_id = ? AND user_now_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.now_id.to_s, true).empty? &&
           client.follow_back?(vw.trigger_media_user_id)
         
         if notify
-          existing_event.fetch_and_add_photos(Time.now) if !existing_event.photos.include?(trigger_photo)
+          existing_event.fetch_and_add_photos(Time.now, :override_token => ig_user.ig_accesstoken) if trigger_photo.nil? || !existing_event.photos.include?(trigger_photo)
           existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name) 
           ig_user.add_to_personalized_events(existing_event.id.to_s)
           existing_event.save!
@@ -70,29 +65,17 @@ class WatchVenue
         next
       end
 
-      venue_ig_id = venue.ig_venue_id
+      venue_ig_id = vw.venue_ig_id
       next if ignore_venues.include?(venue_ig_id)
       ignore_venues << venue_ig_id
 
       #blacklist -- log it
-      if venue.blacklist || (venue.categories && venue.categories.any? && CategoriesHelper.black_list[venue.categories.last["id"]])
 
-        EventCreation.create(:facebook_user_id => creating_user.id.to_s,
-                             :instagram_user_id =>  vw.trigger_media_user_id,
-                             :creation_time => Time.now,
-                             :blacklist => true,
-                             :greylist => false,
-                             :ig_media_id => vw.trigger_media_ig_id,
-                             :venue_id => venue.id.to_s) 
-
-        vw.ignore = true
-        vw.blacklist = true
-        vw.save!
-
+      if venue && check_blacklist(venue, vw)
         event_skip_count += 1
         next
       end
-      greylist = (venue.categories && venue.categories.any? && CategoriesHelper.grey_list[venue.categories.last["id"]])
+
       
       
       update += 1
@@ -104,8 +87,46 @@ class WatchVenue
         additional_photos = []
 
         if check_media(response, :additional_photos => additional_photos)
-          Rails.logger.info("WatchVenues Will create new event")
+
+
+          #check if the venue already exists -- if so try creating
+
+          if venue.nil?
+            location = response.data.first.location
+            venue = Venue.create_venue_from_ig_info(vw.venue_ig_id, location.name, location.latitude, location.longitude, false)
+
+            if venue.nil?
+              #will show how often event was not created due to lack of FS venue info
+
+              ec = EventCreation.create(:event_id => nil,
+                                       :facebook_user_id => creating_user.id.to_s,
+                                       :instagram_user_id =>  vw.trigger_media_user_id,
+                                       :creation_time => Time.now,
+                                       :blacklist => false,
+                                       :greylist => false,
+                                       :no_fs_data => true,
+                                       :ig_media_id => vw.trigger_media_ig_id,
+                                       :venue_id => nil,
+                                       :venue_watch_id => vw.id) 
+
+              vw.event_created = false; 
+              vw.ignore = true
+              vw.save!  
+              event_skip_count += 1
+              next
+            end
+          end
+
+          if check_blacklist(venue, vw)
+            event_skip_count += 1
+            next
+          end
+ 
          
+          greylist = (venue.categories && venue.categories.any? && CategoriesHelper.grey_list[venue.categories.last["id"]])
+          
+          
+          Rails.logger.info("WatchVenues Will create new event")
           event_id = create_event_or_reply(venue, creating_user, vw.trigger_media_ig_id) 
         
           ec = EventCreation.create(:event_id => event_id.to_s,
@@ -115,7 +136,8 @@ class WatchVenue
                                :blacklist => false,
                                :greylist => greylist || false,
                                :ig_media_id => vw.trigger_media_ig_id,
-                               :venue_id => venue.id.to_s) 
+                               :venue_id => venue.id.to_s,
+                               :venue_watch_id => vw.id) 
           
           
           Rails.logger.info("Created Event #{event_id}")
@@ -202,6 +224,27 @@ class WatchVenue
     end
 
     return true
+  end
+
+  def self.check_blacklist(venue, vw)
+    if venue.blacklist || (venue.categories && venue.categories.any? && CategoriesHelper.black_list[venue.categories.last["id"]])
+
+      EventCreation.create(:facebook_user_id => creating_user.id.to_s,
+                           :instagram_user_id =>  vw.trigger_media_user_id,
+                           :creation_time => Time.now,
+                           :blacklist => true,
+                           :greylist => false,
+                           :ig_media_id => vw.trigger_media_ig_id,
+                           :venue_id => venue.id.to_s,
+                           :venue_watch_id => vw.id)  
+
+      vw.ignore = true
+      vw.blacklist = true
+      vw.save!
+      return true
+    end
+
+    return false
   end
 
   def self.create_event_or_reply(venue, fb_user, media_id, options={})

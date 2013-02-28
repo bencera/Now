@@ -47,20 +47,18 @@ class UserFollow3
           #Rails.logger.info("Media id: #{media_id} venue_ig_id #{venue_ig_id}")
 
          
-          
-          photo = add_photo(media)
+         
+          photo = Photo.where(:ig_media_id => media.id).first
           venue = photo.venue if photo #some photos have locations that dont correspond to fsq -- skip for now
-
-          next if photo.nil? || venue.nil?           
 
           next if ignore_media.include?(media.id.to_s) || media.created_time.to_i < 3.hours.ago.to_i
 
-          venue_watch = VenueWatch.new(:venue_id => venue.id.to_s,
+          venue_watch = VenueWatch.new(:venue_id => venue && venue.id.to_s,
                                        :start_time => Time.at(media.created_time.to_i),
                                        :end_time => Time.at(media.created_time.to_i + 3.hours.to_i),
                                        :venue_ig_id => venue_ig_id,
                                        :user_now_id => ig_user.now_id,
-                                       :trigger_media_id => photo.id.to_s,
+                                       :trigger_media_id => phota && photo.id.to_s,
                                        :trigger_media_ig_id => media.id,
                                        :trigger_media_user_id => media.user.id, 
                                        :trigger_media_user_name => media.user.username,
@@ -99,18 +97,6 @@ class UserFollow3
 
     ignore_media = ignore_media.uniq
   end
-
-  def self.add_photo(media)
-     
-    if Photo.where(:ig_media_id => media.id).first
-      new_photo = Photo.where(:ig_media_id => media.id).first
-    else
-      new_photo = Photo.create_photo("ig", media, nil)
-    end
-
-    return new_photo
-  end
-
 
 end
 
