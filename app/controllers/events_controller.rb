@@ -245,6 +245,18 @@ class EventsController < ApplicationController
     EventsHelper.get_event_cards(@more_events)
     @event.add_view
     @event.add_click
+
+    array = @photos[0..25]
+
+    @mobile_photos = []
+
+    while array.any?
+      @mobile_photos << []
+      rand_num = [2,3].sample
+      rand_num.times do 
+        @mobile_photos.last << array.pop if array.any?
+      end
+    end
   end
   
   def cities

@@ -1,0 +1,263 @@
+/* Reset & Basics (Inspired by E. Meyers)
+================================================== */
+  html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline; }
+  article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+    display: block; }
+  body {
+    line-height: 1; }
+  ol, ul {
+    list-style: none; }
+  blockquote, q {
+    quotes: none; }
+  blockquote:before, blockquote:after,
+  q:before, q:after {
+    content: '';
+    content: none; }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0; }
+
+/* Fonts
+================================================== */
+  
+  @font-face {
+    font-family: 'League Gothic Regular';
+    src: url('League_Gothic.eot');
+    src: local('League Gothic Regular'), local('LeagueGothic-Regular'), url('League_Gothic.otf') format('opentype');
+  }
+
+/* Site styles
+================================================== */
+    html, body { height: 100%; }
+
+    body {
+        font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.4em;
+        text-align: left;
+        color: #473d20;
+        background-attachment: fixed !important;
+        -webkit-font-smoothing: antialiased;
+        background-color: white;
+      }
+
+    h1 {
+        font-family: 'League Gothic Regular', Helvetica, sans-serif;
+        font-weight: bold;
+        font-size: 80px;
+        line-height: 1em;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 10px;
+        text-shadow: 0px -1px 1px #333;
+    }
+    
+    h2 {
+        font-weight: bold;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+              
+    hr { margin: 20px 0; height: 1px; border: 0; background-color: #ccc; }
+    p { width: 800px; margin: 0 auto 20px auto; }
+    a { color: #099; text-decoration: none;  }
+    a:hover {}
+
+    #mobileVenue {
+font-size: 12px;
+}
+#header.fixed {
+position: fixed;
+top: 0;
+}
+#header {
+background: #ff4a6f;
+width: 100%;
+z-index: 10000;
+-moz-box-shadow: rgba(0, 0, 0, 0.5) 0 1px 5px 0;
+-webkit-box-shadow: rgba(0, 0, 0, 0.5) 0 1px 5px 0;
+box-shadow: rgba(0, 0, 0, 0.5) 0 1px 5px 0;
+}
+#header, #headerSpacer {
+height: 43px;
+}
+.fixed {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+}
+.wrap {
+margin: 0 auto;
+padding: inherit 10px;
+padding: inherit 1.041667rem;
+width: 90%;
+max-width: 60rem;
+}
+.leftSide {
+float: left;
+}
+#header #logo {
+margin: 0;
+padding: 0;
+}
+#header #logo a, #header #logo span.logoImage {
+background: url('http://s3.amazonaws.com/now_assets/now-web-logo.png') left center no-repeat;
+float: left;
+height: 29px;
+margin: 0;
+padding: 15px 0 0 0;
+text-indent: -9999em;
+width: 101px;
+}
+  .rightSide {
+float: right;
+}
+#header .appButton {
+background: #e31254;
+border-left: 1px solid #ff5473;
+cursor: pointer;
+position: absolute;
+right: 0;
+width:120px;
+
+}
+a, a:link, a:visited, a:active {
+color: #ff5473;
+cursor: pointer;
+text-decoration: none;
+}
+#header .appButton>a>div {
+background: transparent;
+border: none;
+border-left: 1px solid #ff5473;
+color: white;
+display: table-cell;
+font-size: 14px;
+font-weight: bold;
+height: 24px;
+margin: 0 auto;
+padding: 10px 10px 9px 10px;
+text-align: center;
+vertical-align: middle;
+width:  120px;
+}
+#header .appButton>a>div {
+background: transparent;
+border: none;
+border-left: 1px solid #ff5473;
+color: white;
+display: table-cell;
+font-size: 14px;
+font-weight: bold;
+height: 24px;
+margin: 0 auto;
+padding: 10px 10px 9px 10px;
+text-align: center;
+vertical-align: middle;
+}
+
+#header, #headerSpacer {
+height: 43px;
+}
+#mobileVenue .map {
+min-height: 160px;
+}
+.map {
+min-height: 184px;
+overflow: hidden;
+padding: 0;
+position: relative;
+text-align: center;
+}
+.map #mapContainer {
+position: absolute;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+z-index: -1;
+}
+.map #insetShadow {
+bottom: 0;
+height: 5px;
+position: absolute;
+width: 100%;
+background: #000000;
+background: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+background: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+}
+.pin {
+width: 100%;
+position: relative;
+-webkit-animation-name: 'fade';
+-moz-animation-name: 'fade';
+-o-animation-name: 'fade';
+animation-name: 'fade';
+-webkit-animation-fill-mode: both;
+-moz-animation-fill-mode: both;
+-ms-animation-fill-mode: both;
+-o-animation-fill-mode: both;
+animation-fill-mode: both;
+-webkit-animation-duration: 0.3s;
+-moz-animation-duration: 0.3s;
+-ms-animation-duration: 0.3s;
+-o-animation-duration: 0.3s;
+animation-duration: 0.3s;
+-webkit-animation-duration: 0.5s;
+-moz-animation-duration: 0.5s;
+-o-animation-duration: 0.5s;
+animation-duration: 0.5s;
+}
+
+.cardPinHolder{
+  margin-top:40px;
+
+}
+
+.venueName{
+  color: #ff4a6f;
+  font-weight: bold;
+}
+
+.venueDescription .timeAgo {
+float: right;
+color: gray;
+}
+
+
+.eventPhotos{
+
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  line-height: 0;
+  height: 0;
+}
+ 
+.clearfix {
+  display: inline-block;
+}
+ 
+html[xmlns] .clearfix {
+  display: block;
+}
+ 
+* html .clearfix {
+  height: 1%;
+}
+
+
+
+   
