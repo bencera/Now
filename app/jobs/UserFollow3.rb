@@ -42,6 +42,7 @@ class UserFollow3
 
           #Rails.logger.info("Media id: #{media_id} venue_ig_id #{venue_ig_id}")
 
+         
           
           photo = add_photo(media)
           venue = photo.venue if photo #some photos have locations that dont correspond to fsq -- skip for now
@@ -74,6 +75,7 @@ class UserFollow3
         break if updates > max_updates
 
       rescue
+        Rails.logger.info(media) if media
         raise
       end
 
