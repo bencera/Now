@@ -43,7 +43,7 @@ class WatchVenue
       if venue && (existing_event = venue.get_live_event)
         #see if user already has a personalization and dont notify if so
         notify = VenueWatch.where("event_id = ? AND user_now_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.now_id.to_s, true).empty? &&
-          client.follow_back?(vw.trigger_media_user_id)
+          (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1")
         
         if notify
           existing_event.fetch_and_add_photos(Time.now, :override_token => ig_user.ig_accesstoken) if trigger_photo.nil? || !existing_event.photos.include?(trigger_photo)
@@ -157,7 +157,7 @@ class WatchVenue
           vw.event_created = true;
           vw.greylist = greylist == true
 
-          notify = client.follow_back?(vw.trigger_media_user_id)
+          notify = (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1")
 
           vw.personalized = notify
           vw.ignore = true
@@ -171,10 +171,10 @@ class WatchVenue
 
           event.insert_photos_safe(additional_photos)
 
-          event.add_to_personalization(ig_user,  vw.trigger_media_user_name)
-          
-          ig_user.add_to_personalized_events(event.id.to_s)
-
+          if notify
+            event.add_to_personalization(ig_user,  vw.trigger_media_user_name)
+            ig_user.add_to_personalized_events(event.id.to_s) 
+          end
 
           event.venue.notify_subscribers(event)
           event.save!
