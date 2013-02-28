@@ -17,10 +17,13 @@
 #  greylist            :boolean
 #  ig_media_id         :string(255)
 #  venue_id            :string(255)
+#  venue_watch_id      :integer
+#  no_fs_data          :boolean
 #
 
 class EventCreation < ActiveRecord::Base
-  attr_accessible :creation_time, :event_id, :facebook_user_id, :instagram_user_id, :instagram_user_name, :search_entry_id, :session_token, :udid, :blacklist, :greylist, :ig_media_id, :venue_id
+  attr_accessible :creation_time, :event_id, :facebook_user_id, :instagram_user_id, :instagram_user_name, :search_entry_id, :session_token, :udid, :blacklist, :greylist, :ig_media_id, :venue_id, :venue_watch_id, :no_fs_data
 
   belongs_to :search_entry
+  belongs_to :venue_watch
 end
