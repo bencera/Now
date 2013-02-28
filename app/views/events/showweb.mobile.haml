@@ -1,190 +1,63 @@
-%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
-%script{:src=>"http://srobbin.github.com/chosen/chosen.jquery.min.js"}
-%script{:src=>"http://srobbin.github.com/intelligist/jquery.intelligist.min.js"}
-%script{:src=>"http://srobbin.github.com/backstretch/jquery.backstretch.min.js"}
-/     :javascript
-/         $.backstretch("#{@photos.all[rand(@photos.count)].url[1]}");
-:javascript
-    function initialize() {
-      var centerLatlng = new google.maps.LatLng(#{@venue.coordinates[1]+ 0.02},#{@venue.coordinates[0]});
-      var myLatlng = new google.maps.LatLng(#{@venue.coordinates[1]},#{@venue.coordinates[0]});
-      var myOptions = {
-        center: centerLatlng,
-        disableDefaultUI: true,
-        zoom: 12,
-        scrollwheel: false,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      };
-      var map = new google.maps.Map(document.getElementById("map_canvas"),
-          myOptions);
-      var image = "http://s3.amazonaws.com/now_assets/#{@category}_web.png";
-      var marker = new google.maps.Marker({
-            position: myLatlng,
-            title:"#{@venue.name}",
-            icon: image,
-            map: map
-            });
-            marker.setMap(map);
-
-        }
-    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-
-- if @photos.count != 0
-    .background_image{:style => "background-size: cover;background-position: 50% 50%;position: fixed;top: 0;left: 0;width: 100%;height: 100%; background-image:url('#{@photos[rand(@photos.count)].url[1]}')"}
-.dimmer{:style =>"background: rgba(252, 74, 111, 0.5);position: fixed;top: 0;left: 0;width: 100%;height: 100%;"}
-%script{:type=>"text/javascript"}
-    mixpanel.track("Show:loaded")
-    mixpanel.track_links("#nowlogo a", "Show:logo")
-    mixpanel.track_links("#downloadlogo a", "Show:download")
-    mixpanel.track_links("#content a", "Show:photo")
-#permalink_wrapper{:style => "background: #ff4a6f;height: 60px;border-bottom: 1px solid #e31254;position: fixed; top:0px; width: 100%; z-index: 100"}
-    #header_h{:style => "width: 1035px;margin: 0 auto;overflow: visible;"}
-        %a{:href => "http://getnowapp.com/"}
-            #now_logo{:style => "font-weight:bold; color:white;opacity:1;font-size:26px; margin: 10px 0 0 10px"}
-                = image_tag "http://s3.amazonaws.com/now_assets/now-web-logo.png", :width => "43px", :height => "35px"
-                - if @theme_title
-                    = "Now : #{@theme_title}"
-                - else
-                    = "Now : #{@venue.name}"
-        %a{:href => "http://getnowapp.com/download"}
-            .download{:style => "float:right; margin:-39px 12px"}
-                = image_tag "https://d3422saexnbpnl.cloudfront.net/static/images/appstorebadge2x.png", :width => "150px"
-
-.CloseupLeft{:style => "position: fixed;top: 60px;left: 50%;width: 222px;margin-left: -425px;"}
-    #SocialShare{:style => "position: fixed;left: 50%;top: 115px;width: 350px;margin-left: 185px;"}
-        %ul
-            %li{:style => "margin-bottom: 10px"}
-                - if @theme
-                    %div{:class=>"fb-like", :'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
-                - else
-                    %div{:class=>"fb-like", :'data-send'=>"false", :'data-layout'=>"button_count", :'data-width'=>"450", :'data-show-faces'=>"false"}
-
-
-            %li{:style => "margin-left: -10px"}
-                - if @theme
-                    %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button",:'data-url'=>"http://getnowapp.com/#{@theme}",:'data-text'=>"See what's happening now #{@is_city ? "in" : "at"} #{@theme_title}",:'data-via'=>"nowapp_", :'data-lang'=>"en"} Tweet
-                - else
-                    %a{:href=>"https://twitter.com/share", :class=>"twitter-share-button", :'data-lang'=>"en"} Tweet                         
-        .more_events
-            - if @theme_title
-                - text = "More events from #{@theme_title}"
-            - else
-                - text = "Happening now"
-            %h2{:style => "color:white; font-size: 20px; margin-top:10px"}= text
-            #events_box{:style => "box-shadow: 0 1px 3px rgba(34,25,25,0.4);-moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);-webkit-box-shadow: 0 1px 3px rgba(34,25,25,0.4);height:265px;width:320px;background-color:white;overflow-y: scroll; overflow-x: hidden;"}
-                - for event in @more_events
-                    - if @theme
-                        - url = "#{@theme}?event=#{event.id}"
-                    - else
-                        - url = "#{event.shortid}"
-                    %a{:href => "http://getnowapp.com/#{url}"}
-                        - if event.preview_photos.count > 5
-                            - event_height = "height:240px"
+.wrapper.touchPage#mobileVenue
+    #header.fixed
+        .wrap.loggedOut
+            .leftSide
+                #logo{:style => "margin-top:5px;float:left"}
+                    = image_tag "http://s3.amazonaws.com/now_assets/now-web-logo.png", :width => "40px"
+                #BrandName{:style => "float:left; margin-top:10px; margin-left: 5px; color: white; font-weight:bold; font-size: 22px"}
+                    Now
+            .righSide
+                .appButton
+                    %a.appLing{:href => "http://getnowapp.com/download"}
+                        .openText Open in App
+    #headerSpacer
+    #contents
+        #container
+            %a{:href => "comgooglemaps://?q=#{@venue.coordinates[1]},#{@venue.coordinates[0]}"}
+                .map
+                    #mapContainer
+                        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=11&size=160x100&maptype=roadmap&sensor=false&scale=2"
+                    .cardPinHolder
+                        .pin.med
+                            .icon
+                                = image_tag "http://s3.amazonaws.com/now_assets/#{@category}_web.png", :width => "58.5px", :height => "70px"
+                    #insetShadow
+            .venueDescription{:style => "margin:1% 2% 3% 2%"}
+                .venueName
+                    = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "7px", :height => "10px"
+                    = @venue.name
+                    .timeAgo
+                        - if @event.end_time.to_i > 1.hour.ago.to_i
+                            = "now"
                         - else
-                            - event_height = "height:138px"
-                        .event_plus{:style => event_height}
-                            .profile{:style => "margin: 10px 0 0 10px; float:left"}
-                                = image_tag "http://s3.amazonaws.com/now_assets/icon.png", :width => "25px", :height => "25px"
-                            .title{:style => "font-size:10px;text-align:left; font-weight:bold; margin-left:42px;width: 270px"}
-                                = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "9px", :height => "13px"
-                                = event.venue_name
-                                #time_ago{:style => "float:right; color:gray; margin-right: 0px"}
-                                    - t = Time.now.to_i - event.end_time.to_i 
-                                    - if t < 3600
-                                        = "now"
-                                    - elsif t < 86400
-                                        = "#{(t / 60 / 60).round}h"
-                                    - elsif t < 604800
-                                        = "#{(t / 60 / 60 / 24).round}d"
-                                    - elsif t < 2592000
-                                        = "#{(t / 60 / 60 / 24 / 7).round}w"
-                                    - elsif t < 31536000
-                                        = "#{(t / 60 / 60 / 24 / 30).round}mo"
-                                    - else
-                                        = "#{(t / 60 / 60 / 24 / 365).round}y"
-
-                            .photos{:style => "margin-left:10px"}
-                                - if event.preview_photos.count > 5
-                                    - event.preview_photos[0..5].each do |p|
-                                        = image_tag p.url[2], :width => '95px', :style => "margin:0 2px 2px 0"
-                                - else
-                                    - event.preview_photos[0..2].each do |p|
-                                        = image_tag p.url[2], :width => '95px', :style => "margin:0 2px 2px 0"
-
-        .more_events
-            %h2{:style => "color:white; font-size: 20px; margin-top:20px"} Cities & Themes
-            #events_box{:style => "box-shadow: 0 1px 3px rgba(34,25,25,0.4);-moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);-webkit-box-shadow: 0 1px 3px rgba(34,25,25,0.4);height:265px;width:320px;background-color:white;overflow-y: scroll; overflow-x: hidden;"}
-                - for entry in @themes_and_cities 
-                    #theme{:style => "height:114px"}
-                        %a{:href => "http://getnowapp.com/#{entry.name}"}
-                            = image_tag entry.url, :width => "320px"
-
-.main_content
-    #header-container
-        #header{:style => "height: 320px; margin-top:61px; margin-left: -520px"}
-            #map_canvas{:style => "width: 680px; height: 250px;"}
-            #map_shadow{:style => "position:absolute; top: 240px"}
-                = image_tag "http://s3.amazonaws.com/now_assets/map_shadow.png", :width => "680px", :height => "7px"
-            .profile_pic{:style => "float:left; margin: 10px 0 0 10px"}
-                - if @event.facebook_user.nil?
-                    = image_tag "http://s3.amazonaws.com/now_assets/icon.png", :width => "50px", :height => "50px"
-                - else
-                    = image_tag "#{@event.facebook_user.now_profile.profile_photo_url}", :width => "50px", :height => "50px"
-
-            .title{:style => "font-size:16px;text-align:left; font-weight:bold; margin-left:70px;"}
-                = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "9px", :height => "13px"
-                = @venue.name
-                #time_ago{:style => "float:right; color:gray; margin-right: 10px"}
-                    - if @event.end_time.to_i > 1.hour.ago.to_i
-                        = "now"
+                            = "#{time_ago_in_words(Time.at @event.end_time.to_i)} ago"
+                .venueType{:style => "color:gray; font-size:13px"}
+                    - if @venue.city.nil?
+                        = "#{@venue.categories.first["name"]}"
                     - else
-                        = "#{time_ago_in_words(Time.at @event.end_time.to_i)} ago"
-            .time_place{:style => "font-size:16px;text-align:left; margin-left:70px;"}= @event.description
-
-    #content{:style => "margin-left: -520px; position:absolute; left:50%;"}
-        - @reposts.each do |repost|
-            - if repost.checkin_card_list.count == 1
-                //1
-                .photo_card{:style => "overflow:hidden; width: 640px; height: 425px; margin: 0 0 10px -5px"}
-                    //= image_tag p.url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
-                    = image_tag repost.checkin_card_list.first.url[1], :width => '640px', :height => '640px', :style => "margin:-107px 0 0 0;"
-            - elsif repost.checkin_card_list.count == 2
-                //2
-                .photo_card{:style => "width: 640px; height: 315px; margin-bottom: 10px; position:relative"}
-                    = image_tag repost.checkin_card_list[0].url[0], :width => '315px', :height => '315px', :style => "margin: 0 0 0 -3px;float:left"
-                    = image_tag repost.checkin_card_list[1].url[0], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
-            - elsif repost.checkin_card_list.count == 3
-                //3
-                .photo_card{:style => "margin-bottom:5px"}
-                    = image_tag repost.checkin_card_list[0].url[0], :width => '425px', :height => '425px', :style => "margin-right: 5px"
-                    = image_tag repost.checkin_card_list[1].url[0], :width => '210px', :height => '210px', :style => "position: absolute;"
-                    = image_tag repost.checkin_card_list[2].url[0], :width => '210px', :height => '210px'
-            - elsif repost.checkin_card_list.count == 4
-                //4
-                .photo_card{:style => "overflow:hidden; width: 640px; height: 210px; margin-bottom: 10px; position:relative"}
-                    = image_tag repost.checkin_card_list[0].url[0], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
-                    = image_tag repost.checkin_card_list[1].url[0], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
-                .photo_card{:style => "overflow:hidden; width: 640px; height: 210px; margin-bottom: 10px; position:relative"}
-                    = image_tag repost.checkin_card_list[2].url[0], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
-                    = image_tag repost.checkin_card_list[3].url[0], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
-            - elsif repost.checkin_card_list.count == 5
-                //5
-                .photo_card
-                    = image_tag repost.checkin_card_list[0].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
-                    = image_tag repost.checkin_card_list[1].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
-                    = image_tag repost.checkin_card_list[2].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
-                .photo_card{:style => "overflow:hidden; width: 640px; height: 210px; margin-bottom: 10px; position:relative"}
-                    = image_tag repost.checkin_card_list[3].url[0], :width => '315px', :height => '315px', :style => "margin: -105px 0 0 0;float:left"
-                    = image_tag repost.checkin_card_list[4].url[0], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
-            - elsif repost.checkin_card_list.count == 6
-                //6
-                .photo_card
-                    = image_tag repost.checkin_card_list[0].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
-                    = image_tag repost.checkin_card_list[1].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
-                    = image_tag repost.checkin_card_list[2].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
-                    = image_tag repost.checkin_card_list[3].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
-                    = image_tag repost.checkin_card_list[4].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
-                    = image_tag repost.checkin_card_list[5].url[0], :width => '210px', :height => '210px', :style => "margin:0 5px 5px 0"
-
-        / = image_tag @photos[1].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
-        / = image_tag @photos[3].url[1], :width => '315px', :height => '315px', :style => "margin: 0 0 0 10px; position: absolute"
+                        = "#{@venue.categories.first["name"]} in #{@venue.city}"
+            .eventPhotos{:style => "margin-left:2%; margin-right: 2%"}
+                - @mobile_photos.each do |photos|
+                    - if photos.count == 2
+                        .twoPhotos.clearfix{:style => "width:100%; margin-top:-11px"}
+                            #photo1{:style => "width:49.5%;height:49.5%;float:left; margin-right: 1%"}
+                                = image_tag photos[0].url[0], :width => "100%"
+                            #photo2{:style => "width:49.5%;height:49.5%;float:left"}
+                                = image_tag photos[1].url[0], :width => "100%"
+                    - elsif photos.count == 3
+                        - if [0,1].sample == 0
+                            .threePhotos.clearfix{:style => "width:100%;margin-top:-11px"}
+                                #photo1{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
+                                    = image_tag photos[0].url[0], :width => "100%"
+                                #photo2{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
+                                    = image_tag photos[1].url[0], :width => "100%"
+                                #photo3{:style => "width:32.66%;height:32.66%;float:left"}
+                                    = image_tag photos[2].url[0], :width => "100%"
+                        - else
+                            .threePhotosOneBig.clearfix{:style => "width:100%;margin-top:-11px"}
+                                #photo1{:style => "width:66.32%;height:66.32%; float:left; margin-right: 1%"}
+                                    = image_tag photos[0].url[0], :width => "100%"
+                                #photo2{:style => "width:32.66%;height:32.66%;float:left;"}
+                                    = image_tag photos[0].url[1], :width => "100%"
+                                #photo3{:style => "width:32.66%;height:32.66%;float:left; margin-top:-3px"}
+                                    = image_tag photos[0].url[2], :width => "100%"
