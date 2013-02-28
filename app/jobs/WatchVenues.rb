@@ -281,7 +281,8 @@ class WatchVenue
                     :id => event_id.to_s,
                     :short_id => event_short_id,
                     :description => "",
-                    :category => category}
+                    :category => category,
+                    :no_checkin => true}
 
     
     AddPeopleEvent.perform(event_params)
