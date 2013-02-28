@@ -171,8 +171,10 @@ class Photo
           break if fs_venue_id != nil
         end
         venue = (Venue.first(conditions: {:id => fs_venue_id}) || Venue.create_venue(fs_venue_id)) unless fs_venue_id.nil?
-        venue.ig_venue_id = media.location.id
-        venue.save!
+        if venue
+          venue.ig_venue_id = media.location.id
+          venue.save!
+        end
       end
     else
       #i'd prefer to use find, but it raises an exception when it fails -- there's a config option we could change
