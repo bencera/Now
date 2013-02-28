@@ -8,6 +8,7 @@ class WatchVenue
 
     max_updates = params[:max_updates] || 10
 
+    #venues we will not create a new event in (but may personalize an existing event -- so do personalization first
     ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
 
     update = 0
@@ -84,10 +85,7 @@ class WatchVenue
         response = client.venue_media(venue_ig_id, :min_timestamp => 3.hours.ago.to_i)
         vw.last_examination = Time.now; 
 
-        additional_photos = []
-
-        if check_media(response, :additional_photos => additional_photos)
-
+        if check_media(response)
 
           #check if the venue already exists -- if so try creating
 
@@ -124,6 +122,18 @@ class WatchVenue
  
          
           greylist = (venue.categories && venue.categories.any? && CategoriesHelper.grey_list[venue.categories.last["id"]])
+
+          additional_photos = []
+         
+          #fill in the additional_photos
+          response.data.each do |photo|
+            if Photo.where(:ig_media_id => photo.id).first
+              new_photo = Photo.where(:ig_media_id => photo.id).first
+            else
+              new_photo = Photo.create_photo("ig", photo, nil)
+            end
+            additional_photos << new_photo
+          end
           
           
           Rails.logger.info("WatchVenues Will create new event")
@@ -202,7 +212,6 @@ class WatchVenue
   def self.check_media(venue_media, options = {})
     unique_users = options[:unique_users] || true
     min_photos = options[:min_photos] || 3
-    additional_photos = options[:additional_photos] || []
 
     if unique_users
       user_list = []
@@ -213,16 +222,6 @@ class WatchVenue
     end
    
     return false if media_count < min_photos
-
-    venue_media.data.each do |photo|
-      if Photo.where(:ig_media_id => photo.id).first
-        new_photo = Photo.where(:ig_media_id => photo.id).first
-      else
-        new_photo = Photo.create_photo("ig", photo, nil)
-      end
-      additional_photos << new_photo
-    end
-
     return true
   end
 
