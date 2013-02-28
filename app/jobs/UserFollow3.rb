@@ -16,6 +16,8 @@ class UserFollow3
    
     updates = 0
 
+    #break_media = nil
+
     users.each do |ig_user|
       token = ig_user.ig_accesstoken
       client = InstagramWrapper.get_client(:access_token => token)
@@ -34,6 +36,8 @@ class UserFollow3
         end
 
         media_list.each do |media|
+
+          #break_media = media
           
           next if media.location.nil? || media.location.id.nil? 
 
@@ -75,7 +79,7 @@ class UserFollow3
         break if updates > max_updates
 
       rescue
-        Rails.logger.info(media) if media
+        #Rails.logger.info(break_media) if break_media
         raise
       end
 
