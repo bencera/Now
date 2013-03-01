@@ -48,11 +48,18 @@ class WatchVenue
 
       if venue && (existing_event = venue.get_live_event)
         #see if user already has a personalization and dont notify if so
+        existing_event.fetch_and_add_photos(Time.now, :override_token => ig_user.ig_accesstoken)
+
+        photo_in_event = false
+        existing_event.photos.each do |photo|
+          photo_in_event = photo.ig_media_id == vw.trigger_media_ig_id
+          break if photo_in_event
+        end
+
         notify = VenueWatch.where("event_id = ? AND user_now_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.now_id.to_s, true).empty? &&
-          (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1")
+          (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && photo_in_event
         
         if notify
-          existing_event.fetch_and_add_photos(Time.now, :override_token => ig_user.ig_accesstoken) if trigger_photo.nil? || !existing_event.photos.include?(trigger_photo)
           existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name) 
           ig_user.add_to_personalized_events(existing_event.id.to_s)
           existing_event.save!
@@ -148,7 +155,7 @@ class WatchVenue
           
           
           Rails.logger.info("WatchVenues Will create new event")
-          event_id = create_event_or_reply(venue, creating_user, vw.trigger_media_ig_id) 
+          event_id = create_event_or_reply(venue, creating_user, response.data.first.id) 
         
           ec = EventCreation.create(:event_id => event_id.to_s,
                                :facebook_user_id => creating_user.id.to_s,
@@ -168,7 +175,6 @@ class WatchVenue
           vw.event_created = true;
           vw.greylist = greylist == true
 
-          notify = (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1")
 
           vw.personalized = notify
           vw.ignore = true
@@ -181,6 +187,15 @@ class WatchVenue
           event = Event.find(event_id)
 
           event.insert_photos_safe(additional_photos)
+
+          photo_in_event = false
+          
+          event.photos.each do |photo|
+            photo_in_event = photo.ig_media_id == vw.trigger_media_ig_id
+            break if photo_in_event
+          end
+
+          notify = (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && photo_in_event
 
           if notify
             event.add_to_personalization(ig_user,  vw.trigger_media_user_name)
