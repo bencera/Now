@@ -591,6 +591,11 @@ class Venue
 
   def get_new_event(status, new_photos, optional_id=nil)
     #TODO: should take start_time instead
+    #
+
+    ####TEMPORARY until all venues have city_name
+    venue.city_name = venue.now_city.name if venue.now_city && venue.city_name.blank?
+    venue.save if venue.changed?
 
     new_photos = new_photos.sort { |a,b| b.time_taken <=> a.time_taken}
 
