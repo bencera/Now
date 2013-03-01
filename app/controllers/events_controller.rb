@@ -241,7 +241,7 @@ class EventsController < ApplicationController
     if theme_id
       @more_events = events[0..19]
     else
-     twenty_events = Event.where(:status.in => ["trending", "trending_people"], :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).shuffle.entries
+     twenty_events = Event.where(:status.in => ["trending", "trending_people"],:category.in => ["Party","Concert","Performance","Conference","Sport"], :n_photos.gt => 8, :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).entries
      @more_events = twenty_events[0..19]
     end
    # @more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
