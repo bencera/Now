@@ -70,12 +70,12 @@
                                         = image_tag photos[1].url[2], :width => "100%"
                                     #photo3{:style => "width:32.66%;height:32.66%;float:left; margin-top:-3px"}
                                         = image_tag photos[2].url[2], :width => "100%"
-    .moreEvents{:style => "margin-top:15px"}
+    .moreEvents{:style => "margin-top:3px"}
         %h2{:style => "font-size: 16px; color:grey; font-weight:bold; margin-left:5px; margin-bottom:10px"} Other events happening now
         - @more_events[0..2].each do |event|
             %a{:href => "http://now-testing.herokuapp.com/#{event.shortid}"}
                 #eventInfo{:style => "font-size: 12px;"}
-                    #wrap{:style => "height:245px"}
+                    #wrap{:style => "height:242px"}
                         .venueDescription{:style => "margin:1% 2% 3% 2%;"}
                             .venueName
                                 = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "7px", :height => "10px"
