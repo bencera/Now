@@ -22,7 +22,7 @@
             .venueDescription{:style => "margin:1% 2% 3% 2%;"}
                 .venueName
                     = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "7px", :height => "10px"
-                    = @venue.name
+                    = truncate(@venue.name,:length => 35)
                     .timeAgo
                         - if @event.end_time.to_i > 1.hour.ago.to_i
                             = "now"
@@ -32,7 +32,7 @@
                     - if @venue.city.nil?
                         = "#{@venue.categories.first["name"]}"
                     - else
-                        = "#{@venue.categories.first["name"]} in #{@venue.city}"
+                        = "#{@venue.categories.first["name"]} in #{@venue.city_name}"
             .eventPhotos{:style => "margin-left:2%; margin-right: 2%; margin-top:12px"}
                 - if @photos.count == 3
                     .threePhotosOneBig.clearfix{:style => "width:100%;margin-top:-11px"}
