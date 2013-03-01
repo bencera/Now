@@ -133,7 +133,8 @@ class FacebookUser
 
         facebook_client = FacebookClient.new(token: token)
 
-        if user = FacebookUser.find_by_facebook_id(facebook_client.user_id)
+        user_id = facebook_client.user_id
+        if user_id && user = FacebookUser.find_by_facebook_id(user_id)
           user.fb_accesstoken = token
         else
           
