@@ -1378,13 +1378,13 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def get_activity_significance(options={})
-    if [CONCERT, PARTY, CONFERENCE, PERFORMANCE, SPORT, EXCEPTIONAL].include? self.category
+    if [CONCERT, PARTY, CONFERENCE, PERFORMANCE, SPORT].include? self.category
       users = []
       self.photos.where(:time_taken.gt => 3.hours.ago.to_i).each {|photo| users << photo.user_details[0]}
 
       user_count = users.uniq.count
       if user_count > 9
-        return {:activity => 2, :message => "Extremely High Activity"}
+        return {:activity => 2, :message => "Very High Activity"}
       elsif user_count > 5
         return {:activity => 1, :message => "High Activity"}
       end
