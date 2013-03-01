@@ -136,6 +136,9 @@ class FacebookUser
         user_id = facebook_client.user_id
         if user_id && user = FacebookUser.find_by_facebook_id(user_id)
           user.fb_accesstoken = token
+          existing_user = true
+          options[:return_hash][:existing_user] = user unless user.nil? || options[:return_hash].nil?
+
         else
           
           if options[:nowtoken]
@@ -144,6 +147,7 @@ class FacebookUser
               user = FacebookUser.new
             else
               existing_user = true
+              options[:return_hash][:existing_user] = user unless user.nil? || options[:return_hash].nil?
             end
           else
             user = FacebookUser.new
