@@ -114,7 +114,7 @@ class NowUsersController < ApplicationController
       Rails.logger.info("ig access token = #{params[:ig_accesstoken]} and nowtoken = #{params[:nowtoken]}") if params[:ig_accesstoken]
       if(!params[:ig_accesstoken].blank?)
         if fb_user
-          params[:nowtoken] = fb_user.nowtoken
+          params[:nowtoken] = fb_user.now_token
         end
         Rails.logger.info("creating ig user")
         personalize = (params[:personalize] == true || params[:personalize] == "true")
