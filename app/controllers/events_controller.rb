@@ -208,7 +208,7 @@ class EventsController < ApplicationController
 
   def showweb
 
-   # @event = Event.where(:shortid => params[:shortid]).first
+  #  @event = Event.where(:shortid => params[:shortid]).first
 
 
     if params[:event]
@@ -249,8 +249,8 @@ class EventsController < ApplicationController
     @themes_and_cities = [*(Theme.get_themes_for_web), *(NowCity.get_cities_for_web)]
     EventsHelper.get_event_cards(@more_events)
 
-    @event.add_view
-    @event.add_click
+     @event.add_view
+     @event.add_click
 
     array = @photos[0..25]
 

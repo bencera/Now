@@ -71,7 +71,7 @@
         %h2{:style => "font-size: 16px; color:grey; font-weight:bold; margin-left:5px; margin-bottom:0px"} More events happening now
         - @more_events[0..2].each do |event|
             #eventInfo{:style => "font-size: 12px;"}
-                #wrap
+                #wrap{:style => "height:140px"}
                     .venueDescription{:style => "margin:1% 2% 3% 2%;"}
                         .venueName
                             = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "7px", :height => "10px"
