@@ -232,10 +232,12 @@ class EventsController < ApplicationController
     end
 
     @photos = @event.photos.order_by([[:time_taken,:asc]]).entries
-    @reposts = @event.make_reply_array(@photos)
-    EventsHelper.build_photo_list(@event, @reposts, @photos, :version => 2)
     @category = @event.category.downcase
     @venue = @event.venue
+
+    @reposts = @event.make_reply_array(@photos)
+    EventsHelper.build_photo_list(@event, @reposts, @photos, :version => 2)
+
     if theme_id
       @more_events = events[0..19]
     else

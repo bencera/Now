@@ -82,10 +82,7 @@ a:hover {}
 
 .wrap {
   margin: 0 auto;
-  padding: inherit 10px;
-  padding: inherit 1.041667rem;
-  width: 90%;
-  max-width: 60rem;
+  width: 95%;
 }
 
 
