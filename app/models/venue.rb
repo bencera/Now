@@ -20,7 +20,7 @@ class Venue
   field :neighborhood
   field :week_stats, :type => Hash
   field :city
-  field :city_name
+  field :city_name, :default => ""
   field :autotrend, :type => Boolean, default: false
   field :descriptions, :type => Array
   field :threshold, :type => Array #[number of people, in number of hours, before time]
