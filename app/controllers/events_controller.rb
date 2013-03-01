@@ -241,16 +241,16 @@ class EventsController < ApplicationController
     if theme_id
       @more_events = events[0..19]
     else
-     twenty_events = Event.where(:status.in => ["trending", "trending_people"], :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).shuffle.entries
+     twenty_events = Event.where(:status.in => ["trending", "trending_people"], :end_time.gt => 1.hour.ago.to_i, :category.in => ["Party","Concert","Performance","Conference","Sport"], :n_photos.gt => 8, :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).entries
      @more_events = twenty_events[0..19]
     end
-   # @more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
+ #  @more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
 
-    @themes_and_cities = [*(Theme.get_themes_for_web), *(NowCity.get_cities_for_web)]
-    EventsHelper.get_event_cards(@more_events)
+      @themes_and_cities = [*(Theme.get_themes_for_web), *(NowCity.get_cities_for_web)]
+     EventsHelper.get_event_cards(@more_events)
 
-     @event.add_view
-     @event.add_click
+       @event.add_view
+       @event.add_click
 
     array = @photos[0..25]
 

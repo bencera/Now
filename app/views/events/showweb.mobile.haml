@@ -30,9 +30,12 @@
                             = "#{time_ago_in_words(Time.at @event.end_time.to_i)} ago"
                 .venueType{:style => "color:gray; font-size:13px; margin-top: -4px;"}
                     - if @venue.city.nil?
-                        = "#{@venue.categories.first["name"]}"
+                        = "#{@venue.categories.first["name"]}" unless @venue.categories.nil?
                     - else
-                        = "#{@venue.categories.first["name"]} in #{@venue.city_name}"
+                        - if @venue.categories.nil?
+                            = "in #{@venue.city_name}" 
+                        - else
+                            = "#{@venue.categories.first["name"]} in #{@venue.city_name}"
             .eventPhotos{:style => "margin-left:2%; margin-right: 2%; margin-top:12px"}
                 - if @photos.count == 3
                     .threePhotosOneBig.clearfix{:style => "width:100%;margin-top:-11px"}
@@ -67,33 +70,39 @@
                                         = image_tag photos[1].url[2], :width => "100%"
                                     #photo3{:style => "width:32.66%;height:32.66%;float:left; margin-top:-3px"}
                                         = image_tag photos[2].url[2], :width => "100%"
-    .moreEvents
-        %h2{:style => "font-size: 16px; color:grey; font-weight:bold; margin-left:5px; margin-bottom:0px"} More events happening now
+    .moreEvents{:style => "margin-top:3px"}
+        %h2{:style => "font-size: 16px; color:grey; font-weight:bold; margin-left:5px; margin-bottom:10px"} Other events happening now
         - @more_events[0..2].each do |event|
-            #eventInfo{:style => "font-size: 12px;"}
-                #wrap{:style => "height:140px"}
-                    .venueDescription{:style => "margin:1% 2% 3% 2%;"}
-                        .venueName
-                            = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "7px", :height => "10px"
-                            = truncate(event.venue.name,:length => 35)
-                            .timeAgo
-                                - if event.end_time.to_i > 1.hour.ago.to_i
-                                    = "now"
-                                - else
-                                    = "#{time_ago_in_words(Time.at event.end_time.to_i)} ago"
-                        .venueType{:style => "color:gray; font-size:13px; margin-top: -4px;"}
-                            - if event.venue.city.nil?
-                                = "#{event.venue.categories.first["name"]}"
-                            - else
-                                = "#{event.venue.categories.first["name"]} in #{event.venue.city_name}"
-                    .eventPhotos{:style => "margin-left:2%; margin-right: 2%; margin-top:12px"}
-                        .threePhotos.clearfix{:style => "width:100%;margin-top:-11px"}
-                            #photo1{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
-                                = image_tag event.photos[0].url[2], :width => "100%"
-                            #photo2{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
-                                = image_tag event.photos[1].url[2], :width => "100%"
-                            #photo3{:style => "width:32.66%;height:32.66%;float:left"}
-                                = image_tag event.photos[2].url[2], :width => "100%"
+            %a{:href => "http://now-testing.herokuapp.com/#{event.shortid}"}
+                #eventInfo{:style => "font-size: 12px;"}
+                    #wrap{:style => "height:242px"}
+                        .venueDescription{:style => "margin:1% 2% 3% 2%;"}
+                            .venueName
+                                = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "7px", :height => "10px"
+                                = truncate(event.venue.name,:length => 35)
+                                .timeAgo
+                                    - if event.end_time.to_i > 1.hour.ago.to_i
+                                        = "now"
+                                    - else
+                                        = "#{time_ago_in_words(Time.at event.end_time.to_i)} ago"
+                            .venueType{:style => "color:gray; font-size:13px; margin-top: -4px;"}
+                                = truncate(event.description, :length => 32)
+                        .eventPhotos{:style => "margin-left:2%; margin-right: 2%; margin-top:12px"}
+                            - liked_photos = event.photos.sort_by{|x| x.now_likes}.reverse
+                            .threePhotos.clearfix{:style => "width:100%;margin-top:-11px"}
+                                #photo1{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
+                                    = image_tag liked_photos[0].url[2], :width => "100%"
+                                #photo2{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
+                                    = image_tag liked_photos[1].url[2], :width => "100%"
+                                #photo3{:style => "width:32.66%;height:32.66%;float:left"}
+                                    = image_tag liked_photos[2].url[2], :width => "100%"
+                            .threePhotos.clearfix{:style => "width:100%;margin-top:-11px"}
+                                #photo1{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
+                                    = image_tag liked_photos[3].url[2], :width => "100%"
+                                #photo2{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
+                                    = image_tag liked_photos[4].url[2], :width => "100%"
+                                #photo3{:style => "width:32.66%;height:32.66%;float:left"}
+                                    = image_tag liked_photos[5].url[2], :width => "100%"
 
 
 
