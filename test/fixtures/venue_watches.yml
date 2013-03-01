@@ -24,6 +24,7 @@
 #  trigger_media_user_name :string(255)
 #  personalized            :boolean         default(FALSE)
 #  trigger_media_fullname  :string(255)
+#  event_significance      :integer
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html

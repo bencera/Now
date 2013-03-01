@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130228185521) do
+ActiveRecord::Schema.define(:version => 20130301184749) do
 
   create_table "archive_events", :force => true do |t|
     t.string   "coordinates"
@@ -220,6 +220,7 @@ ActiveRecord::Schema.define(:version => 20130228185521) do
     t.string   "trigger_media_user_name"
     t.boolean  "personalized",            :default => false
     t.string   "trigger_media_fullname"
+    t.integer  "event_significance"
   end
 
 end

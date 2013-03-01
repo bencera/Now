@@ -71,9 +71,19 @@ class WatchVenue
         vw.event_id = existing_event.id.to_s
         vw.save!
         
-        unless (ig_user.ig_user_id == vw.trigger_media_user_id) || !notify
-          message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}!"
+        if notify && creating_user != ig_user
+
+          significance_hash = existing_event.get_activity_significance
+
+          previous_push_count = SentPush.where("ab_test_id = 'PERSONALIZATION' AND facebook_user_id = ? AND sent_time > ?",
+                                                 ig_user.id.to_s, 12.hours.ago).count
+
+          break if (previous_push_count > 3) && (significance_hash[:activity] < 1)
+            
+          message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}. #{significance_hash[:message]}"
           SentPush.notify_users(message, existing_event.id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION")
+          
+          vw.event_significance = significance_hash[:activity]
         end
 
         next
@@ -82,7 +92,7 @@ class WatchVenue
       venue_ig_id = vw.venue_ig_id
       if ignore_venues.include?(venue_ig_id)
         vw.last_examination = Time.now;
-        vw.save
+        vw.save!
       end
       ignore_venues << venue_ig_id
 
@@ -210,18 +220,27 @@ class WatchVenue
           #notify user that their friend is at the venue
           
           if notify && creating_user != ig_user
-            message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}!"
+            significance_hash = event.get_activity_significance
+
+            previous_push_count = SentPush.where("ab_test_id = 'PERSONALIZATION' AND facebook_user_id = ? AND sent_time > ?",
+                                                 ig_user.id.to_s, 12.hours.ago).count
+
+            break if (previous_push_count > 3) && (significance_hash[:activity] < 1)
+            
+            message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}. #{significance_hash[:message]}"
             SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION")
+            vw.event_significance = significance_hash[:activity]
+            vw.save!
           end
 
           event_creation_count += 1
         end
       rescue
-        vw.save if vw.changed?
+        vw.save! if vw.changed?
         raise
       end
 
-      vw.save if vw.changed?
+      vw.save! if vw.changed?
       break if update > max_updates
     end
 

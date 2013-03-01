@@ -29,6 +29,7 @@ CONFERENCE            = "Conference"
 PARTY                 = "Party"
 EXCEPTIONAL           = "Exceptional"
 CELEBRITY             = "Celebrity"
+SHOPPING              = "Shopping"
 
 MISC                  = "Misc"
 
@@ -42,7 +43,7 @@ WAITING_STATUSES      = [WAITING, WAITING_CONFIRMATION, WAITING_SCHEUDLED, WAITI
 PEOPLE_STATUSES       = [TRENDING_PEOPLE, TRENDED_PEOPLE, TRENDING_LOW, TRENDED_LOW]
 TRENDED_OR_TRENDING_LOW =  [TRENDING_PEOPLE, TRENDED_PEOPLE, TRENDING_LOW, TRENDED_LOW, TRENDING, TRENDED]
 
-CATEGORIES            = [SPORT, CONFERENCE, CONCERT, PERFORMANCE, OUTDOORS, FOOD, MOVIE, PARTY, EXCEPTIONAL, CELEBRITY]
+CATEGORIES            = [SPORT, CONFERENCE, CONCERT, PERFORMANCE, OUTDOORS, FOOD, MOVIE, PARTY, EXCEPTIONAL, CELEBRITY, SHOPPING]
 
 NOW_BOT_NAME          = "Now Bot"
 NOW_BOT_ID            = "0"
@@ -1374,6 +1375,22 @@ SCORE_HALF_LIFE       = 7.day.to_f
     else
       return {:message => "#{emoji} #{description}", :user_count => user_list.count} 
     end
+  end
+
+  def get_activity_significance(options={})
+    if [CONCERT, PARTY, CONFERENCE, PERFORMANCE, SPORT, EXCEPTIONAL].include? self.category
+      users = []
+      self.photos.where(:time_taken.gt => 3.hours.ago.to_i).each {|photo| users << photo.user_details[0]}
+
+      user_count = users.uniq.count
+      if user_count > 9
+        return {:activity => 2, :message => "Extremely High Activity"}
+      elsif user_count > 5
+        return {:activity => 1, :message => "High Activity"}
+      end
+    end
+  
+    return {:activity => 0, :message => "See what's happening"}
   end
 
   def destroy_reply(reply=nil)
