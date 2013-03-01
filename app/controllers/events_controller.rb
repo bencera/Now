@@ -244,10 +244,11 @@ class EventsController < ApplicationController
      twenty_events = Event.where(:status.in => ["trending", "trending_people"], :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).shuffle.entries
      @more_events = twenty_events[0..19]
     end
-    #@more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
+   # @more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
 
     @themes_and_cities = [*(Theme.get_themes_for_web), *(NowCity.get_cities_for_web)]
     EventsHelper.get_event_cards(@more_events)
+
     @event.add_view
     @event.add_click
 
