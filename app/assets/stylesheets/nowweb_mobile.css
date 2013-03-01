@@ -34,192 +34,115 @@
 
 /* Site styles
 ================================================== */
-    html, body { height: 100%; }
 
-    body {
-        font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 16px;
-        line-height: 1.4em;
-        text-align: left;
-        color: #473d20;
-        background-attachment: fixed !important;
-        -webkit-font-smoothing: antialiased;
-        background-color: white;
-      }
+html, body { height: 100%; }
 
-    h1 {
-        font-family: 'League Gothic Regular', Helvetica, sans-serif;
-        font-weight: bold;
-        font-size: 80px;
-        line-height: 1em;
-        margin-bottom: 20px;
-        text-transform: uppercase;
-        letter-spacing: 10px;
-        text-shadow: 0px -1px 1px #333;
-    }
-    
-    h2 {
-        font-weight: bold;
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
-              
-    hr { margin: 20px 0; height: 1px; border: 0; background-color: #ccc; }
-    p { width: 800px; margin: 0 auto 20px auto; }
-    a { color: #099; text-decoration: none;  }
-    a:hover {}
+body {
+    font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.4em;
+    text-align: left;
+    color: #473d20;
+    background-attachment: fixed !important;
+    -webkit-font-smoothing: antialiased;
+    background-color: white;
+  }
 
-    #mobileVenue {
-font-size: 12px;
+h1 {
+    font-family: 'League Gothic Regular', Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 80px;
+    line-height: 1em;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 10px;
+    text-shadow: 0px -1px 1px #333;
 }
-#header.fixed {
-position: fixed;
-top: 0;
+
+h2 {
+    font-weight: bold;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
-#header {
-background: #ff4a6f;
-width: 100%;
-z-index: 10000;
--moz-box-shadow: rgba(0, 0, 0, 0.5) 0 1px 5px 0;
--webkit-box-shadow: rgba(0, 0, 0, 0.5) 0 1px 5px 0;
-box-shadow: rgba(0, 0, 0, 0.5) 0 1px 5px 0;
+          
+hr { margin: 20px 0; height: 1px; border: 0; background-color: #ccc; }
+p { width: 800px; margin: 0 auto 20px auto; }
+a { color: #099; text-decoration: none;  }
+a:hover {}
+
+#top-bar {
+  z-index: 10;
+  background: #ff4a6f;
+  -moz-box-shadow: rgba(0, 0, 0, 0.5) 0 1px 3px 0;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0 1px 3px 0;
+  box-shadow: rgba(0, 0, 0, 0.5) 0 1px 3px 0;
+  width: 100%;
+  height: 40px;
 }
-#header, #headerSpacer {
-height: 43px;
-}
-.fixed {
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-}
+
 .wrap {
-margin: 0 auto;
-padding: inherit 10px;
-padding: inherit 1.041667rem;
-width: 90%;
-max-width: 60rem;
-}
-.leftSide {
-float: left;
-}
-#header #logo {
-margin: 0;
-padding: 0;
-}
-#header #logo a, #header #logo span.logoImage {
-background: url('http://s3.amazonaws.com/now_assets/now-web-logo.png') left center no-repeat;
-float: left;
-height: 29px;
-margin: 0;
-padding: 15px 0 0 0;
-text-indent: -9999em;
-width: 101px;
-}
-  .rightSide {
-float: right;
-}
-#header .appButton {
-background: #e31254;
-border-left: 1px solid #ff5473;
-cursor: pointer;
-position: absolute;
-right: 0;
-width:120px;
-
-}
-a, a:link, a:visited, a:active {
-color: #ff5473;
-cursor: pointer;
-text-decoration: none;
-}
-#header .appButton>a>div {
-background: transparent;
-border: none;
-border-left: 1px solid #ff5473;
-color: white;
-display: table-cell;
-font-size: 14px;
-font-weight: bold;
-height: 24px;
-margin: 0 auto;
-padding: 10px 10px 9px 10px;
-text-align: center;
-vertical-align: middle;
-width:  120px;
-}
-#header .appButton>a>div {
-background: transparent;
-border: none;
-border-left: 1px solid #ff5473;
-color: white;
-display: table-cell;
-font-size: 14px;
-font-weight: bold;
-height: 24px;
-margin: 0 auto;
-padding: 10px 10px 9px 10px;
-text-align: center;
-vertical-align: middle;
+  margin: 0 auto;
+  padding: inherit 10px;
+  padding: inherit 1.041667rem;
+  width: 90%;
+  max-width: 60rem;
 }
 
-#header, #headerSpacer {
-height: 43px;
+
+.downloadButton {
+  background: #e31254;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  width:120px;
 }
-#mobileVenue .map {
-min-height: 160px;
+
+.downloadButton a {
+  background: transparent;
+  border: none;
+  margin: 0 auto;
+  padding: 10px;
+  padding-bottom: 9px;
+  color: white;
+  font-size: 14px;
+  display: table-cell;
+  font-weight: bold;
+  height: 24px;
+  text-align: center;
+  width: 120px;
 }
+
 .map {
-min-height: 184px;
-overflow: hidden;
-padding: 0;
-position: relative;
-text-align: center;
+  min-height: 160px;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+  text-align: center;
 }
 .map #mapContainer {
-position: absolute;
-top: 0;
-bottom: 0;
-left: 0;
-right: 0;
-z-index: -1;
-}
-.map #insetShadow {
-bottom: 0;
-height: 5px;
-position: absolute;
-width: 100%;
-background: #000000;
-background: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
-background: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
-background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
-}
-.pin {
-width: 100%;
-position: relative;
--webkit-animation-name: 'fade';
--moz-animation-name: 'fade';
--o-animation-name: 'fade';
-animation-name: 'fade';
--webkit-animation-fill-mode: both;
--moz-animation-fill-mode: both;
--ms-animation-fill-mode: both;
--o-animation-fill-mode: both;
-animation-fill-mode: both;
--webkit-animation-duration: 0.3s;
--moz-animation-duration: 0.3s;
--ms-animation-duration: 0.3s;
--o-animation-duration: 0.3s;
-animation-duration: 0.3s;
--webkit-animation-duration: 0.5s;
--moz-animation-duration: 0.5s;
--o-animation-duration: 0.5s;
-animation-duration: 0.5s;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
 }
 
-.cardPinHolder{
+#mapShadow {
+  background: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+  background: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+  background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+  height: 3px;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+
+.categoryPin{
   margin-top:40px;
-
+  width: 100%;
+  position: relative;
 }
 
 .venueName{
@@ -228,13 +151,8 @@ animation-duration: 0.5s;
 }
 
 .venueDescription .timeAgo {
-float: right;
-color: gray;
-}
-
-
-.eventPhotos{
-
+  float: right;
+  color: gray;
 }
 
 .clearfix:after {

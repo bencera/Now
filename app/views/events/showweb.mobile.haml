@@ -1,28 +1,26 @@
-.wrapper.touchPage#mobileVenue
-    #header.fixed
-        .wrap.loggedOut
-            .leftSide
+.root
+    #top-bar{:style => "position:fixed;top:0; height:43px"}
+        .wrap
+            .brand
                 #logo{:style => "margin-top:5px;float:left"}
                     = image_tag "http://s3.amazonaws.com/now_assets/now-web-logo.png", :width => "40px"
                 #BrandName{:style => "float:left; margin-top:10px; margin-left: 5px; color: white; font-weight:bold; font-size: 22px"}
                     Now
-            .righSide
-                .appButton
-                    %a.appLing{:href => "http://getnowapp.com/download"}
+            .download{:style => "float:right"}
+                .downloadButton
+                    %a.appLink{:href => "http://getnowapp.com/download"}
                         .openText Open in App
-    #headerSpacer
-    #contents
-        #container
+    #space{:style => "height: 40px;"}
+    #eventInfo{:style => "font-size: 12px;"}
+        #wrap
             %a{:href => "comgooglemaps://?q=#{@venue.coordinates[1]},#{@venue.coordinates[0]}"}
                 .map
                     #mapContainer
-                        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=11&size=320x200&maptype=roadmap&sensor=false&scale=2", :width => "320px", :height => "200px"
-                    .cardPinHolder
-                        .pin.med
-                            .icon
-                                = image_tag "http://s3.amazonaws.com/now_assets/#{@category}_web.png", :width => "58.5px", :height => "70px"
-                    #insetShadow
-            .venueDescription{:style => "margin:1% 2% 3% 2%"}
+                        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=11&size=320x200&maptype=roadmap&sensor=false&scale=2&key=AIzaSyDaB7Lbgnwfni3jrzOephB8HW7_6tJf-Es", :width => "320px", :height => "200px"
+                    .categoryPin
+                        = image_tag "http://s3.amazonaws.com/now_assets/#{@category}_web.png", :width => "58.5px", :height => "70px"
+                    #mapShadow
+            .venueDescription{:style => "margin:1% 2% 3% 2%;"}
                 .venueName
                     = image_tag "http://s3.amazonaws.com/now_assets/location-pin.png", :width => "7px", :height => "10px"
                     = @venue.name
