@@ -594,8 +594,8 @@ class Venue
     #
 
     ####TEMPORARY until all venues have city_name
-    venue.city_name = venue.now_city.name if venue.now_city && venue.city_name.blank?
-    venue.save if venue.changed?
+    self.city_name = self.now_city.name if self.now_city && self.city_name.blank?
+    self.save if self.changed?
 
     new_photos = new_photos.sort { |a,b| b.time_taken <=> a.time_taken}
 
