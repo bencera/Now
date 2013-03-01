@@ -88,12 +88,13 @@
                             = event.description
                     .eventPhotos{:style => "margin-left:2%; margin-right: 2%; margin-top:12px"}
                         .threePhotos.clearfix{:style => "width:100%;margin-top:-11px"}
+                            - liked_photos = event.photos.sort_by{|x| x.now_likes}
                             #photo1{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
-                                = image_tag event.photos[0].url[2], :width => "100%"
+                                = image_tag liked_photos[0].url[2], :width => "100%"
                             #photo2{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
-                                = image_tag event.photos[1].url[2], :width => "100%"
+                                = image_tag liked_photos[1].url[2], :width => "100%"
                             #photo3{:style => "width:32.66%;height:32.66%;float:left"}
-                                = image_tag event.photos[2].url[2], :width => "100%"
+                                = image_tag liked_photos[2].url[2], :width => "100%"
 
 
 
