@@ -82,7 +82,7 @@ class NowUsersController < ApplicationController
 
       if(!params[:fb_accesstoken].blank?)
         fb_user = FacebookUser.find_or_create_by_facebook_token(params[:fb_accesstoken], 
-                                                                :udid => params[:udid], 
+                                                                :udid => params[:deviceid], 
                                                                 :nowtoken => params[:nowtoken], 
                                                                 :return_hash => return_hash)
         if fb_user.nil?
@@ -114,14 +114,14 @@ class NowUsersController < ApplicationController
       Rails.logger.info("ig access token = #{params[:ig_accesstoken]} and nowtoken = #{params[:nowtoken]}") if params[:ig_accesstoken]
       if(!params[:ig_accesstoken].blank?)
         if fb_user
-          params[:nowtoken] = fb_user.nowtoken
+          params[:nowtoken] = fb_user.now_token
         end
         Rails.logger.info("creating ig user")
         personalize = (params[:personalize] == true || params[:personalize] == "true")
         ig_like = (params[:ig_like] == true || params[:ig_like] == "true")
 
         fb_user = FacebookUser.find_or_create_by_ig_token(params[:ig_accesstoken], 
-                                                           :udid => params[:udid], 
+                                                           :udid => params[:deviceid], 
                                                            :nowtoken => params[:nowtoken], 
                                                            :return_hash => return_hash,
                                                            :personalize => personalize,
