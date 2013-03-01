@@ -20,6 +20,7 @@ class Venue
   field :neighborhood
   field :week_stats, :type => Hash
   field :city
+  field :city_name
   field :autotrend, :type => Boolean, default: false
   field :descriptions, :type => Array
   field :threshold, :type => Array #[number of people, in number of hours, before time]
@@ -634,6 +635,7 @@ class Venue
     begin
       new_venue.now_city = NowCity.where(:name => venue_data.location['city'], :state => venue_data.location['state'], 
                 :country => venue_data.location['country']).first || NowCity.create_from_fs_venue_data(venue_data)
+      new_venue.city_name = new_venue.now_city.name || venue.city || ""
     rescue
       #didn't create the city properly find nearest one
 
