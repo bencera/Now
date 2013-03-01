@@ -115,9 +115,9 @@ class AddPeopleEvent
         check_in_event = nil
       end
   
-      if check_in_event
+      if check_in_event && !params[:no_checkin]
  
-        if params[:new_post] == true
+        if params[:new_post] == true && (check_in_event.facebook_user.nil? || check_in_event.facebook_user.now_id == "0")
           Rails.logger.info("AddPeopleEvent: claiming event #{check_in_event.id}")
           check_in_event.facebook_user = fb_user
           check_in_event.category = params[:category] || check_in_event.category

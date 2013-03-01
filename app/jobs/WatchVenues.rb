@@ -13,13 +13,17 @@ class WatchVenue
 
     update = 0
 
-    vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true)
+    vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true).entries
+
+    Rails.logger.info("#{vws.count} vws")
 
     event_creation_count = 0
     event_skip_count = 0
 
 
     vws.each do |vw|
+
+      Rails.logger.info("XXXX #{vw.user_now_id} #{vw.venue_ig_id} #{vw.trigger_media_user_name}")
 
       ig_user = FacebookUser.first(:conditions => {:now_id => vw.user_now_id})
 
@@ -28,6 +32,8 @@ class WatchVenue
       trigger_photo = Photo.first(:conditions => {:id => vw.trigger_media_id})
   
       creating_user = get_creating_user(vw.trigger_media_user_id)
+
+
 
       #quick escapes
       if ig_user.nil? || ig_user.ig_accesstoken.nil?
@@ -42,11 +48,18 @@ class WatchVenue
 
       if venue && (existing_event = venue.get_live_event)
         #see if user already has a personalization and dont notify if so
+        existing_event.fetch_and_add_photos(Time.now, :override_token => ig_user.ig_accesstoken)
+
+        photo_in_event = false
+        existing_event.photos.each do |photo|
+          photo_in_event = photo.ig_media_id == vw.trigger_media_ig_id
+          break if photo_in_event
+        end
+
         notify = VenueWatch.where("event_id = ? AND user_now_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.now_id.to_s, true).empty? &&
-          (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1")
+          (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && photo_in_event
         
         if notify
-          existing_event.fetch_and_add_photos(Time.now, :override_token => ig_user.ig_accesstoken) if trigger_photo.nil? || !existing_event.photos.include?(trigger_photo)
           existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name) 
           ig_user.add_to_personalized_events(existing_event.id.to_s)
           existing_event.save!
@@ -58,21 +71,34 @@ class WatchVenue
         vw.event_id = existing_event.id.to_s
         vw.save!
         
-        unless (ig_user.ig_user_id == vw.trigger_media_user_id) || !notify
-          message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}!"
+        if notify && creating_user != ig_user
+
+          significance_hash = existing_event.get_activity_significance
+
+          previous_push_count = SentPush.where("ab_test_id = 'PERSONALIZATION' AND facebook_user_id = ? AND sent_time > ?",
+                                                 ig_user.id.to_s, 12.hours.ago).count
+
+          break if (previous_push_count > 3) && (significance_hash[:activity] < 1)
+            
+          message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}. #{significance_hash[:message]}"
           SentPush.notify_users(message, existing_event.id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION")
+          
+          vw.event_significance = significance_hash[:activity]
         end
 
         next
       end
 
       venue_ig_id = vw.venue_ig_id
-      next if ignore_venues.include?(venue_ig_id)
+      if ignore_venues.include?(venue_ig_id)
+        vw.last_examination = Time.now;
+        vw.save!
+      end
       ignore_venues << venue_ig_id
 
       #blacklist -- log it
 
-      if venue && check_blacklist(venue, vw)
+      if venue && check_blacklist(venue, vw, creating_user)
         event_skip_count += 1
         next
       end
@@ -81,12 +107,14 @@ class WatchVenue
       
       update += 1
 
+      Rails.logger.info("MADE IT TO THIS POINT")
       begin
         response = client.venue_media(venue_ig_id, :min_timestamp => 3.hours.ago.to_i)
         vw.last_examination = Time.now; 
 
         if check_media(response)
 
+          Rails.logger.info("Media checked out ok")
           #check if the venue already exists -- if so try creating
 
           if venue.nil?
@@ -115,7 +143,7 @@ class WatchVenue
             end
           end
 
-          if check_blacklist(venue, vw)
+          if check_blacklist(venue, vw, creating_user)
             event_skip_count += 1
             next
           end
@@ -137,7 +165,7 @@ class WatchVenue
           
           
           Rails.logger.info("WatchVenues Will create new event")
-          event_id = create_event_or_reply(venue, creating_user, vw.trigger_media_ig_id) 
+          event_id = create_event_or_reply(venue, creating_user, response.data.first.id) 
         
           ec = EventCreation.create(:event_id => event_id.to_s,
                                :facebook_user_id => creating_user.id.to_s,
@@ -157,7 +185,6 @@ class WatchVenue
           vw.event_created = true;
           vw.greylist = greylist == true
 
-          notify = (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1")
 
           vw.personalized = notify
           vw.ignore = true
@@ -170,6 +197,15 @@ class WatchVenue
           event = Event.find(event_id)
 
           event.insert_photos_safe(additional_photos)
+
+          photo_in_event = false
+          
+          event.photos.each do |photo|
+            photo_in_event = photo.ig_media_id == vw.trigger_media_ig_id
+            break if photo_in_event
+          end
+
+          notify = (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && photo_in_event
 
           if notify
             event.add_to_personalization(ig_user,  vw.trigger_media_user_name)
@@ -184,19 +220,30 @@ class WatchVenue
           #notify user that their friend is at the venue
           
           if notify && creating_user != ig_user
-            message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}!"
+            significance_hash = event.get_activity_significance
+
+            previous_push_count = SentPush.where("ab_test_id = 'PERSONALIZATION' AND facebook_user_id = ? AND sent_time > ?",
+                                                 ig_user.id.to_s, 12.hours.ago).count
+
+            break if (previous_push_count > 3) && (significance_hash[:activity] < 1)
+            
+            message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}. #{significance_hash[:message]}"
             SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION")
+            vw.event_significance = significance_hash[:activity]
+            vw.save!
           end
 
           event_creation_count += 1
         end
       rescue
-        vw.save if vw.changed?
+        vw.save! if vw.changed?
         raise
       end
 
+      vw.save! if vw.changed?
       break if update > max_updates
     end
+
 
     FacebookUser.where(:now_id => "2").first.send_notification(
       "WatchVenues created #{event_creation_count} new events.  Skipped #{event_skip_count}", nil) unless event_creation_count < 1
@@ -225,7 +272,7 @@ class WatchVenue
     return true
   end
 
-  def self.check_blacklist(venue, vw)
+  def self.check_blacklist(venue, vw, creating_user)
     if venue.blacklist || (venue.categories && venue.categories.any? && CategoriesHelper.black_list[venue.categories.last["id"]])
 
       EventCreation.create(:facebook_user_id => creating_user.id.to_s,
@@ -268,7 +315,8 @@ class WatchVenue
                     :id => event_id.to_s,
                     :short_id => event_short_id,
                     :description => "",
-                    :category => category}
+                    :category => category,
+                    :no_checkin => true}
 
     
     AddPeopleEvent.perform(event_params)
