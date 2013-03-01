@@ -305,12 +305,12 @@ module EventsHelper
       personalized_events = []
       event_list.each {|event| personalized_events << event unless event.personalize_for[facebook_user.now_id].nil?}
       
-      found_event_ids = personalized_events.map{|event| event.id}
+      found_event_ids = personalized_events.map{|event| event.id.to_s}
       
       if personalized_events.count < 5
         #we need to do another search
         more_events = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :_id.in => (personalized_event_ids - found_event_ids)[0..50] ).entries
-        personalized_events.push(*(more_events[0..(5 - personalized_events.count)]))
+        personalized_events.push(*(more_events[0..(4 - personalized_events.count)]))
       end
 
       events = events[0..(num_events -1)] + personalized_events
