@@ -16,7 +16,6 @@
             %a{:href => "comgooglemaps://?q=#{@venue.coordinates[1]},#{@venue.coordinates[0]}"}
                 .map
                     #mapContainer
-                        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=11&size=320x200&maptype=roadmap&sensor=false&scale=2&key=AIzaSyDaB7Lbgnwfni3jrzOephB8HW7_6tJf-Es", :width => "320px", :height => "200px"
                     .categoryPin
                         = image_tag "http://s3.amazonaws.com/now_assets/#{@category}_web.png", :width => "58.5px", :height => "70px"
                     #mapShadow
@@ -68,3 +67,9 @@
                                         = image_tag photos[1].url[2], :width => "100%"
                                     #photo3{:style => "width:32.66%;height:32.66%;float:left; margin-top:-3px"}
                                         = image_tag photos[2].url[2], :width => "100%"
+
+%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
+:javascript
+    var width = $(window).width();
+    var newHtml = '<img alt="map" height="200px" src="http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&amp;zoom=11&amp;size=' + width + 'x200&amp;maptype=roadmap&amp;sensor=false&amp;scale=2&amp;key=AIzaSyDaB7Lbgnwfni3jrzOephB8HW7_6tJf-Es">'
+    $("#mapContainer").html(newHtml);

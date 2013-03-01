@@ -208,7 +208,7 @@ class EventsController < ApplicationController
 
   def showweb
 
-   # @event = Event.where(:shortid => params[:shortid]).first
+    @event = Event.where(:shortid => params[:shortid]).first
 
 
     if params[:event]

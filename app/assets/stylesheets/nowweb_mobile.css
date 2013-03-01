@@ -94,7 +94,7 @@ a:hover {}
   cursor: pointer;
   position: absolute;
   right: 0;
-  width:120px;
+  width:130px;
 }
 
 .downloadButton a {
@@ -109,7 +109,7 @@ a:hover {}
   font-weight: bold;
   height: 24px;
   text-align: center;
-  width: 120px;
+  width: 130px;
 }
 
 .map {
