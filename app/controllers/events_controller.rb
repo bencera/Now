@@ -208,46 +208,46 @@ class EventsController < ApplicationController
 
   def showweb
 
-    @event = Event.where(:shortid => params[:shortid]).first
+   # @event = Event.where(:shortid => params[:shortid]).first
 
 
-    # if params[:event]
-    #   theme_results = WebNameMatcher.load_from_webname(params[:shortid], :main_event_id => params[:event])
-    # else
-    #   theme_results = WebNameMatcher.load_from_webname(params[:shortid])
-    # end
+    if params[:event]
+      theme_results = WebNameMatcher.load_from_webname(params[:shortid], :main_event_id => params[:event])
+    else
+      theme_results = WebNameMatcher.load_from_webname(params[:shortid])
+    end
     
-    # if theme_results.nil?
-    #   @event = Event.where(:shortid => params[:shortid]).first
-    #   @theme = nil
-    #   @theme_title = nil
-    #   @is_city = false
-    # else
-    #   theme_id = theme_results[:theme]
-    #   @theme_title = theme_results[:title]
-    #   @theme = params[:shortid].downcase
-    #   events = theme_results[:events]
-    #   @event = theme_results[:main_event]
-    #   @is_city = theme_results[:city]
-    # end
+    if theme_results.nil?
+      @event = Event.where(:shortid => params[:shortid]).first
+      @theme = nil
+      @theme_title = nil
+      @is_city = false
+    else
+      theme_id = theme_results[:theme]
+      @theme_title = theme_results[:title]
+      @theme = params[:shortid].downcase
+      events = theme_results[:events]
+      @event = theme_results[:main_event]
+      @is_city = theme_results[:city]
+    end
 
     @photos = @event.photos.order_by([[:time_taken,:asc]]).entries
-    # @reposts = @event.make_reply_array(@photos)
-    # EventsHelper.build_photo_list(@event, @reposts, @photos, :version => 2)
+    @reposts = @event.make_reply_array(@photos)
+    EventsHelper.build_photo_list(@event, @reposts, @photos, :version => 2)
     @category = @event.category.downcase
     @venue = @event.venue
-    # if theme_id
-    #   @more_events = events[0..19]
-    # else
-    #  twenty_events = Event.where(:status.in => ["trending", "trending_people"], :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).shuffle.entries
-    #  @more_events = twenty_events[0..19]
-    # end
-    # #@more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
+    if theme_id
+      @more_events = events[0..19]
+    else
+     twenty_events = Event.where(:status.in => ["trending", "trending_people"], :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).shuffle.entries
+     @more_events = twenty_events[0..19]
+    end
+    #@more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
 
-    # @themes_and_cities = [*(Theme.get_themes_for_web), *(NowCity.get_cities_for_web)]
-    # EventsHelper.get_event_cards(@more_events)
-    # @event.add_view
-    # @event.add_click
+    @themes_and_cities = [*(Theme.get_themes_for_web), *(NowCity.get_cities_for_web)]
+    EventsHelper.get_event_cards(@more_events)
+    @event.add_view
+    @event.add_click
 
     array = @photos[0..25]
 
