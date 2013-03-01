@@ -35,27 +35,36 @@
                     - else
                         = "#{@venue.categories.first["name"]} in #{@venue.city}"
             .eventPhotos{:style => "margin-left:2%; margin-right: 2%; margin-top:12px"}
-                - @mobile_photos.each do |photos|
-                    - if photos.count == 2
-                        .twoPhotos.clearfix{:style => "width:100%; margin-top:-11px"}
-                            #photo1{:style => "width:49.5%;height:49.5%;float:left; margin-right: 1%"}
-                                = image_tag photos[0].url[0], :width => "100%"
-                            #photo2{:style => "width:49.5%;height:49.5%;float:left"}
-                                = image_tag photos[1].url[0], :width => "100%"
-                    - elsif photos.count == 3
-                        - if [0,1].sample == 0
-                            .threePhotos.clearfix{:style => "width:100%;margin-top:-11px"}
-                                #photo1{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
-                                    = image_tag photos[0].url[2], :width => "100%"
-                                #photo2{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
-                                    = image_tag photos[1].url[2], :width => "100%"
-                                #photo3{:style => "width:32.66%;height:32.66%;float:left"}
-                                    = image_tag photos[2].url[2], :width => "100%"
-                        - else
-                            .threePhotosOneBig.clearfix{:style => "width:100%;margin-top:-11px"}
-                                #photo1{:style => "width:66.32%;height:66.32%; float:left; margin-right: 1%"}
+                - if @photos.count == 3
+                    .threePhotosOneBig.clearfix{:style => "width:100%;margin-top:-11px"}
+                        #photo1{:style => "width:66.32%;height:66.32%; float:left; margin-right: 1%"}
+                            = image_tag @photos[0].url[0], :width => "100%"
+                        #photo2{:style => "width:32.66%;height:32.66%;float:left;"}
+                            = image_tag @photos[1].url[2], :width => "100%"
+                        #photo3{:style => "width:32.66%;height:32.66%;float:left; margin-top:-3px"}
+                            = image_tag @photos[2].url[2], :width => "100%"
+                - else
+                    - @mobile_photos.each do |photos|
+                        - if photos.count == 2
+                            .twoPhotos.clearfix{:style => "width:100%; margin-top:-11px"}
+                                #photo1{:style => "width:49.5%;height:49.5%;float:left; margin-right: 1%"}
                                     = image_tag photos[0].url[0], :width => "100%"
-                                #photo2{:style => "width:32.66%;height:32.66%;float:left;"}
-                                    = image_tag photos[1].url[2], :width => "100%"
-                                #photo3{:style => "width:32.66%;height:32.66%;float:left; margin-top:-3px"}
-                                    = image_tag photos[2].url[2], :width => "100%"
+                                #photo2{:style => "width:49.5%;height:49.5%;float:left"}
+                                    = image_tag photos[1].url[0], :width => "100%"
+                        - elsif photos.count == 3
+                            - if [0,1].sample == 0
+                                .threePhotos.clearfix{:style => "width:100%;margin-top:-11px"}
+                                    #photo1{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
+                                        = image_tag photos[0].url[2], :width => "100%"
+                                    #photo2{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
+                                        = image_tag photos[1].url[2], :width => "100%"
+                                    #photo3{:style => "width:32.66%;height:32.66%;float:left"}
+                                        = image_tag photos[2].url[2], :width => "100%"
+                            - else
+                                .threePhotosOneBig.clearfix{:style => "width:100%;margin-top:-11px"}
+                                    #photo1{:style => "width:66.32%;height:66.32%; float:left; margin-right: 1%"}
+                                        = image_tag photos[0].url[0], :width => "100%"
+                                    #photo2{:style => "width:32.66%;height:32.66%;float:left;"}
+                                        = image_tag photos[1].url[2], :width => "100%"
+                                    #photo3{:style => "width:32.66%;height:32.66%;float:left; margin-top:-3px"}
+                                        = image_tag photos[2].url[2], :width => "100%"
