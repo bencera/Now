@@ -16,7 +16,7 @@
             %a{:href => "comgooglemaps://?q=#{@venue.coordinates[1]},#{@venue.coordinates[0]}"}
                 .map
                     #mapContainer
-                        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=11&size=160x100&maptype=roadmap&sensor=false&scale=2"
+                        = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=11&size=320x200&maptype=roadmap&sensor=false&scale=2", :width => "320px", :height => "200px"
                     .cardPinHolder
                         .pin.med
                             .icon
