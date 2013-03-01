@@ -88,7 +88,7 @@
                             .venueType{:style => "color:gray; font-size:13px; margin-top: -4px;"}
                                 = event.description
                         .eventPhotos{:style => "margin-left:2%; margin-right: 2%; margin-top:12px"}
-                             - liked_photos = event.photos.sort_by{|x| x.now_likes}
+                            - liked_photos = event.photos.sort_by{|x| x.now_likes}
                             .threePhotos.clearfix{:style => "width:100%;margin-top:-11px"}
                                 #photo1{:style => "width:32.66%;height:32.66%;float:left; margin-right: 1%"}
                                     = image_tag liked_photos[0].url[2], :width => "100%"
