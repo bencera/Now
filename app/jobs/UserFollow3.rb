@@ -76,6 +76,8 @@ class UserFollow3
         updates += 1
         break if updates > max_updates
 
+      rescue ActiveRecord::RecordInvalid 
+        next
       rescue
         #Rails.logger.info(break_media) if break_media
         raise
