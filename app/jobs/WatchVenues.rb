@@ -192,8 +192,6 @@ class WatchVenue
           
           vw.save!
 
-          
-
 
           event = Event.find(event_id)
 
