@@ -56,7 +56,7 @@ class WatchVenue
           break if photo_in_event
         end
 
-        notify = VenueWatch.where("event_id = ? AND user_now_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.now_id.to_s, true).empty? &&
+        notify = ig_user.now_profile.personalize_ig_feed && VenueWatch.where("event_id = ? AND user_now_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.now_id.to_s, true).empty? &&
           (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && photo_in_event
         
         if notify
@@ -186,6 +186,7 @@ class WatchVenue
           vw.greylist = greylist == true
 
 
+          notify = ig_user.now_profile.personalize_ig_feed && (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && photo_in_event
           vw.personalized = notify
           vw.ignore = true
           
@@ -205,7 +206,6 @@ class WatchVenue
             break if photo_in_event
           end
 
-          notify = (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && photo_in_event
 
           if notify
             event.add_to_personalization(ig_user,  vw.trigger_media_user_name)
