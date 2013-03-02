@@ -164,7 +164,7 @@ class NowUsersController < ApplicationController
 
     rescue Exception => e
       params[:returned_now_token] = return_hash[:now_token]
-      params[:user_id] = return_hash[:user_id]
+      params[:user_id] = return_hash[:user_id].to_s
       params[:exception_text] = "#{e.message}\n#{e.backtrace.inspect}"
       params[:breakpoint] = 3
       Resque.enqueue(LogBadFbCreate, params)
@@ -173,7 +173,7 @@ class NowUsersController < ApplicationController
 
     if fb_user && device.facebook_user_id != fb_user.id
       params[:returned_now_token] = return_hash[:now_token]
-      params[:user_id] = return_hash[:user_id]
+      params[:user_id] = return_hash[:user_id].to_s
       params[:breakpoint] = 4
       Resque.enqueue(LogBadFbCreate, params)
     end
@@ -186,6 +186,7 @@ class NowUsersController < ApplicationController
       #just so we don't crash for a stupid reason here
     end
 
+    return_hash.delete(:existing_user)
     return render :json => return_hash, :status => :ok
   end
 
