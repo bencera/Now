@@ -186,13 +186,6 @@ class WatchVenue
           vw.greylist = greylist == true
 
 
-          notify = ig_user.now_profile.personalize_ig_feed && (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && photo_in_event
-          vw.personalized = notify
-          vw.ignore = true
-          
-          vw.save!
-
-
           event = Event.find(event_id)
 
           event.insert_photos_safe(additional_photos)
@@ -203,6 +196,12 @@ class WatchVenue
             photo_in_event = photo.ig_media_id == vw.trigger_media_ig_id
             break if photo_in_event
           end
+
+          notify = ig_user.now_profile.personalize_ig_feed && (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && photo_in_event
+          vw.personalized = notify
+          vw.ignore = true
+          
+          vw.save!
 
 
           if notify
