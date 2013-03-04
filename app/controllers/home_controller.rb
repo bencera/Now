@@ -58,19 +58,6 @@ class HomeController < ApplicationController
     end
   end
 
-  def southprep
-    if cookies[:nowsxsw].nil? || cookies[:nowsxsw] == "sxswcookie_help"
-      cookies[:nowsxsw] ={
-        :value => "sxswcookie_help",
-        :expires => 1.day.from_now,
-        :domain => "getnowapp.com"
-      }
-    end
-
-    render :text => "OK"
-  end
-  
-
   ####
 
   def help
