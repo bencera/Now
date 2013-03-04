@@ -41,6 +41,7 @@ class HomeController < ApplicationController
         :domain => "getnowapp.com"
       }
       redirect_to '/sxsw/hi'
+      return
     end
 
     if cookies[:nowsxsw] == "sxswcookie_help"
