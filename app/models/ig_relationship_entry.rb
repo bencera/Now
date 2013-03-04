@@ -13,7 +13,8 @@
 #
 
 class IgRelationshipEntry < ActiveRecord::Base
-  attr_accessible :last_refreshed, :relationships
+  attr_accessible :facebook_user_id 
+  attr_accessor :relationship_hash
 
   def do_ig_refresh
     self.last_refreshed= Time.now
@@ -45,7 +46,7 @@ class IgRelationshipEntry < ActiveRecord::Base
       followed_by_ids = []
       follow_backs = []
 
-      relationship_hash = {}
+      self.relationship_hash = {}
        
       response = client.user_follows("self")
 
@@ -53,7 +54,7 @@ class IgRelationshipEntry < ActiveRecord::Base
         response.data.each do |user|
           follower_ids << user.id
           follower_names[user.id] = user.full_name.blank? ? user.username : user.full_name
-          relationship_hash[user.id] ||= {:type => "follow", 
+          self.relationship_hash[user.id] ||= {:type => "follow", 
                                       :name => user.full_name.blank? ? user.username : user.full_name }
         end
       end while response && response.pagination && response.pagination.next_url && 
@@ -67,10 +68,10 @@ class IgRelationshipEntry < ActiveRecord::Base
           followed_by_ids << user.id
           if follower_names[user.id]
             follow_backs << user.id 
-            relationship_hash[user.id] = {:type => "follow_back", 
+            self.relationship_hash[user.id] = {:type => "follow_back", 
                                       :name => user.full_name.blank? ? user.username : user.full_name }
           end
-          relationship_hash[user.id] ||= {:type => "followed_by", 
+          self.relationship_hash[user.id] ||= {:type => "followed_by", 
                                       :name => user.full_name.blank? ? user.username : user.full_name}
         end
       end while response && response.pagination && response.pagination.next_url && 
@@ -103,22 +104,22 @@ class IgRelationshipEntry < ActiveRecord::Base
 
         begin
           response.data.each do |user|
-            existing_relationship = relationship_hash[user.id]
+            existing_relationship = self.relationship_hash[user.id]
             if existing_relationship.nil?
-              relationship_hash[user.id] = {:type => "friend_of_friend", 
+              self.relationship_hash[user.id] = {:type => "friend_of_friend", 
                                         :through => [user_id], 
                                         :through_type => [(use_followers ? "follower" : "follows")],
                                         :name => user.full_name.blank? ? user.username : user.full_name }
             elsif existing_relationship[:type] == "friend_of_friend"
-              relationship_hash[user.id][:through] << user_id
-              relationship_hash[user.id][:through_type] << (use_followers ? "follower" : "follows")
+              self.relationship_hash[user.id][:through] << user_id
+              self.relationship_hash[user.id][:through_type] << (use_followers ? "follower" : "follows")
             end
           end
         end while response && response.pagination && response.pagination.next_url && 
               (response = client.pull_pagination(response.pagination.next_url))
       end
 
-      self.relationships = relationship_hash.inspect
+      self.relationships = self.relationship_hash.inspect
 
     rescue
       self.failed_loading = true
@@ -130,9 +131,9 @@ class IgRelationshipEntry < ActiveRecord::Base
   end
 
   def get_relationship(user_id)
-    relationship_hash = eval self.relationships
+    self.relationship_hash ||= eval self.relationships
   
-    relationship = relationship_hash[user_id.to_s] 
+    relationship = self.relationship_hash[user_id.to_s] 
 
     return_hash = {:type => "NONE"}
 
@@ -153,12 +154,12 @@ class IgRelationshipEntry < ActiveRecord::Base
         mutual_friends = relationship[:through]
 
         if mutual_friends.count == 1
-          return_hash[:message] = "You know #{relationship[:name]} through " + relationship_hash[relationship[:through].first][:name]
+          return_hash[:message] = "You know #{relationship[:name]} through " + self.relationship_hash[relationship[:through].first][:name]
         elsif mutual_friends.count == 2
-          friend_names = relationship[:through].map {|id| relationship_hash[id][:name]}.join(" and ")
+          friend_names = relationship[:through].map {|id| self.relationship_hash[id][:name]}.join(" and ")
           return_hash[:message] = "You know #{relationship[:name]} through #{friend_names}"
         elsif mutual_friends.count > 2
-          friend_names = relationship[:through].map {|id| relationship_hash[id][:name]}
+          friend_names = relationship[:through].map {|id| self.relationship_hash[id][:name]}
           friend_name_list = "#{friend_names[0..-2].join(", ")}, and #{friend_names.last}"
           return_hash[:message] = "You know #{relationship[:name]} through #{friend_name_list}"
         end

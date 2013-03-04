@@ -26,6 +26,41 @@ class HomeController < ApplicationController
     EventsHelper.get_event_cards(@more_events)
   end
 
+  #### SXSW HACK
+  
+  def southby
+
+    @show_links = false
+  
+    if cookies[:nowsxsw] == "sxswcookie_help"
+      @show_links = true
+      @links = $redis.smembers("SWXW:LINKS") 
+      render :text => "LINKS"
+    else
+      cookies[:nowsxsw] = {
+      :value => "sxswcookie_visit",
+      :expires => 1.month.from_now,
+      :domain => "getnowapp.com"
+      }
+      render :text => "HELLO!"
+    end
+  end
+
+  def southprep
+    if cookies[:nowsxsw].nil? || cookies[:nowsxsw] == "sxswcookie_help"
+      cookies[:nowsxsw] ={
+        :value => "sxswcookie_help",
+        :expires => 1.day.from_now,
+        :domain => "getnowapp.com"
+      }
+    end
+
+    render :text => "OK"
+  end
+  
+
+  ####
+
   def help
     redirect_to "http://checkthis.com/1k4o"
   end
