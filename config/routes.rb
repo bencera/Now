@@ -15,7 +15,7 @@ Ubimachine::Application.routes.draw do
   
   #temporary hack for sxsw
 
-#  match "sxsw/:id" => "home#southby"
+  match "sxsw/:id" => "home#southby"
 #  match "southprep" => "home#southprep"
 
 #### Conall routes that we need to make in a RESTful way eventually

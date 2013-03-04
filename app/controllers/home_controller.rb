@@ -31,7 +31,18 @@ class HomeController < ApplicationController
   def southby
 
     @show_links = false
+
+    id = params[:id]
   
+    if id == "links" && (cookies[:nowsxsw].nil? || cookies[:nowsxsw] == "sxswcookie_help")
+      cookies[:nowsxsw] ={
+        :value => "sxswcookie_help",
+        :expires => 1.day.from_now,
+        :domain => "getnowapp.com"
+      }
+      redirect_to '/sxsw/hi'
+    end
+
     if cookies[:nowsxsw] == "sxswcookie_help"
       @show_links = true
       @links = $redis.smembers("SWXW:LINKS") 
