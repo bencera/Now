@@ -84,6 +84,16 @@ class InstagramWrapper
     end
   end
 
+  def user_followed_by(user_id, options={})
+    user_id = "self" if user_id.nil? 
+    url =  "https://api.instagram.com/v1/users/#{user_id}/followed-by?access_token=#{@access_token}"
+    if(options[:text])
+      InstagramWrapper.get_json_string(url, @access_token)
+    else
+      InstagramWrapper.get_data(url, @access_token)
+    end
+  end
+
   def get_relationship(user_id, options={})
     url =  "https://api.instagram.com/v1/users/#{user_id}/relationship?access_token=#{@access_token}"
     if(options[:text])

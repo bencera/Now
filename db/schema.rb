@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130302192949) do
+ActiveRecord::Schema.define(:version => 20130304200153) do
 
   create_table "archive_events", :force => true do |t|
     t.string   "coordinates"
@@ -96,6 +96,16 @@ ActiveRecord::Schema.define(:version => 20130302192949) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.string   "session_token"
+  end
+
+  create_table "ig_relationship_entries", :force => true do |t|
+    t.string   "facebook_user_id"
+    t.text     "relationships"
+    t.datetime "last_refreshed"
+    t.boolean  "cannot_load"
+    t.boolean  "failed_loading"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
   end
 
   create_table "index_searches", :force => true do |t|
@@ -221,6 +231,7 @@ ActiveRecord::Schema.define(:version => 20130302192949) do
     t.boolean  "personalized",            :default => false
     t.string   "trigger_media_fullname"
     t.integer  "event_significance"
+    t.boolean  "selfie"
   end
 
   add_index "venue_watches", ["trigger_media_ig_id", "user_now_id"], :name => "index_venue_watches_on_trigger_media_ig_id_and_user_now_id", :unique => true

@@ -25,6 +25,7 @@
 #  personalized            :boolean         default(FALSE)
 #  trigger_media_fullname  :string(255)
 #  event_significance      :integer
+#  selfie                  :boolean
 #
 
 require 'test_helper'

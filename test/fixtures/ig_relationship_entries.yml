@@ -1,0 +1,23 @@
+# == Schema Information
+#
+# Table name: ig_relationship_entries
+#
+#  id               :integer         not null, primary key
+#  facebook_user_id :string(255)
+#  relationships    :text
+#  last_refreshed   :datetime
+#  cannot_load      :boolean
+#  failed_loading   :boolean
+#  created_at       :datetime        not null
+#  updated_at       :datetime        not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  relationships: MyText
+  last_refreshed: 2013-03-04 15:01:53
+
+two:
+  relationships: MyText
+  last_refreshed: 2013-03-04 15:01:53
