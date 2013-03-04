@@ -15,7 +15,7 @@
 class IgRelationshipEntry < ActiveRecord::Base
   attr_accessible :last_refreshed, :relationships
 
-  def refresh
+  def do_ig_refresh
     self.last_refreshed= Time.now
     self.cannot_load = false
     self.failed_loading = false
