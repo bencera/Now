@@ -46,13 +46,9 @@ class HomeController < ApplicationController
 
     if cookies[:nowsxsw] == "sxswcookie_help" 
       sxsw_entry = $redis.hget("SXSW:ENTRIES", id)
-      if id == "test" || id == "links" || sxsw_entry.nil?
-        @show_links = true
-        @new_tab = true
-        @links = $redis.hgetall("SXSW:ENTRIES").map {|entry| entry[1].split("|")[1]}
-      else
-        redirect_to sxsw_entry.split("|")[1]
-      end
+      @show_links = true
+      @new_tab = true
+      @links = $redis.hgetall("SXSW:ENTRIES").values
     else
       cookies[:nowsxsw] = {
       :value => "sxswcookie_visit",
@@ -61,11 +57,7 @@ class HomeController < ApplicationController
 #      :domain => "getnowapp.com"
       }
       sxsw_entry = $redis.hget("SXSW:ENTRIES", id)
-      if sxsw_entry.nil?
-        @name = "Southby Goer"
-      else
-        @name = sxsw_entry.split("|")[0]
-      end
+      @name = "Bitch"
     end
   end
 
