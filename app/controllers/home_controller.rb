@@ -49,11 +49,9 @@ class HomeController < ApplicationController
       if id == "test" || id == "links" || sxsw_entry.nil?
         @show_links = true
         @new_tab = true
-        @links = $redis.hgetall("SXSW:ENTRIES").map {|entry| "http://now-testing.herokuapp.com/southby/#{entry[0]}"}
+        @links = $redis.hgetall("SXSW:ENTRIES").map {|entry| entry[1].split("|")[1]}
       else
-        @show_links = true
-        @new_tab = false 
-        @links = [sxsw_entry.split("|")[1]]
+        redirect_to sxsw_entry.split("|")[1]
       end
     else
       cookies[:nowsxsw] = {
