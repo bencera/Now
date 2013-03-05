@@ -42,6 +42,12 @@ class HomeController < ApplicationController
 #        :domain => "getnowapp.com"
       }
       redirect_to '/southby/now'
+      return
+    end
+
+    if id == "check" && cookies[:nowsxsw] == "sxswcookie_help" 
+      $redis.sadd("SXSW:CHECKED", cookies[:nowsxpc])
+      render :text => "OK"
     end
 
     if cookies[:nowsxsw] == "sxswcookie_help" 
@@ -51,6 +57,13 @@ class HomeController < ApplicationController
       @passcode = "" 
       6.times {@passcode += [*1..9].sample.to_s}
       $redis.sadd("SXSW:PASSCODES", @passcode)
+
+      cookies[:nowsxpc] ={
+        :value => @passcode,
+        :expires => 1.month.from_now,
+        :domain => "now-testing.herokuapp.com"
+#        :domain => "getnowapp.com"
+      }
     else
       cookies[:nowsxsw] = {
       :value => "sxswcookie_visit",
