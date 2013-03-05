@@ -36,7 +36,7 @@
 
 	%p.question Please click all the links below.  When you've clicked them all, you'll get your completion code
 	- @links.each do |link_url|
-		%p.question
+		%p#link
 			-if @new_tab
 				%a{:href => link_url, :target=> "_blank"}
 					= link_url
@@ -44,8 +44,8 @@
 				%a{:href => link_url}
 					= link_url
 	:javascript
-		$("#target").click(function() {
+		$("#link").click(function() {
 		var i = parseInt($("#counter").html(),10);
 		$("#counter").text(i+1);
-		if(i >= 10){alert("The passcode is HELLO")}
-	});
+		if(i >= 10){alert("The passcode is #{@passcode}")}
+		});
