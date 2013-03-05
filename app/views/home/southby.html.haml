@@ -47,5 +47,5 @@
     $("#link").click(function() {
     var i = parseInt($("#counter").html(),10);
     $("#counter").text(i+1);
-    if(i >= 10){alert("The passcode is #{@passcode}")}
+    if(i >= #{@links.count}){alert("The passcode is #{@passcode}")}
     });

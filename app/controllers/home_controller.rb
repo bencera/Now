@@ -38,10 +38,10 @@ class HomeController < ApplicationController
       cookies[:nowsxsw] ={
         :value => "sxswcookie_help",
         :expires => 1.day.from_now,
-        :domain => "now-testing.herokuapp.com"
-#        :domain => "getnowapp.com"
+#        :domain => "now-testing.herokuapp.com"
+        :domain => "getnowapp.com"
       }
-      redirect_to '/southby/now'
+      redirect_to '/southby/nsfw'
       return
     end
 
@@ -61,15 +61,15 @@ class HomeController < ApplicationController
       cookies[:nowsxpc] ={
         :value => @passcode,
         :expires => 1.month.from_now,
-        :domain => "now-testing.herokuapp.com"
-#        :domain => "getnowapp.com"
+#        :domain => "now-testing.herokuapp.com"
+        :domain => "getnowapp.com"
       }
     else
       cookies[:nowsxsw] = {
       :value => "sxswcookie_visit",
       :expires => 1.month.from_now,
-      :domain => "now-testing.herokuapp.com"
-#      :domain => "getnowapp.com"
+#      :domain => "now-testing.herokuapp.com"
+      :domain => "getnowapp.com"
       }
     end
   end
