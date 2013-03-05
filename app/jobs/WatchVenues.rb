@@ -56,10 +56,13 @@ class WatchVenue
           break if photo_in_event
         end
 
-        notify = ig_user.now_profile.personalize_ig_feed && VenueWatch.where("event_id = ? AND user_now_id = ? AND personalized = ?", existing_event.id.to_s, ig_user.now_id.to_s, true).empty? &&
-          (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && photo_in_event
+        personalize =  ig_user.now_profile.personalize_ig_feed && photo_in_event && 
+                       VenueWatch.where("event_id = ? AND trigger_media_ig_user_id = ? AND personalized = ?", 
+                           existing_event.id.to_s, vw.trigger_media_ig_user_id, true).empty? 
+
+        notify = (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && creating_user != ig_user
         
-        if notify
+        if personalize
           existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name) 
           ig_user.add_to_personalized_events(existing_event.id.to_s)
           existing_event.save!
@@ -71,7 +74,7 @@ class WatchVenue
         vw.event_id = existing_event.id.to_s
         vw.save!
         
-        if notify && creating_user != ig_user
+        if personalize && notify 
 
           significance_hash = existing_event.get_activity_significance
 
@@ -197,14 +200,17 @@ class WatchVenue
             break if photo_in_event
           end
 
-          notify = ig_user.now_profile.personalize_ig_feed && (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && photo_in_event
-          vw.personalized = notify
+          personalize = ig_user.now_profile.personalize_ig_feed && photo_in_event
+
+          notify = (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && creating_user != ig_user           
+          
+          vw.personalized = personalize
           vw.ignore = true
           
           vw.save!
 
 
-          if notify
+          if personalize 
             event.add_to_personalization(ig_user,  vw.trigger_media_user_name)
             ig_user.add_to_personalized_events(event.id.to_s) 
           end
@@ -216,7 +222,7 @@ class WatchVenue
           #notify superusers that the event was created
           #notify user that their friend is at the venue
           
-          if notify && creating_user != ig_user
+          if personalize && notify            
             significance_hash = event.get_activity_significance
 
             previous_push_count = SentPush.where("ab_test_id = 'PERSONALIZATION' AND facebook_user_id = ? AND sent_time > ?",
