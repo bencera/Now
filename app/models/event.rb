@@ -309,11 +309,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def get_fb_user_name
-    if self.overriding_repost.nil? 
-      fb_user = nil
-    else
-      fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
-    end
+    
+    fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
 
     if fb_user.nil?
       return NOW_BOT_NAME
@@ -323,11 +320,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def get_fb_user_photo
-    if self.overriding_repost.nil? 
-      fb_user = nil
-    else
-      fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
-    end
+    
+    fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
 
     if fb_user.nil?
       return NOW_BOT_PHOTO_URL
@@ -337,11 +331,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def get_fb_user_id
-    if self.overriding_repost.nil? 
-      fb_user = nil
-    else
-      fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
-    end
+    fb_user = self.overriding_repost ? self.overriding_repost.facebook_user : self.facebook_user
 
     if fb_user.nil?
       return NOW_BOT_ID
