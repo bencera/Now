@@ -40,21 +40,30 @@ class HomeController < ApplicationController
         :expires => 1.day.from_now,
         :domain => "getnowapp.com"
       }
-      redirect_to '/sxsw/hi'
-      return
+      redirect_to '/southby/hi'
     end
 
-    if cookies[:nowsxsw] == "sxswcookie_help"
-      @show_links = true
-      @links = $redis.smembers("SWXW:LINKS") 
-      render :text => "LINKS"
+    if cookies[:nowsxsw] == "sxswcookie_help" || id == "test"
+      sxsw_entry = $redis.hget("SXSW:ENTRIES", id)
+      if id == "test" || id == "links" || sxsw_entry.nil?
+        @show_links = true
+        @links = $redis.hgetall("SXSW:ENTRIES").map {|entry| "http://localhost:3000/southby/#{entry[0]}"}
+      else
+        redirect_to sxsw_entry.split("|")[1]
+        return
+      end
     else
       cookies[:nowsxsw] = {
       :value => "sxswcookie_visit",
       :expires => 1.month.from_now,
       :domain => "getnowapp.com"
       }
-      render :text => "HELLO!"
+      sxsw_entry = $redis.hget("SXSW:ENTRIES", id)
+      if sxsw_entry.nil?
+        @name = "Southby Goer"
+      else
+        @name = sxsw_entry.split("|")[0]
+      end
     end
   end
 
@@ -261,7 +270,7 @@ class HomeController < ApplicationController
 
    private
     def choose_layout    
-      if action_name == "index_now"
+      if action_name == "index_now" || action_name == 'southby'
         'application_now_landing'
       elsif action_name == "index_now_2"
         'application_now_landing_2'
