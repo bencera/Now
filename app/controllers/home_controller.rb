@@ -44,7 +44,7 @@ class HomeController < ApplicationController
       redirect_to '/southby/hi'
     end
 
-    if cookies[:nowsxsw] == "sxswcookie_help" || id == "test"
+    if cookies[:nowsxsw] == "sxswcookie_help" 
       sxsw_entry = $redis.hget("SXSW:ENTRIES", id)
       if id == "test" || id == "links" || sxsw_entry.nil?
         @show_links = true
