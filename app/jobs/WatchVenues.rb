@@ -58,7 +58,7 @@ class WatchVenue
 
         personalize =  ig_user.now_profile.personalize_ig_feed && photo_in_event && 
                        VenueWatch.where("event_id = ? AND trigger_media_ig_user_id = ? AND personalized = ?", 
-                           existing_event.id.to_s, vw.trigger_media_ig_user_id, true).empty? 
+                           existing_event.id.to_s, vw.trigger_media_user_id, true).empty? 
 
         notify = (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && creating_user != ig_user
         
