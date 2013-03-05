@@ -1,17 +1,13 @@
-%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
-#wrapper
-	.left{:style => "margin-top:15px"}
-		=image_tag "http://s3.amazonaws.com/now_assets/iphone_web_3.png", :width => "350px", :id => "iphone"
-		
-
-	.right
-		#content
-			=image_tag "logo_landing.png", :width => "260px"
-			- if !@show_links
-				%p.tagline#target{:style => "font-size:bold"} 
-					= "Dear #{@name},"
-				%p.question I see you love Google Analytics! So do we. :)
-				%p.question Download Now for SxSW: </br>- See how the coolest events are before going <br/>- Check if your Instagram friends are there
+- if !@show_links
+	#wrapper
+		.left{:style => "margin-top:15px"}
+			=image_tag "http://s3.amazonaws.com/now_assets/sxsw_iphone.png", :width => "350px", :id => "iphone"
+		.right
+			#content
+				= image_tag "logo_landing.png", :width => "260px"
+				%p.question{:style => "font-size:22px"} I see you love Google Analytics! So do we. :)
+				%p.question Download Now for SxSW: </br>- See the coolest events before you go <br/>- Check if your Instagram friends are there
+				%p.question See you around!
 				%p.question
 					= "- "
 					%a{:href => "mailto:ben@getnowapp.com"}Ben
@@ -23,43 +19,33 @@
 				%a{:href => "http://itunes.apple.com/app/now./id525956360", :target => "_blank"}
 					#appstore{:style => "margin-left:10px; margin-top:35px"}
 						= image_tag "https://d3422saexnbpnl.cloudfront.net/static/images/appstorebadge2x.png", :width => "200px"
-			- else
-				%p.question Please click all the links below.  When you've clicked them all, you'll get your completion code
-				- @links.each do |link_url|
-					%p.question
-						-if @new_tab
-							%a{:href => link_url, :target=> "_blank"}
-								= link_url
-						-else
-							%a{:href => link_url}
-								= link_url
 
+		.footer{:style => "width: 520px;"}
+			%a{:href => "http://checkthis.com/aboutnow"} About
+			·
+			%a{:href => "http://checkthis.com/nowhelpcenter"} Help
+			·
+			%a{:href => "http://checkthis.com/nowtermsofservice"} Terms
+			·
+			%a{:href => "http://checkthis.com/nowprivacy"} Privacy
+			·
+			%a{:href => "http://checkthis.com/nowpress"} Press
+- else
+	%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
+	%p#counter{:style => "display:none"} 1
 
-
-	.footer{:style => "width: 520px;"}
-		%a{:href => "http://checkthis.com/aboutnow"} About
-		·
-		%a{:href => "http://checkthis.com/nowhelpcenter"} Help
-		·
-		%a{:href => "http://checkthis.com/nowtermsofservice"} Terms
-		·
-		%a{:href => "http://checkthis.com/nowprivacy"} Privacy
-		·
-		%a{:href => "http://checkthis.com/nowpress"} Press
-%p#counter{:style => "display:none"} 1
-/ #social
-/ 	%nav
-/ 		%ul
-/ 			%li
-/ 				%a.tw{:href => "http://twitter.com/nowapp_", :title => "Now on Twitter", :target => "_blank"}
-/ 					%span.hide Now on Twitter
-/ 			%li
-/ 				%a.fb{:href => "http://facebook.com/getnowapp", :title => "Now on Facebook", :target => "_blank"}
-/ 					%span.hide Now on Facebook
-
-:javascript
-	$("#target").click(function() {
-	var i = parseInt($("#counter").html(),10);
-	$("#counter").text(i+1);
-	if(i >= 10){alert("The passcode is HELLO")}
+	%p.question Please click all the links below.  When you've clicked them all, you'll get your completion code
+	- @links.each do |link_url|
+		%p.question
+			-if @new_tab
+				%a{:href => link_url, :target=> "_blank"}
+					= link_url
+			-else
+				%a{:href => link_url}
+					= link_url
+	:javascript
+		$("#target").click(function() {
+		var i = parseInt($("#counter").html(),10);
+		$("#counter").text(i+1);
+		if(i >= 10){alert("The passcode is HELLO")}
 	});
