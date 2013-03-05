@@ -48,9 +48,11 @@ class HomeController < ApplicationController
       sxsw_entry = $redis.hget("SXSW:ENTRIES", id)
       if id == "test" || id == "links" || sxsw_entry.nil?
         @show_links = true
+        @new_tab = true
         @links = $redis.hgetall("SXSW:ENTRIES").map {|entry| "http://now-testing.herokuapp.com/southby/#{entry[0]}"}
       else
         @show_links = true
+        @new_tab = false 
         @links = [sxsw_entry.split("|")[1]]
       end
     else
