@@ -53,7 +53,15 @@ class HomeController < ApplicationController
     if cookies[:nowsxsw] == "sxswcookie_help" 
       @show_links = true
       @new_tab = true
-      @links = $redis.smembers("SXSW:LINKS")
+      @links = []
+
+      rand = [*7..14].sample
+      19.times do |nu|
+        @links << $redis.srandmember("SXSW:LINKS")
+        if nu == rand
+          @links << "http://getnowapp.com/southby/check"
+        end
+      end
       @passcode = "" 
       6.times {@passcode += [*1..9].sample.to_s}
       $redis.sadd("SXSW:PASSCODES", @passcode)
