@@ -50,8 +50,8 @@ class HomeController < ApplicationController
         @show_links = true
         @links = $redis.hgetall("SXSW:ENTRIES").map {|entry| "http://now-testing.herokuapp.com/southby/#{entry[0]}"}
       else
-        redirect_to sxsw_entry.split("|")[1]
-        return
+        @show_links = true
+        @links = [sxsw_entry.split("|")[1]]
       end
     else
       cookies[:nowsxsw] = {
