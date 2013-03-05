@@ -38,7 +38,8 @@ class HomeController < ApplicationController
       cookies[:nowsxsw] ={
         :value => "sxswcookie_help",
         :expires => 1.day.from_now,
-        :domain => "getnowapp.com"
+        :domain => "now-testing.herokuapp.com"
+#        :domain => "getnowapp.com"
       }
       redirect_to '/southby/hi'
     end
@@ -56,7 +57,8 @@ class HomeController < ApplicationController
       cookies[:nowsxsw] = {
       :value => "sxswcookie_visit",
       :expires => 1.month.from_now,
-      :domain => "getnowapp.com"
+      :domain => "now-testing.herokuapp.com"
+#      :domain => "getnowapp.com"
       }
       sxsw_entry = $redis.hget("SXSW:ENTRIES", id)
       if sxsw_entry.nil?
