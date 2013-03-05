@@ -48,7 +48,7 @@ class HomeController < ApplicationController
       sxsw_entry = $redis.hget("SXSW:ENTRIES", id)
       if id == "test" || id == "links" || sxsw_entry.nil?
         @show_links = true
-        @links = $redis.hgetall("SXSW:ENTRIES").map {|entry| "http://localhost:3000/southby/#{entry[0]}"}
+        @links = $redis.hgetall("SXSW:ENTRIES").map {|entry| "/southby/#{entry[0]}"}
       else
         redirect_to sxsw_entry.split("|")[1]
         return
