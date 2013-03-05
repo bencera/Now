@@ -1,18 +1,27 @@
+%script{:src=>"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"}
 #wrapper
-	.left
-		=image_tag "iphone_landing.png", :width => "400px", :id => "iphone"
+	.left{:style => "margin-top:15px"}
+		=image_tag "http://s3.amazonaws.com/now_assets/iphone_web_3.png", :width => "350px", :id => "iphone"
 		
 
 	.right
 		#content
 			=image_tag "logo_landing.png", :width => "260px"
-			%p.tagline Experience your city.
-			%p.question What is happening in your city?
-			%p.description{:style => "width: 360px"} Now detects events in your city and shows you photos taken by others there. Finally be in the know.
+			%p.tagline#target{:style => "font-size:bold"} Dear Josh,
+			%p.question I see you love Google Analytics! So do we. :)
+			%p.question Download Now for SxSW: </br>- See how the coolest events are before going <br/>- Check if your Instagram friends are there
+			%p.question
+				= "- "
+				%a{:href => "mailto:ben@getnowapp.com"}Ben
+				, Conall & Chris
+			%p{:style => "font-size:14px; margin-top:5px"}
+				PS: We'd love to meet you at SxSW! Say hi at our display at 
+				%a{:href => "http://feed.is/", :target=> "_blank"}#FEED
+
 			%a{:href => "http://itunes.apple.com/app/now./id525956360", :target => "_blank"}
-				%p.download_btn Get the free app
-			%p{:style => "font-size: 14px; margin-top: 68px", :class => "instagram"} Photos powered by the Instagram API
-	.footer
+				#appstore{:style => "margin-left:10px; margin-top:35px"}
+					= image_tag "https://d3422saexnbpnl.cloudfront.net/static/images/appstorebadge2x.png", :width => "200px"
+	.footer{:style => "width: 520px;"}
 		%a{:href => "http://checkthis.com/aboutnow"} About
 		·
 		%a{:href => "http://checkthis.com/nowhelpcenter"} Help
@@ -22,6 +31,7 @@
 		%a{:href => "http://checkthis.com/nowprivacy"} Privacy
 		·
 		%a{:href => "http://checkthis.com/nowpress"} Press
+%p#counter{:style => "display:none"} 1
 / #social
 / 	%nav
 / 		%ul
@@ -31,3 +41,10 @@
 / 			%li
 / 				%a.fb{:href => "http://facebook.com/getnowapp", :title => "Now on Facebook", :target => "_blank"}
 / 					%span.hide Now on Facebook
+
+:javascript
+	$("#target").click(function() {
+	var i = parseInt($("#counter").html(),10);
+	$("#counter").text(i+1);
+	if(i >= 10){alert("The passcode is HELLO")}
+	});

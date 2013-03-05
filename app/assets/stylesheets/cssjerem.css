@@ -201,7 +201,7 @@ td h3 {
 	float: left;
 	display: block;
 /*	background-color:red;
-*/	width:460px;
+*/	width:400px;
 
 }
 
@@ -209,7 +209,7 @@ td h3 {
 	float: right;
 	display: block;
 /*	background-color:blue;
-*/	width:460px;
+*/	width:520px;
 }
 
 .footer{
@@ -236,7 +236,7 @@ td h3 {
 }
 
 #iphone {
-	width: 460px;
+	width: 350px;
 }
 
 #content {
@@ -246,7 +246,7 @@ td h3 {
 
 #content p {
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-	font-size: 28px;
+	font-size: 45px;
 	margin: 24px 0 0 14px;
 	text-shadow: 0px 1px #d23d5b;
 }
@@ -272,7 +272,7 @@ text-shadow: none;
 }
 
 #content p.download_btn {
-	margin: 44px 0 0 10px;
+	margin: 26px 0 0 10px;
 	text-align: center;
 	padding: 16px 10px;
 	color: #666;
@@ -345,9 +345,16 @@ display: none;
 }
 
 .footer{
-	padding: 35px 0;
+	padding: 44px 0;
 	color: #ac2e48;
 	text-shadow: 0 1px #ff7591;
+}
+
+a:link, a:visited, a:active {
+color: #B92644;
+font-size: 20px;
+font-weight: bold;
+text-shadow: 0px 1px #F77892;
 }
 
 .footer a:link, .footer a:visited, .footer a:active {
