@@ -41,14 +41,16 @@ class HomeController < ApplicationController
         :domain => "now-testing.herokuapp.com"
 #        :domain => "getnowapp.com"
       }
-      redirect_to '/southby/hi'
+      redirect_to '/southby/now'
     end
 
     if cookies[:nowsxsw] == "sxswcookie_help" 
-      sxsw_entry = $redis.hget("SXSW:ENTRIES", id)
       @show_links = true
       @new_tab = true
-      @links = $redis.hgetall("SXSW:ENTRIES").values
+      @links = $redis.smembers("SXSW:LINKS")
+      @passcode = "" 
+      6.times {@passcode += [*1..9].sample.to_s}
+      $redis.sadd("SXSW:PASSCODES", @passcode)
     else
       cookies[:nowsxsw] = {
       :value => "sxswcookie_visit",
@@ -56,8 +58,6 @@ class HomeController < ApplicationController
       :domain => "now-testing.herokuapp.com"
 #      :domain => "getnowapp.com"
       }
-      sxsw_entry = $redis.hget("SXSW:ENTRIES", id)
-      @name = "Bitch"
     end
   end
 
