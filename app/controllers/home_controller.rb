@@ -51,7 +51,7 @@ class HomeController < ApplicationController
     end
 
     if id == "passcode" && cookies[:nowsxsw] == "sxswcookie_help" 
-      passcode = $redis.ismember("SXSW:CHECKED", cookies[:nowsxpc]) ? "passcode: #{cookies[:nowsxpc]}" : "You didnt click all the links"
+      passcode = $redis.sismember("SXSW:CHECKED", cookies[:nowsxpc]) ? "passcode: #{cookies[:nowsxpc]}" : "You didnt click all the links"
       render :text => passcode
     end
 
