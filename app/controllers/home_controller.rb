@@ -48,12 +48,14 @@ class HomeController < ApplicationController
     if id == "tech_blog" && cookies[:nowsxsw] == "sxswcookie_help" 
       $redis.sadd("SXSW:CHECKED", cookies[:nowsxpc].to_s)
       render :text => "OK"
+      return
     end
 
     if id == "passcode" && cookies[:nowsxsw] == "sxswcookie_help" 
       Rails.logger.info("#{ cookies[:nowsxpc].to_s} -- ismember #{ $redis.sismember("SXSW:CHECKED", cookies[:nowsxpc].to_s) }")
       passcode = $redis.sismember("SXSW:CHECKED", cookies[:nowsxpc].to_s) ? "passcode: #{cookies[:nowsxpc]}" : "You didnt click all the links"
       render :text => passcode
+      return
     end
 
     if cookies[:nowsxsw] == "sxswcookie_help" 
@@ -65,16 +67,22 @@ class HomeController < ApplicationController
       
       @links << "http://getnowapp.com/southby/passcode"
 
-      @passcode = "" 
-      6.times {@passcode += [*1..9].sample.to_s}
-      $redis.sadd("SXSW:PASSCODES", @passcode)
 
-      cookies[:nowsxpc] ={
-        :value => @passcode,
-        :expires => 1.month.from_now,
-#        :domain => "now-testing.herokuapp.com"
-        :domain => "getnowapp.com"
-      }
+      if cookies[:nowsxpc].nil?
+        @passcode = ""
+        6.times {@passcode += [*1..9].sample.to_s}
+        $redis.sadd("SXSW:PASSCODES", @passcode)
+
+        cookies[:nowsxpc] ={
+          :value => @passcode,
+          :expires => 1.month.from_now,
+  #        :domain => "now-testing.herokuapp.com"
+          :domain => "getnowapp.com"
+        }
+      else
+        @passcode = cookies[:nowsxpc]
+      end
+
     else
       cookies[:nowsxsw] = {
       :value => "sxswcookie_visit",
