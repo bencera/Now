@@ -35,6 +35,10 @@ class SentPush < ActiveRecord::Base
     event = Event.find(event_id)
 
     fb_users.each do |fb_user|
+
+      now_profile = fb_user.now_profile
+      next if !now_profile.notify_like && !now_profile.notify_photos && !now_profile.notify_reply && !now_profile.notify_views
+
       next if fb_user == event.facebook_user
 #        next if !(["1", "2", "359"].include?(fb_user.now_id))
       begin 
@@ -50,6 +54,11 @@ class SentPush < ActiveRecord::Base
 
     devices.each do |device|
       begin 
+        
+        if device.facebook_user
+          now_profile = device.facebook_user.now_profile
+          next if !now_profile.notify_like && !now_profile.notify_photos && !now_profile.notify_reply && !now_profile.notify_views
+        end
         Rails.logger.info("notifying #{device.udid}")
 
         device.subscriptions.each do |subscription|
@@ -93,7 +102,7 @@ class SentPush < ActiveRecord::Base
                      )
     end
 
-    FacebookUser.where(:now_id => "2").first.send_notification("#{options[:ab_test_id]}: Sent Push to #{device_ids.count + fb_user_ids.count} users", event_id) unless (device_ids.count + fb_user_ids.count) == 0
+    FacebookUser.where(:now_id => "2").first.send_notification("#{options[:ab_test_id]}: Sent Push to #{device_ids.count + fb_user_ids.count} users", event_id) unless (device_ids.count + fb_user_ids.count) < 100
   end
 
   def self.batch_push(message, event_id, user_count)
