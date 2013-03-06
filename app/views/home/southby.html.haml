@@ -44,7 +44,7 @@
         %a{:href => link_url}
           = link_url
   :javascript
-    $("#link").click(function() {
+    $("p#link").click(function() {
     var i = parseInt($("#counter").html(),10);
     $("#counter").text(i+1);
     if(i >= #{@links.count}){alert("The passcode is #{@passcode}")}
