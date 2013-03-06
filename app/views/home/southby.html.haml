@@ -38,13 +38,13 @@
   - @links.each do |link_url|
     %p#link
       -if @new_tab
-        %a{:href => link_url, :target=> "_blank"}
+        %a#link{:href => link_url, :target=> "_blank"}
           = link_url
       -else
-        %a{:href => link_url}
+        %a#link{:href => link_url}
           = link_url
   :javascript
-    $("p#link").click(function() {
+    $("a#link").click(function() {
     var i = parseInt($("#counter").html(),10);
     $("#counter").text(i+1);
     if(i >= #{@links.count}){alert("The passcode is #{@passcode}")}
