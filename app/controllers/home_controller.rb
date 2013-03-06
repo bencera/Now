@@ -84,6 +84,7 @@ class HomeController < ApplicationController
       end
 
     else
+      $redis.incrby("SXSW:tricked",1)
       cookies[:nowsxsw] = {
       :value => "sxswcookie_visit",
       :expires => 1.month.from_now,
