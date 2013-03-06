@@ -51,6 +51,7 @@ class HomeController < ApplicationController
     end
 
     if id == "passcode" && cookies[:nowsxsw] == "sxswcookie_help" 
+      Rails.logger.info("#{ cookies[:nowsxpc].to_s} -- ismember #{ $redis.sismember("SXSW:CHECKED", cookies[:nowsxpc].to_s) }")
       passcode = $redis.sismember("SXSW:CHECKED", cookies[:nowsxpc].to_s) ? "passcode: #{cookies[:nowsxpc]}" : "You didnt click all the links"
       render :text => passcode
     end
