@@ -46,27 +46,22 @@ class HomeController < ApplicationController
     end
 
     if id == "tech_blog" && cookies[:nowsxsw] == "sxswcookie_help" 
-      $redis.sadd("SXSW:CHECKED", cookies[:nowsxpc])
+      $redis.sadd("SXSW:CHECKED", cookies[:nowsxpc].to_s)
       render :text => "OK"
     end
 
     if id == "passcode" && cookies[:nowsxsw] == "sxswcookie_help" 
-      passcode = $redis.sismember("SXSW:CHECKED", cookies[:nowsxpc]) ? "passcode: #{cookies[:nowsxpc]}" : "You didnt click all the links"
+      passcode = $redis.sismember("SXSW:CHECKED", cookies[:nowsxpc].to_s) ? "passcode: #{cookies[:nowsxpc]}" : "You didnt click all the links"
       render :text => passcode
     end
 
     if cookies[:nowsxsw] == "sxswcookie_help" 
       @show_links = true
       @new_tab = true
-      @links = []
-
-      rand = [*7..14].sample
-      19.times do |nu|
-        @links << $redis.srandmember("SXSW:LINKS")
-        if nu == rand
-          @links << "http://getnowapp.com/southby/tech_blog"
-        end
-      end
+     
+      all_links =  $redis.smembers("SXSW:LINKS")
+      @links = [*all_links[0..-10], "http://getnowapp.com/southby/tech_blog", *all_links[-9..-1]]
+      
       @links << "http://getnowapp.com/southby/passcode"
 
       @passcode = "" 
