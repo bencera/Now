@@ -11,6 +11,7 @@ class WatchVenue
     #venues we will not create a new event in (but may personalize an existing event -- so do personalization first
     ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
 
+    #also ignore venues we just checked
     ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND last_examination > ?", 15.minutes.ago).map {|vw| vw.venue_ig_id}
 
     ignore_venues.push(*ignore_venues_2)
@@ -241,6 +242,9 @@ class WatchVenue
 
           event_creation_count += 1
         end
+      rescue Mongoid::Errors::Validations
+        vw.save! if vw.changed? 
+        next
       rescue
         vw.save! if vw.changed?
         raise
