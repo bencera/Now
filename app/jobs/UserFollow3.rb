@@ -33,6 +33,8 @@ class UserFollow3
         if media_list && media_list.any?
           current_pull = media_list.first.created_time
           $redis.hset("LAST_FEED_PULL", ig_user.ig_user_id, current_pull)
+        else
+          next
         end
 
         media_list.each do |media|
