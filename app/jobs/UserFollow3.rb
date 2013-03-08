@@ -88,7 +88,7 @@ class UserFollow3
   end
 
   def self.users_to_update
-    FacebookUser.where(:last_ig_update.lt => 15.minutes.ago.to_i, :ig_accesstoken.ne => nil, "now_profile.personalize_ig_feed" => true).entries
+    FacebookUser.where(:last_ig_update.lt => 15.minutes.ago.to_i, :ig_accesstoken.ne => nil, "now_profile.personalize_ig_feed" => true).entries.shuffle
   end
 
   def self.get_ignores(options={})
