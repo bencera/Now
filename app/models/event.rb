@@ -301,7 +301,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
 
     if main_photo_ids.empty? || (main_photo_ids.count < PHOTO_CARD_PHOTOS && options[:all_six])
-      main_photo_ids.push(*self.photo_ids)
+      main_photo_ids.push(*self.photo_ids.reverse)
       main_photo_ids = main_photo_ids.uniq
     end
       
