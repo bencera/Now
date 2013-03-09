@@ -59,7 +59,7 @@ user_follow3:
   description: "Pull venue watches from user feeds"
 
 venue_watch:
-  every: "20s"
+  every: "60s"
   class: WatchVenue
   args:
   description: "examine venues we're watching"
