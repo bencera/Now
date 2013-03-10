@@ -4,9 +4,10 @@ class WatchVenue
 
   def self.perform(in_params="{}")
 
+    start_time = Time.now
     params = eval in_params
 
-    max_updates = params[:max_updates] || 50
+    max_updates = params[:max_updates] || 100
 
     #venues we will not create a new event in (but may personalize an existing event -- so do personalization first
     ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
@@ -27,6 +28,8 @@ class WatchVenue
 
     vws.each do |vw|
   
+      break if Time.now > (start_time + 4.minutes)
+
       vw.reload
       next if vw.ignore || vw.last_examination.to_i > 15.minutes.ago.to_i
 
