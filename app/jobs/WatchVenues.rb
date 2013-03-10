@@ -11,6 +11,10 @@ class WatchVenue
     #venues we will not create a new event in (but may personalize an existing event -- so do personalization first
     ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
 
+    ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND last_examination > ?", 15.minutes.ago).map {|vw| vw.venue_ig_id}
+    ignore_venues.push(*ignore_venues_2)  
+    ignore_venues = ignore_venues.uniq
+    
     update = 0
 
     vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true).entries.shuffle
@@ -26,9 +30,6 @@ class WatchVenue
       vw.reload
       next if vw.ignore || vw.last_examination.to_i > 15.minutes.ago.to_i
 
-      ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND last_examination > ?", 15.minutes.ago).map {|vw| vw.venue_ig_id}
-      ignore_venues.push(*ignore_venues_2)  
-      ignore_venues = ignore_venues.uniq
 
       Rails.logger.info("XXXX #{vw.user_now_id} #{vw.venue_ig_id} #{vw.trigger_media_user_name}")
 
