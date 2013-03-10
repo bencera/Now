@@ -6,7 +6,7 @@ class WatchVenue
 
     params = eval in_params
 
-    max_updates = params[:max_updates] || 60
+    max_updates = params[:max_updates] || 50
 
     #venues we will not create a new event in (but may personalize an existing event -- so do personalization first
     ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
