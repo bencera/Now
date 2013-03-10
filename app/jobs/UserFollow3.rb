@@ -6,7 +6,7 @@ class UserFollow3
 
     params = eval in_params
 
-    max_updates = params[:max_updates] || 25
+    max_updates = params[:max_updates] || 200
 
     #pull list of all users to do personalization update for
     
