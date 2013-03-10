@@ -11,10 +11,6 @@ class WatchVenue
     #venues we will not create a new event in (but may personalize an existing event -- so do personalization first
     ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
 
-    #also ignore venues we just checked
-    ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND last_examination > ?", 15.minutes.ago).map {|vw| vw.venue_ig_id}
-
-    ignore_venues.push(*ignore_venues_2)
     update = 0
 
     vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true).entries.shuffle
@@ -26,6 +22,10 @@ class WatchVenue
 
 
     vws.each do |vw|
+  
+      ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND last_examination > ?", 15.minutes.ago).map {|vw| vw.venue_ig_id}
+      ignore_venues.push(*ignore_venues_2)  
+      ignore_venues = ignore_venues.uniq
 
       Rails.logger.info("XXXX #{vw.user_now_id} #{vw.venue_ig_id} #{vw.trigger_media_user_name}")
 
@@ -110,15 +110,19 @@ class WatchVenue
         next
       end
 
-      
-      
+      #dont want to slam instagram with queries
+      next if update > max_updates
       update += 1
 
       Rails.logger.info("MADE IT TO THIS POINT")
       begin
         response = client.venue_media(venue_ig_id, :min_timestamp => 3.hours.ago.to_i)
-        vw.last_examination = Time.now; 
-
+        if response.data.count <= 1
+          #look at venues less when we dont think they'll trend soon.
+          vw.last_examination = Time.now + 30.minutes
+        else
+          vw.last_examination = Time.now; 
+        end
         if check_media(response)
 
           Rails.logger.info("Media checked out ok")
@@ -251,7 +255,7 @@ class WatchVenue
       end
 
       vw.save! if vw.changed?
-      break if update > max_updates
+      #break if update > max_updates
     end
 
 
@@ -294,6 +298,7 @@ class WatchVenue
                            :venue_id => venue.id.to_s,
                            :venue_watch_id => vw.id)  
 
+      vw.last_examination = Time.now
       vw.ignore = true
       vw.blacklist = true
       vw.save!
