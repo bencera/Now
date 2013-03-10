@@ -14,7 +14,7 @@ class WatchVenue
     ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND last_examination > ?", 15.minutes.ago).map {|vw| vw.venue_ig_id}
     ignore_venues.push(*ignore_venues_2)  
     ignore_venues = ignore_venues.uniq
-    
+
     update = 0
 
     vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true).entries.shuffle
@@ -104,6 +104,7 @@ class WatchVenue
       if ignore_venues.include?(venue_ig_id)
         vw.last_examination = Time.now;
         vw.save!
+        next
       end
       ignore_venues << venue_ig_id
 
