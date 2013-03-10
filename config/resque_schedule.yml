@@ -16,11 +16,11 @@ people_trending:
   args: 
   description: "updating events created by members of Now community"
 
-auto_ig_events:
-  every: "30s"
-  class: UserFollowEvent2
-  args: 
-  description: "pull recent instagram photos from our tastemakers -- create an event if its good"
+#auto_ig_events:
+#  every: "30s"
+#  class: UserFollowEvent2
+#  args: 
+#  description: "pull recent instagram photos from our tastemakers -- create an event if its good"
 
 drain_event_opens:
   every: "5m"
