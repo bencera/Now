@@ -336,8 +336,15 @@ module EventsHelper
 
   def self.sort_now_events_by_photo_count(events)
     now_events = []
-    events.each {|event| now_events << event if event.end_time > 1.hour.ago.to_i}
-    other_events = events - now_events
+    other_events = []
+    events.each do |event| 
+      if(event.end_time > 1.hour.ago.to_i)
+        now_events << event
+      else
+        other_events << event
+      end
+    end
+    
     [*(events.sort_by {|event| event.n_photos}.reverse), *other_events]
   end
 
