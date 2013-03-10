@@ -23,6 +23,9 @@ class WatchVenue
 
     vws.each do |vw|
   
+      vw.reload
+      next if vw.ignore || vw.last_examination > 15.minutes.ago
+      
       ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND last_examination > ?", 15.minutes.ago).map {|vw| vw.venue_ig_id}
       ignore_venues.push(*ignore_venues_2)  
       ignore_venues = ignore_venues.uniq
