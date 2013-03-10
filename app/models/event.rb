@@ -662,10 +662,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
 # commented out for testing on workers CONALL
     if(new_photo_count != 0) 
-      if Rails.env != "development"
-        Resque.enqueue(VerifyURL2, self.id, last_update, true) 
-        Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
-      end
+      #if Rails.env != "development"
+      #  Resque.enqueue(VerifyURL2, self.id, last_update, true) 
+      #  Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
+      #end
       self.update_attribute(:end_time, new_end_time) 
       Rails.logger.info("Added #{new_photo_count} photos to event #{self.id}") 
     end
@@ -753,8 +753,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
     Rails.logger.info("Event #{self.id} added #{new_photos.count} new photos")
 
     if(new_photos.any?)
-      Resque.enqueue(VerifyURL2, self.id, last_update, true) 
-      Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
+      #Resque.enqueue(VerifyURL2, self.id, last_update, true) 
+      #Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
 
       #send reply notification about new photos
       current_now_bot_photos = $redis.get("NOW_BOT_PHOTOS:#{self.id}").to_i
