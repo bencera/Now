@@ -17,5 +17,5 @@ Resque.schedule = YAML.load_file("#{Rails.root}/config/resque_schedule.yml")
 
 Resque.before_fork = Proc.new { ActiveRecord::Base.establish_connection }
 
-app_name = Rails.application.class.parent_name
-Resque.redis.namespace = "resque:#{app_name}"
+#app_name = Rails.application.class.parent_name
+#Resque.redis.namespace = "resque:#{app_name}"
