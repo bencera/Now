@@ -21,7 +21,7 @@ class UserFollow3
     #break_media = nil
 
     users.each do |ig_user|
-      break if Time.now > (start_time + 4.minutes)
+      break if Time.now > (job_start_time + 4.minutes)
       token = ig_user.ig_accesstoken
       client = InstagramWrapper.get_client(:access_token => token)
 
