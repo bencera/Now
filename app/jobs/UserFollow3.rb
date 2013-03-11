@@ -4,6 +4,8 @@ class UserFollow3
 
   def self.perform(in_params="{}")
 
+    job_start_time = Time.now
+
     params = eval in_params
 
     max_updates = params[:max_updates] || 70
@@ -19,6 +21,7 @@ class UserFollow3
     #break_media = nil
 
     users.each do |ig_user|
+      break if Time.now > (start_time + 4.minutes)
       token = ig_user.ig_accesstoken
       client = InstagramWrapper.get_client(:access_token => token)
 
