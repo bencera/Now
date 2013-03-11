@@ -313,10 +313,10 @@ module EventsHelper
         personalized_events.push(*(more_events[0..(4 - personalized_events.count)]))
       end
 
-      events = events[0..(num_events -1)] + personalized_events
+      events = sort_now_events_by_photo_count(events[0..(num_events -1)]) + personalized_events
       return events.uniq
     else
-      return events[0..(num_events - 1)]
+      return sort_now_events_by_photo_count(events[0..(num_events - 1)])
     end
 
     #this is commented out because we're just using event end_time to rank events for now so the above code is faster
@@ -332,6 +332,20 @@ module EventsHelper
 #    Rails.logger.info("localized results DEBUG: #{lon_lat},  #{ts_2 - ts_1} #{ts_3 - ts_2}") if debug_opt
 #    return events
 
+  end
+
+  def self.sort_now_events_by_photo_count(events)
+    now_events = []
+    other_events = []
+    events.each do |event| 
+      if(event.end_time > 1.hour.ago.to_i)
+        now_events << event
+      else
+        other_events << event
+      end
+    end
+    
+    [*(events.sort_by {|event| event.n_photos}.reverse), *other_events]
   end
 
   def self.get_localized_likes(lon_lat, max_dist, nowtoken)

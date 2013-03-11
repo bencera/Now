@@ -4,16 +4,21 @@ class WatchVenue
 
   def self.perform(in_params="{}")
 
+    start_time = Time.now
     params = eval in_params
 
-    max_updates = params[:max_updates] || 10
+    max_updates = params[:max_updates] || 100
 
     #venues we will not create a new event in (but may personalize an existing event -- so do personalization first
     ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
 
+    ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND last_examination > ?", 15.minutes.ago).map {|vw| vw.venue_ig_id}
+    ignore_venues.push(*ignore_venues_2)  
+    ignore_venues = ignore_venues.uniq
+
     update = 0
 
-    vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true).entries
+    vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true).entries.shuffle
 
     Rails.logger.info("#{vws.count} vws")
 
@@ -22,6 +27,12 @@ class WatchVenue
 
 
     vws.each do |vw|
+  
+      break if Time.now > (start_time + 4.minutes)
+
+      vw.reload
+      next if vw.ignore || vw.last_examination.to_i > 15.minutes.ago.to_i
+
 
       Rails.logger.info("XXXX #{vw.user_now_id} #{vw.venue_ig_id} #{vw.trigger_media_user_name}")
 
@@ -96,6 +107,7 @@ class WatchVenue
       if ignore_venues.include?(venue_ig_id)
         vw.last_examination = Time.now;
         vw.save!
+        next
       end
       ignore_venues << venue_ig_id
 
@@ -106,15 +118,19 @@ class WatchVenue
         next
       end
 
-      
-      
+      #dont want to slam instagram with queries
+      next if update > max_updates
       update += 1
 
       Rails.logger.info("MADE IT TO THIS POINT")
       begin
         response = client.venue_media(venue_ig_id, :min_timestamp => 3.hours.ago.to_i)
-        vw.last_examination = Time.now; 
-
+        if response.data.count <= 1
+          #look at venues less when we dont think they'll trend soon.
+          vw.last_examination = Time.now + 30.minutes
+        else
+          vw.last_examination = Time.now; 
+        end
         if check_media(response)
 
           Rails.logger.info("Media checked out ok")
@@ -238,13 +254,16 @@ class WatchVenue
 
           event_creation_count += 1
         end
+      rescue Mongoid::Errors::Validations
+        vw.save! if vw.changed? 
+        next
       rescue
         vw.save! if vw.changed?
         raise
       end
 
       vw.save! if vw.changed?
-      break if update > max_updates
+      #break if update > max_updates
     end
 
 
@@ -287,6 +306,7 @@ class WatchVenue
                            :venue_id => venue.id.to_s,
                            :venue_watch_id => vw.id)  
 
+      vw.last_examination = Time.now
       vw.ignore = true
       vw.blacklist = true
       vw.save!

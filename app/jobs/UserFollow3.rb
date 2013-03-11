@@ -4,9 +4,11 @@ class UserFollow3
 
   def self.perform(in_params="{}")
 
+    job_start_time = Time.now
+
     params = eval in_params
 
-    max_updates = params[:max_updates] || 25
+    max_updates = params[:max_updates] || 70
 
     #pull list of all users to do personalization update for
     
@@ -19,6 +21,7 @@ class UserFollow3
     #break_media = nil
 
     users.each do |ig_user|
+      break if Time.now > (job_start_time + 4.minutes)
       token = ig_user.ig_accesstoken
       client = InstagramWrapper.get_client(:access_token => token)
 
@@ -30,9 +33,11 @@ class UserFollow3
 
       begin
         media_list = client.feed_since(last_pull)
-        if media_list.any?
+        if media_list && media_list.any?
           current_pull = media_list.first.created_time
           $redis.hset("LAST_FEED_PULL", ig_user.ig_user_id, current_pull)
+        else
+          next
         end
 
         media_list.each do |media|
