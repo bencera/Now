@@ -28,7 +28,7 @@ class MainDistributor
 
     user_groups.each do |user_group|
       user_id_list = user_group.map{|user| user.now_id}
-      Resque.enqueue(UserFollow3, {:user_ids => user_id_list})
+      Resque.enqueue(UserFollow3, {:user_ids => user_id_list}.inspect)
     end
   end
 end
