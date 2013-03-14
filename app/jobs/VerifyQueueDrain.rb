@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class VerifyQueueDrain
-  @queue = :drain_verify_queue
+  @queue = :maintenance
 
   def self.perform(in_params={})
 

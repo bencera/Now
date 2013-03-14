@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class VerifyURL
-  @queue = :verifyURL_queue
+  @queue = :verifyURL
   def self.perform(event_id)
         
       Event.find(event_id).photos.each do |photo|

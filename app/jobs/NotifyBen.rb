@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class NotifyBen
 
-  @queue = :notify_ben_queue
+  @queue = :notify_ben
 
   def self.perform(message)
     users_to_notify = FacebookUser.where(:now_id.in => ["1", "2", "359"])

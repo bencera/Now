@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class PostToFacebook
-  @queue = :facebook_post_queue
+  @queue = :share
   def self.perform(in_params)
     params = in_params.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
  

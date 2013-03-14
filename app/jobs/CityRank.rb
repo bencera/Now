@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class CityRank
-  @queue = :city_rank_queue
+  @queue = :maintenance
 
   def self.perform()
 

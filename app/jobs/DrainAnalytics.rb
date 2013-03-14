@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class DrainAnalytics
-  @queue = :drain_analytics_list
+  @queue = :analytics
 
   def self.perform(in_params={})
    

@@ -1,6 +1,6 @@
 class UserFollow3
   
-  @queue = :user_follow3_queue
+  @queue = :user_follow
 
   def self.perform(in_params="{}")
 
@@ -11,8 +11,12 @@ class UserFollow3
     max_updates = params[:max_updates] || 70
 
     #pull list of all users to do personalization update for
-    
-    users = users_to_update() 
+    if params[:user_id_list]
+      users = FacebookUser.where(:now_id.in => params[:user_id_list]).entries
+      users.delete_if {|user| user.last_ig_update > 15.minutes.ago.to_i}
+    else
+      users = users_to_update() 
+    end
     ignore_media = []
 
    

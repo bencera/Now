@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class AddView
-  @queue = :view_add_queue
+  @queue = :view_add
 
   def self.perform(event_list)
     event_ids = event_list.split(",")

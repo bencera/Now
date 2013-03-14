@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class PhotoLike
-  @queue = :photo_like_queue
+  @queue = :like
 
   def self.perform(photo_id, param_string="{}")
     params = eval param_string

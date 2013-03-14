@@ -1,5 +1,5 @@
 class RetryFacebookCreate
-  @queue = :facebook_retry_queue
+  @queue = :user_retry
 
 
   def self.perform(in_params)

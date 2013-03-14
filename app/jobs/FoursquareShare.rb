@@ -1,5 +1,5 @@
 class FoursquareShare
-  @queue = :foursquareshare_queue
+  @queue = :share
 
   #can't be sure if it's an event or reply so handle both
   def self.perform(in_params)

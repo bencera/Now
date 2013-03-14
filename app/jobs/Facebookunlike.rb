@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Facebookunlike
-  @queue = :facebookunlike_queue
+  @queue = :like
   def self.perform(access_token, event_shortid, user_id)
 
     fb_user = FacebookUser.where(:_id => user_id).first

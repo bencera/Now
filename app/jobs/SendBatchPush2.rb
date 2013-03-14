@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class SendBatchPush2
-  @queue = :sendpush2_queue
+  @queue = :sendpush
   def self.perform(in_params="{}")
 
     params = eval(in_params)

@@ -1,5 +1,5 @@
 class VerifyNewUser
-  @queue = :user_verification_queue
+  @queue = :user_verify
 
   def self.perform(in_params)
     errors = []

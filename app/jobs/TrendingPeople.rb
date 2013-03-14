@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class TrendingPeople
-  @queue = :trending_people_queue
+  @queue = :trending_people
 
   def self.perform()
     current_time = Time.now

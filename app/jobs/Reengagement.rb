@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Reengagement
-  @queue = :reengagement_queue
+  @queue = :reengagement
 
   def self.primary_device(user)
     main_device = user.devices.first

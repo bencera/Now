@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class VerifyURL2
-  @queue = :verifyiURL2_queue
+  @queue = :verifyiURL2
   def self.perform(event_id, since_time, immediate, options={})
 
     repair_photos = []

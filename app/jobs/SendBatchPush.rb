@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class SendBatchPush
-  @queue = :sendpush_queue
+  @queue = :sendpush
   def self.perform(event_id, device_ids)
     
     event = Event.find(event_id)

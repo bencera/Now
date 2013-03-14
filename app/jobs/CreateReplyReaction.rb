@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class CreateReplyReaction
-  @queue = :ReactionQueue
+  @queue = :reaction
 
   def self.perform(reply_id)
 

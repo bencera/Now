@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class RepairPhotoCards
-  @queue = :repair_photo_queue
+  @queue = :maintenance
 
   def self.perform(event_id, photo_id_list)
     event = Event.find(event_id)

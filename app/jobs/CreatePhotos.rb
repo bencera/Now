@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class CreatePhotos
-  @queue = :create_photo_queue
+  @queue = :create_photo
 
   def self.perform(venue_id, photo_json_body)
 

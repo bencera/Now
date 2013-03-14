@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class AddPeopleEvent
-  @queue = :add_people_event_queue
+  @queue = :add_event
 
   def self.perform(in_params)
     #params come back with string keys -- make them labels to simplify -- then make string true/false to booleans

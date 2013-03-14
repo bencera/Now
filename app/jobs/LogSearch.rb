@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class LogSearch
-  @queue = :log_search_queue
+  @queue = :log_search
 
   def self.perform(in_params)
     #params come back with string keys -- make them labels to simplify -- then make string true/false to booleans

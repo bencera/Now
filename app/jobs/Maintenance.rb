@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Maintenance
-  @queue = :maintenance_queue
+  @queue = :maintenance
 
   def self.perform
 

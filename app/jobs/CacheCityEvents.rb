@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class CacheCityEvents
-  @queue = :cache_city_events_queue
+  @queue = :maintenance
   def self.perform()
 
     city_entries = $redis.smembers("NOW_CITY_KEYS")

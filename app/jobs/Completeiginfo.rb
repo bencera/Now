@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Completeiginfo
-  @queue = :completeinfo_queue
+  @queue = :completeinfo
   def self.perform(user_id)
     begin
       user = User.find(user_id)

@@ -1,5 +1,5 @@
 class NewUserNotification 
-  @queue = :user_notification_queue
+  @queue = :user_notification
 
   def self.perform(fb_user_id)
 
