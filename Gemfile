@@ -44,7 +44,7 @@ gem 'httparty'
 gem 'mathstats'
 #gem 'resque', :require => "resque/server"
 #gem 'resque', :git => 'git://github.com/defunkt/resque.git'
-gem 'resque', :git => 'https://github.com/hone/resque.git', :branch => 'keepalive'
+gem 'resque'
 gem 'resque-scheduler'
 gem 'god'
 gem "bcrypt-ruby", :require => "bcrypt"
