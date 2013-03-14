@@ -22,6 +22,7 @@ class FacebookUser
 
   #if the user gets ig personalizations
   field :last_ig_update
+  field :last_ig_queue, default: 0
 
   field :super_user, type: Boolean, default: false
   field :admin_user, type: Boolean, default: false
@@ -98,6 +99,8 @@ class FacebookUser
 
       user.ig_accesstoken = token
       user.last_ig_update ||= Time.now.to_i
+      user.last_ig_queue ||= Time.now.to_i
+
       user.udid = options[:udid] if options[:udid]
          
       if user_info
