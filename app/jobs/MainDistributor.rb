@@ -10,18 +10,24 @@ class MainDistributor
     #find all users awaiting a feed pull.  
     #this logic can be made more sophisticated to load balance but for now, just pull everyone not recently or waiting to be processed
     
-    users = FacebookUser.where(:last_ig_update.lt => 15.minutes.ago.to_i, :last_ig_queue.lt => 15.minutes.ago.to_i, :ig_accesstoken.ne => nil, "now_profile.personalize_ig_feed" => true).entries.shuffle 
+    users_query = FacebookUser.where(:last_ig_update.lt => 15.minutes.ago.to_i, "$or" => [{"last_ig_queue" => nil}, {"last_ig_queue" => {"$lt" => 15.minutes.ago.to_i}}], :ig_accesstoken.ne => nil, "now_profile.personalize_ig_feed" => true)
+
+    users = users_query.entries.shuffle ; puts ""
+
+    #this might not be the best idea -- if this crashes, those users wont get an update for 15 more minutes
+    #probably wrap the rest of this in a begin...rescue and we can unset it
+
+    users_query.update_all(:last_ig_queue => queue_time) 
 
     user_groups = [[]]
 
     users.each do |user|
       user_groups.last << user
       user_groups << [] if user_groups.last.count >= 20
-    end
+    end; puts ""
 
     user_groups.each do |user_group|
       user_id_list = user_group.map{|user| user.now_id}
-      user_group.each {|user| user.last_ig_queue = queue_time; user.save!}
       Resque.enqueue(UserFollow3, {:user_ids => user_id_list})
     end
   end

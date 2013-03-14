@@ -13,7 +13,7 @@ class UserFollow3
     #pull list of all users to do personalization update for
     if params[:user_id_list]
       users = FacebookUser.where(:now_id.in => params[:user_id_list]).entries
-      users.delete_if {|user| user.last_ig_update > 15.minutes.ago.to_i}
+      users = users.delete_if {|user| user.last_ig_update > 15.minutes.ago.to_i}
     else
       users = users_to_update() 
     end

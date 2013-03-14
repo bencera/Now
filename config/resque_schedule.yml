@@ -52,9 +52,9 @@ update_city_cache:
   args:
   description: "Cache events in city search for faster access"
 
-user_follow3:
+main_distributor:
   every: "1m"
-  class: UserFollow3
+  class: MainDistributor
   args: 
   description: "Pull venue watches from user feeds"
 
