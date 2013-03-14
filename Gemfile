@@ -27,8 +27,8 @@ end
 
 gem 'jquery-rails'
 gem 'localtunnel'
-gem 'delayed_job'
-gem 'delayed_job_mongoid'
+#gem 'delayed_job'
+#gem 'delayed_job_mongoid'
 
 gem 'geocoder', :path => "vendor/gems/geocoder"
 #gem 'geocoder', "~> 1.1.4"

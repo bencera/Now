@@ -54,12 +54,6 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.6.1)
-    delayed_job (3.0.5)
-      activesupport (~> 3.0)
-    delayed_job_mongoid (1.1.0)
-      delayed_job (~> 3.0)
-      mongo (~> 1.6)
-      mongoid (>= 2.0)
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
@@ -219,8 +213,6 @@ DEPENDENCIES
   bcrypt-ruby
   bson_ext (~> 1.8.1)
   coffee-rails (~> 3.2.2)
-  delayed_job
-  delayed_job_mongoid
   faker (= 1.0.1)
   faraday (~> 0.5.3)
   faraday_middleware (~> 0.3.1)
