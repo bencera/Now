@@ -9,16 +9,22 @@ class WatchVenue
 
     max_updates = params[:max_updates] || 100
 
-    #venues we will not create a new event in (but may personalize an existing event -- so do personalization first
-    ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
-
-    ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND last_examination > ?", 15.minutes.ago).map {|vw| vw.venue_ig_id}
-    ignore_venues.push(*ignore_venues_2)  
-    ignore_venues = ignore_venues.uniq
-
     update = 0
 
-    vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true).entries.shuffle
+    if params[:vw_ids]
+      vws = VenueWatch.find(params[:vw_ids])
+    else
+      #venues we will not create a new event in (but may personalize an existing event -- so do personalization first
+      vws = VenueWatch.where("end_time > ? AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, true, true).entries.shuffle
+    end
+
+    ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
+    
+    ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND last_examination > ?", 15.minutes.ago).map {|vw| vw.venue_ig_id}
+    
+    ignore_venues.push(*ignore_venues_2)  
+    
+    ignore_venues = ignore_venues.uniq
 
     Rails.logger.info("#{vws.count} vws")
 
@@ -68,8 +74,8 @@ class WatchVenue
         end
 
         personalize =  ig_user.now_profile.personalize_ig_feed && photo_in_event && 
-                       VenueWatch.where("event_id = ? AND trigger_media_user_id = ? AND personalized = ?", 
-                           existing_event.id.to_s, vw.trigger_media_user_id, true).empty? 
+                       VenueWatch.where("event_id = ? AND trigger_media_user_id = ? AND user_now_id = ? AND personalized = ?", 
+                           existing_event.id.to_s, vw.trigger_media_user_id, vw.user_now_id, true).empty? 
 
         notify = (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && creating_user != ig_user
         
@@ -80,8 +86,8 @@ class WatchVenue
           vw.personalized = true
         end
 
-        vw.ignore = true;
-        vw.event_created = false;
+        vw.ignore = true
+        vw.event_created = false
         vw.event_id = existing_event.id.to_s
         vw.save!
         
@@ -98,6 +104,7 @@ class WatchVenue
           SentPush.notify_users(message, existing_event.id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION")
           
           vw.event_significance = significance_hash[:activity]
+          vw.save!
         end
 
         next
