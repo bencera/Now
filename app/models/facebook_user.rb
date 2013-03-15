@@ -21,7 +21,7 @@ class FacebookUser
   field :whitelist_cities, type: Array, default: []
 
   #if the user gets ig personalizations
-  field :last_ig_update
+  field :last_ig_update #NOTE -- dont use this as the actual last time i updated, i add 15 min if the user's feed isnt very active
   field :last_ig_queue, default: 0
 
   field :super_user, type: Boolean, default: false

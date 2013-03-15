@@ -16,8 +16,7 @@ class MainDistributor
 
     #this might not be the best idea -- if this crashes, those users wont get an update for 15 more minutes
     #probably wrap the rest of this in a begin...rescue and we can unset it
-
-    users_query.update_all(:last_ig_queue => queue_time) 
+#    users_query.update_all(:last_ig_queue => queue_time) 
 
     user_groups = [[]]
 
@@ -30,8 +29,8 @@ class MainDistributor
     #enque a max of 5 groups each cycle -- gotta limit this somehow
     user_groups[0..5].each do |user_group|
       user_id_list = user_group.map{|user| user.now_id}
-
-      Resque.enqueue(UserFollow3, {:user_id_list => user_id_list}.inspect)
+      user_group.each {|user| user.last_ig_queue = queue_time; user.save!}
+      Resque.enqueue(UserFollow3, {:user_id_list => user_id_list}.inspect) if user_id_list.any?
     end
   end
 end

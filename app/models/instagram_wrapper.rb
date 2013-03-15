@@ -18,26 +18,19 @@ class InstagramWrapper
 
   def feed_since(last_pull=0, options={})
     response = self.feed
-    media_list = response.data
-
+    
     #get at least one page
-    return_media = response.data
+    return_media = []
 
     done_pulling = false
 
-    while !done_pulling && response && response.pagination && response.pagination.next_url && 
-      (response = self.pull_pagination(response.pagination.next_url))
-
+    begin
       break if !response || !response.data || response.data.empty? 
-
-      done_pulling = true
-      response.data.each do |media|
-        if media.created_time.to_i > last_pull
-          done_pulling = false
-          return_media << media
-        end
-      end
-    end
+      photos = response.data.sort{|x| x.created_time.to_i}.reverse
+      done_pulling = photos.last.created_time.to_i < last_pull
+      return_media.push(*photos)
+    end while !done_pulling && response && response.pagination && response.pagination.next_url && 
+      (response = self.pull_pagination(response.pagination.next_url))
 
     return return_media
   
