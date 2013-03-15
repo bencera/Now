@@ -29,7 +29,7 @@ class MainDistributor
     #enque a max of 5 groups each cycle -- gotta limit this somehow
     user_groups[0..5].each do |user_group|
       user_id_list = user_group.map{|user| user.now_id}
-      Resque.enqueue(UserFollow3, {:user_ids => user_id_list}.inspect)
+      Resque.enqueue(UserFollow3, {:user_id_list => user_id_list}.inspect)
     end
   end
 end
