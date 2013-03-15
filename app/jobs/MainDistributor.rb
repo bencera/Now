@@ -10,7 +10,7 @@ class MainDistributor
     #find all users awaiting a feed pull.  
     #this logic can be made more sophisticated to load balance but for now, just pull everyone not recently or waiting to be processed
     
-    users_query = FacebookUser.where(:last_ig_update.lt => 30.minutes.ago.to_i, "$or" => [{"last_ig_queue" => nil}, {"last_ig_queue" => {"$lt" => 30.minutes.ago.to_i}}], :ig_accesstoken.ne => nil, "now_profile.personalize_ig_feed" => true)
+    users_query = FacebookUser.where(:last_ig_update.lt => 15.minutes.ago.to_i, "$or" => [{"last_ig_queue" => nil}, {"last_ig_queue" => {"$lt" => 15.minutes.ago.to_i}}], :ig_accesstoken.ne => nil, "now_profile.personalize_ig_feed" => true)
 
     users = users_query.entries.shuffle ; puts ""
 
