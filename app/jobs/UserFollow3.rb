@@ -41,8 +41,11 @@ class UserFollow3
           current_pull = media_list.first.created_time
           $redis.hset("LAST_FEED_PULL", ig_user.ig_user_id, current_pull)
         else
+          ig_user.last_ig_queue = (Time.now + 60.minutes).to_i
           next
         end
+
+        new_media_count = media_list.count{|photo| photo.created_time.to_i > [3.hours.ago.to_i, current_pull].max }
 
         media_list.each do |media|
 
@@ -81,7 +84,9 @@ class UserFollow3
 
         $redis.hset("LAST_FEED_PULL", ig_user.ig_user_id, current_pull)
 
-        ig_user.last_ig_update = Time.now.to_i
+
+        #don't check people too often if they're not showing us a ton of 
+        ig_user.last_ig_queue= Time.now.to_i + (new_media_count <= 2 ? 15.minutes.to_i : 0)
         ig_user.save!
         updates += 1
         break if updates > max_updates
