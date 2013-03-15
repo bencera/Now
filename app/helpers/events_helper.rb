@@ -279,7 +279,11 @@ module EventsHelper
 
     event_query = Event.limit(100).where(:coordinates.within => {"$center" => [lon_lat, max_dist]})
     if options[:category]
-      event_query = event_query.where(:category => options[:category])
+      if options[:category] == "now"
+        event_query = event_query.where(:end_time.gt => 3.hours.ago.to_i)
+      else
+        event_query = event_query.where(:category => options[:category])
+      end
     elsif options[:waiting]
       event_query = event_query.where(:status.in => Event::WAITING_STATUSES)
     elsif options[:facebook_user_id]
