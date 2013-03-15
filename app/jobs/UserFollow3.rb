@@ -41,7 +41,9 @@ class UserFollow3
           current_pull = media_list.first.created_time
           $redis.hset("LAST_FEED_PULL", ig_user.ig_user_id, current_pull)
         else
-          ig_user.last_ig_queue = (Time.now + 60.minutes).to_i
+          ig_user.last_ig_queue = (Time.now + 3.hours).to_i
+          ig_user.last_ig_update = Time.now.to_i
+          ig_user.save!
           next
         end
 
