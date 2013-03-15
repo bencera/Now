@@ -109,6 +109,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :last_photo_card_verify
 
   #fields related to showing personalized event
+  field :last_personalized
   field :personalizations, :type => Array, :default => []
   field :personalize_for, :type => Hash, :default => {}
 
