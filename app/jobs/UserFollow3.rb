@@ -45,7 +45,7 @@ class UserFollow3
           next
         end
 
-        new_media_count = media_list.count{|photo| photo.created_time.to_i > [3.hours.ago.to_i, current_pull].max }
+        new_media_count = media_list.count_if{|photo| photo.created_time.to_i > [3.hours.ago.to_i, current_pull.to_i].max }
 
         media_list.each do |media|
 
