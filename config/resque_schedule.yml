@@ -59,7 +59,7 @@ main_distributor:
   description: "Pull venue watches from user feeds"
 
 venue_watch:
-  every: "40s"
+  every: "3m"
   class: WatchVenue
   args:
   description: "examine venues we're watching"
