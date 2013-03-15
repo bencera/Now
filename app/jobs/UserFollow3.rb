@@ -88,7 +88,7 @@ class UserFollow3
 
 
         #don't check people too often if they're not showing us a ton of 
-        ig_user.last_ig_queue= Time.now.to_i + (new_media_count <= 2 ? 15.minutes.to_i : 0)
+        ig_user.last_ig_queue= Time.now.to_i + (new_media_count == 0 ? 15.minutes.to_i : 0)
         ig_user.save!
         updates += 1
         break if updates > max_updates
