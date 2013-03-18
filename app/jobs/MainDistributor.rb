@@ -23,7 +23,7 @@ class MainDistributor
 
 
     #enque a max of 14 groups each cycle -- gotta limit this somehow
-    user_groups[0..14].each do |user_group|
+    user_groups[0..10].each do |user_group|
       user_id_list = user_group.map{|user| user.now_id}
       user_group.each {|user| user.last_ig_queue = queue_time; user.save!}
       Resque.enqueue(UserFollow3, {:user_id_list => user_id_list}.inspect) if user_id_list.any?
