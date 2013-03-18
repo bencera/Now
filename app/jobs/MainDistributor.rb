@@ -29,16 +29,20 @@ class MainDistributor
       Resque.enqueue(UserFollow3, {:user_id_list => user_id_list}.inspect) if user_id_list.any?
     end
 
+    #personalize events first -- should be fast enough...
+
+    PersonalizeEvents.perform()
+
 
     # Now distribute venues to watch
 
-    #do_venue_watch_enqueue(Time.now)    
+    do_venue_watch_enqueue(Time.now)    
 
   end
 
   def self.do_venue_watch_enqueue(queue_time)
     #first, personalize all the events that dont need 
-    vws = VenueWatch.where("end_time > ? AND (last_queue IS NULL OR last_queue < ? ) AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, 15.minutes.ago, true, true).entries.shuffle
+    vws = VenueWatch.where("end_time > ? AND (last_queued IS NULL OR last_queued < ? ) AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, 15.minutes.ago, true, true).entries.shuffle
 
     ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
 
@@ -54,7 +58,7 @@ class MainDistributor
 
     #split venue watches into unique venues -- send one watch per venue.  may need to split by user...
     vws.each do |vw|
-      next if ignore_venues.include vw.venue_ig_id || venue_to_watch[vw.venue_ig_id]
+      next if ignore_venues.include? vw.venue_ig_id || venue_to_watch[vw.venue_ig_id]
 
       venue_to_watch[vw.venue_ig_id] = vw
 
@@ -64,8 +68,8 @@ class MainDistributor
 
     #send each venue watch group -- dont do more than 10 in a cycle for now
     vw_groups[0..10].each do |vw_group|
-      vw_group.each {|vw| vw.last_queue = queue_time; vw.save!}
-#      Resque.enqueue(WatchVenue, {:vw_ids => vw_group.map{|vw| vw.id}}.inspect)
+      vw_group.each {|vw| vw.last_queued = queue_time; vw.save!}
+      Resque.enqueue(WatchVenue, {:vw_ids => vw_group.map{|vw| vw.id}}.inspect)
     end
 
   end

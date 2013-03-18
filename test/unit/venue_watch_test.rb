@@ -26,6 +26,7 @@
 #  trigger_media_fullname  :string(255)
 #  event_significance      :integer
 #  selfie                  :boolean
+#  last_queued             :datetime
 #
 
 require 'test_helper'
