@@ -67,7 +67,7 @@ class MainDistributor
     end
 
     #send each venue watch group -- dont do more than 10 in a cycle for now
-    vw_groups[0..10].each do |vw_group|
+    vw_groups[0..5].each do |vw_group|
       vw_group.each {|vw| vw.last_queued = queue_time; vw.save!}
       Resque.enqueue(WatchVenue, {:vw_ids => vw_group.map{|vw| vw.id}}.inspect)
     end
