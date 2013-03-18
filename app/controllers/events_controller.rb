@@ -75,8 +75,8 @@ class EventsController < ApplicationController
         # 1 kilometer
         max_distance = 1.0 / 111
       end  
-      if (params[:liked] || params[:category] == "starred" ) && params[:nowtoken]
-        @events = EventsHelper.get_localized_likes(coordinates, max_distance, params[:nowtoken]).entries
+      if (params[:liked] || params[:scope] == "saved" ) && params[:nowtoken]
+        @events = EventsHelper.get_localized_likes(coordinates, max_distance, params[:nowtoken], params).entries
       else
         search_params = params.clone
         search_params[:facebook_user] = facebook_user

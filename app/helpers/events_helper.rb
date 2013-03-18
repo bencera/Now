@@ -278,12 +278,15 @@ module EventsHelper
     num_events = options[:num_events] || 20
 
     event_query = Event.limit(100).where(:coordinates.within => {"$center" => [lon_lat, max_dist]})
+
+    if options[:scope] == "friends"
+      facebook_user = options[:facebook_user]
+      personalized_event_ids = facebook_user.get_personalized_event_ids()
+      event_query = event_query.where(:_id.in => personalized_event_ids)
+    end
+
     if options[:category]
-      if options[:category] == "now"
-        event_query = event_query.where(:end_time.gt => 3.hours.ago.to_i)
-      else
         event_query = event_query.where(:category => options[:category])
-      end
     elsif options[:waiting]
       event_query = event_query.where(:status.in => Event::WAITING_STATUSES)
     elsif options[:facebook_user_id]
@@ -302,26 +305,11 @@ module EventsHelper
       end
     end
     
-    if options[:facebook_user]
-      facebook_user = options[:facebook_user]
-      personalized_event_ids = facebook_user.get_personalized_event_ids()
-
-      personalized_events = []
-      event_list.each {|event| personalized_events << event unless event.personalize_for[facebook_user.now_id].nil?}
-      
-      found_event_ids = personalized_events.map{|event| event.id.to_s}
-      
-      if personalized_events.count < 5
-        #we need to do another search -- modify this if category is now
-        more_events = Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :_id.in => (personalized_event_ids - found_event_ids)[0..50] ).entries
-        personalized_events.push(*(more_events[0..(4 - personalized_events.count)]))
-      end
-
-      events = sort_now_events_by_photo_count(events[0..(num_events -1)]) + personalized_events
-      return events.uniq
-    else
-      return sort_now_events_by_photo_count(events[0..(num_events - 1)])
+    if options[:scope] == "now"
+      events = events.delete_if {|event| event.end_time < 3.hours.ago.to_i}
     end
+
+    return events[0..(num_events - 1)]
 
     #this is commented out because we're just using event end_time to rank events for now so the above code is faster
 #
@@ -352,10 +340,14 @@ module EventsHelper
     [*(events.sort_by {|event| event.n_photos}.reverse), *other_events]
   end
 
-  def self.get_localized_likes(lon_lat, max_dist, nowtoken)
+  def self.get_localized_likes(lon_lat, max_dist, nowtoken, options={})
     facebook_id = FacebookUser.find_by_nowtoken(nowtoken).facebook_id
     shortids = $redis.smembers("liked_events:#{facebook_id}")
-    return Event.where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :shortid.in => shortids).order_by([[:end_time, :desc]]).take(20)
+    event_query = Event.limit(100).where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :shortid.in => shortids).order_by([[:end_time, :desc]])
+    if options[:category]
+      event_query = event_query.where(:category => options[:category])
+    end
+    return event_query
   end
 
   def self.repair_event_v2_photos(event)
