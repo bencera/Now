@@ -279,7 +279,7 @@ module EventsHelper
 
     event_query = Event.limit(100).where(:coordinates.within => {"$center" => [lon_lat, max_dist]})
 
-    if options[:scope] == "friends"
+    if options[:scope] == "Friends"
       facebook_user = options[:facebook_user]
       personalized_event_ids = facebook_user.get_personalized_event_ids()
       event_query = event_query.where(:_id.in => personalized_event_ids)
@@ -305,7 +305,7 @@ module EventsHelper
       end
     end
     
-    if options[:scope] == "now"
+    if options[:scope] == "Now"
       events = events.delete_if {|event| event.end_time < 3.hours.ago.to_i}
     end
 
