@@ -46,7 +46,7 @@ class MainDistributor
 
     ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
 
-    ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND last_examination > ?", 15.minutes.ago).map {|vw| vw.venue_ig_id}
+    ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND (last_examination > ? OR last_queued > ?)", 15.minutes.ago, 15.minutes.ago).map {|vw| vw.venue_ig_id}
 
     ignore_venues_3 = Event.where(:status.in => Event::TRENDING_STATUSES).map{|event| event.venue.ig_venue_id}
 
@@ -58,13 +58,16 @@ class MainDistributor
 
     #split venue watches into unique venues -- send one watch per venue.  may need to split by user...
     vws.each do |vw|
-      next if ignore_venues.include? vw.venue_ig_id || venue_to_watch[vw.venue_ig_id]
+      next if ignore_venues.include?(vw.venue_ig_id) || venue_to_watch[vw.venue_ig_id]
 
       venue_to_watch[vw.venue_ig_id] = vw
 
       vw_groups << [] if vw_groups.last.count > 20
       vw_groups.last << vw
     end
+
+    #venue_ids = []
+    #vw_groups.each {|group| group.each {|vw| venue_ids << vw.venue_ig_id}}
 
     #send each venue watch group -- dont do more than 10 in a cycle for now
     vw_groups[0..5].each do |vw_group|
