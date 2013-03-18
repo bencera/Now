@@ -7,14 +7,20 @@ class PersonalizeEvents
     start_time = Time.now
     params = eval in_params
     
-    events = Event.where(:status.in => Event::TRENDING_2_STATUSES, :last_personalized.lt => 10.minutes.ago).entries; puts
+    events = Event.where(:status.in => Event::TRENDING_2_STATUSES, :last_personalized.lt => 10.minutes.ago.to_i).entries; puts
+    skip_unless_venues = VenueWatch.where("end_time > ? AND ignore <> ?", Time.now, true).map{|vw| vw.venue_ig_id}.uniq
 
     events.each do |event|
 
       event.last_personalized = Time.now.to_i
+      event.save!
 
       venue = event.venue
       venue_ig_id = venue.ig_venue_id
+
+      Rails.logger.info("skipping") if !skip_unless_venues.include?(venue_ig_id)
+
+      next unless skip_unless_venues.include?(venue_ig_id)
 
       #get all venue watches that arent being ignored
       vws = VenueWatch.where("end_time > ? AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ? AND venue_ig_id = ?", 
