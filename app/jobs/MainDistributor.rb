@@ -66,8 +66,9 @@ class MainDistributor
       vw_groups.last << vw
     end
 
-    #venue_ids = []
-    #vw_groups.each {|group| group.each {|vw| venue_ids << vw.venue_ig_id}}
+#    venue_ids = []
+#    vw_groups.each {|group| group.each {|vw| venue_ids << vw.venue_ig_id}}
+#    venue_ids.count
 
     #send each venue watch group -- dont do more than 10 in a cycle for now
     vw_groups[0..5].each do |vw_group|

@@ -7,6 +7,8 @@ class WatchVenue
     start_time = Time.now
     params = eval in_params
 
+    nowbot = FacebookUser.where(:now_id => "0").first
+
     max_updates = params[:max_updates] || 100
 
     update = 0
@@ -132,12 +134,17 @@ class WatchVenue
       Rails.logger.info("MADE IT TO THIS POINT")
       begin
         response = client.venue_media(venue_ig_id, :min_timestamp => 3.hours.ago.to_i)
-        if response.data.count <= 1
+        if response.data.count == 0
+          vw.last_examination = [Time.now + 1.hour, vw.end_time - 15.minutes].min
+        elsif response.data.count == 1
           #look at venues less when we dont think they'll trend soon.
-          vw.last_examination = Time.now + 30.minutes
-        else
+          vw.last_examination =  [Time.now + 1.hour, vw.end_time - 15.minutes].min
+        elsif 
           vw.last_examination = Time.now; 
         end
+
+        vw.save! if vw.changed?
+
         if check_media(response)
 
           Rails.logger.info("Media checked out ok")
@@ -163,7 +170,7 @@ class WatchVenue
 
               vw.event_created = false; 
               vw.ignore = true
-              vw.save!  
+              vw.save! if vw.changed?
               event_skip_count += 1
               next
             end
@@ -194,7 +201,7 @@ class WatchVenue
           event_id = create_event_or_reply(venue, creating_user, response.data.first.id) 
         
           ec = EventCreation.create(:event_id => event_id.to_s,
-                               :facebook_user_id => creating_user.id.to_s,
+                               :facebook_user_id => nowbot.id.to_s,
                                :instagram_user_id =>  vw.trigger_media_user_id,
                                :creation_time => Time.now,
                                :blacklist => false,
@@ -230,7 +237,7 @@ class WatchVenue
           vw.personalized = personalize
           vw.ignore = true
           
-          vw.save!
+          vw.save! if vw.changed?
 
 
           if personalize 
@@ -256,9 +263,8 @@ class WatchVenue
             message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}. #{significance_hash[:message]}"
             SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION")
             vw.event_significance = significance_hash[:activity]
-            vw.save!
           end
-
+          
           event_creation_count += 1
         end
       rescue Mongoid::Errors::Validations
