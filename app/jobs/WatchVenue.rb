@@ -57,7 +57,7 @@ class WatchVenue
       #quick escapes
       if ig_user.nil? || ig_user.ig_accesstoken.nil?
         #should probably note that it's a bad venue watch
-        vw.ignore = true
+        vw.end_time = Time.now
         vw.save!
         next
       end

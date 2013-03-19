@@ -47,6 +47,7 @@ class MainDistributor
     #first, personalize all the events that dont need 
     vws = VenueWatch.where("end_time > ? AND (last_queued IS NULL OR last_queued < ? ) AND (last_examination < ? OR last_examination IS NULL) AND ignore <> ? AND user_now_id IS NOT NULL AND event_created <> ?", Time.now, 15.minutes.ago, 15.minutes.ago, true, true).entries.shuffle
 
+    #either there's an event there (the personalization job will get it) or it's blacklisted
     ignore_venues = VenueWatch.where("end_time > ? AND ignore = ? AND venue_ig_id IS NOT NULL", Time.now, true).map {|vw| vw.venue_ig_id}
 
     ignore_venues_2 = VenueWatch.where("venue_ig_id IS NOT NULL AND (last_examination > ? OR last_queued > ?)", 15.minutes.ago, 15.minutes.ago).map {|vw| vw.venue_ig_id}
