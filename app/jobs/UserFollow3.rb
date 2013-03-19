@@ -100,7 +100,7 @@ class UserFollow3
       rescue ActiveRecord::RecordInvalid 
         next
       rescue SignalException
-        if params[:retry].nil
+        if params[:retry].nil?
           params[:retry] = 1
           Resque.enqueue(UserFollow3, params.inspect)
         end
