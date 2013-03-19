@@ -270,7 +270,8 @@ class WatchVenue
       rescue Mongoid::Errors::Validations
         vw.save! if vw.changed? 
         next
-      rescue Resque::DirtyExit
+      rescue SignalException
+        #this is when we get a termination from heroku -- might want to do a cleanup
         return
       rescue
         vw.save! if vw.changed?

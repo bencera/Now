@@ -9,35 +9,38 @@ class MainDistributor
 
     #find all users awaiting a feed pull.  
     #this logic can be made more sophisticated to load balance but for now, just pull everyone not recently or waiting to be processed
-    
-    users_query = FacebookUser.where(:last_ig_update.lt => 15.minutes.ago.to_i, "$or" => [{"last_ig_queue" => nil}, {"last_ig_queue" => {"$lt" => 15.minutes.ago.to_i}}], :ig_accesstoken.ne => nil, "now_profile.personalize_ig_feed" => true)
+   
+    begin
+      users_query = FacebookUser.where(:last_ig_update.lt => 15.minutes.ago.to_i, "$or" => [{"last_ig_queue" => nil}, {"last_ig_queue" => {"$lt" => 15.minutes.ago.to_i}}], :ig_accesstoken.ne => nil, "now_profile.personalize_ig_feed" => true)
 
-    users = users_query.entries.shuffle ; puts ""
+      users = users_query.entries.shuffle ; puts ""
 
-    user_groups = [[]]
+      user_groups = [[]]
 
-    users.each do |user|
-      user_groups.last << user
-      user_groups << [] if user_groups.last.count >= 20
-    end; puts ""
+      users.each do |user|
+        user_groups.last << user
+        user_groups << [] if user_groups.last.count >= 20
+      end; puts ""
 
 
-    #enque a max of 14 groups each cycle -- gotta limit this somehow
-    user_groups[0..10].each do |user_group|
-      user_id_list = user_group.map{|user| user.now_id}
-      user_group.each {|user| user.last_ig_queue = queue_time; user.save!}
-      Resque.enqueue(UserFollow3, {:user_id_list => user_id_list}.inspect) if user_id_list.any?
+      #enque a max of 14 groups each cycle -- gotta limit this somehow
+      user_groups[0..10].each do |user_group|
+        user_id_list = user_group.map{|user| user.now_id}
+        user_group.each {|user| user.last_ig_queue = queue_time; user.save!}
+        Resque.enqueue(UserFollow3, {:user_id_list => user_id_list}.inspect) if user_id_list.any?
+      end
+
+      #personalize events first -- should be fast enough...
+
+      PersonalizeEvents.perform()
+
+
+      # Now distribute venues to watch
+
+      do_venue_watch_enqueue(Time.now)
+    rescue SignalException
+      #this is when we get a termination from heroku -- might want to do a cleanup
     end
-
-    #personalize events first -- should be fast enough...
-
-    PersonalizeEvents.perform()
-
-
-    # Now distribute venues to watch
-
-    do_venue_watch_enqueue(Time.now)    
-
   end
 
   def self.do_venue_watch_enqueue(queue_time)

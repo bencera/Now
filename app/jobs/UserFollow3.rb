@@ -96,8 +96,9 @@ class UserFollow3
 
       rescue ActiveRecord::RecordInvalid 
         next
-      rescue Resque::DirtyExit
-        Rails.logger("Interrupted")
+      rescue SignalException
+        #this is when we get a termination from heroku -- might want to do a cleanup
+        return
       rescue
         #Rails.logger.info(break_media) if break_media
         raise
