@@ -47,7 +47,7 @@ class UserFollow3
           next
         end
 
-        new_media_count = media_list.count{|photo| photo.created_time.to_i > [3.hours.ago.to_i, current_pull.to_i].max }
+        new_media_count = media_list.count{|photo| photo.location && photo.location.id && (photo.created_time.to_i > [3.hours.ago.to_i, current_pull.to_i].max) }
 
         media_list.each do |media|
 
@@ -88,7 +88,10 @@ class UserFollow3
 
 
         #don't check people too often if they're not showing us a ton of 
-        ig_user.last_ig_queue= Time.now.to_i + (new_media_count == 0 ? 15.minutes.to_i : 0)
+
+        time_padding = (30 * [4 - new_media_count, 0].max).minutes.to_i
+
+        ig_user.last_ig_queue = Time.now.to_i + time_padding
         ig_user.last_ig_update = Time.now.to_i
         ig_user.save!
         updates += 1
