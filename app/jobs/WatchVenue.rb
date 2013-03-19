@@ -271,6 +271,10 @@ class WatchVenue
         vw.save! if vw.changed? 
         next
       rescue SignalException
+        if params[:retry].nil
+          params[:retry] = 1
+          Resque.enqueue(WatchVenue, params.inspect)
+        end
         #this is when we get a termination from heroku -- might want to do a cleanup
         return
       rescue

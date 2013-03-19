@@ -100,6 +100,10 @@ class UserFollow3
       rescue ActiveRecord::RecordInvalid 
         next
       rescue SignalException
+        if params[:retry].nil
+          params[:retry] = 1
+          Resque.enqueue(UserFollow3, params.inspect)
+        end
         #this is when we get a termination from heroku -- might want to do a cleanup
         return
       rescue

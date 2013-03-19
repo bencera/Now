@@ -5,41 +5,45 @@ class TrendingPeople
   def self.perform()
     current_time = Time.now
 
-    events = Event.where(:status.in => Event::TRENDING_2_STATUSES).where(:next_update.lt => current_time.to_i).entries
-#    now_bot_events = FacebookUser.where(:now_id => "0").first.events.where(:status.in => Event::TRENDING_STATUSES, :next_update.lt => current_time.to_i).entries
+    begin
+      events = Event.where(:status.in => Event::TRENDING_2_STATUSES).where(:next_update.lt => current_time.to_i).entries
+  #    now_bot_events = FacebookUser.where(:now_id => "0").first.events.where(:status.in => Event::TRENDING_STATUSES, :next_update.lt => current_time.to_i).entries
 
-#    events.push(*now_bot_events)
+  #    events.push(*now_bot_events)
 
-    Rails.logger.info("TrendingPeople: beginning for #{events.count} events")
+      Rails.logger.info("TrendingPeople: beginning for #{events.count} events")
 
-    events.each do |event|
-      #if the event began today, we can keep trending it, otherwise, it's done
-      if event.began_today2?(current_time) && event.end_time > 3.hours.ago.to_i
-        event.fetch_and_add_photos(current_time)
-        event.venue.notify_subscribers(event)
-      else
-        event.untrend
-      end
+      events.each do |event|
+        #if the event began today, we can keep trending it, otherwise, it's done
+        if event.began_today2?(current_time) && event.end_time > 3.hours.ago.to_i
+          event.fetch_and_add_photos(current_time)
+          event.venue.notify_subscribers(event)
+        else
+          event.untrend
+        end
 
-      if (event.facebook_user.nil? || event.facebook_user.now_id == "0") && event.su_renamed == false
-        new_caption =  Captionator.get_caption(event)
-        event.description = new_caption unless new_caption.blank?
-        event.save!
-      end
-
-      #check event velocity
-      
-      if !event.reached_velocity && !event.venue.graylist
-        if event.photos.where(:time_taken.gt => 1.hour.ago.to_i).count > 3 && ["Concert", "Conference", "Sport", "Movie", "Performance"].include?(event.category)
-          event.reached_velocity = true
+        if (event.facebook_user.nil? || event.facebook_user.now_id == "0") && event.su_renamed == false
+          new_caption =  Captionator.get_caption(event)
+          event.description = new_caption unless new_caption.blank?
           event.save!
+        end
 
-          #FacebookUser.where(:now_id.in => ["2", "359"]).each {|admin_user| admin_user.send_notification("\u{1F525}: #{event.description} @ #{event.venue.name}", event.id)}
+        #check event velocity
+        
+        if !event.reached_velocity && !event.venue.graylist
+          if event.photos.where(:time_taken.gt => 1.hour.ago.to_i).count > 3 && ["Concert", "Conference", "Sport", "Movie", "Performance"].include?(event.category)
+            event.reached_velocity = true
+            event.save!
 
+            #FacebookUser.where(:now_id.in => ["2", "359"]).each {|admin_user| admin_user.send_notification("\u{1F525}: #{event.description} @ #{event.venue.name}", event.id)}
+
+          end
         end
       end
-    end
 
-    Rails.logger.info("TrendingPeople: done")
+      Rails.logger.info("TrendingPeople: done")
+    rescue SignalException
+      return
+    end
   end
 end
