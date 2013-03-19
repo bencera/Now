@@ -9,7 +9,9 @@ class MainDistributor
 
     #find all users awaiting a feed pull.  
     #this logic can be made more sophisticated to load balance but for now, just pull everyone not recently or waiting to be processed
-   
+  
+    Rails.logger.info("Beginning Main Distributor")
+
     begin
       users_query = FacebookUser.where(:last_ig_update.lt => 15.minutes.ago.to_i, "$or" => [{"last_ig_queue" => nil}, {"last_ig_queue" => {"$lt" => 15.minutes.ago.to_i}}], :ig_accesstoken.ne => nil, "now_profile.personalize_ig_feed" => true)
 
@@ -38,6 +40,10 @@ class MainDistributor
       # Now distribute venues to watch
 
       do_venue_watch_enqueue(Time.now)
+
+      Rails.logger.info("Done with Main Distributor")
+
+
     rescue SignalException
       #this is when we get a termination from heroku -- might want to do a cleanup
     end
