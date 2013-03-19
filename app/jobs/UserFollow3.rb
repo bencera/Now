@@ -96,6 +96,8 @@ class UserFollow3
 
       rescue ActiveRecord::RecordInvalid 
         next
+      rescue Resque::DirtyExit
+        Rails.logger("Interrupted")
       rescue
         #Rails.logger.info(break_media) if break_media
         raise

@@ -270,6 +270,8 @@ class WatchVenue
       rescue Mongoid::Errors::Validations
         vw.save! if vw.changed? 
         next
+      rescue Resque::DirtyExit
+        return
       rescue
         vw.save! if vw.changed?
         raise
