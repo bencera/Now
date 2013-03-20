@@ -615,7 +615,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
       return self.end_time - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness) 
     else
-      return self.end_time - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends)a
+      return self.end_time - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends)
     end
 
   end
