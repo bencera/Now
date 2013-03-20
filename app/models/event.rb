@@ -600,18 +600,23 @@ SCORE_HALF_LIFE       = 7.day.to_f
     #calculate exceptionality score
 
     event_ex = eval self.exceptionality
-    frequency = event_ex[:frequency]
-    last_trended = event_ex[:last_trended] || 3.months.ago.to_i
 
     #rareness = 0 if it trends once a week
-    n_events = event_ex[:n_events].nil? ? 0 : event_ex[:n_events].to_i
-    events_per_week = n_events / 13.0
-    rareness = 12 - ( 12 * events_per_week)
-    
-    #rather do this with stats -- stdev etc
-    relative_size = event_ex[:n_events] == 0 ? 1 : ( self.n_photos / (event_ex[:photo_count].to_f / event_ex[:n_events]))
 
-    self.end_time - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness) 
+    if !event_ex.empty?
+      n_events = event_ex[:n_events].nil? ? 0 : event_ex[:n_events].to_i
+      events_per_week = n_events / 13.0
+      rareness = 12 - ( 12 * events_per_week)
+
+      photo_count = (event_ex[:photo_count] || 0
+      
+      #rather do this with stats -- stdev etc
+      relative_size = n_events == 0 ? 1 : ( self.n_photos / (photo_count / n_events ))
+
+      return self.end_time - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness) 
+    else
+      return self.end_time - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends)a
+    end
 
   end
 
