@@ -596,9 +596,21 @@ SCORE_HALF_LIFE       = 7.day.to_f
     photo_base = [0, [self.n_photos - 5, 30].min].max
 
     distance =  Geocoder::Calculations.distance_between(self.coordinates.reverse, location.reverse)
-    
-    #expressing score in time -- a friend is worth 1 hour, a mile is worth 30 minutes, photos between 5 and 30 are each worth 1 minute
-    self.end_time + (n_friends * 1.hour.to_i) - (distance * 30.minutes.to_i) + (photo_base * 1.minute)
+
+    #calculate exceptionality score
+
+    event_ex = eval self.exceptionality
+    frequency = event_ex[:frequency]
+    last_trended = event_ex[:last_trended] || 3.months.ago.to_i
+
+    #rareness = 0 if it trends once a week
+    rareness = (event_ex[:n_events] / 13) - 1
+
+    #rather do this with stats -- stdev etc
+    relative_size = event_ex[:n_events] == 0 ? 1 : ( self.n_photos / (event_ex[:photo_count].to_f / event_ex[:n_events]))
+
+    self.end_time - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness) 
+
   end
 
   def update_keywords
