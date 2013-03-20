@@ -744,7 +744,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
         venue_ig_id = self.venue.ig_venue_id
       end
 
-      random = [0..5].sample
+      random = [*0..5].sample
 
       if override_token
         client = InstagramWrapper.get_client(:access_token => override_token)
