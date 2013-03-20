@@ -305,7 +305,7 @@ module EventsHelper
       end
     end
     
-    if options[:scope] == "Now"
+    if options[:scope] == "now"
       events = events.delete_if {|event| event.end_time < 3.hours.ago.to_i}
     end
 
