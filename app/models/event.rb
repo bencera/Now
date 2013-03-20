@@ -604,8 +604,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
     last_trended = event_ex[:last_trended] || 3.months.ago.to_i
 
     #rareness = 0 if it trends once a week
-    rareness = (event_ex[:n_events].to_i / 13) - 1
-
+    n_events = event_ex[:n_events].nil? ? 0 : event_ex[:n_events].to_i
+    events_per_week = n_events / 13.0
+    rareness = 12 - ( 12 * events_per_week)
+    
     #rather do this with stats -- stdev etc
     relative_size = event_ex[:n_events] == 0 ? 1 : ( self.n_photos / (event_ex[:photo_count].to_f / event_ex[:n_events]))
 
