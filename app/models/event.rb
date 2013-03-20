@@ -1103,7 +1103,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     photos = ((photos_orig.clone - liked_photos) - friend_photos).sort_by {|photo| photo.time_taken}.reverse
 
 
-    max_rand = (photos.count > 20) ? 5 : 2
+    #max_rand = 2
 
     checkins = self.checkins.order_by([[:created_at, :asc]]).entries
     remove_ids = []
@@ -1180,7 +1180,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
       timestamp = photos.last.time_taken < self.start_time ? self.start_time : photos.last.time_taken
 
-      num_photos = rand(max_rand) + 1
+      num_photos = [1,2,3].sample 
 #      num_photos = [3,4,5].sample
 
       new_photo_card = []
