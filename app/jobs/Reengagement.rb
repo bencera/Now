@@ -14,7 +14,7 @@ class Reengagement
 
     Rails.logger.info("Beginning Reengagement")
 
-    already_notified_udids = SentPush.where("reengagement = ? AND sent_time > ?", true, 12.hours.ago).map{|sp| sp.udid}.uniq  #; puts ""
+    already_notified_udids = SentPush.where("reengagement = ? AND sent_time > ?", true, 7.days.ago).map{|sp| sp.udid}.uniq  #; puts ""
     do_city_push(already_notified_udids)
 
     events = Event.where(:category.in => ["Concert", "Party"], 
