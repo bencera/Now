@@ -593,9 +593,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
       n_friends = personalization["friend_names"].count
     end
 
-    photo_base = [0, [self.n_photos - 5, 30].min].max
+    photo_base = [0, [self.n_photos - 5, 60].min].max
 
     distance =  Geocoder::Calculations.distance_between(self.coordinates.reverse, location.reverse)
+
+    distance = [distance, 20].min
 
     #calculate exceptionality score
 
@@ -614,9 +616,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
       relative_size = n_events == 0 ? 1 : ( self.n_photos.to_f / (photo_count.to_f / n_events ))
 
       #Rails.logger.info("#{self.venue.name} exceptionality: rel_size = #{relative_size - 1}, rareness: #{rareness}")
-      return self.end_time - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness) 
+      return self.end_time + [6.hours.to_i, (2.minutes.to_i * photo_base) - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness)].min
     else
-      return self.end_time - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends)
+      return self.end_time + [6.hours.to_i, (2.minutes.to_i * photo_base) - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends)].min
     end
 
   end
