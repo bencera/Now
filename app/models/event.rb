@@ -70,7 +70,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :shortid
   field :link
   field :super_user
-  field :intensity
   field :status
   field :n_photos
   field :city
@@ -97,8 +96,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :ig_creator
 
   # this the static score of the event from likes, checkins, etc -- not taking into account user specific info (friends checked in etc)
+  # should pull these out 
   field :score, :default => 0
   field :adjusted_score, :default => 0
+
+  # come up with exceptionality
+  field exceptionality, :default => "{}"
 
   #these fields are only used for places updating without subscription
   field :last_update
