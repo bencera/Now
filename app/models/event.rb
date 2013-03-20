@@ -101,7 +101,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :adjusted_score, :default => 0
 
   # come up with exceptionality
-  field exceptionality, :default => "{}"
+  field :exceptionality, :default => "{}"
 
   #these fields are only used for places updating without subscription
   field :last_update
