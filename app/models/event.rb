@@ -613,6 +613,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       #rather do this with stats -- stdev etc
       relative_size = n_events == 0 ? 1 : ( self.n_photos / (photo_count / n_events ))
 
+      Rails.logger.info("exceptionality: rel_size = #{relative_size - 1}, rareness: #{rareness}")
       return self.end_time - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness) 
     else
       return self.end_time - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends)
