@@ -5,9 +5,17 @@ class ReactionsController < ApplicationController
 
   def index
     viewer = FacebookUser.find_by_nowtoken(params[:nowtoken])
+
+    show_messages = viewer && viewer.now_id == params[:now_id]
+
     @viewer_id = @viewer.nil? ? nil : @viewer.id
 
-    if params[:event_id]
+    
+
+    if show_messages
+      @event_perspective = false
+      @reactions = SentPush.get_user_reactions(viewer)
+    elsif  params[:event_id]
       event = Event.find(params[:event_id])
       @event_perspective = true
       @reactions = event.reactions.order_by([[:created_at, :desc]]).limit(20).entries
@@ -36,7 +44,6 @@ class ReactionsController < ApplicationController
                                                      :counter => total_views)
         @reactions.unshift view_reaction
       end
-
 
     elsif params[:now_id]
       facebook_user = FacebookUser.where(:now_id=> params[:now_id]).first
