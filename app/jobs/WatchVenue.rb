@@ -198,7 +198,7 @@ class WatchVenue
           
           
           Rails.logger.info("WatchVenues Will create new event")
-          event_id = create_event_or_reply(venue, creating_user, response.data.first.id) 
+          event_id = create_event_or_reply(venue, nowbot, response.data.first.id) 
         
           ec = EventCreation.create(:event_id => event_id.to_s,
                                :facebook_user_id => nowbot.id.to_s,
