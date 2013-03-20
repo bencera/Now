@@ -309,7 +309,7 @@ module EventsHelper
       events = events.delete_if {|event| event.end_time < 3.hours.ago.to_i}
     end
 
-    return events[0..(num_events - 1)]
+    return events.sort_by{|event| event.result_order_score(facebook_user, lon_lat)}.reverse[0..(num_events - 1)]
 
     #this is commented out because we're just using event end_time to rank events for now so the above code is faster
 #

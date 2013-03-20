@@ -580,6 +580,24 @@ SCORE_HALF_LIFE       = 7.day.to_f
     return self.adjusted_score
   end
 
+  #new score for ordering results once they come in
+
+  def result_order_score(user, location)
+    n_friends = 0
+    idx = self.personalize_for[user.now_id] if user
+    if idx
+      personalization = self.personalizations[idx]
+      n_friends = personalization["friend_names"].count
+    end
+
+    photo_base = [0, [self.n_photos - 5, 30].min].max
+
+    distance =  Geocoder::Calculations.distance_between(self.coordinates.reverse, location.reverse)
+    
+    #expressing score in time -- a friend is worth 1 hour, a mile is worth 30 minutes, photos between 5 and 30 are each worth 1 minute
+    self.end_time + (n_friends * 1.hour.to_i) - (distance * 30.minutes.to_i) + (photo_base * 1.minute)
+  end
+
   def update_keywords
 
     comments = ""
