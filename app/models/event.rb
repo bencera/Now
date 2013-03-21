@@ -512,7 +512,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def calculate_exceptionality
-    next if self.exceptionality && self.exceptionality != "{}"
+    return if self.exceptionality && self.exceptionality != "{}"
     venue = self.venue
     older_events = venue.events.where(:end_time.lt => self.end_time, :end_time.gt => 90.days.ago.to_i, :status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
 
