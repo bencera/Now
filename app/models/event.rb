@@ -231,7 +231,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
         event_params[:new_photos] = false
       end
       
-      errors += "no photos given\n" if event_params[:photo_id_list].nil? && event_params[:photo_ig_list].nil? && event_params[:new_photos] !== false
+      errors += "no photos given\n" if event_params[:photo_id_list].nil? && event_params[:photo_ig_list].nil? && (event_params[:new_photos] != false)
 
       errors += "must give new photos if no event selected\n" if event_params[:new_photos] == false && event_params[:event_id].nil?
 
