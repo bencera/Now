@@ -1132,6 +1132,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
     first_card = true
     after_reply = false
 
+    #make the first 6 photos show up as 1s
+    first_six_count = 0
+
 #    if self.photo_card.any? && !(self.facebook_user && self.facebook_user.now_id == "0")
 #      #need to make the fake first reply
 #      initial_reply = make_fake_reply(self.photo_card, self.description, self.start_time, false)
@@ -1156,6 +1159,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       new_friend = true
       Rails.logger.info("friend #{friend} photos: #{photos_by_friend[friend].count}")
       photos_by_friend[friend].each do |photo|
+        first_six_count += 1
         if new_friend
           description = friend_captions[friend] || ""
           
@@ -1181,6 +1185,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
 
     while liked_photos.any?
+      first_six_count += 1
       description_text = first_card ? self.description : (after_reply ? "I found more photos" : "")
       photo = liked_photos.shift
       replies << make_fake_reply([photo.id], description_text, photo.time_taken, !first_card)
@@ -1196,12 +1201,17 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
 
     photos = photos.delete_if {|photo| remove_ids.include? photo.id}
-    
+   
     while photos.any?
 
       timestamp = photos.last.time_taken < self.start_time ? self.start_time : photos.last.time_taken
 
-      num_photos = [1,2,3].sample 
+      if first_six_count < 6
+        num_photos = 1
+      else
+        num_photos = [1,2,3].sample 
+      end
+      first_six_count += 1
 #      num_photos = [3,4,5].sample
 
       new_photo_card = []
