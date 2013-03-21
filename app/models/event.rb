@@ -525,10 +525,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
       event_sizes = older_events.map{|event| event.n_photos}
       photo_count = event_sizes.sum
       stdev = Mathstats.standard_deviation(event_sizes)
+      stdev = photo_count if stdev.nan? 
     else
       last_trended = [90.days.ago.to_i, venue.created_at.to_i].max
       photo_count = self.n_photos
-      stdev = 0
+      stdev = photo_count
     end
 
     self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_eventss => n_events, :stdev => stdev}.inspect
