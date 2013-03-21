@@ -181,6 +181,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
     current_time = Time.now.to_i
     self.last_update = current_time
     self.next_update = current_time
+
+    self.calculate_exceptionality
   end
 
   after_create do
@@ -507,6 +509,30 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if self.scheduled_event && trending
       self.scheduled_event.update_attribute(:last_trended, Time.now.to_i)
     end
+  end
+
+  def calculate_exceptionality
+    next if self.exceptionality && self.exceptionality != "{}"
+    venue = self.venue
+    older_events = venue.events.where(:end_time.lt => self.end_time, :end_time.gt => 90.days.ago.to_i, :status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).entries
+
+    n_events = older_events.count
+    frequency = n_events.count / 90.0
+
+    #maybe put when the venue was created as last trended if no previous eventss...
+    if older_events.any?
+      last_trended = older_events.first.end_time 
+      event_sizes = older_events.map{|event| event.n_photos}
+      photo_count = event_sizes.sum
+      stdev = Mathstats.standard_deviation(event_sizes)
+    else
+      last_trended = [90.days.ago.to_i, venue.created_at.to_i].max
+      photo_count = self.n_photos
+      stdev = 0
+    end
+
+    self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_eventss => n_events, :stdev => stdev}.inspect
+
   end
  
 ################################################################################  
