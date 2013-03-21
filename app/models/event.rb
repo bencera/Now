@@ -532,7 +532,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       stdev = photo_count
     end
 
-    self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_eventss => n_events, :stdev => stdev}.inspect
+    self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_events => n_events, :stdev => stdev}.inspect
 
   end
  
@@ -622,10 +622,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     photo_base = [0, [self.n_photos - 5, 60].min].max
 
-    distance =  Geocoder::Calculations.distance_between(self.coordinates.reverse, location.reverse)
-
-    distance = [distance, 20].min
-
     #calculate exceptionality score
 
     event_ex = eval self.exceptionality
@@ -643,9 +639,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
       relative_size = n_events == 0 ? 1 : ( self.n_photos.to_f / (photo_count.to_f / n_events ))
 
       Rails.logger.info("#{self.venue.name} exceptionality: rel_size = #{relative_size - 1}, rareness: #{rareness}")
-      return self.end_time + [6.hours.to_i, (2.minutes.to_i * photo_base) - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness)].min
+      return self.end_time + [6.hours.to_i, (2.minutes.to_i * photo_base) -  (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness)].min
     else
-      return self.end_time + [6.hours.to_i, (2.minutes.to_i * photo_base) - (30.minutes.to_i * distance) + (1.hour.to_i * n_friends)].min
+      return self.end_time + [6.hours.to_i, (2.minutes.to_i * photo_base) -  (1.hour.to_i * n_friends)].min
     end
 
   end
