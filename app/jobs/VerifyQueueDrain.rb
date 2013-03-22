@@ -32,6 +32,7 @@ class VerifyQueueDrain
 
       fixed = 0
 
+      venue_refreshed = false
       events.each do |event_id|
         event = Event.first(:conditions => {:id => event_id})
         if event.nil?
@@ -40,9 +41,8 @@ class VerifyQueueDrain
         end
         next if event.last_verify && event.last_verify > 20.minutes.ago
 
-
         #do venue refresh (if necessary)
-        event.venue.do_refresh(:notify => true) 
+        venue_refreshed = event.venue.do_refresh(:notify => true) unless venue_refreshed
 
         VerifyURL2.perform(event_id, 0, false)
         fixed += 1
