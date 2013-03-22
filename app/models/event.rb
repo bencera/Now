@@ -66,7 +66,7 @@ EMOJIS                = {ART => ["E502".to_i(16)].pack("U"),
                          OUTDOORS => ["E04A".to_i(16)].pack("U"),
                          FOOD => ["E120".to_i(16)].pack("U"),
                          MOVIE => ["E324".to_i(16)].pack("U"),
-                         PARTY => ["E047".to_i(16)].pack("U"),
+                         PARTY => "\u{1F378}", #nightlife
                          EXCEPTIONAL => ["E252".to_i(16)].pack("U"),
                          CELEBRITY => ["E51C".to_i(16)].pack("U"),
                          SHOPPING => "\u{1F460}",
