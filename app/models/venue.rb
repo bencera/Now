@@ -201,10 +201,20 @@ class Venue
     last_refresh_time = self.last_refresh || self.created_at.to_i
     
     if options[:force] || (last_refresh_time < 30.days.ago.to_i)
-      self.foursq_data = Venue.client.venues.find(self.fs_venue_id).json
+      fs_data = Venue.client.venues.find(self.fs_venue_id).json
+      fs_data.delete("tips")
+      fs_data.delete("photos")
+      fs_data.delete("listed")
+      
+      self.foursq_data = fs_data
       self.refresh_to_apply = true
       self.last_refresh = Time.now.to_i
       self.save!
+
+      if options[:notify]
+        conall = FacebookUser.where(:now_id => "2").first
+        conall.send_notification("refreshed venue #{self.name}.", nil)
+      end
     end
 
   end

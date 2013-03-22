@@ -40,6 +40,10 @@ class VerifyQueueDrain
         end
         next if event.last_verify && event.last_verify > 20.minutes.ago
 
+
+        #do venue refresh (if necessary)
+        event.venue.do_refresh(:notify => true) 
+
         VerifyURL2.perform(event_id, 0, false)
         fixed += 1
         break if fixed > 5 
