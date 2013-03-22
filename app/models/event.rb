@@ -20,6 +20,7 @@ WAITING_CONFIRMATION  = "waiting_confirmation"
 WAITING_SCHEUDLED     = "waiting_scheduled"
 
 SPORT                 = "Sport"
+ART                   = "Art"
 CONCERT               = "Concert"
 PERFORMANCE           = "Performance"
 OUTDOORS              = "Outdoors"
@@ -30,6 +31,17 @@ PARTY                 = "Party"
 EXCEPTIONAL           = "Exceptional"
 CELEBRITY             = "Celebrity"
 SHOPPING              = "Shopping"
+
+#new categories
+ENTERTAINMENT         = "Entertainment"
+ACTIVITY              = "Activity"
+EDUCATION             = "Education"
+HOME                  = "Home"
+OFFICE                = "Office"
+BUILDING              = "Building"
+COFFEE                = "Coffee"
+TRANSPORTATION        = "Transportation"
+
 
 MISC                  = "Misc"
 
@@ -43,7 +55,30 @@ WAITING_STATUSES      = [WAITING, WAITING_CONFIRMATION, WAITING_SCHEUDLED, WAITI
 PEOPLE_STATUSES       = [TRENDING_PEOPLE, TRENDED_PEOPLE, TRENDING_LOW, TRENDED_LOW]
 TRENDED_OR_TRENDING_LOW =  [TRENDING_PEOPLE, TRENDED_PEOPLE, TRENDING_LOW, TRENDED_LOW, TRENDING, TRENDED]
 
-CATEGORIES            = [SPORT, CONFERENCE, CONCERT, PERFORMANCE, OUTDOORS, FOOD, MOVIE, PARTY, EXCEPTIONAL, CELEBRITY, SHOPPING]
+CATEGORIES            = [ART, SPORT, CONFERENCE, CONCERT, PERFORMANCE, OUTDOORS, FOOD, MOVIE, PARTY, EXCEPTIONAL, CELEBRITY, SHOPPING,
+                          ENTERTAINMENT, ACTIVITY, EDUCATION, HOME, OFFICE, BUILDING, COFFEE, TRANSPORTATION]
+
+EMOJIS                = {ART => ["E502".to_i(16)].pack("U"),
+                         SPORT => ["E42A".to_i(16)].pack("U"),
+                         CONFERENCE => ["E301".to_i(16)].pack("U"),
+                         CONCERT => ["E03E".to_i(16)].pack("U"),
+                         PERFORMANCE => ["E503".to_i(16)].pack("U"),
+                         OUTDOORS => ["E04A".to_i(16)].pack("U"),
+                         FOOD => ["E120".to_i(16)].pack("U"),
+                         MOVIE => ["E324".to_i(16)].pack("U"),
+                         PARTY => ["E047".to_i(16)].pack("U"),
+                         EXCEPTIONAL => ["E252".to_i(16)].pack("U"),
+                         CELEBRITY => ["E51C".to_i(16)].pack("U"),
+                         SHOPPING => "\u{1F460}",
+                         ENTERTAINMENT => "\u{1F388}",
+                         ACTIVITY => "\u{1F485}",
+                         EDUCATION => "\u{1F393}",
+                         HOME => "\u{1F3E0}",
+                         OFFICE => "\u{1F4BC}",
+                         BUILDING => "\u{1F3E2}",
+                         COFFEE => "☕",
+                         TRANSPORTATION => "\u{1F697}" 
+                        }
 
 NOW_BOT_NAME          = "Now Bot"
 NOW_BOT_ID            = "0"
