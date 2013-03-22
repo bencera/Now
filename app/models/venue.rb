@@ -209,12 +209,18 @@ class Venue
       self.foursq_data = fs_data
       self.refresh_to_apply = true
       self.last_refresh = Time.now.to_i
-      self.save!
+      self.closed = fs_data["closed"] if fs_data["closed"]
 
-      if options[:notify]
-        conall = FacebookUser.where(:now_id => "2").first
-        conall.send_notification("refreshed venue #{self.name}.", nil)
+      if self.name == fs_data["name"]
+        self.categories = fs_data["categories"]
+        self.refresh_to_apply = false
+      else
+        if options[:notify]
+          conall = FacebookUser.where(:now_id => "2").first
+          conall.send_notification("refreshed venue #{self.name} != #{ fs_data["name"]}", nil)
+        end
       end
+      self.save!
       return true
     end
     return false
