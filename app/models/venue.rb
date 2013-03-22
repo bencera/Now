@@ -33,6 +33,13 @@ class Venue
   field :website
   field :street_address
   field :phone_number
+
+  # for foursquare caching etc
+  field :last_refresh
+  field :foursq_data
+  field :refresh_to_apply, :type => Boolean, default: false
+  field :closed, :type => Boolean, default: false
+
   
   # top_event is the event with the highest score currently (includes time value)
   field :top_event_id
@@ -187,6 +194,19 @@ class Venue
       end
     end
     return nil
+  end
+
+  def do_refresh(options={})
+
+    last_refresh_time = self.last_refresh || self.created_at.to_i
+    
+    if options[:force] || (last_refresh_time < 30.days.ago.to_i)
+      self.foursq_data = Venue.client.venues.find(self.fs_venue_id).json
+      self.refresh_to_apply = true
+      self.last_refresh = Time.now.to_i
+      self.save!
+    end
+
   end
   
   def fs_venue
