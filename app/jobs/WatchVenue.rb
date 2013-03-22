@@ -148,7 +148,7 @@ class WatchVenue
         #without category, needs more photos
         min_photos = (venue.nil? || (venue.categories && venue.categories.any?)) ? 3 : 5
 
-        if check_media(response, :min_photos => min_users)
+        if check_media(response, :min_photos => min_photos)
 
           Rails.logger.info("Media checked out ok")
           #check if the venue already exists -- if so try creating
@@ -179,7 +179,7 @@ class WatchVenue
             else
               #without category, needs more photos
               min_photos = (venue.categories && venue.categories.any?) ? 3 : 5
-              next unless check_media(response, :min_photos => min_users)
+              next unless check_media(response, :min_photos => min_photos)
             end
           end
 
