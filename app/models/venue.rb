@@ -211,7 +211,8 @@ class Venue
       self.last_refresh = Time.now.to_i
       self.closed = fs_data["closed"] if fs_data["closed"]
 
-      if self.name == fs_data["name"]
+      if self.name.downcase == fs_data["name"].downcase
+        self.name = fs_data["name"]
         self.categories = fs_data["categories"] if fs_data["categories"].any?
         self.refresh_to_apply = false
       else
