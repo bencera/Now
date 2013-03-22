@@ -10,7 +10,7 @@ class SendBatchPush
     when "Concert"
       emoji = ["E03E".to_i(16)].pack("U")
     when "Party"
-      emoji = ["E047".to_i(16)].pack("U")
+      emoji = "\u{1F378}", #nightlife
     when "Sport"
       emoji = ["E42A".to_i(16)].pack("U")
     when "Art"
@@ -62,7 +62,7 @@ class SendBatchPush
     when "Concert"
       emoji = ["E03E".to_i(16)].pack("U")
     when "Party"
-      emoji = ["E047".to_i(16)].pack("U")
+      emoji = "\u{1F378}", #nightlife
     when "Sport"
       emoji = ["E42A".to_i(16)].pack("U")
     when "Art"
