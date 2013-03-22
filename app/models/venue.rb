@@ -215,8 +215,9 @@ class Venue
         conall = FacebookUser.where(:now_id => "2").first
         conall.send_notification("refreshed venue #{self.name}.", nil)
       end
+      return true
     end
-
+    return false
   end
   
   def fs_venue
