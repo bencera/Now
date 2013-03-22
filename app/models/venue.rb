@@ -212,7 +212,7 @@ class Venue
       self.closed = fs_data["closed"] if fs_data["closed"]
 
       if self.name == fs_data["name"]
-        self.categories = fs_data["categories"]
+        self.categories = fs_data["categories"] if fs_data["categories"].any?
         self.refresh_to_apply = false
       else
         if options[:notify]
