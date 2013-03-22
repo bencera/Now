@@ -145,7 +145,10 @@ class WatchVenue
 
         vw.save! if vw.changed?
 
-        if check_media(response)
+        #without category, needs more photos
+        min_photos = (venue.nil? || (venue.categories && venue.categories.any?)) ? 3 : 5
+
+        if check_media(response, :min_photos => min_users)
 
           Rails.logger.info("Media checked out ok")
           #check if the venue already exists -- if so try creating
@@ -173,6 +176,10 @@ class WatchVenue
               vw.save! if vw.changed?
               event_skip_count += 1
               next
+            else
+              #without category, needs more photos
+              min_photos = (venue.categories && venue.categories.any?) ? 3 : 5
+              next unless check_media(response, :min_photos => min_users)
             end
           end
 
