@@ -30,7 +30,7 @@
 #
 
 class VenueWatch < ActiveRecord::Base
-  attr_accessible :activity_score, :blacklist, :end_time, :event_created, :event_creation_id, :event_id, :greylist, :ignore, :last_examination, :start_time, :trigger_media_id, :trigger_media_ig_id, :trigger_media_user_id, :user_now_id, :venue_id, :venue_ig_id, :trigger_media_user_name, :personalized, :trigger_media_fullname, :event_significance
+  attr_accessible :activity_score, :blacklist, :end_time, :event_created, :event_creation_id, :event_id, :greylist, :ignore, :last_examination, :start_time, :trigger_media_id, :trigger_media_ig_id, :trigger_media_user_id, :user_now_id, :venue_id, :venue_ig_id, :trigger_media_user_name, :personalized, :trigger_media_fullname, :event_significance, :selfie
 
   validates_presence_of :venue_ig_id
 
