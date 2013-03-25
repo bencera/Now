@@ -286,7 +286,11 @@ module EventsHelper
     end
 
     if options[:category]
+      if options[:category] == "Arts"
+        event_query = event_query.where(:category.in => Event::ARTS_CATEGORIES)
+      else
         event_query = event_query.where(:category => options[:category])
+      end
     elsif options[:waiting]
       event_query = event_query.where(:status.in => Event::WAITING_STATUSES)
     elsif options[:facebook_user_id]
