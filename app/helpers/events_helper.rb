@@ -309,7 +309,7 @@ module EventsHelper
       end
     end
     
-    if options[:scope] == "now"
+    if options[:scope].downcase == "now"
       events = events.delete_if {|event| event.end_time < 3.hours.ago.to_i}
     end
 
@@ -349,7 +349,11 @@ module EventsHelper
     shortids = $redis.smembers("liked_events:#{facebook_id}")
     event_query = Event.limit(100).where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :shortid.in => shortids).order_by([[:end_time, :desc]])
     if options[:category]
-      event_query = event_query.where(:category => options[:category])
+      if options[:category] == "Arts"
+        event_query = event_query.where(:category.in => Event::ARTS_CATEGORIES)
+      else
+        event_query = event_query.where(:category => options[:category])
+      end
     end
     return event_query
   end
