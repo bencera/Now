@@ -82,10 +82,14 @@ class WatchVenue
         notify = (client.follow_back?(vw.trigger_media_user_id) || ig_user.now_id == "1") && creating_user != ig_user
         
         if personalize
+          if vw.selfie
+            ig_user.attending_event(existing_event)
+          end
           existing_event.add_to_personalization(ig_user, vw.trigger_media_user_name) 
           ig_user.add_to_personalized_events(existing_event.id.to_s)
           existing_event.save!
           vw.personalized = true
+          ig_user.save!
         end
 
         vw.ignore = true
@@ -248,8 +252,12 @@ class WatchVenue
 
 
           if personalize 
+            if vw.selfie
+              ig_user.attending_event(existing_event)
+            end
             event.add_to_personalization(ig_user,  vw.trigger_media_user_name)
             ig_user.add_to_personalized_events(event.id.to_s) 
+            ig_user.save!
           end
 
           event.venue.notify_subscribers(event)

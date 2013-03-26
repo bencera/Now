@@ -69,6 +69,10 @@ class PersonalizeEvents
             Rails.logger.info("Personalizing")
             event.add_to_personalization(ig_user, vw.trigger_media_user_name) 
             ig_user.add_to_personalized_events(event.id.to_s)
+            if vw.selfie
+              ig_user.attending_event(event)
+              ig_user.save!
+            end
             event.save!
 
             client = InstagramWrapper.get_client(:access_token => ig_user.ig_accesstoken)

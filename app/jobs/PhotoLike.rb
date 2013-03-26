@@ -37,7 +37,7 @@ class PhotoLike
         end
       end
 
-      if facebook_user.ig_accesstoken && photo.external_media_source != "nw" && !photo.ig_media_id.start_with?("nw")
+      if facebook_user.ig_accesstoken && photo.external_media_source == "ig" && !photo.ig_media_id.start_with?("nw")
         ig_client =  InstagramWrapper.get_client(:access_token => facebook_user.ig_accesstoken)
         begin
           ig_client.unlike_media(photo.ig_media_id) if facebook_user.now_profile.pass_ig_likes
@@ -62,7 +62,7 @@ class PhotoLike
       end
 
 
-      if facebook_user.ig_accesstoken && photo.external_media_source != "nw" && !photo.ig_media_id.start_with?("nw")
+      if facebook_user.ig_accesstoken && photo.external_media_source == "ig" && !photo.ig_media_id.start_with?("nw")
 
         ig_client =  InstagramWrapper.get_client(:access_token => facebook_user.ig_accesstoken)
         begin

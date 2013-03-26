@@ -42,6 +42,9 @@ class FacebookUser
   field :coordinates, type: Array
   field :event_dist, type: Integer, default: 20 #radius that this super user will watch
 
+  #attended_events
+  field :attended_events, type: Array
+
   index({ now_token: 1 }, { unique: true, name: "now_token_index" })
   index({ now_id: 1}, {unique: true, name: "now_id_index"})
 
@@ -351,6 +354,11 @@ class FacebookUser
   def self.fake(name, photo_url, fake_now_id=-1) 
 
     Hashie::Mash.new({:now_id => fake_now_id, :now_profile => {:first_name => name, :profile_photo_url => photo_url}})
+  end
+
+  def attending_event(event, options={})
+    return if self.attended_events.include? event.id.to_s
+    self.attended_events << event.id.to_s
   end
 
 #  def do_redis_checkin(event)
