@@ -359,7 +359,7 @@ class FacebookUser
   def attending_event(event, options={})
     return if self.attended_events && self.attended_events.include?(event.id.to_s)
     self.attended_events ||= []
-    self.attended_events << event.id.to_s
+    self.attended_events << event.id
   end
 
 #  def do_redis_checkin(event)
