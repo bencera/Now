@@ -345,7 +345,9 @@ module EventsHelper
   end
 
   def self.get_localized_likes(lon_lat, max_dist, nowtoken, options={})
-    facebook_id = FacebookUser.find_by_nowtoken(nowtoken).facebook_id
+    facebook_user = FacebookUser.find_by_nowtoken(nowtoken)
+    return nil if facebook_user.nil? 
+    facebook_user_id = facebook_user_id.facebook_id || facebook_user.id.to_s
     shortids = $redis.smembers("liked_events:#{facebook_id}")
     event_query = Event.limit(100).where(:coordinates.within => {"$center" => [lon_lat, max_dist]}, :shortid.in => shortids).order_by([[:end_time, :desc]])
     if options[:category]
