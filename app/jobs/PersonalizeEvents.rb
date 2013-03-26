@@ -8,6 +8,8 @@ class PersonalizeEvents
     params = eval in_params
     
     events = Event.where(:status.in => Event::TRENDING_2_STATUSES, :last_personalized.lt => 15.minutes.ago.to_i).entries; puts
+    events.each {|event| event.last_personalized = Time.now.to_i; event.save!}
+
     skip_unless_venues = VenueWatch.where("end_time > ? AND ignore <> ?", Time.now, true).map{|vw| vw.venue_ig_id}.uniq
 
     events.each do |event|
