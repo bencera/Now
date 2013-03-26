@@ -58,8 +58,8 @@ main_distributor:
   args: 
   description: "Pull venue watches from user feeds"
 
-#venue_watch:
-#  every: "90s"
-#  class: WatchVenue
-#  args:
-#  description: "examine venues we're watching"
+personalization:
+  every: "4m"
+  class: PersonalizeEvents
+  args:
+  description: "Personalizing existing events"

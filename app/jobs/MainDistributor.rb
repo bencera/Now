@@ -34,7 +34,7 @@ class MainDistributor
 
       #personalize events first -- should be fast enough...
 
-      PersonalizeEvents.perform()
+#      PersonalizeEvents.perform()
 
 
       # Now distribute venues to watch
