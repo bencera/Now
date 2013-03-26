@@ -220,6 +220,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.next_update = current_time
 
     self.calculate_exceptionality
+    self.last_personalized = Time.now.to_i
   end
 
   after_create do
