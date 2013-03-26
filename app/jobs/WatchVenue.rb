@@ -189,7 +189,7 @@ class WatchVenue
           end
  
          
-          greylist = (venue.categories && venue.categories.any? && CategoriesHelper.grey_list[venue.categories.last["id"]])
+          greylist = (venue.categories && venue.categories.any? && CategoriesHelper.grey_list[venue.categories.first["id"]])
 
           additional_photos = []
          
@@ -322,7 +322,7 @@ class WatchVenue
   end
 
   def self.check_blacklist(venue, vw, creating_user)
-    if venue.blacklist || (venue.categories && venue.categories.any? && CategoriesHelper.black_list[venue.categories.last["id"]])
+    if venue.blacklist || (venue.categories && venue.categories.any? && CategoriesHelper.black_list[venue.categories.first["id"]])
 
       EventCreation.create(:facebook_user_id => creating_user.id.to_s,
                            :instagram_user_id =>  vw.trigger_media_user_id,
@@ -351,10 +351,10 @@ class WatchVenue
 
     if venue.autocategory
       category = venue.autocategory
-    elsif venue.categories.nil? || venue.categories.last.nil? || categories[venue.categories.last["id"]].nil?
+    elsif venue.categories.nil? || venue.categories.last.nil? || categories[venue.categories.first["id"]].nil?
       category = "Misc"
     else
-      category = categories[venue.categories.last["id"]]
+      category = categories[venue.categories.first["id"]]
     end
 
     event_params = {:photo_id_list => "ig|#{media_id}",

@@ -469,7 +469,7 @@ EOS
 
     new_event = user_count >= 3 
 
-    new_event = false if venue && (venue.blacklist || (venue.categories && venue.categories.any? && venue.categories.last && CategoriesHelper.black_list[venue.categories.last["id"]]))
+    new_event = false if venue && (venue.blacklist || (venue.categories && venue.categories.any? && venue.categories.first && CategoriesHelper.black_list[venue.categories.first["id"]]))
   
     
     photo_ids = []
@@ -487,9 +487,9 @@ EOS
     event_id = new_event ? Event.new.id : "FAKE"
     event_short_id = new_event ? Event.get_new_shortid : "FAKE"
 
-    if venue && venue.categories && venue.categories.any? && venue.categories.last
+    if venue && venue.categories && venue.categories.any? && venue.categories.first
       categories = CategoriesHelper.categories
-      category = categories[venue.categories.last["id"]] || "Misc"
+      category = categories[venue.categories.first["id"]] || "Misc"
     else
       category = "Misc"
     end
