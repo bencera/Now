@@ -461,7 +461,7 @@ module CaptionsHelper
             "zabourah"]
   end
 
-  def self stop_words
+  def self.stop_words
     ["a", "b", "c", "d", "e", "f", "g","h","i","j","k","l","m","n","o","p","q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
           "a's", "able", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", 
           "again", "against", "ain't", "all", "allow", "allows", "almost", "alone", "along", "already", "also", "although", "always", 
@@ -510,7 +510,7 @@ module CaptionsHelper
           "your", "yours", "yourself", "yourselves", "zero",""]
   end
 
-  def stop_chars
+  def self.stop_chars
     ["-",".","~", "!", "&", ",", "(", ")", "/", ":", "<", ">", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
   end
 end
