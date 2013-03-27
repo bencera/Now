@@ -27,6 +27,7 @@ end
 
 gem 'jquery-rails'
 gem 'localtunnel'
+
 #gem 'delayed_job'
 #gem 'delayed_job_mongoid'
 
@@ -39,6 +40,7 @@ gem 'fb_graph'
 gem 'rabl'
 
 gem 'httparty'
+gem 'nokogiri'
 
 #gem 'infinitescrolling-rails'
 gem 'mathstats'
