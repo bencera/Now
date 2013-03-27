@@ -27,6 +27,10 @@ class Photo
   field :high_resolution_url
   field :thumbnail_url
 
+#for vines
+  field :has_vine
+  field :video_url
+
 # this is for the phase-out of old code
   field :now_version, :default => 1
 
