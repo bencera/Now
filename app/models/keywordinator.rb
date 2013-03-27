@@ -1,4 +1,4 @@
-class keywordinator
+class Keywordinator
   def self.get_hashtag(event)
 
     caption_list = event.photos.map{|photo| photo.caption.downcase}.uniq
