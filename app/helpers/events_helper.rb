@@ -157,7 +157,11 @@ module EventsHelper
   def self.get_user_created_or_reposted(fb_user, options = {})
 
     if fb_user
-      events = Event.limit(20).where("$or" => [{"facebook_user_id" => fb_user.id}, {:_id => {"$in" => fb_user.attended_events}}]).order_by([[:end_time, :desc]]).entries
+      if fb_user.attended_events.any?
+        events = Event.limit(20).where("$or" => [{"facebook_user_id" => fb_user.id}, {:_id => {"$in" => fb_user.attended_events}}]).order_by([[:end_time, :desc]]).entries
+      else
+        events = Event.limit(20).where(:facebook_user_id => fb_user.id).order_by([[:end_time, :desc]]).entries
+      end
     end
     return events
   end
