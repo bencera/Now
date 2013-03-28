@@ -210,7 +210,7 @@ class Photo
     photo.coordinates = [media.location.longitude, media.location.latitude]
 
     #leaving this in for compatibility.  delete it when deprecated in API endpoint rabl
-    photo.url = [media.images.low_resolution.url, media.images.standard_resolution.url, media.images.thumbnail.url]
+    photo.url = [media.images.low_resolution, media.images.standard_resolution, media.images.thumbnail]
 
     photo.low_resolution_url = media.images.low_resolution.url
     photo.high_resolution_url = media.images.standard_resolution.url
