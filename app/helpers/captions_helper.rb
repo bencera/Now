@@ -515,7 +515,7 @@ module CaptionsHelper
   end
 
   def self.common_english_words
-    ["the", "be", "and", "of", "a", "in", "to", "have", "it", "I", "that", "for", "you", "he", "with",
+    ["the", "be", "and", "of", "a", "in", "to", "have", "it", "i", "that", "for", "you", "he", "with",
 "on", "do", "say", "this", "they", "at", "but", "we", "his", "from", "not", "n't", "by", "she", "or", "as",
 "what", "go", "their", "can", "who", "get", "if", "would", "her", "all", "my", "make", "about", "know", "will", "up",
 "one", "time", "there", "year", "so", "think", "when", "which", "them", "some", "me", "people", "take", "out", "into", "just",
@@ -527,7 +527,7 @@ module CaptionsHelper
 "keep", "student", "why", "let", "great", "same", "big", "group", "begin", "seem", "country", "help", "talk", "where", "turn", "problem",
 "every", "start", "hand", "might", "American", "show", "part", "against", "place", "such", "again", "few", "case", "week", "company", "system",
 "each", "right", "program", "hear", "question", "during", "play", "government", "run", "small", "number", "off", "always", "move", "night", "live",
-"Mr", "point", "believe", "hold", "today", "bring", "happen", "next", "without", "before", "large", "million", "must", "home", "under", "water",
+"mr", "point", "believe", "hold", "today", "bring", "happen", "next", "without", "before", "large", "million", "must", "home", "under", "water",
 "room", "write", "mother", "area", "national", "money", "story", "young", "fact", "month", "different", "lot", "study", "book", "eye", "job",
 "word", "though", "business", "issue", "side", "kind", "four", "head", "far", "black", "long", "both", "little", "house", "yes", "since",
 "provide", "service", "around", "friend", "important", "father", "sit", "away", "until", "power", "hour", "game", "often", "yet", "line", "political",
@@ -603,7 +603,7 @@ module CaptionsHelper
 "progress", "bottom", "island", "exchange", "clean", "studio", "train", "lady", "colleague", "application", "neck", "lean", "damage", "plastic", "tall", "plate",
 "hate", "otherwise", "writing", "male", "alive", "expression", "football", "intend", "chicken", "army", "abuse", "theater", "shut", "map", "extra", "session",
 "danger", "welcome", "domestic", "lots", "literature", "rain", "desire", "assessment", "injury", "respect", "northern", "nod", "paint", "fuel", "leaf", "dry",
-"Russian", "instruction", "pool", "climb", "sweet", "engine", "fourth", "salt", "expand", "importance", "metal", "fat", "ticket", "software", "disappear", "corporate",
+"russian", "instruction", "pool", "climb", "sweet", "engine", "fourth", "salt", "expand", "importance", "metal", "fat", "ticket", "software", "disappear", "corporate",
 "strange", "lip", "reading", "urban", "mental", "increasingly", "lunch", "educational", "somewhere", "farmer", "sugar", "planet", "favorite", "explore", "obtain", "enemy",
 "greatest", "complex", "surround", "athlete", "invite", "repeat", "carefully", "soul", "scientific", "impossible", "panel", "meaning", "mom", "married", "instrument", "predict",
 "weather", "presidential", "emotional", "commitment", "Supreme", "bear", "pocket", "thin", "temperature", "surprise", "poll", "proposal", "consequence", "breath", "sight", "balance",
@@ -723,7 +723,7 @@ module CaptionsHelper
 "vitamin", "enthusiasm", "accommodate", "praise", "injure", "wilderness", "endless", "mandate", "respectively", "uncertainty", "chaos", "mechanical", "canvas", "forty", "lobby", "profound",
 "format", "trait", "currency", "turkey", "reserve", "beam", "astronomer", "corruption", "contractor", "apologize", "doctrine", "genuine", "thumb", "unity", "compromise", "horrible",
 "behavioral", "exclusive", "scatter", "commonly", "convey", "twist", "complexity", "fork", "disk", "relieve", "suspicion", "health-care", "residence", "shame", "meaningful", "sidewalk",
-"Olympics", "technological", "signature", "pleasant", "wow", "suspend", "rebel", "frozen", "spouse", "fluid", "pension", "resume", "theoretical", "sodium", "promotion", "delicate",
+"olympics", "technological", "signature", "pleasant", "wow", "suspend", "rebel", "frozen", "spouse", "fluid", "pension", "resume", "theoretical", "sodium", "promotion", "delicate",
 "forehead", "rebuild", "bounce", "electrical", "hook", "detective", "traveler", "click", "compensation", "exit", "attraction", "dedicate", "altogether", "pickup", "carve", "needle",
 "belly", "scare", "portfolio", "shuttle", "invisible", "timing", "engagement", "ankle", "transaction", "rescue", "counterpart", "historically", "firmly", "mild", "rider", "doll",
 "noon", "amid", "identical", "precise", "anxious", "structural", "residential", "diagnose", "carbohydrate", "liberty", "poster", "theology", "nonprofit", "crawl", "oxygen", "handsome",
@@ -790,6 +790,10 @@ module CaptionsHelper
   end
 
   def self.city_names
-    ["Tokyo", "Jakarta", "Seoul", "Delhi", "Shanghai", "Manila", "Karachi", "New York", "NYC", "Brooklyn", "Sao Paulo", "Mexico City", "Cairo", "Beijing", "Osaka", "Mumbai", "Bombay", "Guangzhou", "Moscow", "Los Angeles", "Calcutta", "Dhaka", "Buenos Aires", "Istanbul", "Rio de Janeiro", "Shenzhen", "Lagos", "Paris", "Nagoya", "Lima", "Chicago", "Kinshasa", "Tianjin", "Chennai", "Bogota", "Bengaluru", "London", "Taipei", "Ho Chi Minh City", "Dongguan", "Hyderabad", "Chengdu", "Lahore", "Johannesburg", "Tehran", "Essen", "Bangkok", "Hong Kong", "Wuhan", "Ahmedabad", "Chongqung", "Baghdad", "Hangzhou", "Toronto", "Kuala Lumpur", "Santiago", "Dallas", "Fort Worth", "San Francisco", "San Jose", "Quanzhou", "Miami", "Shenyang", "Belo Horizonte", "Philadelphia", "Nanjing", "Madrid", "Houston", "Xi'an-Xianyang", "Milan", "Luanda", "Pune", "Singapore", "Riyadh", "Khartoum", "Saint Petersburg", "Atlanta", "Surat", "Washington", "Bandung", "Surabaya", "Yangoon", "Alexandria", "Guadalajara", "Harbin", "Boston", "Zhengzhou", "Qingdao", "Abidjan", "Barcelona", "Monterrey", "Ankara", "Suzhou", "Phoenix", "Mesa", "Salvador", "Porto Alegre", "Rome", "Accra", "Sydney", "Recife", "Naples", "Detroit", "Dalian", "Fuzhou", "Medellin"]
+    ["tokyo", "jakarta", "seoul", "delhi", "shanghai", "manila", "karachi", "new york", "nyc", "brooklyn", "sao paulo", "mexico city", "cairo", "beijing", "osaka", "mumbai", "bombay", "guangzhou", "moscow", "los angeles", "calcutta", "dhaka", "buenos aires", "istanbul", "rio de janeiro", "shenzhen", "lagos", "paris", "nagoya", "lima", "chicago", "kinshasa", "tianjin", "chennai", "bogota", "bengaluru", "london", "taipei", "ho chi minh city", "dongguan", "hyderabad", "chengdu", "lahore", "johannesburg", "tehran", "essen", "bangkok", "hong kong", "wuhan", "ahmedabad", "chongqung", "baghdad", "hangzhou", "toronto", "kuala lumpur", "santiago", "dallas", "fort worth", "san francisco", "san jose", "quanzhou", "miami", "shenyang", "belo horizonte", "philadelphia", "nanjing", "madrid", "houston", "xi'an-xianyang", "milan", "luanda", "pune", "singapore", "riyadh", "khartoum", "saint petersburg", "atlanta", "surat", "washington", "bandung", "surabaya", "yangoon", "alexandria", "guadalajara", "harbin", "boston", "zhengzhou", "qingdao", "abidjan", "barcelona", "monterrey", "ankara", "suzhou", "phoenix", "mesa", "salvador", "porto alegre", "rome", "accra", "sydney", "recife", "naples", "detroit", "dalian", "fuzhou", "medellin"]
+  end
+
+  def self.restricted_phrases
+    ["last night"]
   end
 end

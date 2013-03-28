@@ -127,6 +127,8 @@ class Keywordinator
       phrase = phrase_entry[0]
       score = phrase_entry[1]
 
+      next if CaptionsHelper.restricted_phrases.include?(phrase) 
+
       break if phrase_entry[1] < 5 || (top_phrase && phrase_entry[0].length < 15 && phrase_entry[0].length < top_phrase[0].length && phrase_entry[1] < (top_phrase[1] * 0.8))
 
       if phrase.split(" ").count > 1
