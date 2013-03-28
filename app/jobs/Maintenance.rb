@@ -94,6 +94,10 @@ class Maintenance
     #Venue.where(:has_top_event => true).each {|venue| venue.reconsider_top_event}
     #Rails.logger.info("Maintenance: completed venue top event calculation")
 
+    
+    
+    #unregister stuck workers
+    Resque.workers.each {|worker| worker.unregister_worker if worker.job["run_at"] && (Time.now.to_i - Time.parse(worker.job["run_at"]).to_i > 2000)}
   end
 
   ########
