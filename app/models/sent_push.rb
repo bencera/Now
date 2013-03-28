@@ -134,22 +134,16 @@ class SentPush < ActiveRecord::Base
   end
 
   def to_reaction
-    return Hashie::Mash.new({:fake => true, 
-                             :timestamp => self.sent_time.to_i, 
-                             :message => self.message, 
-                             :event_id => self.event_id,
-                             :venue_name => "",
-                             :reactor_name => "",
-                             :reactor_photo_url => "",
-                             :reactor_id => "0",
-                             :reaction_type => Reaction::TYPE_REPLY,
-                             :counter => 0
-                             })
+    return{:fake => true, 
+           :timestamp => self.sent_time.to_i, 
+           :message => self.message, 
+           :event_id => self.event_id,
+           :venue_name => "",
+           :reactor_name => "",
+           :reactor_photo_url => "",
+           :reactor_id => "0",
+           :reaction_type => Reaction::TYPE_REPLY,
+           :counter => 0}.inspect
   end
 
-  def self.get_user_reactions(facebook_user)
-    last_pushes = SentPush.limit(20).where("facebook_user_id = ? AND reengagement = ?", facebook_user.id.to_s, false).order("sent_time DESC")
-    
-    last_pushes.map {|sp| sp.to_reaction}
-  end
 end

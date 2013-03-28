@@ -57,6 +57,8 @@ class FacebookUser
 
   has_many :reactions, dependent: :destroy
 
+  embeds_one :user_notification
+
   validates_numericality_of :score
 
   before_create :initialize_members
@@ -360,6 +362,10 @@ class FacebookUser
     return if event.nil? || (self.attended_events && self.attended_events.include?(event.id.to_s))
     self.attended_events ||= []
     self.attended_events << event.id
+  end
+
+  def get_notifications
+    self.user_notification.get_notifications    
   end
 
 #  def do_redis_checkin(event)
