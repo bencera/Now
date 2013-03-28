@@ -727,7 +727,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def update_photo_card(options={})
     event_photos = self.photos.where(:now_likes.gt => 0).order_by([[:now_likes, :desc]]).entries.map {|photo| photo.id}
-    vine_photos = self.photos.where(:has_vine => true).order_by([[:now_likes, :desc]]).entries
+    vine_photos = self.photos.where(:has_vine => true).order_by([[:now_likes, :desc], [:time_taken, :desc]]).entries
 
     if vine_photos.any?
       vine_photo = vine_photos.first.id 
