@@ -424,8 +424,14 @@ EOS
     photo_ids = []
     response.data[0..5].each do |photo|
       break if (user_count >= 1 && photo.created_time.to_i < 3.hours.ago.to_i)
+      
+      low_res = media.images.low_resolution.is_a?(String) ?  media.images.low_resolution :  media.images.low_resolution.url
+      stan_res = media.images.standard_resolution.is_a?(String) ?  media.images.standard_resolution :  media.images.standard_resolution.url
+      thum_res = media.images.thumbnail.is_a?(String) ?  media.images.thumbnail :  media.images.thumbnail.url
+
+
       fake_photo = {:fake => true,
-                    :url => [photo.images.low_resolution.url, photo.images.standard_resolution.url, photo.images.thumbnail.url],
+                    :url => [low_res, stan_res, thum_res],
                     :external_source => "ig",
                     :external_id => photo.id,
                     :time_taken => photo.created_time}
