@@ -14,13 +14,13 @@ class FindVines
       event.save!
 
       venue = event.venue
-      known_vines = event.venue.photos.where(:created_at.gt => event.created_at).where(:has_vine => true).entries.map {|photo| photo.video_url}
+      known_vines = event.venue.photos.where(:created_at.gt => event.created_at).where(:has_vine => true).entries.map {|photo| photo.external_media_id}
 
       photos = []
 
       vines = VineTools.find_event_vines(event)
 
-      vines.delete_if {|vine| known_vines.include?(vine[:video_url]) }
+      vines.delete_if {|vine| known_vines.include?(vine[:vine_url]) }
 
       if vines.any?
         vines.each do |vine|
