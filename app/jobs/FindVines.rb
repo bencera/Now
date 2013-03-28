@@ -7,14 +7,21 @@ class FindVines
     params = eval in_params
     
 
-    events = Event.where(:status.in => Event::TRENDING_STATUSES, :category => "Concert", :n_photos.gt => 15).entries
+    events = Event.where(:status.in => Event::TRENDING_STATUSES, :category => "Concert", :n_photos.gt => 15, :last_vine_update.lt => 15.minutes.ago.to_i).entries.shuffle[0..20]
 
     events.each do |event|
+      event.last_vine_update = Time.now.to_i
+      event.save!
+
       venue = event.venue
+      known_vines = event.photos.where(:has_vine => true).entries.map {|photo| photo.video_url}
 
       photos = []
 
       vines = VineTools.find_event_vines(event)
+
+      vines.delete_if {|vine| known_vines.include?(vine[:video_url]) }
+
       if vines.any?
         vines.each do |vine|
           begin
@@ -31,8 +38,12 @@ class FindVines
 
         event.insert_photos_safe(photos)
         event.update_photo_card
-        event.save! if event.changed?
+        
+        #notify when vines are added to an event
+        conall = FacebookUser.where(:now_id => "2")
+        conall.send_notification("Added #{vines.count} vines to event", event.id)
       end
+      event.save! if event.changed?
     end
   end
 end

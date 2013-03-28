@@ -144,6 +144,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
   field :last_update
   field :next_update
 
+  #dont want to search for vines too often
+  field :last_vine_update
+
   #this is used to keep verifying live photos for events that are getting viewed
   field :last_verify
   field :last_photo_card_verify
@@ -218,6 +221,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     current_time = Time.now.to_i
     self.last_update = current_time
     self.next_update = current_time
+    self.last_vine_update = current_time
 
     self.calculate_exceptionality
     self.last_personalized = Time.now.to_i
