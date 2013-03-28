@@ -41,7 +41,7 @@ class FindVines
         
         #notify when vines are added to an event
         conall = FacebookUser.where(:now_id => "2").first
-        conall.send_notification("Added #{vines.count} vines to event", event.id)
+        conall.send_notification("Added #{photos.count} vines to event", event.id)
       end
       event.save! if event.changed?
     end
