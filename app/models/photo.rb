@@ -240,6 +240,45 @@ class Photo
 
   end
 
+  def set_from_vine(vine, options={})
+  
+    self.external_media_source = "vi"
+    self.low_resolution_url = vine[:photo_url]
+    self.high_resolution_url = vine[:photo_url]
+    self.thumbnail_url = vine[:photo_url]
+
+    self.has_vine = !vine[:video_url].nil?
+    self.video_url = vine[:video_url]
+    
+    self.external_media_id = vine[:vine_url]
+    
+    media_key = Photo.get_media_key("vi", vine[:vine_url])
+    self.ig_media_id = media_key
+
+    self.now_version = 2
+
+    self.coordinates = options[:coordinates] || self.venue.coordinates
+
+    self.url = [vine[:photo_url], vine[:photo_url], vine[:photo_url]]
+  
+    self.caption = vine[:caption]
+    self.time_taken = options[:timestamp] || Time.now.to_i
+
+    user_id = Photo.vine_to_ig_user_id(vine[:username])
+    
+    user = User.where(:ig_id => user_id.to_s).first || User.new(:ig_id => user_id.to_s)
+    user.update_if_new(user_id.to_s, vine[:username], vine[:username], 
+                vine[:user_profile_photo], "", "")
+
+    self.user = user
+
+    self.user_details = [user.ig_username, user.ig_details[1], user.ig_details[0]]
+
+    self.city = self.venue.city
+
+    self.save!
+  end
+
   def self.get_media_key(source, external_id)
     source.to_s + "|" + external_id.to_s
   end
@@ -259,6 +298,10 @@ class Photo
   #photos in our system require an ig_id -- which is a pain but we'll fix that later, and make a fake ig_id
   def self.now_to_ig_user_id(user_id)
     return "nw" + user_id.to_s
+  end
+
+  def self.vine_to_ig_user_id(user_name)
+    return "vi" + user_name.to_s
   end
 
   def external_source

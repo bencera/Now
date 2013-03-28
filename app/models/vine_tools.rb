@@ -5,7 +5,8 @@ class VineTools
     end_time = (event.end_time < 1.hour.ago.to_i) ? event.end_time : Time.now.to_i
 
     keywords_entries = Keywordinator.get_keyphrases(event)
-    top_keys = Keywordinator.top_results(keywords_entries)
+    top_keys = Keywordinator.top_results(keywords_entries) || []
+
 
     venue_name = event.venue_name.downcase
 
@@ -16,7 +17,8 @@ class VineTools
 
     top_keys.each do |key|
       search_key = key
-      if (key.length <= 4 || CaptionsHelper.common_english_words.include?(key)) && key != venue_name
+      if (key.length <= 4 || CaptionsHelper.common_english_words.include?(key)) 
+        next if key != venue_name
         search_key = "#{search_key} #{venue_name}"
       end
       vines.push(*find_vines(search_key, event.start_time, event.end_time))
@@ -29,6 +31,10 @@ class VineTools
   def self.find_vines(search_word, start_time, end_time)
     url = URI.escape("http://search.twitter.com/search.json?q=vine.co+#{search_word}")
     results = do_search_request(url)
+    if results.nil?
+      Rails.logger.info("ERROR")
+      return [] 
+    end
     results.delete_if {|result| created_time = Time.parse(result.created_at).to_i; created_time < start_time || created_time > end_time}
    
     return nil if results.empty?
