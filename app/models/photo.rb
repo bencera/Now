@@ -209,12 +209,18 @@ class Photo
 
     photo.coordinates = [media.location.longitude, media.location.latitude]
 
-    #leaving this in for compatibility.  delete it when deprecated in API endpoint rabl
-    photo.url = [media.images.low_resolution, media.images.standard_resolution, media.images.thumbnail]
 
-    photo.low_resolution_url = media.images.low_resolution.url
-    photo.high_resolution_url = media.images.standard_resolution.url
-    photo.thumbnail_url = media.images.thumbnail.url
+    #instagram randomly changed this -- no idea wtf happened.  make it handle both cases
+    low_res = media.images.low_resolution.is_a?(String) ?  media.images.low_resolution :  media.images.low_resolution.url
+    stan_res = media.images.standard_resolution.is_a?(String) ?  media.images.standard_resolution :  media.images.standard_resolution.url
+    thum_res = media.images.thumbnail.is_a?(String) ?  media.images.thumbnail :  media.images.thumbnail.url
+
+    #leaving this in for compatibility.  delete it when deprecated in API endpoint rabl
+    photo.url = [low_res, stan_res, thum_res]
+
+    photo.low_resolution_url = low_res
+    photo.high_resolution_url = stan_res
+    photo.thumbnail_url = thum_res
 
     photo.caption = media.caption.text unless media.caption.nil?
     photo.time_taken = media.created_time.to_i #UNIX timestamp
