@@ -365,7 +365,15 @@ class FacebookUser
   end
 
   def get_notifications
+    return [] if self.user_notification.nil?
+
     self.user_notification.get_notifications    
+  end
+
+  def add_notification(sent_push)
+    self.user_notification ||= UserNotification.new
+    self.user_notification.add_notification(sent_push)
+    self.save!
   end
 
 #  def do_redis_checkin(event)
