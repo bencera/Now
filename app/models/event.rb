@@ -732,7 +732,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if vine_photos.any?
       vine_photo = vine_photos.first.id 
       event_photos.unshift(vine_photo)
-      event.has_vine = true
+      self.has_vine = true
     end
 
     event_photos = event_photos.uniq
