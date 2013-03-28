@@ -150,8 +150,8 @@ class EventsController < ApplicationController
     end
 
     ########################DEBUG!!! VINE
-    vine_event = Event.find("5153ce392b6ffa0475000010")
-    @events.unshift(vine_event)
+ #   vine_event = Event.find("5153ce392b6ffa0475000010")
+#    @events.unshift(vine_event)
     #############################
     
     EventsHelper.personalize_events(@events, facebook_user) if facebook_user
