@@ -3,6 +3,7 @@ class UserNotification
   include Mongoid::Timestamps
 
   field :notifications, :type => Array, :default => []
+  field :new_notifications, :type => Integer, :default => 0
 
   embedded_in  :facebook_user
 
@@ -14,6 +15,7 @@ class UserNotification
     end
     
     self.notifications.unshift(sp)
+    self.new_notifications += 1
 
     self.save!
   end
