@@ -138,7 +138,7 @@ class EventsController < ApplicationController
     elsif params[:city] == "onlyme" 
       @events = EventsHelper.get_user_created_or_reposted(FacebookUser.find_by_nowtoken(params[:nowtoken]), :show_anonymous => true)
     elsif params[:city] == "world"
-      @events = Event.where(:status.in => Event::TRENDED_OR_TRENDING).order_by([[:end_time, :desc]]).limit(20).entries
+      @events = Event.find($redis.smembers("WORLD_EXP_LIST")).entries
     else
       #leaving just "trended"/"trending" for these because this is an endpoint the old app uses
       events = Event.where(:city => params[:city]).where(:end_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending", "trending_people", "trended_people"]).order_by([[:end_time, :desc]]).entries

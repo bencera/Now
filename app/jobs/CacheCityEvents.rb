@@ -19,6 +19,16 @@ class CacheCityEvents
         event_ids.each {|event_id| $redis.sadd("#{city_key}_EXP_LIST", event_id)}
       end
     end
+
+    city_key = "WORLD"
+    events = Event.where(:status.in => Event::TRENDING_STATUSES, :n_photos.gt => 10).entries; puts
+
+    world_events = events.sort_by{|event| event.result_order_score(nil, [0,0])}.reverse[0..20].map{|event| event.id}
+
+    $redis.multi do
+      $redis.del("#{city_key}_EXP_LIST")
+      world_events.each {|event_id| $redis.sadd("#{city_key}_EXP_LIST", event_id)}
+    end
   end
 end
 
