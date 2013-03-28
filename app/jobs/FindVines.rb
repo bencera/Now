@@ -17,7 +17,7 @@ class FindVines
       if vines.any?
         vines.each do |vine|
           begin
-            photo = venue.photo.new
+            photo = venue.photos.new
             photo.set_from_vine(vine, :timestamp => Time.now.to_i)
             photo.save!
             photos << photo
