@@ -191,6 +191,10 @@ class EventsController < ApplicationController
       #fails silently for now -- not good, but we can't push to prod otherwise
     end
 
+    ########################DEBUG!!! VINE
+    vine_event = Event.find("5153ce392b6ffa0475000010")
+    @events.unshift(vine_event)
+    #############################
     return @events
   end
 
