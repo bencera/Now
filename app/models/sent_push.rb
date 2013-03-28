@@ -143,8 +143,8 @@ class SentPush < ActiveRecord::Base
                              :reactor_photo_url => "",
                              :reactor_id => "0",
                              :reaction_type => Reaction::TYPE_REPLY,
-                             :counter => 0},
-                             :fake => true)
+                             :counter => 0,
+                             :fake => true})
   end
 
   def self.get_user_reactions(facebook_user)
