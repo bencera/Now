@@ -14,7 +14,7 @@ class FindVines
       event.save!
 
       venue = event.venue
-      known_vines = event.venue.photos.where(:has_vine => true, :created_at.gt => event.created_at).entries.map {|photo| photo.video_url}
+      known_vines = event.venue.photos.where(:created_at.gt => event.created_at).where(:has_vine => true).entries.map {|photo| photo.video_url}
 
       photos = []
 
@@ -40,7 +40,7 @@ class FindVines
         event.update_photo_card
         
         #notify when vines are added to an event
-        conall = FacebookUser.where(:now_id => "2")
+        conall = FacebookUser.where(:now_id => "2").first
         conall.send_notification("Added #{vines.count} vines to event", event.id)
       end
       event.save! if event.changed?
