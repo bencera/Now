@@ -14,7 +14,7 @@ class ReactionsController < ApplicationController
 
     if show_messages
       @event_perspective = false
-      @reactions = SentPush.get_user_reactions(viewer)
+      @reactions = viewer.get_notifications
     elsif  params[:event_id]
       event = Event.find(params[:event_id])
       @event_perspective = true
