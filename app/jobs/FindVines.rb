@@ -5,6 +5,7 @@ class FindVines
   def self.perform(in_params="{}")
 
     params = eval in_params
+    
 
     events = Event.where(:status.in => Event::TRENDING_STATUSES, :category => "Concert", :n_photos.gt => 15).entries
 
@@ -26,8 +27,10 @@ class FindVines
             next
           end
         end
-        
+       
+
         event.insert_photos_safe(photos)
+        event.update_photo_card
         event.save! if event.changed?
       end
     end

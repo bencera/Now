@@ -716,6 +716,22 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.save
   end
 
+  ################################################################################
+  # set the photo card for the event -- vine first, then liked photos
+  ################################################################################
+
+  def update_photo_card(options={})
+    event_photos = self.photos.where(:now_likes.gt => 0).order_by([[:now_likes, :desc]]).entries.map {|photo| photo.id}
+    vine_photo = self.photos.where(:has_vine => true).order_by([[:now_likes, :desc]]).first.id
+
+    event_photos.unshift(vine_photo) if vine_photo
+    event_photos = event_photos.uniq
+
+    if event_photos.count > 0
+      self.photo_card = event_photos
+    end
+  end
+
   ##############################################################
   # generates a new shortid unless one already exists
   ##############################################################
