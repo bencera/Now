@@ -264,15 +264,17 @@ class Photo
     self.caption = vine[:caption]
     self.time_taken = options[:timestamp] || Time.now.to_i
 
-    user_id = Photo.vine_to_ig_user_id(vine[:username])
+    user_id = Photo.vine_to_ig_user_id(vine[:user_name])
     
     user = User.where(:ig_id => user_id.to_s).first || User.new(:ig_id => user_id.to_s)
-    user.update_if_new(user_id.to_s, vine[:username], vine[:username], 
+    user.update_if_new(user_id.to_s, vine[:user_name], vine[:user_name], 
                 vine[:user_profile_photo], "", "")
+
+    user.ig_username ||= vine[:user_name]
 
     self.user = user
 
-    self.user_details = [user.ig_username, user.ig_details[1], user.ig_details[0]]
+    self.user_details = [user.ig_username, user.ig_details[1], ""]
 
     self.city = self.venue.city
 
