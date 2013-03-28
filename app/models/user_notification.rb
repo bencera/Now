@@ -21,7 +21,7 @@ class UserNotification
   end
 
   def get_notifications
-    self.notifications.map{|notification| Hashie::Mash.new(eval notification)}
+    self.notifications.map{|notification| OpenStruct.new(eval notification)}
   end
 
 end
