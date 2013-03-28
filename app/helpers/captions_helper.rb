@@ -788,4 +788,8 @@ module CaptionsHelper
 "managing", "marine", "dock", "organized", "fog", "diplomat", "boring", "sometime", "summary", "missionary", "epidemic", "fatal", "trim", "warehouse", "accelerate", "butterfly",
 "bronze", "drown", "inherent", "nationwide", "spit", "kneel", "vacuum", "selected", "dictate", "stereotype", "sensor", "laundry", "manual", "pistol", "naval", "plaintiff", "middle-class", "apology"]
   end
+
+  def city_names
+    ["Tokyo", "Jakarta", "Seoul", "Delhi", "Shanghai", "Manila", "Karachi", "New York", "NYC", "Brooklyn", "Sao Paulo", "Mexico City", "Cairo", "Beijing", "Osaka", "Mumbai", "Bombay", "Guangzhou", "Moscow", "Los Angeles", "Calcutta", "Dhaka", "Buenos Aires", "Istanbul", "Rio de Janeiro", "Shenzhen", "Lagos", "Paris", "Nagoya", "Lima", "Chicago", "Kinshasa", "Tianjin", "Chennai", "Bogota", "Bengaluru", "London", "Taipei", "Ho Chi Minh City", "Dongguan", "Hyderabad", "Chengdu", "Lahore", "Johannesburg", "Tehran", "Essen", "Bangkok", "Hong Kong", "Wuhan", "Ahmedabad", "Chongqung", "Baghdad", "Hangzhou", "Toronto", "Kuala Lumpur", "Santiago", "Dallas", "Fort Worth", "San Francisco", "San Jose", "Quanzhou", "Miami", "Shenyang", "Belo Horizonte", "Philadelphia", "Nanjing", "Madrid", "Houston", "Xi'an-Xianyang", "Milan", "Luanda", "Pune", "Singapore", "Riyadh", "Khartoum", "Saint Petersburg", "Atlanta", "Surat", "Washington", "Bandung", "Surabaya", "Yangoon", "Alexandria", "Guadalajara", "Harbin", "Boston", "Zhengzhou", "Qingdao", "Abidjan", "Barcelona", "Monterrey", "Ankara", "Suzhou", "Phoenix", "Mesa", "Salvador", "Porto Alegre", "Rome", "Accra", "Sydney", "Recife", "Naples", "Detroit", "Dalian", "Fuzhou", "Medellin"]
+  end
 end

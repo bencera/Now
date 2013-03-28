@@ -17,7 +17,7 @@ class VineTools
 
     top_keys.each do |key|
       search_key = key
-      if (key.length <= 4 || CaptionsHelper.common_english_words.include?(key)) 
+      if (key.length <= 4 || CaptionsHelper.common_english_words.include?(key) || CaptionsHelper.city_names.include?(key)) 
         next if key != venue_name
         search_key = "#{search_key} #{venue_name}"
       end
