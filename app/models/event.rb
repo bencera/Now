@@ -146,6 +146,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   #dont want to search for vines too often
   field :last_vine_update
+  field :has_vine, :type => Boolean, :default => false
 
   #this is used to keep verifying live photos for events that are getting viewed
   field :last_verify
@@ -728,8 +729,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
     event_photos = self.photos.where(:now_likes.gt => 0).order_by([[:now_likes, :desc]]).entries.map {|photo| photo.id}
     vine_photos = self.photos.where(:has_vine => true).order_by([[:now_likes, :desc]]).entries
 
-    vine_photo = vine_photos.first.id if vine_photos.any?
-    event_photos.unshift(vine_photo) if vine_photo
+    if vine_photos.any?
+      vine_photo = vine_photos.first.id 
+      event_photos.unshift(vine_photo)
+      event.has_vine = true
+    end
+
     event_photos = event_photos.uniq
 
     if event_photos.count > 0
