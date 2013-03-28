@@ -63,3 +63,9 @@ personalization:
   class: PersonalizeEvents
   args:
   description: "Personalizing existing events"
+
+find_vines:
+  every: "5m"
+  class: FindVines
+  args:
+  description:
