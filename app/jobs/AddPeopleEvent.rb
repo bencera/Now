@@ -225,7 +225,7 @@ class AddPeopleEvent
 
     now_bot = FacebookUser.where(:now_id => "0").first
 
-    hashtags = ["#rename", "#demote", "#delete", "#category", "#blacklist", "#push", "#delphoto", "#graylist", "#greylist", "#theme", "#carnival", "#carnaval"]
+    hashtags = ["#rename", "#demote", "#delete", "#category", "#blacklist", "#push", "#delphoto", "#graylist", "#greylist", "#theme", "#carnival", "#carnaval", "#devine"]
     command = commands[0].downcase if commands[0]
 
     return false if !(hashtags.include?(command))
@@ -332,6 +332,13 @@ class AddPeopleEvent
       when "#theme"
         theme_id = commands[1].to_s
         Theme.add_experience(theme_id, check_in_event.id.to_s)
+        check_in_event.save!
+      when "#devine"
+        photos = check_in_event.photos.where(:has_vine => true).entries
+        photos.each do |photo|
+          check_in_event.photos.delete(photo)
+        end
+        check_in_event.update_photo_card
         check_in_event.save!
       end
 
