@@ -425,9 +425,9 @@ EOS
     response.data[0..5].each do |photo|
       break if (user_count >= 1 && photo.created_time.to_i < 3.hours.ago.to_i)
       
-      low_res = media.images.low_resolution.is_a?(String) ?  media.images.low_resolution :  media.images.low_resolution.url
-      stan_res = media.images.standard_resolution.is_a?(String) ?  media.images.standard_resolution :  media.images.standard_resolution.url
-      thum_res = media.images.thumbnail.is_a?(String) ?  media.images.thumbnail :  media.images.thumbnail.url
+      low_res = photo.images.low_resolution.is_a?(String) ?  photo.images.low_resolution :  photo.images.low_resolution.url
+      stan_res = photo.images.standard_resolution.is_a?(String) ?  photo.images.standard_resolution :  photo.images.standard_resolution.url
+      thum_res = photo.images.thumbnail.is_a?(String) ?  photo.images.thumbnail :  photo.images.thumbnail.url
 
 
       fake_photo = {:fake => true,
