@@ -103,9 +103,13 @@ class Photo
       photo.external_media_key = get_media_key(photo_src, media.id.to_s)
       photo.ig_media_id = photo_id
 
-      photo.low_resolution_url = media.images.low_resolution.url
-      photo.high_resolution_url = media.images.standard_resolution.url
-      photo.thumbnail_url = media.images.thumbnail.url
+      low_res = media.images.low_resolution.is_a?(String) ?  media.images.low_resolution :  media.images.low_resolution.url
+      stan_res = media.images.standard_resolution.is_a?(String) ?  media.images.standard_resolution :  media.images.standard_resolution.url
+      thum_res = media.images.thumbnail.is_a?(String) ?  media.images.thumbnail :  media.images.thumbnail.url
+
+      photo.low_resolution_url = low_res
+      photo.high_resolution_url = stan_res
+      photo.thumbnail_url = thum_res
 
       photo.caption = media.caption.text unless media.caption.nil?
       photo.time_taken = media.created_time.to_i 
