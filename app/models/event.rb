@@ -918,7 +918,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def insert_photos_safe(new_photos)
-    new_photos.each {|new_photo| self.photos.push new_photo unless self.photo_ids.include? new_photo.id }
+    new_photos.each {|new_photo| self.photos.push new_photo unless new_photo.nil? || self.photo_ids.include?(new_photo.id) }
   end
 
   def repair_photo_list
