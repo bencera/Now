@@ -14,7 +14,7 @@ class FindVines
       event.save!
 
       venue = event.venue
-      known_vines = event.photos.where(:has_vine => true).entries.map {|photo| photo.video_url}
+      known_vines = event.venue.photos.where(:has_vine => true, :created_at.gt => event.created_at).entries.map {|photo| photo.video_url}
 
       photos = []
 
