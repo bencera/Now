@@ -131,8 +131,22 @@ class Keywordinator
 
       break if phrase_entry[1] < 5 || (top_phrase && phrase_entry[0].length < 15 && phrase_entry[0].length < top_phrase[0].length && phrase_entry[1] < (top_phrase[1] * 0.8))
 
-      if phrase.split(" ").count > 1
-        top_phrase = phrase_entry
+      phrase_words = phrase.split(" ")
+      if phrase_words.count > 1
+        #not a worthwhile phrase if 1) only stop words 2) only stop words with 1 common worda -- so find 2 non-stopwords or 1 non-common word and you're good
+
+        worthwhile = false
+        almost_worthwhile = false
+
+        phrase_words.each do |word|
+          
+          worthwhile = true if (!CaptionsHelper.common_english_words.include?(word) && !CaptionsHelper.stop_words.include?(word)) ||
+            (almost_worthwhile && !CaptionsHelper.stop_words.include?(word))
+
+          almost_worthwhile = true if !CaptionsHelper.stop_words.include?(word)
+        end
+
+        top_phrase = phrase_entry if worthwhile
       end
     end
 
