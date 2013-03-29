@@ -112,6 +112,7 @@ GEM
       net-ssh (>= 2.6.5)
     newrelic_rpm (3.5.8.72)
     nokogiri (1.5.9)
+    oauth (0.4.7)
     pg (0.14.1)
     polyglot (0.3.3)
     rabl (0.8.0)
@@ -232,6 +233,7 @@ DEPENDENCIES
   mongoid (~> 2.4)
   newrelic_rpm
   nokogiri
+  oauth
   pg
   rabl
   rack-google_analytics
