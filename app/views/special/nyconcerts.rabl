@@ -6,7 +6,7 @@ node(:web) do |u|
 end
 
 node(:description) do |u|
-  u.keywords.join(" ")
+  u.keywords.sort_by{|x| x.length}.last
 end
 
 node :venue do |u|
@@ -14,7 +14,10 @@ node :venue do |u|
 end
 
 child :preview_photos => "photos" do
-  node :url do |p|
+  node :high_res do |p|
     p.url[1]
+  end
+  node :low_res do |p|
+    p.url[0]
   end
 end
