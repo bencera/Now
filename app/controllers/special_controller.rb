@@ -18,6 +18,7 @@ class SpecialController < ApplicationController
                           :category => "Concert", 
                           :coordinates.within => {"$center" => [coordinates, radius]}, 
                           :keywords.ne => []).order_by([[:end_time, :desc]]).entries 
+    EventsHelper.get_event_cards(@events, :no_vines => true) if @events && @events.any?  
   end
 
   private
@@ -28,6 +29,5 @@ class SpecialController < ApplicationController
   end
 
   def load_events
-    EventsHelper.get_event_cards(@events, :no_vines => true) if @events && @events.any?  
   end
 end
