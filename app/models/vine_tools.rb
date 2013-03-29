@@ -120,7 +120,12 @@ class VineTools
   end
 
   def get_twitter_user_timezone(username, options={})
-    url = 
+    oauth_token = "25747317-ziGL5EWFxPt0D7zZsuMqdJ5eg5g5DnjDABxigdvf4"
+    oauth_secret = "BDVJJRN0qth1298TDmovspdcNjuA2X8tZXE6IKm8"
+    token = prepare_access_token(oauth_token, oauth_secret)
+    response = token.request(:get, "https://api.twitter.com/1.1/users/lookup.json?screen_name=ocallaco")
+
+
   end
 
   def prepare_access_token(oauth_token, oauth_token_secret)
