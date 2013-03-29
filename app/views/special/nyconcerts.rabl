@@ -6,7 +6,7 @@ node(:web) do |u|
 end
 
 node(:description) do |u|
-  u.keywords.sort_by{|x| x.length}.last
+  ""
 end
 
 node :venue do |u|
