@@ -14,10 +14,10 @@ class SpecialController < ApplicationController
     coordinates = [city_hash["longitude"].to_f, city_hash["latitude"].to_f]
     radius = city_hash["radius"].to_f / 111000
 
-    @events = Event.where(:status.in => Event::TRENDING_STATUSES, 
+    @events = Event.limit(20).where(:status.in => Event::TRENDED_OR_TRENDING,
                           :category => "Concert", 
                           :coordinates.within => {"$center" => [coordinates, radius]}, 
-                          :keywords.ne => []).entries 
+                          :keywords.ne => []).order_by([[:end_time, :desc]]).entries 
   end
 
   private
