@@ -17,6 +17,11 @@ Ubimachine::Application.routes.draw do
 
   match "southby/:id" => "home#southby"
 
+
+  ###### Special routes
+
+  match "/partners/nyconcerts" => "special#nyconcerts"
+
 #### Conall routes that we need to make in a RESTful way eventually
   match "/event/peoplecreate" => "events#create_people"
 

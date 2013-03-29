@@ -150,9 +150,10 @@ class Keywordinator
       end
     end
 
+    reject_words += (CaptionsHelper.stop_words + CaptionsHelper.common_english_words + CaptionsHelper.city_names).uniq
 
     if top_phrase
-      reject_words.push(*(top_phrase[0].split(" ")))
+      reject_words += (top_phrase[0].split(" "))
     end
 
 

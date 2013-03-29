@@ -7,6 +7,9 @@ class VineTools
     keywords_entries = Keywordinator.get_keyphrases(event)
     top_keys = Keywordinator.top_results(keywords_entries) || []
 
+    event.keywords = top_keys
+    event.save!
+
 
     venue_name = event.venue_name.downcase
 
@@ -48,7 +51,7 @@ class VineTools
         next if urls_seen.include? vine_url
         urls_seen << vine_url
         begin
-          possible_vine = pull_vine(vine_url)
+          possible_vine = pull_vine(vine_url, :twitter_user => result.from_user)
           break if !possible_vine.blank?
         rescue
         end
@@ -76,7 +79,7 @@ class VineTools
     Hashie::Mash.new(JSON.parse(response.body)).results
   end
 
-  def self.pull_vine(url)
+  def self.pull_vine(url, options={})
 
     parsed_url = URI.parse(url)
     http = Net::HTTP.new(parsed_url.host, parsed_url.port)
@@ -101,7 +104,7 @@ class VineTools
     
     
     if response.code == "301"
-      pull_vine(response["location"])
+      pull_vine(response["location"], options)
     else
       doc = Nokogiri::HTML(response.body)
 
@@ -110,7 +113,8 @@ class VineTools
        :video_url => doc.at_css(".video-container source")["src"],
        :caption => doc.at_css(".inner p").text,
        :user_profile_photo => doc.at_css(".user img")["src"],
-       :user_name => doc.at_css(".user h2").text
+       :user_name => doc.at_css(".user h2").text,
+       :referring_twitter_user => options[:twitter_user]
       }
     end
   end

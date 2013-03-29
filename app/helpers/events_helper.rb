@@ -166,7 +166,7 @@ module EventsHelper
     return events
   end
 
-  def self.get_event_cards(events)
+  def self.get_event_cards(events, options={})
     photo_id_list = []
     photo_id_hash = {}
     events.each do |event|
@@ -176,7 +176,12 @@ module EventsHelper
       photo_id_hash[event.id] = photo_ids
     end
     
-    all_photos = Photo.where(:_id.in => photo_id_list).entries
+    all_photos = []
+    if options[:no_vines]
+      all_photos = Photo.where(:_id.in => photo_id_list, :has_vine.ne => true).entries
+    else
+      all_photos = Photo.where(:_id.in => photo_id_list).entries
+    end
 
     events.each do |event|
       next if event.fake
