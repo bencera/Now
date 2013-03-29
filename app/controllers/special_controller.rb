@@ -20,7 +20,7 @@ class SpecialController < ApplicationController
                           :keywords.ne => []).entries 
   end
 
-  private:
+  private
 
   def verify_partner
     nowtoken = params[:nowtoken]
