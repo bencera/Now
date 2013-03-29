@@ -4,6 +4,18 @@ class EventsController < ApplicationController
   respond_to :json, :xml
 
   include EventsHelper
+
+  def v3show
+    @event = Event.find(params[:id])
+    
+    if params[:nowtoken]
+      @requesting_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+      @user_id = @requesting_user.facebook_id || @requesting_user.now_id
+    end
+
+    @blocks = EventDetailBlock.get_blocks(@event,@requesting_user)
+
+  end
   
   def show
     @event = Event.find(params[:id])
@@ -11,7 +23,7 @@ class EventsController < ApplicationController
     begin
     if params[:nowtoken]
       @requesting_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
-      @user_id = @requesting_user.facebook_id
+      @user_id = @requesting_user.facebook_id || @requesting_user.now_id
     end
     rescue
     end
@@ -139,6 +151,8 @@ class EventsController < ApplicationController
       @events = EventsHelper.get_user_created_or_reposted(FacebookUser.find_by_nowtoken(params[:nowtoken]), :show_anonymous => true)
     elsif params[:city] == "world"
       @events = Event.find($redis.smembers("WORLD_EXP_LIST")).entries
+    elsif params[:city] == "vines"
+      @events = Event.limit(20).where(:has_vine => true).entries
     else
       #leaving just "trended"/"trending" for these because this is an endpoint the old app uses
       events = Event.where(:city => params[:city]).where(:end_time.gt => 12.hours.ago.to_i).where(:status.in => ["trended", "trending", "trending_people", "trended_people"]).order_by([[:end_time, :desc]]).entries
