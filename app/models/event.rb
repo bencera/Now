@@ -1173,14 +1173,15 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     if !self.personalized.nil?
       pers_settings = self.personalizations[self.personalized]
-      break if pers_settings.nil?
-      friend_list = pers_settings["friend_names"]
+      if !pers_settings.nil?
+        friend_list = pers_settings["friend_names"]
 
-      photos_orig.each do |photo|
-        if friend_list.include?(photo.user_details[0])
-          friend_photos << photo 
-          photos_by_friend[photo.user_details[0]] << photo
-          friend_captions[photo.user_details[0]] = photo.caption unless photo.caption.blank?
+        photos_orig.each do |photo|
+          if friend_list.include?(photo.user_details[0])
+            friend_photos << photo 
+            photos_by_friend[photo.user_details[0]] << photo
+            friend_captions[photo.user_details[0]] = photo.caption unless photo.caption.blank?
+          end
         end
       end
     end
