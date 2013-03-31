@@ -1306,6 +1306,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.personalized = personalization
 
     pers_settings = self.personalizations[personalization]
+
+    #this shouldn't happen but it does -- TODO: fix this
+    return if pers_settings.nil?
+
     photo_count = pers_settings["friend_photos"].count
     friend_names = pers_settings["friend_names"]
    
