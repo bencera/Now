@@ -4,7 +4,7 @@ class ReactionsController < ApplicationController
   include ActionView::Helpers::TextHelper
 
   def index
-    @viewer = FacebookUser.find_by_nowtoken(params[:nowtoken])
+    viewer = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
     show_messages = viewer && viewer.now_id == params[:now_id] && params[:version].to_i >= 3
 
