@@ -19,13 +19,11 @@ class CheckinsController < ApplicationController
   end
 
   def create
-    converted_params = Checkin.convert_params(params)
 
-    if converted_params[:errors]
-      return render :text => converted_params[:errors], :status => :error
-    end
-
-    Resque.enqueue(DoCheckin, converted_params)
+    Resque.enqueue(UserComment, {:nowtoken => params[:nowtoken], 
+                                 :event_id => params[:id], 
+                                 :message => params[:message],
+                                 :timestamp => Time.now.to_i}.inspect)
 
     return render :text => "OK", :status => :ok
   end
