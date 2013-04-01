@@ -14,7 +14,7 @@ class EventDetailBlock
     
     comments = event.checkins.order_by([[:created_at, :asc]]).map {|ci| self.comment(ci)}
 
-    users = photos.map{|photo| self.user_entry(photo)}.reject{|user| user.photo.nil?}.uniq
+    users = photos.map{|photo| self.user_entry(photo)}.reject{|user| user.data.photo.nil?}.uniq
 
     photos = make_event_photos_block(event, photos)
     
