@@ -15,7 +15,7 @@ class EventDetailBlock
                                :block => event.checkins.order_by([[:created_at, :asc]]).map {|ci| self.comment(ci)} })
 
     users =  OpenStruct.new({:type => BLOCK_PEOPLE, :message => "See who's here", 
-                             :block => photos.map {|photo| self.user_entry(photo)}.uniq })
+                             :block => photos.map {|photo| self.user_entry(photo)}.reject{|user| user.photo.nil?}.uniq})
 
     photos = OpenStruct.new({:type => BLOCK_PHOTOS, :message => "Photo Album", 
                              :block => make_event_photos_block(event, photos) })
@@ -34,8 +34,9 @@ class EventDetailBlock
 
   def self.user_entry(photo)
     return Hashie::Mash.new({:username => photo.user_details[0],
-            :photo => photo.user_details[1],
-            :user_id => -1 #not cached at the moment -- fill this in later
+                            :user_full_name => photo.user_details[2],
+                            :photo => photo.user_details[1],
+                            :user_id => -1 #not cached at the moment -- fill this in later
     })
   end
 
