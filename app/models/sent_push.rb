@@ -100,6 +100,7 @@ class SentPush < ActiveRecord::Base
 
       if options[:type]
         fb_user.add_notification(options[:type], sp)
+        fb_user.save!
       end
     end
 

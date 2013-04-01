@@ -6,7 +6,7 @@ class ReactionsController < ApplicationController
   def index
     viewer = FacebookUser.find_by_nowtoken(params[:nowtoken])
 
-    show_messages = viewer && viewer.now_id == params[:now_id]
+    show_messages = viewer && viewer.now_id == params[:now_id] && params[:version] >= 3
     show_messages = false
 
     @viewer_id = @viewer.nil? ? nil : @viewer.id
