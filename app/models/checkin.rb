@@ -51,10 +51,7 @@ class Checkin
       self.user_fullname = fb_user.now_profile.name
       self.user_profile_photo = fb_user.now_profile.profile_photo_url
     end
-  end
-
-  before_save do |checkin|
-    
+        
     if checkin.event
       checkin.venue = checkin.event.venue
     end
