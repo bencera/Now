@@ -7,6 +7,7 @@ class EventsController < ApplicationController
 
   def v3show
     @event = Event.find(params[:id])
+    EventsHelper.get_event_cards([@event])
     if params[:nowtoken]
       @requesting_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
       @user_id = @requesting_user.facebook_id || @requesting_user.now_id
