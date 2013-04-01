@@ -13,7 +13,7 @@ class NowProfile
   field :last_name, :default => ""
   field :bio, :default => ""
   field :email, :default => ""
-  field :profile_photo_url, :default => " "
+  field :profile_photo_url, :default => " " # need to update this for ig users sometimes...
 
   #notification settings
   field :notify_like, type: Boolean, default: true

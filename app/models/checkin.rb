@@ -24,6 +24,11 @@ class Checkin
   # in cae we ever decide to not delete these. not likely
   field :alive,  :type => Boolean, default: true
 
+  #cached info for checkins
+  field :user_now_id
+  field :user_fullname
+  field :user_profile_photo
+
   belongs_to :facebook_user
   belongs_to :event
   belongs_to :venue
@@ -36,6 +41,17 @@ class Checkin
   validates_associated :event
 
   #should it validate the number of photos given?
+  #
+
+  before_create do |checkin|
+
+    fb_user = checkin.facebook_user
+    if fb_user
+      self.user_now_id = fb_user.now_id
+      self.user_fullname = fb_user.now_profile.name
+      self.user_profile_photo = fb_user.now_profile.profile_photo_url
+    end
+  end
 
   before_save do |checkin|
     
@@ -134,7 +150,7 @@ class Checkin
   end
 
   def get_fb_user_id
-    return self.facebook_user.now_id unless self.facebook_user.nil?  || self.facebook_user.now_profile.nil?
+    return self.facebook_user.now_id unless self.facebook_user.nil?  
     return Event::NOW_BOT_ID 
   end
 

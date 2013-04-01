@@ -23,6 +23,8 @@ Ubimachine::Application.routes.draw do
   match "/partners/nyconcerts" => "special#nyconcerts"
 
 #### Conall routes that we need to make in a RESTful way eventually
+  match "/v3/event/:id" => "events#v3show"
+
   match "/event/peoplecreate" => "events#create_people"
 
   match "/venue/has_activity" => "venues#has_activity"

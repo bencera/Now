@@ -1,0 +1,2 @@
+object @block
+extends "event"
