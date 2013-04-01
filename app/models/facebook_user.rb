@@ -370,9 +370,9 @@ class FacebookUser
     self.user_notification.get_notifications    
   end
 
-  def add_notification(sent_push)
+  def add_notification(type, sent_push)
     self.user_notification ||= UserNotification.new
-    self.user_notification.add_notification(sent_push)
+    self.user_notification.add_notification(type, sent_push)
     self.save!
   end
 

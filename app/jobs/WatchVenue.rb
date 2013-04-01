@@ -107,7 +107,8 @@ class WatchVenue
           break if (previous_push_count > 3) && (significance_hash[:activity] < 1)
             
           message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}. #{significance_hash[:message]}"
-          SentPush.notify_users(message, existing_event.id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION")
+          SentPush.notify_users(message, existing_event.id.to_s, [], [ig_user.id.to_s], 
+                                :ab_test_id => "PERSONALIZATION", :type => SentPush.TYPE_FRIEND)
           
           vw.event_significance = significance_hash[:activity]
           vw.save!
@@ -276,7 +277,8 @@ class WatchVenue
             break if (previous_push_count > 3) && (significance_hash[:activity] < 1)
             
             message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}. #{significance_hash[:message]}"
-            SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION")
+            SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s],
+                                  :ab_test_id => "PERSONALIZATION", :type => SentPush.TYPE_FRIEND))
             vw.event_significance = significance_hash[:activity]
           end
           

@@ -7,8 +7,8 @@ class UserNotification
 
   embedded_in  :facebook_user
 
-  def add_notification(sent_push)
-    sp = sent_push.to_reaction
+  def add_notification(type, sent_push)
+    sp = sent_push.to_reaction(type)
 
     while self.notifications.count >= 20
       self.notifications.pop

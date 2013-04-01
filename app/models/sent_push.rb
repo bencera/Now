@@ -19,6 +19,12 @@
 #
 
 class SentPush < ActiveRecord::Base
+
+  TYPE_FRIEND = "friend"
+  TYPE_WORLD_EVENT = "world"
+  TYPE_LOCAL_EVENT = "local"
+  TYPE_COMMENT = "comment"
+
   attr_accessible :event_id, :opened_event, :sent_time, :user_id, :facebook_user_id, :message, :user_count, :udid, :reengagement, :failed, :ab_test_id, :is_a
 
   has_many :event_opens
@@ -75,9 +81,13 @@ class SentPush < ActiveRecord::Base
 
     end
 
-    fb_users_notified.each do |fb_user_id|
+    fb_users.each do |fb_user|
+      fb_user_id = fb_user.id.to_s
+      
+      next if !fb_users_notified.include?(fb_user_id)
+
       next if fb_user_id == event.facebook_user.id.to_s
-      SentPush.create(:facebook_user_id => fb_user_id.to_s, 
+      sp = SentPush.create(:facebook_user_id => fb_user_id.to_s, 
                       :event_id => event_id.to_s, 
                       :message => message, 
                       :sent_time => Time.now, 
@@ -87,6 +97,10 @@ class SentPush < ActiveRecord::Base
                       :ab_test_id => options[:ab_test_id],
                       :is_a => options[:is_a]
                      )
+
+      if options[:type]
+        fb_user.add_notification(options[:type], sp)
+      end
     end
 
     devices_notified.each do |device_id|
@@ -133,7 +147,7 @@ class SentPush < ActiveRecord::Base
     Event.first(:conditions => {:id => self.event_id})
   end
 
-  def to_reaction
+  def to_reaction(type)
     return{:fake => true, 
            :timestamp => self.sent_time.to_i, 
            :message => self.message, 
@@ -142,7 +156,7 @@ class SentPush < ActiveRecord::Base
            :reactor_name => "",
            :reactor_photo_url => "",
            :reactor_id => "0",
-           :reaction_type => Reaction::TYPE_REPLY,
+           :reaction_type => type,
            :counter => 0}.inspect
   end
 
