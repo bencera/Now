@@ -1,5 +1,5 @@
 collection @photobatches 
-attributes :title, :timestamp
+attributes :timestamp
 
 child(:photos) do |u|
   extends "photos/showless"
