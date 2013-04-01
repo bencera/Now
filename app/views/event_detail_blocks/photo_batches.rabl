@@ -1,4 +1,4 @@
-collection @photobatches 
+object @photobatch 
 attributes :timestamp
 
 child(:photos) do |u|
