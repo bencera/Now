@@ -41,7 +41,6 @@ gem 'rabl'
 
 gem 'httparty'
 gem 'nokogiri'
-gem 'oauth'
 
 #gem 'infinitescrolling-rails'
 gem 'mathstats'
