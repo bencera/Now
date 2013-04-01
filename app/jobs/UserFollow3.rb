@@ -77,6 +77,7 @@ class UserFollow3
                                        :trigger_media_user_id => media.user.id, 
                                        :trigger_media_user_name => media.user.username,
                                        :trigger_media_fullname => media.user.full_name,
+                                       :trigger_media_profile_photo => media.user.profile_picture,
                                        :selfie => media.user.id.to_s == ig_user.ig_user_id.to_s)
 
           venue_watch.save!

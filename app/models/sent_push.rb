@@ -99,7 +99,7 @@ class SentPush < ActiveRecord::Base
                      )
 
       if options[:type]
-        fb_user.add_notification(options[:type], sp)
+        fb_user.add_notification(sp, options)
         fb_user.save!
       end
     end
@@ -148,14 +148,17 @@ class SentPush < ActiveRecord::Base
     Event.first(:conditions => {:id => self.event_id})
   end
 
-  def to_reaction(type)
+  def to_reaction(options)
+
+    type = options[:type] || SentPush::TYPE_FRIEND
+
     return{:fake => true, 
            :timestamp => self.sent_time.to_i, 
            :message => self.message, 
            :event_id => self.event_id,
            :venue_name => "",
-           :reactor_name => "",
-           :reactor_photo_url => "",
+           :reactor_name => options[:user_name] || "",
+           :reactor_photo_url => options[:user_photo] || "",
            :reactor_id => "0",
            :reaction_type => type,
            :counter => 0}.inspect
