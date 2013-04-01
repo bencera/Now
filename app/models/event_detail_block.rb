@@ -14,7 +14,9 @@ class EventDetailBlock
     
     comments = event.checkins.order_by([[:created_at, :asc]]).map {|ci| self.comment(ci)}
 
-    users = photos.map{|photo| self.user_entry(photo)}.reject{|user| user.data.photo.nil?}.uniq
+    user_entries = photos.map{|photo| self.user_entry(photo)}.reject{|user| user.photo.nil?}.uniq
+
+    users = group_users(user_entries)
 
     photos = make_event_photos_block(event, photos)
     
@@ -30,10 +32,17 @@ class EventDetailBlock
   end
 
   def self.user_entry(photo)
-    return OpenStruct.new({:type => BLOCK_PEOPLE, :data => OpenStruct.new({:username => photo.user_details[0],
+    return OpenStruct.new({:username => photo.user_details[0],
                             :user_full_name => photo.user_details[2],
                             :photo => photo.user_details[1],
-                            :user_id => -1 })})
+                            :user_id => -1 })
+  end
+
+  def self.group_users(user_entries)
+    user_groups = [[]]
+    user_entries.each {|user_entry| user_groups.last << user_entry; user_groups << [] if user_groups.last.count == 5}
+
+    user_groups.map{|group| OpenStruct.new(:type => BLOCK_PEOPLE, :data => group)}
   end
 
   def self.make_event_photos_block(event, photos)
