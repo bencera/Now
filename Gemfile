@@ -68,7 +68,7 @@ gem 'will_paginate', '~> 3.0.0'
 
 #foursquare api gem
 gem "json"
-#gem "typhoeus", '~> 0.2.2'
+gem "typhoeus", '~> 0.2.2'
 #installed pierre valade gem as plugin "rails plugin install https://github.com/pierrevalade/quimby.git"
 #gem "quimby"
 # To use ActiveModel has_secure_password
