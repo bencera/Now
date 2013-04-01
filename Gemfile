@@ -25,7 +25,8 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
-
+gem 'jquery-rails'
+gem 'localtunnel'
 
 #gem 'delayed_job'
 #gem 'delayed_job_mongoid'
@@ -47,7 +48,7 @@ gem 'mathstats'
 #gem 'resque', :git => 'git://github.com/defunkt/resque.git'
 gem 'resque'
 gem 'resque-scheduler'
-#gem 'god'
+gem 'god'
 gem "bcrypt-ruby", :require => "bcrypt"
 gem 'hirefireapp'
 
@@ -91,8 +92,6 @@ group :development do
   gem "magic_encoding", "~> 0.0.2"
   gem 'faker', '1.0.1'
   gem 'annotate', '2.4.0'
-  gem 'jquery-rails'
-  gem 'localtunnel'
 end
 
 group :test do

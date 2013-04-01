@@ -70,6 +70,7 @@ GEM
       multi_json (>= 1.3)
       rack-oauth2 (>= 0.14.4)
       tzinfo
+    god (0.13.2)
     haml (4.0.0)
       tilt
     hashie (2.0.2)
@@ -218,6 +219,7 @@ DEPENDENCIES
   faraday_middleware (~> 0.3.1)
   fb_graph
   geocoder!
+  god
   haml
   hashie (>= 0.4.0)
   hirefireapp
