@@ -70,7 +70,6 @@ GEM
       multi_json (>= 1.3)
       rack-oauth2 (>= 0.14.4)
       tzinfo
-    god (0.13.2)
     haml (4.0.0)
       tilt
     hashie (2.0.2)
@@ -190,9 +189,6 @@ GEM
       polyglot (>= 0.3.1)
     turn (0.8.2)
       ansi (>= 1.2.2)
-    typhoeus (0.2.4)
-      mime-types
-      mime-types
     tzinfo (0.3.37)
     uglifier (1.3.0)
       execjs (>= 0.3.0)
@@ -203,7 +199,6 @@ GEM
       raindrops (~> 0.7)
     vegas (0.1.11)
       rack (>= 1.0.0)
-    will_paginate (3.0.4)
 
 PLATFORMS
   ruby
@@ -219,7 +214,6 @@ DEPENDENCIES
   faraday_middleware (~> 0.3.1)
   fb_graph
   geocoder!
-  god
   haml
   hashie (>= 0.4.0)
   hirefireapp
@@ -243,7 +237,5 @@ DEPENDENCIES
   sqlite3
   timezone (~> 0.1.5)
   turn (= 0.8.2)
-  typhoeus (~> 0.2.2)
   uglifier (>= 1.0.3)
   unicorn
-  will_paginate (~> 3.0.0)
