@@ -49,7 +49,7 @@ class EventDetailBlock
       title = group[:title]
     
       while group[:photos].any?
-        batch_size = [1,2,3,4,5,6].sample
+        batch_size = [1,2,3].sample
         batch = group[:photos].shift(batch_size)
         timestamp = batch.first.time_taken
 
