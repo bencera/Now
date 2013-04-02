@@ -242,7 +242,7 @@ class Photo
 
     photo.save!
     #not sure if i need this  
-    photo.reload
+    #photo.reload
 
 #will want to comment this out when done testing
     Rails.logger.info("Photo.rb: created new photo #{photo.id} in venue #{photo.venue.id} by user #{photo.user.id}")
