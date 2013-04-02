@@ -46,9 +46,9 @@ class EventsController < ApplicationController
       category = params[:category] && params[:category].downcase
 
       if scope == "saved" && @user
-        @events = V3EventsHelper.get_user_created_or_reposted(@user)
+        @events = EventsTools.get_user_created_or_reposted(@user)
       else
-        results = V3EventsHelper.get_localized_results(coordinates, max_distance,
+        results = EventsTools.get_localized_results(coordinates, max_distance,
                                                       :scope => scope, :category => category,
                                                       :facebook_user => @user)
         @meta_data.merge!(results[:meta])
