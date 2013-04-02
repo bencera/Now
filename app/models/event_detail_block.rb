@@ -14,7 +14,7 @@ class EventDetailBlock
 
     #for debugging
     
-    checkin = Checkin.where(:description.ne = " ", :created_at.gt => 1.month.ago).first
+    checkin = Checkin.where(:description.ne => " ", :created_at.gt => 1.month.ago).first
 
     checkins = [checkin]
     
