@@ -47,7 +47,7 @@ class EventDetailBlock
 
   def self.group_users(user_entries)
     user_groups = [[]]
-    user_entries.each {|user_entry| user_groups.last << user_entry; user_groups << [] if user_groups.last.count == 8}
+    user_entries.each {|user_entry| user_groups.last << user_entry; user_groups << [] if user_groups.last.count == 7}
 
     user_groups.map{|group| OpenStruct.new(:type => BLOCK_PEOPLE, :data => group)}
   end
