@@ -30,7 +30,7 @@ class EventsController < ApplicationController
     redirected = false
     search_time = Time.now.to_i
 
-    @meta_data = {:heat_map => "off"}
+    @meta_data = {}
 
     if params[:lon_lat]
       coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
@@ -51,12 +51,14 @@ class EventsController < ApplicationController
         results = EventsTools.get_localized_results(coordinates, max_distance,
                                                       :scope => scope, :category => category,
                                                       :facebook_user => @user)
-        @meta_data.merge!(results[:meta])
+        @meta_data = results[:meta]
         @events = results[:events]
       end
     end
 
-    EventsHelper.personalize_events(@events, facebook_user) if facebook_user
+    @meta_data[:heat_map] ||= "off"
+
+    EventsHelper.personalize_events(@events, @user) if @user 
     EventsHelper.get_event_cards(@events)
 
     event_ids = []

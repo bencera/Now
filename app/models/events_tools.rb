@@ -50,7 +50,8 @@ class EventsTools
     #set meta_data
 
     if scope == "now"
-      meta_data[:heat_results_max] = events.empty ? 0 : events.max_by{|event| event.n_reactions}.n_reactions
+      meta_data[:heat_map] = "on"
+      meta_data[:heat_results_max] = events.empty? ? 0 : events.max_by{|event| event.n_reactions}.n_reactions
       meta_data[:heat_world_max] = $redis.get("HEAT_WORLD_MAX") || 250
     end
 

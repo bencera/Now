@@ -26,6 +26,7 @@ Ubimachine::Application.routes.draw do
   #new v3 endpoints
 
   match "/v3/inbox" => "reactions#inbox"
+  match "/v3/events" => "events#v3index"
   match "/v3/event/:id" => "events#v3show"
   match "/v3/event/:id/comment" => "checkins#create"
 
