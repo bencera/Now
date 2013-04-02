@@ -21,9 +21,9 @@ class UserNotification
   end
 
   def get_notifications
-    self.notifications.map{|notification| OpenStruct.new(eval notification)}
     self.new_notifications = 0
     self.save
+    self.notifications.map{|notification| OpenStruct.new(eval notification)}
   end
 
 end
