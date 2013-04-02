@@ -9,7 +9,7 @@ test:
 # set these environment variables on your prod server
 production:
     uri: 'mongodb://heroku:c02c2c3a696b0785f962754467945eed@penny.mongohq.com:10055/ubimachine2go'
-    
+    persist_in_safe_mode: true 
   # slaves:
   #   - host: slave1.local
   #     port: 27018
