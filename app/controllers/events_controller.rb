@@ -16,6 +16,55 @@ class EventsController < ApplicationController
     @blocks = EventDetailBlock.get_blocks(@event,@requesting_user)
 
   end
+
+  def v3index
+
+    @user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+    @user_id = if @user
+                 @user.facebook_id || @user.now_id
+               else
+                 nil
+               end
+
+    session_token = cookies[:now_session]
+    redirected = false
+    search_time = Time.now.to_i
+
+    @meta_data = {:heat_map => "off"}
+
+    if params[:lon_lat]
+      coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
+
+      if params[:maxdistance]
+        max_distance = params[:maxdistance].to_f / 111000
+      else
+        # 1 kilometer
+        max_distance = 1.0 / 111
+      end  
+      
+      scope = params[:scope] && params[:scope].downcase
+      category = params[:category] && params[:category].downcase
+
+      if scope == "saved" && @user
+        @events = V3EventsHelper.get_user_created_or_reposted(@user)
+      else
+        results = V3EventsHelper.get_localized_results(coordinates, max_distance,
+                                                      :scope => scope, :category => category,
+                                                      :facebook_user => @user)
+        @meta_data.merge!(results[:meta])
+        @events = results[:events]
+      end
+    end
+
+    EventsHelper.personalize_events(@events, facebook_user) if facebook_user
+    EventsHelper.get_event_cards(@events)
+
+    event_ids = []
+    @events.each {|event| event_ids << event.id.to_s}
+
+    Resque.enqueue(AddView, event_ids.join(","))
+
+  end
   
   def show
     @event = Event.find(params[:id])
@@ -210,7 +259,7 @@ class EventsController < ApplicationController
       #fails silently for now -- not good, but we can't push to prod otherwise
     end
 
-
+    @events.delete_if {|event| event.event_card_list.nil? || event.event_card_list.empty?}
     return @events
   end
 
