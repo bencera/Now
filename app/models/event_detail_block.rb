@@ -27,7 +27,7 @@ class EventDetailBlock
 
     photos = make_event_photos_block(event, photos)
     
-    return [photo_card, message_block("Comments"), *comments, message_block("See who's here"), *users, *photos]
+    return [photo_card, message_block("Comments"), *comments, message_block("See who's here"), *users,message_block("Photos"), *photos]
   end
 
   def self.comment(checkin)
