@@ -13,7 +13,7 @@ class VerifyURL2
     event = Event.find(event_id)
      
     if options[:photo_card]
-      unverified = Photo.find(event.get_preview_photo_ids)
+      unverified = Photo.where(:_id.in => event.get_preview_photo_ids).entries
     else
       unverified = event.photos.where(:time_taken.gt => since_time)
     end
