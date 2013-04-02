@@ -9,7 +9,6 @@ test:
 # set these environment variables on your prod server
 production:
     uri: 'mongodb://heroku_new:getr1ch0rd1etry1nm0f0@now-production.m0.mongolayer.com:27017/now_production'
-    persist_in_safe_mode: true 
   # slaves:
   #   - host: slave1.local
   #     port: 27018
