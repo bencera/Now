@@ -3,6 +3,21 @@ class ReactionsController < ApplicationController
   
   include ActionView::Helpers::TextHelper
 
+  def inbox
+    user = FacebookUser.find_by_nowtoken(params[:nowtoken])
+    @waiting_notifications = if user && user.user_notification
+                               user.user_notification.new_notifications 
+                             else
+                               0
+                             end
+
+    @greeting = if user
+                  "Welcome back #{user.now_profile.name}!"
+                else
+                  "Please log in"
+                end
+  end
+
   def index
     viewer = FacebookUser.find_by_nowtoken(params[:nowtoken])
 

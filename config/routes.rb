@@ -24,6 +24,8 @@ Ubimachine::Application.routes.draw do
 
 #### Conall routes that we need to make in a RESTful way eventually
   #new v3 endpoints
+
+  match "/v3/inbox" => "reactions#inbox"
   match "/v3/event/:id" => "events#v3show"
   match "/v3/event/:id/comment" => "checkins#create"
 
