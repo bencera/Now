@@ -12,11 +12,12 @@ class EventsController < ApplicationController
       @user_id = @requesting_user.facebook_id || @requesting_user.now_id
     end
     
-#    if params[:venue]
-#      @event = EventTools.get_venue_event(params[:id], @requesting_user)
-#    else
-    @event = Event.find(params[:id])
-#    end
+    if params[:venue]
+      @event = Event.last
+      #@event = EventTools.get_venue_event(params[:id], @requesting_user)
+    else
+      @event = Event.find(params[:id])
+    end
     EventsHelper.get_event_cards([@event])
 
     @blocks = EventDetailBlock.get_blocks(@event,@requesting_user)
