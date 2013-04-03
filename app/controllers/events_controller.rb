@@ -57,6 +57,8 @@ class EventsController < ApplicationController
       results = EventsTools.get_theme_events(theme_id)
     elsif params[:world]
       results = EventsTools.get_world_events
+    elsif params[:vine]
+      results = {:events => Event.limit(20).where(:has_vine => true).entries }
     end
 
     @meta_data = results[:meta] || {}
