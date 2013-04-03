@@ -60,4 +60,33 @@ class NowCitiesController < ApplicationController
 
     @themes = Theme.index
   end
+
+  def v3index
+    city_entries = $redis.smembers("NOW_CITY_KEYS")
+
+    unordered_cities = []
+
+    city_entries.each do |city_key|
+
+      exp_count = $redis.get("#{city_key}_EXP")
+      city_hash = $redis.hgetall("#{city_key}_VALUES")
+
+      #for now we can't handle if url isn't blank
+      next if !(city_hash["url"].blank?)
+
+      city_coords = [city_hash["longitude"].to_f, city_hash["latitude"].to_f]
+
+      city_entry =  OpenStruct.new({:name => city_hash["name"], 
+                                    :latitude => city_hash["latitude"].to_f,
+                                    :longitude => city_hash["longitude"].to_f,
+                                    :radius => city_hash["radius"].to_f,
+                                    :url_web => city_hash["web_url"], 
+                                    :experiences => exp_count.to_i,
+                                    :id => "", :nearest_city => false})
+
+      unordered_cities << city_entry
+    end
+
+    @cities = unordered_cities.sort {|city| city.experiences}.reverse
+  end
 end

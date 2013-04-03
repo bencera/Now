@@ -29,6 +29,9 @@ Ubimachine::Application.routes.draw do
   match "/v3/events" => "events#v3index"
   match "/v3/event/:id" => "events#v3show"
   match "/v3/event/:id/comment" => "checkins#create"
+  match "/v3/now_cities" => "now_cities#v3index"
+  match "/themes" => "themes#index"
+  
 
   match "/event/peoplecreate" => "events#create_people"
 
