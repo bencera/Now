@@ -89,6 +89,8 @@ class EventsTools
     events.each do |event|
       heat_entries << OpenStruct.new({:coordinates => event.coordinates, :value => event.n_reactions})
     end
+
+    meta_data = {}
  
     meta_data[:heat_map] = "on"
     meta_data[:heat_results_max] = events.empty? ? 0 : events.max_by{|event| event.n_reactions}.n_reactions
