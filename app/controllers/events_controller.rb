@@ -6,12 +6,18 @@ class EventsController < ApplicationController
   include EventsHelper
 
   def v3show
-    @event = Event.find(params[:id])
-    EventsHelper.get_event_cards([@event])
+
     if params[:nowtoken]
       @requesting_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
       @user_id = @requesting_user.facebook_id || @requesting_user.now_id
     end
+    
+#    if params[:venue]
+#      @event = EventTools.get_venue_event(params[:id], @requesting_user)
+#    else
+    @event = Event.find(params[:id])
+#    end
+    EventsHelper.get_event_cards([@event])
 
     @blocks = EventDetailBlock.get_blocks(@event,@requesting_user)
 
