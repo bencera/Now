@@ -26,16 +26,8 @@ node(:description) do |u|
   u.get_description 
 end
 
-child :preview_photos => "photos" do
-  attributes :url, :external_source, :external_id
-  node (:has_vine) do |u|
-    u.has_vine || false
-  end
-
-  node (:video_url) do |u|
-    u.video_url || ""
-  end
-
+node :photos do |u|
+  partial("event_detail_blocks/photo", :object => u.preview_photos, :object_root => "photo")
 end
 
 node :venue do |u|
