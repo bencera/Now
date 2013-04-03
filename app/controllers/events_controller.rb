@@ -46,16 +46,13 @@ class EventsController < ApplicationController
       scope = params[:scope] && params[:scope].downcase
       category = params[:category] && params[:category].downcase
 
-      if scope == "saved" && @user
-        @events = EventsTools.get_user_created_or_reposted(@user)
-      else
-        results = EventsTools.get_localized_results(coordinates, max_distance,
+
+      results = EventsTools.get_localized_results(coordinates, max_distance,
                                                       :scope => scope, :category => category,
                                                       :facebook_user => @user)
-        @meta_data = results[:meta]
-        @events = results[:events]
-        @heat = results[:heat_entries] || []
-      end
+      @meta_data = results[:meta]
+      @events = results[:events]
+      @heat = results[:heat_entries] || []
     end
 
     @meta_data[:heat_map] ||= "off"

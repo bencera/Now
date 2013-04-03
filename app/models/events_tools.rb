@@ -27,12 +27,16 @@ class EventsTools
     event_query = nil
 
     event_query = Event.limit(100).where(:coordinates.within => {"$center" => [lon_lat, max_dist]})
-    event_query = event_query.where(:status.in => Event::TRENDED_OR_TRENDING) 
-
+    
     if scope == "friends"
       personalized_event_ids = facebook_user.get_personalized_event_ids()
       event_query = event_query.where(:_id.in => personalized_event_ids)
+    elsif scope == "saved"
+      facebook_user_id = facebook_user.facebook_id || facebook_user.id.to_s
+      shortids = $redis.smembers("liked_events:#{facebook_user_id}")
+      event_query = event_quere.where(:shortid.in => shortids) 
     elsif scope == "now"
+      event_query = event_query.where(:status.in => Event::TRENDED_OR_TRENDING) 
       event_query = event_query.where(:end_time.gt => 3.hours.ago.to_i)
     end
 
@@ -67,6 +71,5 @@ class EventsTools
     return results_hash
 
   end
-
 end
 
