@@ -4,8 +4,8 @@ node(:meta_data) do
   @meta_data
 end
 
-node(:events) do
-  partial("events/showless", :object => @events)
+child(@events => :events) do
+  extends "events/v3/showless", :object_root => :event
 end
 
 node(:heat_map) do
