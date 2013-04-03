@@ -83,7 +83,7 @@ class EventsTools
   def self.get_world_events()
     results_hash = {}
 
-    events => Event.find($redis.smembers("WORLD_EXP_LIST")).entries
+    events = Event.find($redis.smembers("WORLD_EXP_LIST")).entries
     
     heat_entries = []
     events.each do |event|
