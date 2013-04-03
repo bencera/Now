@@ -57,6 +57,7 @@ class EventsController < ApplicationController
       @events = results[:events]
       @heat = results[:heat_entries] || []
     elsif params[:theme]
+      theme_id = params[:theme]
       results = EventsTools.get_theme_events(theme_id)
       @meta_data = results[:meta]
       @events = results[:events]
