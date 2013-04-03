@@ -4,7 +4,7 @@ attributes :type
 node(:data) do |u|
   case u.type
   when EventDetailBlock::BLOCK_CARD
-    attributes :card => partial("event_detail_blocks/event_card", :object => @event)
+    attributes :card => partial("events/v3/showless", :object => @event)
   when EventDetailBlock::BLOCK_COMMENTS
     attributes :comment => partial("event_detail_blocks/comment", :object => u.data)
   when EventDetailBlock::BLOCK_PEOPLE
