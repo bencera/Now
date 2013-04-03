@@ -79,5 +79,26 @@ class EventsTools
 
     {:events => events, :meta => {}}
   end
+
+  def self.get_world_events()
+    results_hash = {}
+
+    events => Event.find($redis.smembers("WORLD_EXP_LIST")).entries
+    
+    heat_entries = []
+    events.each do |event|
+      heat_entries << OpenStruct.new({:coordinates => event.coordinates, :value => event.n_reactions})
+    end
+ 
+    meta_data[:heat_map] = "on"
+    meta_data[:heat_results_max] = events.empty? ? 0 : events.max_by{|event| event.n_reactions}.n_reactions
+    meta_data[:heat_world_max] = $redis.get("HEAT_WORLD_MAX") || 250
+
+    results_hash[:events] = events
+    results_hash[:heat_entries] = heat_entries
+    results_hash[:meta] = meta_data
+
+    results_hash
+  end
 end
 

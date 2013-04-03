@@ -23,7 +23,9 @@ class CacheCityEvents
     city_key = "WORLD"
     events = Event.where(:status.in => Event::TRENDING_STATUSES, :n_photos.gt => 10).entries; puts
 
-    world_events = events.sort_by{|event| event.result_order_score(nil, [0,0])}.reverse[0..20].map{|event| event.id}
+    world_events = events.sort_by{|event| event.result_order_score(nil, [0,0])}.reverse[0..100].map{|event| event.id}
+    max_world_reactions = events.map{|event| event.n_reactions}.max
+    $redis.set("HEAT_WORLD_MAX", max_world_reactions)
 
     $redis.multi do
       $redis.del("#{city_key}_EXP_LIST")

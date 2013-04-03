@@ -33,8 +33,7 @@ class EventsController < ApplicationController
     max_distance = nil
     city_search_params = nil
 
-    @meta_data = {}
-    @heat = []
+    results = {}
 
     if params[:lon_lat]
       coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
@@ -53,16 +52,16 @@ class EventsController < ApplicationController
       results = EventsTools.get_localized_results(coordinates, max_distance,
                                                       :scope => scope, :category => category,
                                                       :facebook_user => @user)
-      @meta_data = results[:meta]
-      @events = results[:events]
-      @heat = results[:heat_entries] || []
     elsif params[:theme]
       theme_id = params[:theme]
       results = EventsTools.get_theme_events(theme_id)
-      @meta_data = results[:meta]
-      @events = results[:events]
-      @heat = results[:heat_entries] || []
+    elsif params[:world]
+      results = EventsTools.get_world_events
     end
+
+    @meta_data = results[:meta] || {}
+    @events = results[:events] || []
+    @heat = results[:heat_entries] || []
 
     @meta_data[:heat_map] ||= "off"
 
