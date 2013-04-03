@@ -96,7 +96,7 @@ class EventsTools
     meta_data[:heat_results_max] = events.empty? ? 0 : events.max_by{|event| event.n_reactions}.n_reactions
     meta_data[:heat_world_max] = $redis.get("HEAT_WORLD_MAX") || 250
 
-    results_hash[:events] = events
+    results_hash[:events] = events[0..19]
     results_hash[:heat_entries] = heat_entries
     results_hash[:meta] = meta_data
 
