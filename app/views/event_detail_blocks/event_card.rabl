@@ -48,3 +48,9 @@ node(:profile_photo) do |u|
   u.get_fb_user_photo
 end
 
+node(:blocks) do |u|
+  u.recent_comments.map do |comment|
+    attributes :block => partial("event_detail_blocks/block", :object => EventDetailBlock.comment(eval comment))
+  end
+end
+
