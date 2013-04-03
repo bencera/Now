@@ -29,6 +29,9 @@ class EventsController < ApplicationController
     session_token = cookies[:now_session]
     redirected = false
     search_time = Time.now.to_i
+    coordinates = []
+    max_distance = nil
+    city_search_params = nil
 
     @meta_data = {}
     @heat = []
@@ -64,6 +67,40 @@ class EventsController < ApplicationController
     @events.each {|event| event_ids << event.id.to_s}
 
     Resque.enqueue(AddView, event_ids.join(","))
+
+
+    begin
+  #log the results unless it's a venue search
+      unless params[:search]
+        log_options = {}
+        log_options[:session_token] = session_token
+        log_options[:latitude] = coordinates[1] if coordinates && coordinates.any?
+        log_options[:longitude] = coordinates[0] if coordinates && coordinates.any?
+        log_options[:theme_id] = params[:theme]
+        log_options[:radius] = (max_distance * 111000).to_i if max_distance
+        if @events.any?
+          log_options[:first_end_time] = @events.first.end_time
+          log_options[:last_end_time] = @events.last.end_time
+          log_options[:events_shown] = @events.count
+        else
+          log_options[:events_shown] = 0
+        end
+
+        if city_search_params
+          log_options[:redirect_lon] = city_search_params[0][0]
+          log_options[:redirect_lat] = city_search_params[0][1]
+        end
+        log_options[:redirected] = redirected
+        log_options[:search_time] = search_time
+
+        Rails.logger.info("TEST: #{log_options}")
+
+        IndexSearch.queue_search_log(log_options)
+     end
+   rescue
+      #fails silently for now -- not good, but we can't push to prod otherwise
+   end
+
 
   end
   

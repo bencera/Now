@@ -122,6 +122,13 @@ class Checkin
     return self.facebook_user.now_profile.profile_photo_url
   end
 
+  def get_comment_hash
+    {:user_id => self.user_now_id,
+     :user_full_name => self.user_fullname,
+     :user_photo => self.user_profile_photo,
+     :message => self.description,
+     :timestamp => self.created_at.to_i }
+  end
   private
 
     def custom_validations
@@ -129,6 +136,8 @@ class Checkin
     end
 
     def create_reaction
+      self.event.update_recent_comments
+      self.event.save!
       Resque.enqueue(CreateReplyReaction, self.id)
     end
 end

@@ -170,6 +170,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   #field :n_people
 
+  field :recent_comments, :type => Array, :default => []
+
   field :n_reactions, type: Integer, default: 0
 
   field :last_viewed
@@ -613,7 +615,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     else
       self.status = NOT_TRENDING
     end
-    
+   
     self.save!
 
     Rails.logger.info("transition_status: event #{self.id} transitioning status from #{old_status} to #{ self.status }")
@@ -1004,17 +1006,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   def update_reaction_count
-    view_reactions = $redis.get("VIEW_COUNT:#{self.shortid}").to_i
-    photo_count = self.photos.count 
+    self.n_reactions = self.photos.where(:time_taken.gt => 3.hours.ago.to_i).count
+  end
 
-#    if self.photo_card.any?
-#      photo_count -= self.photo_card.count
-#      photo_count = [photo_count, 0].max
-#    end
-
-    reply_count = self.facebook_user.nil? ? self.checkins.count : self.checkins.where(:facebook_user_id.ne => self.facebook_user_id).count
-
-    self.n_reactions = photo_count + reply_count + self.likes.to_i + (view_reactions / 10) 
+  def update_recent_comments
+    self.recent_comments = self.checkins.order_by([[:created_at, :desc]])[0..4].map {|checkin| checkin.get_comment_hash.inspect}
   end
 
 

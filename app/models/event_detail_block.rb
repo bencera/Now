@@ -16,10 +16,7 @@ class EventDetailBlock
     
     checkin = Checkin.where(:description.ne => " ", :created_at.gt => 1.month.ago).first
 
-    checkins = [checkin]
-    
-    comments = checkins.map {|ci| self.comment(ci)}
-   # comments = event.checkins.order_by([[:created_at, :asc]]).map {|ci| self.comment(ci)}
+    comments = event.checkins.order_by([[:created_at, :asc]]).map {|ci| self.comment(ci.get_comment_hash)}
 
     user_entries = photos.map{|photo| self.user_entry(photo)}.reject{|user| user.photo.nil?}.uniq
 
@@ -30,12 +27,8 @@ class EventDetailBlock
     return [photo_card, message_block("Comments"), *comments, message_block("See who's here"), *users,message_block("Photos"), *photos]
   end
 
-  def self.comment(checkin)
-    return OpenStruct.new({:type => BLOCK_COMMENTS, :data => OpenStruct.new({:user_id => checkin.user_now_id,
-            :user_full_name => checkin.user_fullname,
-            :user_photo => checkin.user_profile_photo,
-            :message => checkin.description,
-            :timestamp => checkin.created_at.to_i })})
+  def self.comment(comment_hash)
+    OpenStruct.new({:type => BLOCK_COMMENTS, :data => OpenStruct.new(comment_hash)})
   end
 
   def self.user_entry(photo)
