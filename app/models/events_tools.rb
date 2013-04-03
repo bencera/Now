@@ -49,13 +49,22 @@ class EventsTools
 
     #set meta_data
 
+    results_hash = {}
+
     if scope == "now"
       meta_data[:heat_map] = "on"
       meta_data[:heat_results_max] = events.empty? ? 0 : events.max_by{|event| event.n_reactions}.n_reactions
       meta_data[:heat_world_max] = $redis.get("HEAT_WORLD_MAX") || 250
+      heat_entries = []
+      events.each do |event|
+        heat_entries << OpenStruct.new({:coordinates => event.coordinates, :value => event.n_reactions})
+      end
+      results_hash[:heat_entries] = heat_entries
     end
+    results_hash[:events] = events[0..(num_events - 1)]
+    results_hash[:meta] = meta_data
 
-    return {:events => events[0..(num_events - 1)], :meta => meta_data}
+    return results_hash
 
   end
 

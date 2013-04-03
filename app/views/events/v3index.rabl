@@ -9,5 +9,5 @@ node(:events) do
 end
 
 node(:heat_map) do
-  {}
+  partial("events/v3/heat", :object => @heat)
 end

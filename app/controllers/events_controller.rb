@@ -31,6 +31,7 @@ class EventsController < ApplicationController
     search_time = Time.now.to_i
 
     @meta_data = {}
+    @heat = []
 
     if params[:lon_lat]
       coordinates = params[:lon_lat].split(",").map {|entry| entry.to_f}
@@ -53,6 +54,7 @@ class EventsController < ApplicationController
                                                       :facebook_user => @user)
         @meta_data = results[:meta]
         @events = results[:events]
+        @heat = results[:heat_entries] || []
       end
     end
 
