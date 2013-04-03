@@ -56,6 +56,11 @@ class EventsController < ApplicationController
       @meta_data = results[:meta]
       @events = results[:events]
       @heat = results[:heat_entries] || []
+    elsif params[:theme]
+      results = EventsTools.get_theme_events(theme_id)
+      @meta_data = results[:meta]
+      @events = results[:events]
+      @heat = results[:heat_entries] || []
     end
 
     @meta_data[:heat_map] ||= "off"

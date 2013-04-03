@@ -6,6 +6,8 @@ class EventDetailBlock
   BLOCK_PHOTOS = "photos"
   BLOCK_MESSAGE = "message"
 
+  PEOPLE_PER_LINE = 8
+
   def self.get_blocks(event, user)
 
     photos = event.photos.order_by([[:likes, :desc],[:time_taken, :desc]]).entries
@@ -40,7 +42,7 @@ class EventDetailBlock
 
   def self.group_users(user_entries)
     user_groups = [[]]
-    user_entries.each {|user_entry| user_groups.last << user_entry; user_groups << [] if user_groups.last.count == 7}
+    user_entries.each {|user_entry| user_groups.last << user_entry; user_groups << [] if user_groups.last.count == PEOPLE_PER_LINE}
 
     user_groups.map{|group| OpenStruct.new(:type => BLOCK_PEOPLE, :data => group)}
   end

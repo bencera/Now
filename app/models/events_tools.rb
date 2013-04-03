@@ -71,5 +71,13 @@ class EventsTools
     return results_hash
 
   end
+
+  def self.get_theme_events(theme_id, options={})
+     
+    experience_ids = Theme.get_exp_list(theme_id)
+    events = Event.find(experience_ids).sort_by {|event| event.end_time}.reverse
+
+    {:events => events, :meta => {}}
+  end
 end
 
