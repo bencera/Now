@@ -101,6 +101,11 @@ class EventsController < ApplicationController
       #fails silently for now -- not good, but we can't push to prod otherwise
    end
 
+    #debug just to put fake comments in 
+    fake_checkins = ["{:user_id=>\"12786\", :user_full_name=>\"Jack Jackson\", :user_photo=>\"https://graph.facebook.com/jack.jackson.90/picture?type=large\", :message=>\"best show ever\", :timestamp=>1364994799}", "{:user_id=>\"1085\", :user_full_name=>\"Teagan Van Rooyen\", :user_photo=>\"https://graph.facebook.com/teaganvanrooyen/picture?type=large\", :message=>\"Dessert. \", :timestamp=>1364928454}", "{:user_id=>\"0\", :user_full_name=>\"now bot\", :user_photo=>\"https://s3.amazonaws.com/now_assets/icon.png\", :message=>\"\", :timestamp=>1364920289}", "{:user_id=>\"12727\", :user_full_name=>\"Roman Petryshen\", :user_photo=>\"https://graph.facebook.com/roman.petryshen/picture?type=large\", :message=>\"Hey\", :timestamp=>1364899665}"]
+    @events.each do |event|
+      event.recent_comments ||= fake_checkins
+    end
 
   end
   
