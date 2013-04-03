@@ -80,7 +80,7 @@ class NowCitiesController < ApplicationController
                                     :latitude => city_hash["latitude"].to_f,
                                     :longitude => city_hash["longitude"].to_f,
                                     :radius => city_hash["radius"].to_f,
-                                    :url_web => city_hash["web_url"], 
+                                    :url => city_hash["url_web"], 
                                     :experiences => exp_count.to_i,
                                     :id => "", :nearest_city => false})
 
