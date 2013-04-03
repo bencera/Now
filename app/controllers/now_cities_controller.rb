@@ -87,6 +87,6 @@ class NowCitiesController < ApplicationController
       unordered_cities << city_entry
     end
 
-    @cities = unordered_cities.sort {|city| city.experiences}.reverse
+    @cities = unordered_cities.sort_by {|city| city.experiences.to_i}.reverse
   end
 end
