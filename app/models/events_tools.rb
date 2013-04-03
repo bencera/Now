@@ -34,7 +34,7 @@ class EventsTools
     elsif scope == "saved"
       facebook_user_id = facebook_user.facebook_id || facebook_user.id.to_s
       shortids = $redis.smembers("liked_events:#{facebook_user_id}")
-      event_query = event_quere.where(:shortid.in => shortids) 
+      event_query = event_query.where(:shortid.in => shortids) 
     elsif scope == "now"
       event_query = event_query.where(:status.in => Event::TRENDED_OR_TRENDING) 
       event_query = event_query.where(:end_time.gt => 3.hours.ago.to_i)
