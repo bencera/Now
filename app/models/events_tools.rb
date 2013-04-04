@@ -147,7 +147,8 @@ class EventsTools
             })
           else
             venue = OpenStruct.new({:id => venue_id, :name => "", :coordinates => [0,0], :neighborhood => "", :categories => [{"name" => ""}], :address => {}})
-            return Event.v3_make_fake_event_detail(venue, [],:custom_message => "No photos here")
+            photo = Photo.find("4fe10767b828ec090f000011")
+            return Event.v3_make_fake_event_detail(venue, [photo],:custom_message => "No photos here")
           end
 
 

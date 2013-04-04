@@ -26,7 +26,11 @@ class EventDetailBlock
                 event.checkins.order_by([[:created_at, :asc]]).map {|ci| self.comment(ci.get_comment_hash)}
                end
 
-    user_entries = photos.map{|photo| self.user_entry(photo)}.reject{|user| user.photo.nil?}.uniq{|user| user.photo}
+    user_entries = if event.fake
+                     []
+                   else
+                     photos.map{|photo| self.user_entry(photo)}.reject{|user| user.photo.nil?}.uniq{|user| user.photo}
+                   end
 
     users = group_users(user_entries)
 
