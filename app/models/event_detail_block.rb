@@ -50,6 +50,8 @@ class EventDetailBlock
   def self.make_event_photos_block(event, photos)
     photos_to_show = photos[0..49]
 
+    batch_sizes = photos_to_show.count > 10 ? [1,2,3] : [1]
+
     photo_groups = []
     photo_groups << {:photos => photos_to_show.reject {|photo| photo.has_vine != true}}
     photo_groups << {:photos => photos_to_show.reject {|photo| photo.has_vine == true || !(photo.now_likes > 0)} }
@@ -60,7 +62,7 @@ class EventDetailBlock
       title = group[:title]
     
       while group[:photos].any?
-        batch_size = [1,2,3].sample
+        batch_size = batch_sizes.sample
         batch = group[:photos].shift(batch_size)
         timestamp = batch.first.time_taken
 
