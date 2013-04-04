@@ -1041,6 +1041,42 @@ SCORE_HALF_LIFE       = 7.day.to_f
     return OpenStruct.new(fake_event)
   end
 
+  def self.v3_make_fake_event_detail(venue, photos, options={})
+    message = options[:custom_message] || ""
+    photos ||= []
+    photo_card_list = options[:photo_card] ||= photos[0..5]
+
+    start_time = photos.any? ? photos.last.time_taken : Time.now.to_i
+    end_time = photos.any? ? photos.first.time_taken : Time.now.to_i
+    fake_event = {:id => "FAKE",
+                  :shortid => "FAKE",
+                  :get_description => message,
+                  :coordinates => venue.coordinates,
+                  :end_time => end_time,
+                  :category => "Misc",
+                  :like_count => 0,
+                  :venue_category => "",
+                  :n_photos => photos.count,
+                  :start_time => end_time,
+                  :status => "not_trending",
+                  :like => false,
+                  :get_fb_user_name => "Now Bot",
+                  :get_fb_user_id => "0",
+                  :get_fb_user_photo =>  "https://s3.amazonaws.com/now_assets/icon.png",
+                  :liked_by_user => false,
+                  :fake => true,
+                  :venue => venue,                  
+                  :venue_id => venue.id,
+                  :venue_name => venue.name,
+                  :preview_photos => photo_card_list,
+                  :photos => photos,
+                  :checkins => [],
+                  :recent_comments => []}
+
+    OpenStruct.new(fake_event)
+
+  end
+
   def self.make_fake_event_detail(venue, photos)
        
     fake_replies = []

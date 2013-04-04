@@ -108,106 +108,106 @@ class EventsTools
     results_hash
   end
 
-#  def get_venue_event(venue_id, facebook_user)
-#    venue = Venue.first(:conditions => {:id => venue_id})
-#    event = nil
-#    venue_ig_id = nil
-#
-#    if venue
-#      
-#      venue_ig_id = venue.ig_venue_id
-#      venue_name = venue.name
-#      venue_lon_lat = venue.coordinates
-#    
-#      live_event = venue.get_live_event
-#      
-#      event = live_event
-#    end
-#
-#    if event.nil?
-#
-#      token = if $redis.get("USE_EMERGENCY_TOKENS") == "true"
-#                InstagramWrapper.get_random_token_emergency()
-#              elsif $redis.get("USE_OTHER_TOKENS") == "true" || $redis.get("SPREAD_IT_AROUND") == "true"
-#                InstagramWrapper.get_best_token()
-#              else
-#                "44178321.f59def8.63f2875affde4de98e043da898b6563f"
-#              end
-#
-#      ig_client = InstagramWrapper.get_client(:access_token => token)
-#
-#      #do i need to find the id?
-#      if venue_ig_id.nil?
-#        venue_retry = 0
-#        begin 
-#          venue_response = Instagram.location_search(nil, nil, :foursquare_v2_id => venue_id)
-#          venue_ig_id = venue_response.first.id
-#          venue_name = venue_response.first.name
-#          venue_lon_lat = [venue_response.first.longitude, venue_response.first.latitude]
-#          #get lat and lon
-#        rescue
-#          venue_retry += 1
-#          sleep (0.2 * venue_retry)
-#          retry if venue_retry < 3
-#          return :event => Event.make_fake_event("FAKE", "FAKE", venue_id, "", [0,0],
-#                                                  :description => "No Activity Found Here", :user_count => 0 )
-#        end
-#      end
-#       
-#      retry_attempt = 0 
-#
-#      begin
-#        body = ig_client.venue_media(venue_ig_id, :text => true)
-#        response = Hashie::Mash.new(JSON.parse(body))
-#      rescue
-#      
-#        if retry_attempt < 3
-#          retry_attempt += 1
-#          sleep 0.2 * retry_attempt
-#          retry
-#        else
-#          return nil 
-#        end
-#      end
-#
-#      photos = []
-#
-#      if response.data.count == 0
-#        return nil
-#      end
-#
-#      activity = Event.get_activity_message(:ig_media_list => response.data)
-#      
-#      description = activity[:message]
-#      user_count = activity[:user_count]
-#
-#      new_event = user_count >= 3 
-#
-#      new_event = false if venue && (venue.blacklist || (venue.categories && venue.categories.any? && venue.categories.first && CategoriesHelper.black_list[venue.categories.first["id"]]))
-#      
-#      photo_ids = []
-#      response.data.each do |photo|
-#        break if (user_count >= 1 && photo.created_time.to_i < 3.hours.ago.to_i)
-#        
-#        low_res = photo.images.low_resolution.is_a?(String) ?  photo.images.low_resolution :  photo.images.low_resolution.url
-#        stan_res = photo.images.standard_resolution.is_a?(String) ?  photo.images.standard_resolution :  photo.images.standard_resolution.url
-#        thum_res = photo.images.thumbnail.is_a?(String) ?  photo.images.thumbnail :  photo.images.thumbnail.url
-#
-#
-#        #have to fill in more info on these photos
-#        fake_photo = {:fake => true,
-#                      :url => [low_res, stan_res, thum_res],
-#                      :external_source => "ig",
-#                      :external_id => photo.id,
-#                      :time_taken => photo.created_time,
-#                      :caption => photo.caption,
-#                      }
-#        photos << OpenStruct.new(fake_photo)
-#        photo_ids << "ig|#{photo.id}"
-#      end
-#
-#      return Event.make_fake_event_detail(venue, photos)
-#    end
-#  end
+  def self.get_venue_event(venue_id, facebook_user)
+    venue = Venue.first(:conditions => {:id => venue_id})
+    event = nil
+    venue_ig_id = nil
+
+    if venue
+      
+      venue_ig_id = venue.ig_venue_id
+      venue_name = venue.name
+      venue_lon_lat = venue.coordinates
+    
+      event = venue.get_live_event
+    end
+
+    if event.nil?
+      #do i need to find the id?
+      if venue_ig_id.nil?
+        venue_retry = 0
+        begin 
+          venue_response = Instagram.location_search(nil, nil, :foursquare_v2_id => venue_id)
+          venue_ig_id = venue_response.first.id
+          venue_name = venue_response.first.name
+          venue_lon_lat = [venue_response.first.longitude, venue_response.first.latitude]
+
+          venue = OpenStruct.new({:id => venue_id,
+                                  :name => venue_name,
+                                  :coordinates => venue_lon_lat,
+                                  :ig_venue_id => venue_ig_id,
+                                  :neighborhood => "",
+                                  :category => "",
+                                  :address => {:lat => venue_lon_lat.last,
+                                               :lon => venue_lon_lat.first}
+          })
+
+
+          #get lat and lon
+        rescue
+          venue_retry += 1
+          sleep (0.2 * venue_retry)
+          retry if venue_retry < 3
+
+          venue = OpenStruct.new({:id => venue_id, :name => "", :coordinates => [0,0], :neighborhood => "", :category => "", :address => {}})
+          return Event.v3_make_fake_event_detail(venue, [],:custom_message => "Please try again later")
+        end
+      end
+       
+      retry_attempt = 0 
+
+      begin
+        response = Instagram.location_recent_media(venue_ig_id)
+      rescue
+      
+        if retry_attempt < 3
+          retry_attempt += 1
+          sleep 0.2 * retry_attempt
+          retry
+        else
+          return Event.v3_make_fake_event_detail(venue, [],:custom_message => "Please try again later")
+        end
+      end
+
+      photos = []
+
+      if response.nil? || response.data.nil? || response.data.count == 0
+        return Event.v3_make_fake_event_detail(venue, [],:custom_message => "No activity")
+      end
+
+      activity = Event.get_activity_message(:ig_media_list => response.data)
+      
+      description = activity[:message]
+      user_count = activity[:user_count]
+
+      new_event = user_count >= 3 
+
+      new_event = false if venue && (venue.blacklist || (venue.categories && venue.categories.any? && venue.categories.first && CategoriesHelper.black_list[venue.categories.first["id"]]))
+      
+      photo_ids = []
+      response.data.each do |photo|               
+        low_res = photo.images.low_resolution.is_a?(String) ?  photo.images.low_resolution :  photo.images.low_resolution.url
+        stan_res = photo.images.standard_resolution.is_a?(String) ?  photo.images.standard_resolution :  photo.images.standard_resolution.url
+        thum_res = photo.images.thumbnail.is_a?(String) ?  photo.images.thumbnail :  photo.images.thumbnail.url
+
+        #have to fill in more info on these photos
+        fake_photo = {:fake => true,
+                      :url => [low_res, stan_res, thum_res],
+                      :external_source => "ig",
+                      :external_id => photo.id,
+                      :time_taken => photo.created_time.to_i,
+                      :caption => photo.caption,
+                      :user_details => [photo.user.username, photo.user.profile_picture, photo.user.full_name, photo.user.id],
+                      :has_vine => false,
+                      :now_likes => 0,
+                      :user => OpenStruct.new({})
+                      }
+        photos << OpenStruct.new(fake_photo)
+        photo_ids << "ig|#{photo.id}"
+      end
+
+      return Event.v3_make_fake_event_detail(venue, photos)
+    end
+  end
 end
 

@@ -10,15 +10,21 @@ class EventDetailBlock
 
   def self.get_blocks(event, user)
 
-    photos = event.photos.order_by([[:likes, :desc],[:time_taken, :desc]]).entries
+    photos = if event.photos.is_a?(Array)
+               event.photos.sort_by{|photo| photo.time_taken}.reverse
+             else
+               event.photos.order_by([[:likes, :desc],[:time_taken, :desc]]).entries
+             end
+
+
 
     photo_card = OpenStruct.new({:type => BLOCK_CARD, :block => nil})
 
-    #for debugging
-    
-    checkin = Checkin.where(:description.ne => " ", :created_at.gt => 1.month.ago).first
-
-    comments = event.checkins.order_by([[:created_at, :asc]]).map {|ci| self.comment(ci.get_comment_hash)}
+    comments = if event.checkins.is_a?(Array)
+                 []
+               else
+                event.checkins.order_by([[:created_at, :asc]]).map {|ci| self.comment(ci.get_comment_hash)}
+               end
 
     user_entries = photos.map{|photo| self.user_entry(photo)}.reject{|user| user.photo.nil?}.uniq{|user| user.photo}
 

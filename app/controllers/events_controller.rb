@@ -13,12 +13,12 @@ class EventsController < ApplicationController
     end
     
     if params[:venue]
-      @event = Event.last
-      #@event = EventTools.get_venue_event(params[:id], @requesting_user)
+#      @event = Event.last
+      @event = EventsTools.get_venue_event(params[:id], @requesting_user)
     else
       @event = Event.find(params[:id])
     end
-    EventsHelper.get_event_cards([@event])
+    EventsHelper.get_event_cards([@event]) unless @event.fake
 
     @blocks = EventDetailBlock.get_blocks(@event,@requesting_user)
 

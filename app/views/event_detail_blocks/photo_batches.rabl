@@ -1,6 +1,6 @@
 object @photobatch 
 attributes :timestamp
 
-child(:photos) do |u|
+child(:photos => :photos) do |u|
   extends "photos/showless"
 end
