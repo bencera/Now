@@ -141,12 +141,12 @@ class EventsTools
                                     :coordinates => venue_lon_lat,
                                     :ig_venue_id => venue_ig_id,
                                     :neighborhood => "",
-                                    :categories => [{:name => ""}],
+                                    :categories => [{"name" => ""}],
                                     :address => {:lat => venue_lon_lat.last,
                                                  :lon => venue_lon_lat.first}
             })
           else
-            venue = OpenStruct.new({:id => venue_id, :name => "", :coordinates => [0,0], :neighborhood => "", :categories => [{:name => ""}], :address => {}})
+            venue = OpenStruct.new({:id => venue_id, :name => "", :coordinates => [0,0], :neighborhood => "", :categories => [{"name" => ""}], :address => {}})
             return Event.v3_make_fake_event_detail(venue, [],:custom_message => "Please try again later")
           end
 
@@ -157,7 +157,7 @@ class EventsTools
           sleep (0.2 * venue_retry)
           retry if venue_retry < 3
 
-          venue = OpenStruct.new({:id => venue_id, :name => "", :coordinates => [0,0], :neighborhood => "", :categories => [{:name => ""}], :address => {}})
+          venue = OpenStruct.new({:id => venue_id, :name => "", :coordinates => [0,0], :neighborhood => "", :categories => [{"name" => ""}], :address => {}})
           return Event.v3_make_fake_event_detail(venue, [],:custom_message => "Please try again later")
         end
       end
