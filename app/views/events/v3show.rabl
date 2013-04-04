@@ -1,5 +1,9 @@
 object @event => :event
-attributes :id, :coordinates, :description
+attributes :id, :coordinates, :end_time
+
+node(:description) do |u|
+  u.get_description 
+end
 
 child(@blocks => "blocks") do
   extends("event_detail_blocks/block", :object_root => "block")
