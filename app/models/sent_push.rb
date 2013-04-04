@@ -93,10 +93,9 @@ class SentPush < ActiveRecord::Base
       next if !now_profile.notify_like && !now_profile.notify_photos && !now_profile.notify_reply && !now_profile.notify_views
       next if (options[:type] == TYPE_FRIEND && now_profile && !now_profile.notify_friends) ||
               (options[:type] == TYPE_COMMENT && now_profile && !now_profile.notify_reply) ||
-              (options[:type] == TYPE_WORLD && now_profile && !now_profile.notify_world) ||
-              (options[:type] == TYPE_LOCAL && now_profile && !now_profile.notify_local) ||
-              (options[:type] == TYPE_LOCAL && now_profile && !now_profile.notify_local) ||
-              (options[:type] == TYPE_LOCAL && now_profile && !now_profile.notify_local) 
+              (options[:type] == TYPE_WORLD_EVENT && now_profile && !now_profile.notify_world) ||
+              (options[:type] == TYPE_FOF && now_profile && !now_profile.notify_fof) ||
+              (options[:type] == TYPE_SELF && now_profile && !now_profile.notify_self) 
 
       #next if fb_user == event.facebook_user
 #        next if !(["1", "2", "359"].include?(fb_user.now_id))
