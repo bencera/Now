@@ -89,7 +89,10 @@ class PersonalizeEvents
               break if (previous_push_count > 3) && (significance_hash[:activity] < 1)
                 
               message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}. #{significance_hash[:message]}"
-              SentPush.notify_users(message, event.id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION", :test => true, :first_batch => true)
+
+              SentPush.notify_users(message, event.id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION", 
+                                    :type => SentPush::TYPE_FRIEND, :first_batch => true, 
+                                    :user_name => vw.trigger_media_fullname, :user_photo => vw.trigger_media_profile_photo)
               
               Rails.logger.info("SENDING MESSAGE '#{message}' to user #{ig_user.now_id}")
               vw.event_significance = significance_hash[:activity]
