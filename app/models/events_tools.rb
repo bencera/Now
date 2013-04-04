@@ -122,7 +122,10 @@ class EventsTools
       event = venue.get_live_event
     end
 
-    if event.nil?
+    if event
+      return event
+    else
+
       #do i need to find the id?
       if venue_ig_id.nil?
         venue_retry = 0
@@ -206,8 +209,9 @@ class EventsTools
         photo_ids << "ig|#{photo.id}"
       end
 
-      return Event.v3_make_fake_event_detail(venue, photos)
+      return Event.v3_make_fake_event_detail(venue, photos, :custom_message => description)
     end
+
   end
 end
 
