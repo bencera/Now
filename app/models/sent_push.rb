@@ -20,14 +20,55 @@
 
 class SentPush < ActiveRecord::Base
 
+  #notification tray types
   TYPE_FRIEND = "friend"
   TYPE_WORLD_EVENT = "world"
   TYPE_LOCAL_EVENT = "local"
   TYPE_COMMENT = "comment"
 
+  #other notification types
+  TYPE_FOF = "fof"
+  TYPE_SELF = "self"
+
+  TRAY_NOTIFICATIONS = [TYPE_FRIEND, TYPE_WORLD_EVENT, TYPE_LOCAL_EVENT, TYPE_COMMENT]
+
   attr_accessible :event_id, :opened_event, :sent_time, :user_id, :facebook_user_id, :message, :user_count, :udid, :reengagement, :failed, :ab_test_id, :is_a
 
   has_many :event_opens
+
+  def self.do_local_push(message, event, devices)
+    i = 0 
+    wait_time = 50.seconds
+
+    ignore_devices = []
+
+    device_groups = [[]]
+
+    devices.each do |device|
+      next if ignore_devices.include?(device.udid)
+      if device_groups.last.count >= 100
+        device_groups << []
+      end
+      device_groups.last << device.id
+    end
+ 
+    event_id = event.id.to_s
+
+    first_batch = true
+    total_count = devices.count
+
+    device_groups.each do |device_group|
+      Resque.enqueue_in((i * wait_time), SendBatchPush2, 
+                        {:message => message, :event_id => event_id, :device_ids => device_group, 
+                         :first_batch => first_batch, :total_count => total_count, :type => SentPush::TYPE_LOCAL_EVENT}.inspect)
+      i += 1
+      first_batch = false
+    end; puts ""
+  end
+
+  def self.do_world_push(message, event)
+
+  end
   
   def self.notify_users(message, event_id, device_ids, fb_user_ids, options={})
 
@@ -36,22 +77,35 @@ class SentPush < ActiveRecord::Base
     devices_notified = []
     fb_users_notified = []
 
+    failed_devs = []
+    failed_users = []
+
     fb_users = FacebookUser.where(:_id.in => fb_user_ids).entries
 
     event = Event.find(event_id)
 
     fb_users.each do |fb_user|
 
-      now_profile = fb_user.now_profile
-      next if !now_profile.notify_like && !now_profile.notify_photos && !now_profile.notify_reply && !now_profile.notify_views
 
-      next if fb_user == event.facebook_user
+      now_profile = fb_user.now_profile
+
+      #need to clean this up...
+      next if !now_profile.notify_like && !now_profile.notify_photos && !now_profile.notify_reply && !now_profile.notify_views
+      next if (options[:type] == TYPE_FRIEND && now_profile && !now_profile.notify_friends) ||
+              (options[:type] == TYPE_COMMENT && now_profile && !now_profile.notify_reply) ||
+              (options[:type] == TYPE_WORLD && now_profile && !now_profile.notify_world) ||
+              (options[:type] == TYPE_LOCAL && now_profile && !now_profile.notify_local) ||
+              (options[:type] == TYPE_LOCAL && now_profile && !now_profile.notify_local) ||
+              (options[:type] == TYPE_LOCAL && now_profile && !now_profile.notify_local) 
+
+      #next if fb_user == event.facebook_user
 #        next if !(["1", "2", "359"].include?(fb_user.now_id))
       begin 
         Rails.logger.info("notifying #{fb_user.now_id}")
         fb_user.send_notification(message, event_id.to_s)
         fb_users_notified.push(fb_user.id.to_s)
       rescue
+        failed_users << fb_user
         next
       end
     end
@@ -76,6 +130,7 @@ class SentPush < ActiveRecord::Base
         end
         devices_notified.push(device.udid)
       rescue
+        failed_devs << device
         next
       end
 
@@ -83,8 +138,9 @@ class SentPush < ActiveRecord::Base
 
     fb_users.each do |fb_user|
       fb_user_id = fb_user.id.to_s
-      
-      next if !fb_users_notified.include?(fb_user_id)
+
+      #should try to log if it didn't successfully send
+      was_sent = !fb_users_notified.include?(fb_user_id) 
 
       next if fb_user_id == event.facebook_user.id.to_s
       sp = SentPush.create(:facebook_user_id => fb_user_id.to_s, 
@@ -98,7 +154,7 @@ class SentPush < ActiveRecord::Base
                       :is_a => options[:is_a]
                      )
 
-      if options[:type]
+      if TRAY_NOTIFICATIONS.include?(options[:type])
         fb_user.add_notification(sp, options)
         fb_user.save!
       end

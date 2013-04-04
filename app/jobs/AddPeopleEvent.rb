@@ -296,25 +296,15 @@ class AddPeopleEvent
         check_in_event.save!
 
         devices = APN::Device.where(:coordinates.within => {"$center" => [check_in_event.coordinates,  33.0/111]}).entries
-        device_groups = [[]]
+        message = "#{check_in_event.description} @ #{check_in_event.venue.name}"
 
-        devices.each do |device|
-          if device_groups.last.count >= 100
-            device_groups << []
-          end
-          device_groups.last << device.id
-        end
+        SentPush.do_local_push(message, check_in_event, devices)
 
-        device_groups.each do |device_group|
-          Resque.enqueue(SendBatchPush, check_in_event.id, device_group)
-        end
-
-
-        message_to_admins = "PUSHING #{check_in_event.description} @ #{check_in_event.venue.name} to #{devices.count} devices"
+        message_to_admins = "PUSHING #{message} to #{devices.count} devices"
         users_to_notify = FacebookUser.where(:now_id.in => ["1", "2", "359"])
         users_to_notify.each {|fb_user| fb_user.send_notification(message_to_admins, check_in_event.id) }
         
-        SentPush.batch_push(SendBatchPush.get_message(check_in_event), check_in_event.id.to_s, devices.count)
+        #SentPush.batch_push(SendBatchPush.get_message(check_in_event), check_in_event.id.to_s, devices.count)
         
       when "#delphoto"
         indices_to_delete = commands[1..-1].map {|photo| photo.to_i}
