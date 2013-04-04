@@ -131,19 +131,24 @@ class EventsTools
         venue_retry = 0
         begin 
           venue_response = Instagram.location_search(nil, nil, :foursquare_v2_id => venue_id)
-          venue_ig_id = venue_response.first.id
-          venue_name = venue_response.first.name
-          venue_lon_lat = [venue_response.first.longitude, venue_response.first.latitude]
+          if venue_response.any?
+            venue_ig_id = venue_response.first.id
+            venue_name = venue_response.first.name
+            venue_lon_lat = [venue_response.first.longitude, venue_response.first.latitude]
 
-          venue = OpenStruct.new({:id => venue_id,
-                                  :name => venue_name,
-                                  :coordinates => venue_lon_lat,
-                                  :ig_venue_id => venue_ig_id,
-                                  :neighborhood => "",
-                                  :category => "",
-                                  :address => {:lat => venue_lon_lat.last,
-                                               :lon => venue_lon_lat.first}
-          })
+            venue = OpenStruct.new({:id => venue_id,
+                                    :name => venue_name,
+                                    :coordinates => venue_lon_lat,
+                                    :ig_venue_id => venue_ig_id,
+                                    :neighborhood => "",
+                                    :categories => [{:name => ""}],
+                                    :address => {:lat => venue_lon_lat.last,
+                                                 :lon => venue_lon_lat.first}
+            })
+          else
+            venue = OpenStruct.new({:id => venue_id, :name => "", :coordinates => [0,0], :neighborhood => "", :categories => [{:name => ""}], :address => {}})
+            return Event.v3_make_fake_event_detail(venue, [],:custom_message => "Please try again later")
+          end
 
 
           #get lat and lon
@@ -152,7 +157,7 @@ class EventsTools
           sleep (0.2 * venue_retry)
           retry if venue_retry < 3
 
-          venue = OpenStruct.new({:id => venue_id, :name => "", :coordinates => [0,0], :neighborhood => "", :category => "", :address => {}})
+          venue = OpenStruct.new({:id => venue_id, :name => "", :coordinates => [0,0], :neighborhood => "", :categories => [{:name => ""}], :address => {}})
           return Event.v3_make_fake_event_detail(venue, [],:custom_message => "Please try again later")
         end
       end
