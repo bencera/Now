@@ -13,7 +13,7 @@ class EventDetailBlock
     photos = if event.photos.is_a?(Array)
                event.photos.sort_by{|photo| photo.time_taken}.reverse
              else
-               event.photos.order_by([[:likes, :desc],[:time_taken, :desc]]).entries
+               event.photos.order_by([[:now_likes, :desc],[:time_taken, :desc]]).entries
              end
 
 
@@ -68,7 +68,9 @@ class EventDetailBlock
       title = group[:title]
     
       while group[:photos].any?
-        batch_size = batch_sizes.sample
+        photo = group[:photos].first
+
+        batch_size = (photo.has_vine || photo.now_likes.to_i > 0) ? 1 : batch_sizes.sample
         batch = group[:photos].shift(batch_size)
         timestamp = batch.first.time_taken
 
