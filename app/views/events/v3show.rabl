@@ -1,4 +1,4 @@
-object @event
+object @event => :event
 attributes :id, :coordinates, :description
 
 child(@blocks => "blocks") do
