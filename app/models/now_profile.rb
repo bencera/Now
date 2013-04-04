@@ -22,6 +22,21 @@ class NowProfile
   field :notify_photos, type: Boolean, default: true
   field :notify_local, type: Boolean, default: true
 
+  ### v3 settings are: 
+  # Friend at trending place -- :notify_friends
+  # I'm at a trending place -- :notify_self
+  # Someone I may know here -- :notify_fof (friend of friend)
+  # Something cool nearby -- :notify_local (already exists)
+  # Comment on the place i'm at -- :notify_reply (already exists)
+  # Something cool in the world -- :notify_world 
+
+  field :notify_friends,  type: Boolean, default: true
+  field :notify_self,  type: Boolean, default: true
+  field :notify_fof,  type: Boolean, default: true
+  field :notify_world,  type: Boolean, default: true
+
+  #### notify friends, self-trending, someone_i_may_know, worl
+
   field :share_to_fb_timeline, type: Boolean, default: false
   field :pass_ig_likes, type: Boolean, default: true
   field :personalize_ig_feed, type: Boolean, default: false

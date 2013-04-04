@@ -28,6 +28,12 @@ class NowUsersController < ApplicationController
       new_values[:pass_ig_likes] = params[:pass_ig_likes] if params[:pass_ig_likes]
       new_values[:personalize_ig_feed] = params[:personalize_ig_feed] if params[:personalize_ig_feed]
 
+      #v3
+      new_values[:notify_friends] = params[:notify_friends] if params[:notify_friends]
+      new_values[:notify_self] = params[:notify_self] if params[:notify_self]
+      new_values[:notify_fof] = params[:notify_fof] if params[:notify_fof]
+      new_values[:notify_world] = params[:notify_world] if params[:notify_world]
+
 
       @now_user.update_now_profile(new_values)
     else

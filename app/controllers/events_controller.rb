@@ -18,7 +18,7 @@ class EventsController < ApplicationController
     else
       @event = Event.find(params[:id])
     end
-    EventsHelper.get_event_cards([@event]) unless @event.nil || @event.fake
+    EventsHelper.get_event_cards([@event]) unless @event.nil? || @event.fake
 
     @blocks = EventDetailBlock.get_blocks(@event,@requesting_user)
 
