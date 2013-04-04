@@ -280,7 +280,7 @@ class WatchVenue
             message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}. #{significance_hash[:message]}"
             SentPush.notify_users(message, event_id.to_s, [], [ig_user.id.to_s],
                                   :ab_test_id => "PERSONALIZATION", :type => SentPush::TYPE_FRIEND, 
-                                  :reactor_name => vw.trigger_media_fullname, :user_photo => vw.trigger_media_profile_photo)
+                                  :user_name => vw.trigger_media_fullname, :user_photo => vw.trigger_media_profile_photo)
             vw.event_significance = significance_hash[:activity]
           end
           
