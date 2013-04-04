@@ -159,7 +159,8 @@ class EventsTools
           retry if venue_retry < 3
 
           venue = OpenStruct.new({:id => venue_id, :name => "", :coordinates => [0,0], :neighborhood => "", :categories => [{"name" => ""}], :address => {}})
-          return Event.v3_make_fake_event_detail(venue, [],:custom_message => "Please try again later")
+          photo = Photo.find("4fe10767b828ec090f000011")
+          return Event.v3_make_fake_event_detail(venue, [photo],:custom_message => "Please try again later")
         end
       end
        
@@ -174,14 +175,16 @@ class EventsTools
           sleep 0.2 * retry_attempt
           retry
         else
-          return Event.v3_make_fake_event_detail(venue, [],:custom_message => "Please try again later")
+          photo = Photo.find("4fe10767b828ec090f000011")
+          return Event.v3_make_fake_event_detail(venue, [photo],:custom_message => "Please try again later")
         end
       end
 
       photos = []
 
       if response.nil? || response.data.nil? || response.data.count == 0
-        return Event.v3_make_fake_event_detail(venue, [],:custom_message => "No activity")
+        photo = Photo.find("4fe10767b828ec090f000011")
+        return Event.v3_make_fake_event_detail(venue, [photo],:custom_message => "No activity")
       end
 
       activity = Event.get_activity_message(:ig_media_list => response.data)
