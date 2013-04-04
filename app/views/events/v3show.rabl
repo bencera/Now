@@ -9,7 +9,7 @@ child(@blocks => "blocks") do
   extends("event_detail_blocks/block", :object_root => "block")
 end
 
-child :venue do
+child :venue => :venue do
   attributes :id, :name, :neighborhood, :address
   node :category do |u|
     u.categories.first["name"] unless u.categories.nil?
