@@ -23,12 +23,7 @@ class UserNotification
   def get_notifications
     self.new_notifications = 0
     self.save
-    #debug
-    #
     self.notifications.map{|notification| OpenStruct.new(eval notification)}
-
-#    self.notifications.map{|notification| x = eval notification; x[:reactor_photo_url] = "http://images.instagram.com/profiles/profile_618031_75sq_1363255067.jpg"; x[:reactor_name] = "Some Bitch"; x[:reaction_type] = [ "friend", "world", "local", "comment"].sample; OpenStruct.new(x)}
-    
 
     
   end
