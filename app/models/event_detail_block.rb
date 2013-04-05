@@ -21,7 +21,7 @@ class EventDetailBlock
     photo_card = OpenStruct.new({:type => BLOCK_CARD, :block => nil})
 
     comments = if event.checkins.is_a?(Array)
-                 []
+                 event.checkins.map {|ci| self.comment(ci.get_comment_hash)}
                else
                 event.checkins.order_by([[:created_at, :asc]]).map {|ci| self.comment(ci.get_comment_hash)}
                end
