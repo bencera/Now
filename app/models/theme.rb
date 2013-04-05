@@ -3,8 +3,9 @@ class Theme
     $redis.smembers("THEME_#{theme_id}_EXP_LIST")
   end
 
-  def self.index()
-    theme_ids = $redis.lrange("NOW_THEMES",0,4)
+  def self.index(options={})
+    n_themes = options[:all] ? $redis.llen("NOW_THEMES") - 1 : 4
+    theme_ids = $redis.lrange("NOW_THEMES",0, n_themes)
 
     themes = []
 
