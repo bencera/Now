@@ -65,7 +65,7 @@ class EventsController < ApplicationController
     elsif params[:world]
       results = EventsTools.get_world_events
     elsif params[:vine]
-      results = {:events => Event.limit(20).where(:has_vine => true).entries }
+      results = {:events => Event.limit(20).where(:has_vine => true).order_by([[:end_time, :desc]]).entries }
     end
 
     @meta_data = results[:meta] || {}
