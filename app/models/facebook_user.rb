@@ -293,10 +293,10 @@ class FacebookUser
       profile[:notify_local] = self.now_profile.notify_local
       profile[:share_to_fb_timeline] = self.now_profile.share_to_fb_timeline
 
-      profile[:notify_friends] = self.notify_friends
-      profile[:notify_self] = self.notify_self
-      profile[:notify_fof] = self.notify_fof
-      profile[:notify_world] = self.notify_world
+      profile[:notify_friends] = self.now_profile.notify_friends
+      profile[:notify_self] = self.now_profile.notify_self
+      profile[:notify_fof] = self.now_profile.notify_fof
+      profile[:notify_world] = self.now_profile.notify_world
     end
     
     return profile
