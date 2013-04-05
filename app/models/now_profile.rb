@@ -24,6 +24,7 @@ class NowProfile
 
   ### v3 settings are: 
   # Friend at trending place -- :notify_friends
+  # Friend at trending place locally -- :notify_friends_local
   # I'm at a trending place -- :notify_self
   # Someone I may know here -- :notify_fof (friend of friend)
   # Something cool nearby -- :notify_local (already exists)
@@ -31,6 +32,7 @@ class NowProfile
   # Something cool in the world -- :notify_world 
 
   field :notify_friends,  type: Boolean, default: true
+  field :notify_friends_local,  type: Boolean, default: true
   field :notify_self,  type: Boolean, default: true
   field :notify_fof,  type: Boolean, default: true
   field :notify_world,  type: Boolean, default: true

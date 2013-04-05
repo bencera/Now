@@ -295,6 +295,7 @@ class FacebookUser
       profile[:personalize_ig_feed] = self.now_profile.personalize_ig_feed
 
       profile[:notify_friends] = self.now_profile.notify_friends
+      profile[:notify_friends_local] = self.now_profile.notify_friends_local
       profile[:notify_self] = self.now_profile.notify_self
       profile[:notify_fof] = self.now_profile.notify_fof
       profile[:notify_world] = self.now_profile.notify_world

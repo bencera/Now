@@ -30,6 +30,7 @@ class NowUsersController < ApplicationController
 
       #v3
       new_values[:notify_friends] = params[:notify_friends] if params[:notify_friends]
+      new_values[:notify_friends_local] = params[:notify_friends_local] if params[:notify_friends_local]
       new_values[:notify_self] = params[:notify_self] if params[:notify_self]
       new_values[:notify_fof] = params[:notify_fof] if params[:notify_fof]
       new_values[:notify_world] = params[:notify_world] if params[:notify_world]
