@@ -44,10 +44,11 @@ class EventDetailBlock
   end
 
   def self.user_entry(photo)
-    return OpenStruct.new({:username => photo.user_details[0],
-                            :user_full_name => photo.user_details[2],
-                            :photo => photo.user_details[1],
-                            :user_id => -1 })
+    #return OpenStruct.new({:username => photo.user_details[0],
+    #                        :user_full_name => photo.user_details[2],
+    #                        :photo => photo.user_details[1],
+    #                        :user_id => -1 })
+    return photo
   end
 
   def self.group_users(user_entries)
