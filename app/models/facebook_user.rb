@@ -292,6 +292,7 @@ class FacebookUser
       profile[:notify_views] = self.now_profile.notify_views
       profile[:notify_local] = self.now_profile.notify_local
       profile[:share_to_fb_timeline] = self.now_profile.share_to_fb_timeline
+      profile[:personalize_ig_feed] = self.now_profile.personalize_ig_feed
 
       profile[:notify_friends] = self.now_profile.notify_friends
       profile[:notify_self] = self.now_profile.notify_self
