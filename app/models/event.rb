@@ -147,6 +147,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   #dont want to search for vines too often
   field :last_vine_update
   field :has_vine, :type => Boolean, :default => false
+  field :vine_block, :type => Boolean, :default => false
 
   #this is used to keep verifying live photos for events that are getting viewed
   field :last_verify

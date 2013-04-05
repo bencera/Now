@@ -13,6 +13,12 @@ class UserComment
       message = params[:message]
       event = Event.find(params[:event_id])
 
+      #check hashcommands
+
+      message = HashCommand.check_and_execute(message, user, event)
+      
+      return if message.nil? || message.blank?
+
       checkin = event.checkins.new
 
       checkin.description = message
@@ -25,6 +31,7 @@ class UserComment
       checkin.save!
     rescue
       Resque.enqueue_in(15.seconds, UserComment, params.inspect) if params[:retry_attempt] < 5
+      raise
     end
   end
 end
