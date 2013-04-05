@@ -78,7 +78,7 @@ class EventsController < ApplicationController
 
       if @heat.any?
         @meta_data[:heat_map] = "on"
-        @meta_data[:heat_results_max] = @heat.max_by(|heat| heat.value)
+        @meta_data[:heat_results_max] = @heat.max_by{|heat| heat.value}
 
         heat_world_max = $redis.get("HEAT_WORLD_MAX") || 250
         @meta_data[:heat_world_max] = heat_world_max.to_i
