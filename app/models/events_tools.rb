@@ -29,9 +29,16 @@ class EventsTools
     event_query = Event.limit(100).where(:coordinates.within => {"$center" => [lon_lat, max_dist]})
     
     if scope == "friends"
+      if facebook_user.nil?
+        return {:events => [], :meta => {:heat_map => "off"}}
+      end
+
       personalized_event_ids = facebook_user.get_personalized_event_ids()
       event_query = event_query.where(:_id.in => personalized_event_ids)
     elsif scope == "saved"
+      if facebook_user.nil?
+        return {:events => [], :meta => {:heat_map => "off"}}
+      end
       facebook_user_id = facebook_user.facebook_id || facebook_user.id.to_s
       shortids = $redis.smembers("liked_events:#{facebook_user_id}")
       event_query = event_query.where(:shortid.in => shortids) 
