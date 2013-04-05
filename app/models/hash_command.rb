@@ -41,7 +41,7 @@ class HashCommand
     
     admin = facebook_user.admin_user 
     super_user = facebook_user.super_user
-    owner = fb_user.admin_user || fb_user == check_in_event.facebook_user
+    owner =  facebook_user == check_in_event.facebook_user
 
     valid_command = ALL_FUNCTIONS.include?(command)
     authorized = admin ? ADMIN_FUNCTIONS.include?(command) : (super_user ? SU_FUNCTIONS.include?(command) : (owner && OWNER_FUNCTIONS.include?(command)))
