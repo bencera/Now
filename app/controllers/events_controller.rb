@@ -72,7 +72,20 @@ class EventsController < ApplicationController
     @events = results[:events] || []
     @heat = results[:heat_entries] || []
 
-    @meta_data[:heat_map] ||= "off"
+    if @heat.empty?
+      #make a heatmap for now events
+      @events.each {|event| @heat.push(OpenStruct.new({:coordinates => event.coordinates, :value => event.n_reactions})) if Event::TRENDING_STATUSES.include?(event.status)}
+
+      if @heat.any?
+        @meta_data[:heat_map] = "on"
+        @meta_data[:heat_results_max] = @heat.max_by(|heat| heat.value)
+
+        heat_world_max = $redis.get("HEAT_WORLD_MAX") || 250
+        @meta_data[:heat_world_max] = heat_world_max.to_i
+      else
+        @meta_data[:heat_map] = "off"
+      end
+    end
 
     EventsHelper.personalize_events(@events, @user) if @user 
     EventsHelper.get_event_cards(@events)
