@@ -16,7 +16,19 @@ class TrendingPeople
       events.each do |event|
         #if the event began today, we can keep trending it, otherwise, it's done
         if event.began_today2?(current_time) && event.end_time > 3.hours.ago.to_i
-          event.fetch_and_add_photos(current_time)
+
+          vw = VenueWatch.where("created_at > ? AND venue_ig_id = ?", 1.day.ago, event.venue.ig_venue_id).last
+          if vw
+            user = FacebookUser.where(:now_id => vw.user_now_id).first
+
+            if user.ig_accesstoken
+              event.fetch_and_add_photos(current_time, :override_token => user.ig_accesstoken)            
+            else
+              event.fetch_and_add_photos(current_time) 
+            end
+          else
+            event.fetch_and_add_photos(current_time) 
+          end
           event.venue.notify_subscribers(event)
         else
           event.untrend
