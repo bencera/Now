@@ -10,7 +10,7 @@ class EventsTools
         events = Event.limit(20).where(:facebook_user_id => fb_user.id).order_by([[:end_time, :desc]]).entries
       end
     end
-    return events
+    return {:events => events}
   end
 
    

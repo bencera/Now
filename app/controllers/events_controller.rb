@@ -67,6 +67,8 @@ class EventsController < ApplicationController
       results = EventsTools.get_world_events
     elsif params[:vine]
       results = {:events => Event.limit(20).where(:has_vine => true).order_by([[:end_time, :desc]]).entries }
+    elsif params[:created_by]
+      results = EventsTools.get_user_created_or_reposted(@user)
     end
 
     @meta_data = results[:meta] || {}
