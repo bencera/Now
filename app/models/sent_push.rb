@@ -42,14 +42,25 @@ class SentPush < ActiveRecord::Base
 
     ignore_devices = []
 
+    fb_users = devices.uniq {|device| device.facebook_user_id}.map {|device| device.facebook_user}.compact
+    other_devices = devices.reject {|device| device.facebook_user_id}
+
+
     device_groups = [[]]
 
-    devices.each do |device|
+    other_devices.each do |device|
       next if ignore_devices.include?(device.udid)
       if device_groups.last.count >= 100
         device_groups << []
       end
       device_groups.last << device.id
+    end
+
+
+    fb_user_groups = [[]]
+    fb_users.each do |fb_user|
+      fb_user_groups.last << fb_user.id.to_s
+      fb_user_groups.push([]) if fb_user_groups.last.count >= 100
     end
  
     event_id = event.id.to_s
@@ -58,8 +69,16 @@ class SentPush < ActiveRecord::Base
     total_count = devices.count
 
     device_groups.each do |device_group|
-      Resque.enqueue_in((i * wait_time), SendBatchPush2, 
+      Resque.enqueue_in((i * wait_time), SendBatchPush3, 
                         {:message => message, :event_id => event_id, :device_ids => device_group, 
+                         :first_batch => first_batch, :total_count => total_count, :type => SentPush::TYPE_LOCAL_EVENT}.inspect)
+      i += 1
+      first_batch = false
+    end; puts ""
+
+    fb_user_groups do |user_group|
+      Resque.enqueue_in((i * wait_time), SendBatchPush3, 
+                        {:message => message, :event_id => event_id, :facebook_user_ids => user_group, 
                          :first_batch => first_batch, :total_count => total_count, :type => SentPush::TYPE_LOCAL_EVENT}.inspect)
       i += 1
       first_batch = false
@@ -68,6 +87,88 @@ class SentPush < ActiveRecord::Base
 
   def self.do_world_push(message, event)
 
+  end
+
+  def self.notify_user(message. event_id, fb_user, options={})
+
+    now_profile = fb_user.now_profile
+
+    failed = false
+
+    blocked = false
+
+    if !now_profile.notify_like && !now_profile.notify_photos && !now_profile.notify_reply && !now_profile.notify_views
+      blocked = true
+    end
+    
+    if (options[:type] == TYPE_FRIEND && now_profile && !now_profile.notify_friends) ||
+              (options[:type] == TYPE_COMMENT && now_profile && !now_profile.notify_reply) ||
+              (options[:type] == TYPE_WORLD_EVENT && now_profile && !now_profile.notify_world) ||
+              (options[:type] == TYPE_FOF && now_profile && !now_profile.notify_fof) ||
+              (options[:type] == TYPE_SELF && now_profile && !now_profile.notify_self) 
+      blocked = true
+    end
+
+    begin 
+      Rails.logger.info("notifying #{fb_user.now_id}")
+      fb_user.send_notification(message, event_id.to_s) unless options[:test] || blocked
+    rescue
+      failed = true
+    end
+
+
+    sp = SentPush.create(:facebook_user_id => fb_user.id.to_s, 
+                        :event_id => event_id.to_s, 
+                        :message => message, 
+                        :sent_time => Time.now, 
+                        :opened_event => false, 
+                        :reengagement => options[:reengagement], 
+                        :user_count => options[:test] ? -1 : 1,
+                        :ab_test_id => options[:ab_test_id],
+                        :is_a => options[:is_a],
+                        :failed => failed)
+
+                     
+
+    if TRAY_NOTIFICATIONS.include?(options[:type])
+      fb_user.add_notification(sp, options)
+      fb_user.save!
+    end
+  end
+
+  #not supposed to send to device directly -- send to fb user
+  def self.notify_device(message, event_id, device, options={})
+    return if device.facebook_user
+
+    failed = false
+
+    begin
+      if !options[:test]
+        device.subscriptions.each do |subscription|
+          n = APN::Notification.new
+          n.subscription = subscription
+          n.alert = message
+          n.event = event_id 
+          n.deliver
+        end
+      end
+    rescue 
+      failed = true
+    end
+
+
+    SentPush.create(:udid => device.udid.to_s, 
+                    :event_id => event_id.to_s, 
+                    :message => message, 
+                    :sent_time => Time.now, 
+                    :opened_event => false, 
+                    :reengagement => false, 
+                    :user_count => options[:test] ? -1 : 1,
+                    :ab_test_id => options[:ab_test_id],
+                    :is_a => options[:is_a],
+                    :failed => failed
+                   )
+    
   end
   
   def self.notify_users(message, event_id, device_ids, fb_user_ids, options={})
