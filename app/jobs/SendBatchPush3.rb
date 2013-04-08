@@ -18,19 +18,19 @@ class SendBatchPush3
     type = params[:type] 
 
     event = Event.find(event_id)
-    devices = APN::Device.find(device_ids)
-    users = APN::Device.where(:now_id.in => user_ids) if user_ids
+    devices = device_ids ? APN::Device.find(device_ids) : []
+    users = user_ids ? FacebookUser.where(:_id.in => user_ids) : []
 
     return if event.nil?
 
-    users.each {|fb_user| SentPush.notify_user(message. event_id, fb_user, :type => type, 
+    users.each {|fb_user| SentPush.notify_user(message, event_id, fb_user, :type => type, 
                                                :ab_test_id => ab_test_id, :is_a => is_a,
-                                               :reengagement => options[:reengagement],
+                                               :reengagement => reengagement,
                                                :test => test)}
 
-    devices.each {|device| SentPush.notify_device(message. event_id, device, :type => type, 
+    devices.each {|device| SentPush.notify_device(message, event_id, device, :type => type, 
                                                   :ab_test_id => ab_test_id, :is_a => is_a,
-                                                  :reengagement => options[:reengagement],
+                                                  :reengagement => reengagement,
                                                   :test => test)}
 
   end

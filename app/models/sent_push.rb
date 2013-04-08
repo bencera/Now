@@ -42,7 +42,7 @@ class SentPush < ActiveRecord::Base
 
     ignore_devices = []
 
-    fb_users = devices.uniq {|device| device.facebook_user_id}.map {|device| device.facebook_user}.compact
+    fb_users = devices.uniq_by {|device| device.facebook_user_id}.map {|device| device.facebook_user}.compact
     other_devices = devices.reject {|device| device.facebook_user_id}
 
 
@@ -70,7 +70,7 @@ class SentPush < ActiveRecord::Base
 
     device_groups.each do |device_group|
       Resque.enqueue_in((i * wait_time), SendBatchPush3, 
-                        {:message => message, :event_id => event_id, :device_ids => device_group, 
+                        {:message => message, :event_id => event_id.to_s, :device_ids => device_group, 
                          :first_batch => first_batch, :total_count => total_count, :type => SentPush::TYPE_LOCAL_EVENT}.inspect)
       i += 1
       first_batch = false
