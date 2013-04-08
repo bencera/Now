@@ -14,6 +14,7 @@ class SendBatchPush2
     total_count = params[:total_count]
     ab_test_id = params[:ab_test_id]
     is_a = params[:is_a]
+    type = params[:type] 
     
     event = Event.find(event_id)
     devices = APN::Device.find(device_ids)

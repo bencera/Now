@@ -89,7 +89,7 @@ class SentPush < ActiveRecord::Base
 
   end
 
-  def self.notify_user(message. event_id, fb_user, options={})
+  def self.notify_user(message, event_id, fb_user, options={})
 
     now_profile = fb_user.now_profile
 
