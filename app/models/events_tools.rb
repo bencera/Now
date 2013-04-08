@@ -209,13 +209,14 @@ class EventsTools
         stan_res = photo.images.standard_resolution.is_a?(String) ?  photo.images.standard_resolution :  photo.images.standard_resolution.url
         thum_res = photo.images.thumbnail.is_a?(String) ?  photo.images.thumbnail :  photo.images.thumbnail.url
 
+        caption = photo.caption ? photo.caption.text : ""
         #have to fill in more info on these photos
         fake_photo = {:fake => true,
                       :url => [low_res, stan_res, thum_res],
                       :external_source => "ig",
                       :external_id => photo.id,
                       :time_taken => photo.created_time.to_i,
-                      :caption => photo.caption.text if photo.caption,
+                      :caption => caption,
                       :user_details => [photo.user.username, photo.user.profile_picture, photo.user.full_name, photo.user.id],
                       :has_vine => false,
                       :now_likes => 0,
