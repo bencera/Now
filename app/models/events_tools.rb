@@ -215,7 +215,7 @@ class EventsTools
                       :external_source => "ig",
                       :external_id => photo.id,
                       :time_taken => photo.created_time.to_i,
-                      :caption => photo.caption,
+                      :caption => photo.caption.text,
                       :user_details => [photo.user.username, photo.user.profile_picture, photo.user.full_name, photo.user.id],
                       :has_vine => false,
                       :now_likes => 0,
