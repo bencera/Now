@@ -199,12 +199,14 @@ private
     http.use_ssl = true
 
     retry_attempt = 0
+    wait_time = 0.5
     begin
       response = http.request(request)
     rescue
       retry_attempt += 1
-      raise if retry_attempt > 5
-      sleep 0.5
+      raise if retry_attempt > 3
+      sleep wait_time
+      wait_time += wait_time
       retry
     end
     
@@ -220,7 +222,7 @@ private
   end
 
   def execute_retry(http, request, options={})
-    retries = options[:retry] || 5
+    retries = options[:retry] || 3
     wait_time = options[:wait_time] || 0.5
     retry_attempt = 0
     begin
@@ -228,7 +230,8 @@ private
     rescue
       retry_attempt += 1
       raise if retry_attempt > retries
-      sleep wait_time
+      sleep wait_time 
+      wait_time += wait_time
       retry
     end
 
@@ -244,12 +247,15 @@ private
     http.use_ssl = true
 
     retry_attempt = 0
+    wait_time = 0.5
+
     begin
       response = http.request(request)
     rescue
       retry_attempt += 1
-      raise if retry_attempt > 5
-      sleep 0.5
+      raise if retry_attempt > 3
+      sleep wait_time
+      wait_time += wait_time
       retry
     end
     
