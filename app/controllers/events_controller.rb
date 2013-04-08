@@ -21,6 +21,7 @@ class EventsController < ApplicationController
     EventsHelper.get_event_cards([@event]) unless @event.nil? || @event.fake
 
     @blocks = EventDetailBlock.get_blocks(@event,@requesting_user)
+    @event.set_time_text
 
   end
 
@@ -89,6 +90,7 @@ class EventsController < ApplicationController
 
     EventsHelper.personalize_events(@events, @user) if @user 
     EventsHelper.get_event_cards(@events)
+    @events.each {|event| event.set_time_text}
 
     event_ids = []
     @events.each {|event| event_ids << event.id.to_s}

@@ -97,7 +97,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 #####
 
 # this is here to allow for caching of photos on index pulls -- only use overriding repost in the index view!
-  attr_accessor :event_card_list, :overriding_repost, :overriding_description, :personalized
+  attr_accessor :event_card_list, :overriding_repost, :overriding_description, :personalized, :time_text
     
   field :coordinates, :type => Array
   field :start_time
@@ -1330,6 +1330,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     #in case there are more replies after last photo
     return replies
+  end
+
+  def set_time_text
+    self.time_text = EventsTools.get_time_text(self.end_time)
   end
 
   def set_personalization(facebook_user)

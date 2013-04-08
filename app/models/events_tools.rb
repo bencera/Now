@@ -229,5 +229,25 @@ class EventsTools
     end
 
   end
+
+  def self.get_time_text(timestamp)
+    now = Time.now.to_i
+    dist = now - timestamp
+    if dist > 1.month
+      months = (dist / 1.month)
+      "#{months}mo"
+    elsif dist > 1.week
+      weeks = (dist / 1.week)
+      "#{weeks}w"
+    elsif dist > 1.day
+      days = (dist / 1.day.to_i)
+      "#{days}d"
+    elsif dist > 1.hour
+      hours = (dist / 1.hour.to_i)
+      "#{hours}h"
+    else
+      "now"
+    end
+  end
 end
 

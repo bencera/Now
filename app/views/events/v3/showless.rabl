@@ -1,5 +1,5 @@
 object @event
-attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :main_photos, :status, :n_reactions
+attributes :id, :coordinates, :end_time, :category, :shortid, :like_count, :main_photos, :status, :n_reactions, :time_text
 
 node(:fake) do |u|
   if u.fake
