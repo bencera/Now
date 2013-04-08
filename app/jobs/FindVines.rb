@@ -14,7 +14,7 @@ class FindVines
       event.save!
 
       venue = event.venue
-      known_vines = event.venue.photos.where(:created_at.gt => event.created_at).where(:has_vine => true).entries.map {|photo| photo.external_media_id}
+      known_vines = event.venue.photos.where(:time_taken.gt => event.created_at).where(:has_vine => true).entries.map {|photo| photo.external_media_id}
 
       photos = []
 
