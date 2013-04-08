@@ -37,7 +37,14 @@ class EventDetailBlock
 
     photos = make_event_photos_block(event, photos)
     
-    return [photo_card, message_block("Comments"), *comments, message_block("See who's here"), *users,message_block("Photos"), *photos]
+    result = [photo_card]
+    result.push(*photos) if photos.any?
+    result.push(message_block("See who's here")) if users.any?
+    result.push(*users) if users.any?
+    result.push(message_block("Comments")) if comments.any?
+    result.push(*comments) if comments.any?
+    
+    return result
   end
 
   def self.comment(comment_hash)
