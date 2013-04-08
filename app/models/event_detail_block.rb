@@ -30,7 +30,7 @@ class EventDetailBlock
                      []
                    else
                      #photos.map{|photo| self.user_entry(photo)}.reject{|user| user.photo.nil?}.uniq{|user| user.photo}
-                     photos.uniq{|photo| photo.user_id}
+                     photos.uniq{|photo| photo.user_id}[0..39]
                    end
 
     users = group_users(user_entries)
