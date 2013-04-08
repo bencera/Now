@@ -2,7 +2,7 @@ object @photo
 attributes :id, :url, :caption, :time_taken, :ig_media_id, :now_likes
 
 node (:user_details) do |u|
-  if @version >= 3
+  if @version && @version >= 3
     [u.user_details[2], u.user_details[1], "", "", "", "", ""]
   else
     u.user.ig_details
