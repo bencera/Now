@@ -1363,9 +1363,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
     end
 
     fake_user = pers_settings["friend_info"]
-    friend_name = fake_user[0]
-    friend_url = fake_user[1]
-    friend_now_id = fake_user[2]
+    friend_name = fake_user[0] || ""
+    friend_url = fake_user[1] || ""
+    friend_now_id = fake_user[2] || ""
     
     fake_repost = Hashie::Mash.new({:photo_card => pers_settings["friend_photos"][0..5],
                                     :facebook_user => FacebookUser.fake(friend_name, friend_url, friend_now_id)})
