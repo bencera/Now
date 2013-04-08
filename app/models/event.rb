@@ -1061,6 +1061,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
                   :start_time => end_time,
                   :status => "not_trending",
                   :like => false,
+                  :has_vine => false,
                   :get_fb_user_name => "Now Bot",
                   :get_fb_user_id => "0",
                   :get_fb_user_photo =>  "https://s3.amazonaws.com/now_assets/icon.png",
