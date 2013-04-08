@@ -71,7 +71,7 @@ class EventsTools
       meta_data[:heat_world_max] = heat_world_max.to_i
       heat_entries = []
       events.each do |event|
-        heat_entries << OpenStruct.new({:coordinates => event.coordinates, :value => event.n_reactions})
+        heat_entries << OpenStruct.new({:coordinates => event.coordinates, :value => event.get_heat(500)})
       end
       results_hash[:heat_entries] = heat_entries
     end
@@ -97,7 +97,7 @@ class EventsTools
     
     heat_entries = []
     events.each do |event|
-      heat_entries << OpenStruct.new({:coordinates => event.coordinates, :value => event.n_reactions})
+      heat_entries << OpenStruct.new({:coordinates => event.coordinates, :value => event.get_heat(500)})
     end
 
     meta_data = {}

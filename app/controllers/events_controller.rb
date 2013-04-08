@@ -81,7 +81,7 @@ class EventsController < ApplicationController
 
     if @heat.empty?
       #make a heatmap for now events
-      @events.each {|event| @heat.push(OpenStruct.new({:coordinates => event.coordinates, :value => event.n_reactions})) if Event::TRENDING_STATUSES.include?(event.status)}
+      @events.each {|event| @heat.push(OpenStruct.new({:coordinates => event.coordinates, :value => event.get_heat(500)})) if Event::TRENDING_STATUSES.include?(event.status)}
 
       if @heat.any?
         @meta_data[:heat_map] = "on"

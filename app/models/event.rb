@@ -1010,6 +1010,14 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.n_reactions = self.photos.where(:time_taken.gt => 3.hours.ago.to_i).count
   end
 
+  def get_heat(world_max)
+    if self.n_reactions < 1
+      return 0
+    end
+
+    return 0.25 * (Math.sqrt(self.n_reactions) / Math.sqrt(world_max))
+  end
+
   def update_recent_comments
     self.recent_comments = self.checkins.order_by([[:created_at, :desc]])[0..4].map {|checkin| checkin.get_comment_hash.inspect}
   end
