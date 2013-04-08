@@ -76,7 +76,7 @@ class SentPush < ActiveRecord::Base
       first_batch = false
     end; puts ""
 
-    fb_user_groups do |user_group|
+    fb_user_groups.each do |user_group|
       Resque.enqueue_in((i * wait_time), SendBatchPush3, 
                         {:message => message, :event_id => event_id, :facebook_user_ids => user_group, 
                          :first_batch => first_batch, :total_count => total_count, :type => SentPush::TYPE_LOCAL_EVENT}.inspect)
