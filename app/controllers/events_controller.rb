@@ -7,6 +7,8 @@ class EventsController < ApplicationController
 
   def v3show
 
+    @version = 3
+
     if params[:nowtoken]
       @requesting_user = FacebookUser.find_by_nowtoken(params[:nowtoken])
       @user_id = @requesting_user.facebook_id || @requesting_user.now_id
@@ -26,6 +28,8 @@ class EventsController < ApplicationController
   end
 
   def v3index
+
+    @version = 3
 
     @user = FacebookUser.find_by_nowtoken(params[:nowtoken])
     @user_id = if @user
