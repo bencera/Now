@@ -298,7 +298,7 @@ class WatchVenue
         end
         #this is when we get a termination from heroku -- might want to do a cleanup
         raise
-      rescue JSON::ParserError || params[:retry] < 4
+      rescue JSON::ParserError 
         if params[:retry].nil?
           params[:retry] ||= 0
           params[:retry] += 1
