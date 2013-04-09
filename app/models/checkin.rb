@@ -138,5 +138,19 @@ class Checkin
     def create_reaction
       self.event.update_recent_comments
       self.event.save!
+
+      user_ids = self.event.get_listener_ids - self.facebook_user_id
+      commenter = self.facebook_user
+
+      if user_ids.any?
+        message = "#{fb_user.now_profile.name} says \"#{self.description}\""
+        FacebookUser.find(user_ids).each do |fb_user|
+          next if fb_user == commenter
+
+          SentPush.notify_user(message, self.event_id.to_s, fb_user, 
+                                    :type => SentPush::TYPE_COMMENT, :first_batch => true, 
+                                    :user_name => commenter.now_profile.name, :user_photo => commenter.now_profile.profile_photo_url) 
+        end
+      end
     end
 end

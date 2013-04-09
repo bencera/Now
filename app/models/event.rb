@@ -937,6 +937,16 @@ SCORE_HALF_LIFE       = 7.day.to_f
     self.facebook_user.send_notification(message, self.id) 
   end
 
+  def get_listener_ids()
+
+    if TRENDING_2_STATUSES.include?(self.status)
+      self.checkins.distinct(:facebook_user_id)
+    else
+      self.checkins.where(:created_at.gt => 3.hours.ago).distinct(:facebook_user_id) 
+    end
+
+  end
+
   def notify_chatroom(message, options={})
 
 #    facebook_users = if TRENDING_2_STATUSES.include?(self.status)
