@@ -139,11 +139,11 @@ class Checkin
       self.event.update_recent_comments
       self.event.save!
 
-      user_ids = self.event.get_listener_ids - self.facebook_user_id
+      user_ids = self.event.get_listener_ids - [self.facebook_user_id]
       commenter = self.facebook_user
 
       if user_ids.any?
-        message = "#{fb_user.now_profile.name} says \"#{self.description}\""
+        message = "#{commenter.now_profile.name} says \"#{self.description}\""
         FacebookUser.find(user_ids).each do |fb_user|
           next if fb_user == commenter
 
