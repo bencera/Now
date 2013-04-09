@@ -247,7 +247,7 @@ class EventsTools
       hours = (dist / 1.hour.to_i)
       "#{hours}h"
     else
-      ["Closes in 12h", "Until 12pm", "Closes at 12pm"].sample
+      "now"
     end
   end
 end
