@@ -293,7 +293,7 @@ class WatchVenue
         if params[:retry].nil? || params[:retry] < 4
           params[:retry] ||= 0
           params[:retry] += 1
-          Resque.enqueue(WatchVenue, params.inspect)
+          Resque.enqueue_in(10.seconds, WatchVenue, params.inspect)
           return
         end
         #this is when we get a termination from heroku -- might want to do a cleanup

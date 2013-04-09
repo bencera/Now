@@ -104,7 +104,7 @@ class UserFollow3
         if params[:retry].nil? || params[:retry] < 4
           params[:retry] ||= 0
           params[:retry] += 1
-          Resque.enqueue(UserFollow3, params.inspect)
+          Resque.enqueue_in(10.seconds, UserFollow3, params.inspect)
           return
         end
 
@@ -114,7 +114,7 @@ class UserFollow3
         if params[:retry].nil? || params[:retry] < 4
           params[:retry] ||= 0
           params[:retry] += 1
-          Resque.enqueue(UserFollow3, params.inspect)
+          Resque.enqueue_in(30.seconds,UserFollow3, params.inspect)
         return
         end
         #this is when we get a termination from heroku -- might want to do a cleanup
