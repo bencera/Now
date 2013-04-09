@@ -204,7 +204,7 @@ private
       response = http.request(request)
     rescue
       retry_attempt += 1
-      raise if retry_attempt > 3
+      raise if retry_attempt > 6
       sleep wait_time
       wait_time += wait_time
       retry
@@ -222,7 +222,7 @@ private
   end
 
   def execute_retry(http, request, options={})
-    retries = options[:retry] || 3
+    retries = options[:retry] || 6
     wait_time = options[:wait_time] || 0.5
     retry_attempt = 0
     begin
@@ -253,7 +253,7 @@ private
       response = http.request(request)
     rescue
       retry_attempt += 1
-      raise if retry_attempt > 3
+      raise if retry_attempt > 6
       sleep wait_time
       wait_time += wait_time
       retry
