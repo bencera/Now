@@ -91,6 +91,9 @@ class SentPush < ActiveRecord::Base
 
   def self.notify_user(message, event_id, fb_user, options={})
 
+    existing_push = SentPush.where(:event_id => event_id, :facebook_user_id => fb_user_id.to_s, :message => message).first
+    return if existing_push
+
     now_profile = fb_user.now_profile
 
     failed = false
