@@ -25,7 +25,7 @@ class UserFollow3
     #break_media = nil
 
     users.each do |ig_user|
-      break if Time.now > (job_start_time + 4.minutes)
+      break if Time.now > (job_start_time + 5.minutes)
       token = ig_user.ig_accesstoken
       client = InstagramWrapper.get_client(:access_token => token)
 
@@ -101,12 +101,24 @@ class UserFollow3
       rescue ActiveRecord::RecordInvalid 
         next
       rescue SignalException
-        if params[:retry].nil?
-          params[:retry] = 1
+        if params[:retry].nil? || params[:retry] < 4
+          params[:retry] ||= 0
+          params[:retry] += 1
           Resque.enqueue(UserFollow3, params.inspect)
+          return
+        end
+
+        raise
+        #this is when we get a termination from heroku -- might want to do a cleanup
+      rescue JSON::ParserError 
+        if params[:retry].nil? || params[:retry] < 4
+          params[:retry] ||= 0
+          params[:retry] += 1
+          Resque.enqueue(UserFollow3, params.inspect)
+        return
         end
         #this is when we get a termination from heroku -- might want to do a cleanup
-        return
+        raise
       rescue
         #Rails.logger.info(break_media) if break_media
         raise

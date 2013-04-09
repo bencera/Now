@@ -36,7 +36,7 @@ class WatchVenue
 
     vws.each do |vw|
   
-      break if Time.now > (start_time + 4.minutes)
+      break if Time.now > (start_time + 5.minutes)
 
       vw.reload
       next if vw.ignore || vw.last_examination.to_i > 15.minutes.ago.to_i
@@ -290,12 +290,22 @@ class WatchVenue
         vw.save! if vw.changed? 
         next
       rescue SignalException
-        if params[:retry].nil?
-          params[:retry] = 1
+        if params[:retry].nil? || params[:retry] < 4
+          params[:retry] ||= 0
+          params[:retry] += 1
           Resque.enqueue(WatchVenue, params.inspect)
+          return
         end
         #this is when we get a termination from heroku -- might want to do a cleanup
-        return
+        raise
+      rescue JSON::ParserError || params[:retry] < 4
+        if params[:retry].nil?
+          params[:retry] ||= 0
+          params[:retry] += 1
+          Resque.enqueue_in(30.seconds, WatchVenue, params.inspect)
+          return
+        end
+        raise
       rescue
         vw.save! if vw.changed?
         raise
