@@ -36,8 +36,5 @@ class Facebooklike
     ll.shared_to_timeline = fb_user.now_profile.share_to_fb_timeline
     ll.venue_id = event.venue._id.to_s unless event.nil?
     ll.save
-
-
-    Reaction.create_reaction_and_notify(Reaction::TYPE_LIKE, event, fb_user, nil)
   end
 end

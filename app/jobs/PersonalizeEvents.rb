@@ -90,7 +90,7 @@ class PersonalizeEvents
                 
               message = "#{vw.trigger_media_fullname.blank? ? vw.trigger_media_user_name : vw.trigger_media_fullname} is at #{venue.name}. #{significance_hash[:message]}"
 
-              SentPush.notify_users(message, event.id.to_s, [], [ig_user.id.to_s], :ab_test_id => "PERSONALIZATION", 
+              SentPush.notify_user(message, event.id.to_s, ig_user, :ab_test_id => "PERSONALIZATION", 
                                     :type => SentPush::TYPE_FRIEND, :first_batch => true, 
                                     :user_name => vw.trigger_media_fullname, :user_photo => vw.trigger_media_profile_photo)
               

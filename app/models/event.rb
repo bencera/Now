@@ -884,31 +884,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
     
     Rails.logger.info("Event #{self.id} added #{new_photos.count} new photos")
 
-    if(new_photos.any?)
-      #Resque.enqueue(VerifyURL2, self.id, last_update, true) 
-      #Resque.enqueue_in(10.minutes, VerifyURL2, self.id, last_update, false)
-
-      #send reply notification about new photos
-      current_now_bot_photos = $redis.get("NOW_BOT_PHOTOS:#{self.id}").to_i
-      new_now_bot_photos = $redis.incrby("NOW_BOT_PHOTOS:#{self.id}", new_photos.count)
-
-      next_milestone = 1
-      milestones_crossed = []
-      i = 0
-
-      while next_milestone <= new_now_bot_photos && i < Reaction::PHOTO_MILESTONES.count
-        next_milestone = Reaction::PHOTO_MILESTONES[i]
-        milestones_crossed << i if next_milestone > current_now_bot_photos && next_milestone <= new_now_bot_photos
-        i += 1
-      end
-      
-      milestones_crossed.each do |milestone|
-        reaction = Reaction.create_reaction_and_notify(Reaction::TYPE_PHOTO, self, nil, Reaction::PHOTO_MILESTONES[milestone])
-      end
-    else
-      Rails.logger.info("no photos were added #{new_photos}")
-    end
-
     self.last_update = current_time.to_i
     self.next_update = current_time.to_i + self.update_interval
     begin
@@ -964,16 +939,18 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def notify_chatroom(message, options={})
 
-    facebook_users = self.checkins.distinct(:facebook_user_id)
-    
-    except_ids = options[:except_ids] || []
-    facebook_users << self.facebook_user_id unless self.facebook_user.nil? 
-
-    if facebook_users.any?
-      FacebookUser.where(:_id.in => facebook_users).entries.each do |fb_user| 
-        fb_user.send_notification(message, self.id) unless (except_ids.include? fb_user.now_id) || !fb_user.accepts_notifications(options[:reaction_type])
-      end
-    end
+#    facebook_users = if TRENDING_2_STATUSES.include?(self.status)
+#              self.checkins.distinct(:facebook_user_id)
+#            else
+#              self.checkins.where(:created_at.gt => 3.hours.ago).distinct(:facebook_user_id) 
+#            end
+#    
+#    except_ids = options[:except_ids] || []
+#
+#    if facebook_users.any?
+#      FacebookUser.where(:_id.in => facebook_users).entries.each do |fb_user| 
+#      end
+#    end
   end
 
   # every view of an event, increment a counter.  if the counter is high enough, enqueue a reaction
@@ -985,9 +962,6 @@ SCORE_HALF_LIFE       = 7.day.to_f
   def add_view
     n_views = $redis.incr("VIEW_COUNT:#{self.shortid}")
     $redis.zincrby("VERIFY_QUEUE", 1, self.id.to_s)
-    if Reaction::VIEW_MILESTONES.include? n_views.to_i
-      Resque.enqueue(ViewReaction, self.id, n_views)
-    end
 
     self.last_viewed = Time.now.to_i
 

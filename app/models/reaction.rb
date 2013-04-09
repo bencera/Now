@@ -57,6 +57,7 @@ class Reaction
   #validate
 
 
+  #deprecated
   def self.create_reaction_and_notify(type, event, fb_reactor, count, options={})
 
     return if type == TYPE_LIKE && event.reactions.where(:reactor_id => fb_reactor.now_id, :reaction_type => type).any?

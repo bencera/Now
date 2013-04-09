@@ -138,6 +138,5 @@ class Checkin
     def create_reaction
       self.event.update_recent_comments
       self.event.save!
-      Resque.enqueue(CreateReplyReaction, self.id)
     end
 end
