@@ -299,7 +299,7 @@ class WatchVenue
         #this is when we get a termination from heroku -- might want to do a cleanup
         raise
       rescue JSON::ParserError 
-        if params[:retry].nil?
+        if params[:retry].nil? && params[:retry] < 4
           params[:retry] ||= 0
           params[:retry] += 1
           Resque.enqueue_in(30.seconds, WatchVenue, params.inspect)
