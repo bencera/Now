@@ -65,6 +65,7 @@ class PersonalizeEvents
           vw.ignore = true
           vw.personalized = personalize
           vw.event_created = false
+          vw.event_id = event.id.to_s
           vw.save!
           Rails.logger.info("Personalize = #{personalize}")
           if personalize
