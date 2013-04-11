@@ -1,6 +1,9 @@
 class VineTools
 
   def self.find_event_vines(event)
+    
+    check_twitter_maintenance
+
     start_time = event.start_time - 1.hour.to_i
     end_time = (event.end_time < 1.hour.ago.to_i) ? event.end_time : Time.now.to_i
 
@@ -24,21 +27,25 @@ class VineTools
         next if key != venue_name
         search_key = "#{search_key} #{venue_name}"
       end
-      vines.push(*find_vines(search_key, event.start_time, event.end_time))
+      vines.push(*find_vines(search_key, event.start_time, event.end_time, event))
     end
 
     vines.uniq
 
   end
 
-  def self.find_vines(search_word, start_time, end_time)
+  def self.find_vines(search_word, start_time, end_time, event)
     url = URI.escape("http://search.twitter.com/search.json?q=vine.co+#{search_word}")
     results = do_search_request(url)
     if results.nil?
       Rails.logger.info("ERROR")
       return [] 
     end
-    results.delete_if {|result| created_time = Time.parse(result.created_at).to_i; created_time < start_time || created_time > end_time}
+
+    
+    results.delete_if {|result| created_time = Time.parse(result.created_at).to_i; created_time < start_time || created_time > end_time }
+
+
    
     return nil if results.empty?
 
@@ -46,6 +53,21 @@ class VineTools
     urls_seen = []
 
     results.each do |result|
+
+      user_loc_hash = get_twitter_user_loc_info(result.from_user)
+
+      skip_result = nil
+      if user_loc_hash[:coordinates]
+        skip_result = Geocoder::Calculations.distance_between(user_loc_hash[:coordinates], event.coordinates.reverse, :units => :km) > 75
+      end
+
+      if skip_result.nil? && user_loc_hash[:utc_offset]
+        now_city = event.venue.now_city
+        skip_result = user_loc_hash[:utc_offset].to_i != now_city.get_tz_offset
+      end
+
+      next if skip_result.nil? || skip_result
+
       possible_vine = nil
       URI.extract(result.text).each do |vine_url|
         next if urls_seen.include? vine_url
@@ -119,26 +141,94 @@ class VineTools
     end
   end
 
-  def get_twitter_user_timezone(username, options={})
-    oauth_token = "25747317-ziGL5EWFxPt0D7zZsuMqdJ5eg5g5DnjDABxigdvf4"
-    oauth_secret = "BDVJJRN0qth1298TDmovspdcNjuA2X8tZXE6IKm8"
-    token = prepare_access_token(oauth_token, oauth_secret)
-    response = token.request(:get, "https://api.twitter.com/1.1/users/lookup.json?screen_name=ocallaco")
+  def self.get_twitter_user_loc_info(username, options={})
+    #this is ugly
+    #
+
+    return {} if $redis.get("BLOCK_TWITTER")
+
+    fast_answer = $redis.hget("TWITTER_INFO", username)
+    if fast_answer
+      return eval fast_answer
+    end
+
+    keep_retry = true
+
+    while keep_retry do
+      keep_retry = false
+      access_token = $redis.get("TWITTER_BEARER_TOKEN")
+
+      url = "https://api.twitter.com/1.1/users/show.json?screen_name=#{username}"
+      parsed_url = URI.parse(url)
+      http = Net::HTTP.new(parsed_url.host, parsed_url.port)
+      request = Net::HTTP::Get.new(parsed_url.request_uri)
+      request["Authorization"] = "Bearer #{access_token}"
+
+      http.use_ssl = true
 
 
+      response = http.request(request)
+
+      if response.code == "401"
+        reset_count = $redis.incr("BEARER_RESET")
+        FacebookUser.where(:now_id => "2").first.send_notification("Bearer reset #{reset_count}")        
+        get_new_bearer_token unless $redis.get("BLOCK_TWITTER") || reset_count > 10
+        keep_retry = true
+      elsif response.code == "200"
+        data = Hashie::Mash.new(JSON.parse(response.body))
+
+        coordinates =  data.status.coordinates.coordinates if data.status && data.status.coordinates
+
+        if coordinates.nil? && data.location
+          coordinates = do_geo_search(data.location)
+        end
+
+        twitter_info = {:utc_offset =>  data.utc_offset,
+                        :coordinates => coordinates,
+                        :location => data.location}.inspect
+
+
+        $redis.hset("TWITTER_INFO", username, twitter_info)
+        return eval twitter_info
+      end
+    end
+
+    return {}
   end
 
-  def prepare_access_token(oauth_token, oauth_token_secret)
-    consumer = OAuth::Consumer.new("APIKey", "APISecret",
-      { :site => "http://api.twitter.com",
-        :scheme => :header
-      })
-    # now create the access token object from passed values
-    token_hash = { :oauth_token => oauth_token,
-                   :oauth_token_secret => oauth_token_secret
-                 }
-    access_token = OAuth::AccessToken.from_hash(consumer, token_hash )
-    return access_token
+  def self.get_new_bearer_token()
+    token = Base64.encode64(key)
+
+    url = "https://api.twitter.com/oauth2/token"
+    parsed_url = URI.parse(url)
+    http = Net::HTTP.new(parsed_url.host, parsed_url.port)
+    request = Net::HTTP::Post.new(parsed_url.request_uri)
+    request.basic_auth("h2XLR9d218I2hVZIo63w", "lqdhs19wEIsxDhkYw3QHT3wifAi8WTiQtzryGgTT05E")
+    request.set_form_data({"grant_type" => "client_credentials"})
+        
+    http.use_ssl = true
+
+    response = http.request(request)
+
+    auth_data = Hashie::Mash.new(JSON.parse(response.body))
+
+    access_token = auth_data.access_token
+
+    $redis.set("TWITTER_BEARER_TOKEN", access_token)
+    
+  end
+
+  def self.check_twitter_maintenance
+    last_twitter_clear = $redis.get("TWITTER_INFO_CLEARED").to_i
+    if last_twitter_clear < 7.day.ago.to_i
+      $redis.del("TWITTER_INFO")
+      $redis.set("TWITTER_INFO_CLEARED", Time.now.to_i)
+    end
+  end
+
+  def self.do_geo_search(location)
+    #may do this better later
+    Geocoder.coordinates(location)
   end
 end
 
