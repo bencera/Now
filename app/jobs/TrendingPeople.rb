@@ -6,17 +6,22 @@ class TrendingPeople
     current_time = Time.now
 
     begin
-      events = Event.where(:status.in => Event::TRENDING_2_STATUSES).where(:next_update.lt => current_time.to_i).entries
+      events = Event.where(:status.in => Event::TRENDING_2_STATUSES).where(:next_update.lt => current_time.to_i).entries.shuffle[0..30]
   #    now_bot_events = FacebookUser.where(:now_id => "0").first.events.where(:status.in => Event::TRENDING_STATUSES, :next_update.lt => current_time.to_i).entries
 
   #    events.push(*now_bot_events)
+    
 
+      
       Rails.logger.info("TrendingPeople: beginning for #{events.count} events")
 
       events.each do |event|
+
+        Rails.logger.info("EVENT")
         #if the event began today, we can keep trending it, otherwise, it's done
         if event.began_today2?(current_time) && event.end_time > 3.hours.ago.to_i
-
+          event.next_update = Time.now + 20.minutes.to_i
+          event.save!
           vw = VenueWatch.where("created_at > ? AND venue_ig_id = ?", 1.day.ago, event.venue.ig_venue_id).last
           if vw
             user = FacebookUser.where(:now_id => vw.user_now_id).first
