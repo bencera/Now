@@ -13,6 +13,7 @@ class HashCommand
   THEME = "#theme"
   DEVINE = "#devine"
   VINEBLOCK = "#vineblock"
+  WHOOPS = "#whoops"
 
   COMMAND_TO_METHOD = {
     KILL => :kill,
@@ -27,11 +28,12 @@ class HashCommand
     GREYLIST => :greylist,
     THEME => :theme,
     DEVINE => :devine,
-    VINEBLOCK => :vineblock}
+    VINEBLOCK => :vineblock,
+    WHOOPS => :whoops}
 
-  ADMIN_FUNCTIONS = [KILL, RENAME, DEMOTE, DELETE, CATEGORY, BLACKLIST, PUSH, DELPHOTO, GRAYLIST, GREYLIST, THEME, DEVINE, VINEBLOCK]
-  SU_FUNCTIONS = [RENAME, DEMOTE, DELETE, CATEGORY, BLACKLIST, GRAYLIST, GREYLIST]
-  OWNER_FUNCTIONS = [RENAME, DELETE, CATEGORY]
+  ADMIN_FUNCTIONS = [KILL, RENAME, DEMOTE, DELETE, CATEGORY, BLACKLIST, PUSH, DELPHOTO, GRAYLIST, GREYLIST, THEME, DEVINE, VINEBLOCK, WHOOPS]
+  SU_FUNCTIONS = [RENAME, DEMOTE, DELETE, CATEGORY, BLACKLIST, GRAYLIST, GREYLIST, WHOOPS]
+  OWNER_FUNCTIONS = [RENAME, DELETE, CATEGORY, WHOOPS]
   ALL_FUNCTIONS = ADMIN_FUNCTIONS
 
   def self.check_and_execute(message_string, facebook_user, event)
@@ -266,6 +268,20 @@ class HashCommand
     event.save!
 
     return nil
+  end
+
+  def self.whoops(arg_hash)
+    event = arg_hash[:event]
+    facebook_user = arg_hash[:facebook_user]
+    args = arg_hash[:args]
+
+    if args[0] == "last"
+      event.checkins.last.destroy
+    elsif args[0] == "all"
+      event.checkins.entries.each {|ci| ci.destroy}
+    else
+      event.checkins.entries.each {|ci| ci.destroy if ci.facebook_user_id.to_s == facebook_user.id.to_s}
+    end
   end
 
 end
