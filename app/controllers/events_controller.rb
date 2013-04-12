@@ -95,7 +95,7 @@ class EventsController < ApplicationController
     end
 
     EventsHelper.personalize_events(@events, @user) if @user 
-    EventsHelper.get_event_cards(@events)
+    EventsHelper.get_event_cards(@events, :v3 => true)
     @events.each {|event| event.set_time_text}
 
     event_ids = []
