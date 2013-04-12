@@ -170,8 +170,12 @@ module EventsHelper
     photo_id_list = []
     photo_id_hash = {}
     events.each do |event|
-      next if event.fake
-      photo_ids = event.get_preview_photo_ids(:all_six => true)
+      if event.fake
+        next unless options[:v3]
+        photo_ids = event.get_preview_photo_ids || []
+      else
+        photo_ids = event.get_preview_photo_ids(:all_six => true)
+      end
       photo_id_list.push(*photo_ids)
       photo_id_hash[event.id] = photo_ids
     end
@@ -184,7 +188,9 @@ module EventsHelper
     end
 
     events.each do |event|
-      next if event.fake
+        
+      next if event.fake && !options[:v3]
+
       photo_ids = photo_id_hash[event.id]
       event.event_card_list = all_photos.find_all {|photo| photo_ids.include? photo._id}.
         sort {|a,b| photo_ids.index(a._id) <=> photo_ids.index(b.id)} 

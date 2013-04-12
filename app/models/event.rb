@@ -1021,9 +1021,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
                   :category => options[:category] || "Misc",
                   :coordinates => venue_lon_lat,
                   :n_reactions => 0, 
-                  :get_fb_user_name => "Now Bot",
-                  :get_fb_user_id => "0",
-                  :get_fb_user_photo => "https://s3.amazonaws.com/now_assets/icon.png",
+                  :get_fb_user_name => options[:user_name] || "Now Bot",
+                  :get_fb_user_id => options[:user_now_id] || "0",
+                  :get_fb_user_photo => options[:user_photo] || "https://s3.amazonaws.com/now_assets/icon.png",
+                  :personalized => options[:personalized] || 0
                   :venue => venue,
                   :venue_id => venue.id,
                   :venue_name => venue_name,
@@ -1032,6 +1033,37 @@ SCORE_HALF_LIFE       = 7.day.to_f
         }
     fake_event[:fake] = true
     return OpenStruct.new(fake_event)
+  end
+
+  def self.v3_make_fake_index_event(options={})
+    end_time = options[:timestamp] || Time.now.to_i
+    venue =  OpenStruct.new({:id => options[:venue_id], :name => options[:venue_name]})
+
+
+    fake_event = {:id => options[:event_id],
+                  :shortid => options[:event_short_id],
+                  :get_description => options[:description] || "",
+                  :like_count => 0, 
+                  :like => false, 
+                  :end_time => end_time,
+                  :status => "trending", 
+                  :category => options[:category] || "Misc",
+                  :coordinates => options[:coordinates],
+                  :n_reactions => 0, 
+                  :get_fb_user_name => options[:user_name] || "Now Bot",
+                  :get_fb_user_id => options[:user_now_id] || "0",
+                  :get_fb_user_photo => options[:user_photo] || "https://s3.amazonaws.com/now_assets/icon.png",
+                  :personalized => options[:personalized] || 0
+                  :venue => venue,
+                  :venue_id => venue.id,
+                  :venue_name => venue.name,
+                  :get_preview_photo_ids => options[:photo_id] || [],
+                  :blocks => []
+    
+        }
+
+
+
   end
 
   def self.v3_make_fake_event_detail(venue, photos, options={})

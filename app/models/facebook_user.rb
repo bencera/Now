@@ -58,6 +58,7 @@ class FacebookUser
   has_many :reactions, dependent: :destroy
 
   embeds_one :user_notification
+  embeds_one :friend_map
 
   validates_numericality_of :score
 
@@ -381,6 +382,36 @@ class FacebookUser
     self.user_notification ||= UserNotification.new
     self.user_notification.add_notification(sent_push, options)
     self.save!
+  end
+
+  def add_friend_loc(photo, name, picture)
+    self.friend_map.add_entry(photo, name, picture)
+    self.save
+  end
+
+  def get_friend_loc_events(lon_lat, max_dist)
+    entries = self.friend_map.get_entries.reject {|entry| Geocoder::Calculations.distance_between(lon_lat.reverse, entry[:coordinates].reverse) > max_dist}
+
+    entries.map do |entry| 
+
+      venue_id = entry[:venue_id]
+      venue_name = entry[:venue_name]
+      friend_name = entry[:name]
+      description = "#{friend_name} is at #{venue_name}"
+
+      Event.v3_make_fake_index_event(:event_id => "#{venue_id}?venue=true}",
+                                                        :event_short_id => "FAKE",
+                                                        :description => description,
+                                                        :coordinates => entry[:coordinates],
+                                                        :user_name => friend_name,
+                                                        :user_now_id => "0",
+                                                        :user_photo => entry[:picture],
+                                                        :personalized => "1",
+                                                        :photo_id => entry[:photo_id],
+                                                        :timestamp => entry[:timestamp],
+                                                        :venue_name => venue_name,
+                                                        :venue_id => venue_id
+                                                       )
   end
 
 #  def do_redis_checkin(event)

@@ -63,9 +63,20 @@ class UserFollow3
          
          
           photo = Photo.where(:ig_media_id => media.id).first
+          if !photo
+            #we want to put your friends on the map now, so create the photo if possible, but not if it means creating a new venue
+            venue = Venue.where(:ig_venue_id => venue_ig_id).first
+            if venue
+              photo = Photo.create_photo("ig", media, nil)
+            end
+          end
           venue = photo.venue if photo #some photos have locations that dont correspond to fsq -- skip for now
 
           next if ignore_media.include?(media.id.to_s) || media.created_time.to_i < 3.hours.ago.to_i
+             
+          if photo
+            ig_user.add_friend_loc(photo, media.user.full_name, media.user.profile_picture)
+          end
 
           venue_watch = VenueWatch.new(:venue_id => venue && venue.id.to_s,
                                        :start_time => Time.at(media.created_time.to_i),
