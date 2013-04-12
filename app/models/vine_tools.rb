@@ -227,8 +227,32 @@ class VineTools
   end
 
   def self.do_geo_search(location)
-    #may do this better later
-    Geocoder.coordinates(location)
+    url = URI.escape("http://maps.googleapis.com/maps/api/geocode/json?address=#{location}&sensor=false&client_id=1013440089763.apps.googleusercontent.com")
+        
+    parsed_url = URI.parse(url)
+
+    http = Net::HTTP.new(parsed_url.host, parsed_url.port)
+    request = Net::HTTP::Get.new(parsed_url.request_uri)
+
+    retry_attempt = 0
+    wait_time = 0.5
+
+    begin
+      response = http.request(request)
+    rescue
+      retry_attempt += 1
+      raise if retry_attempt > 4
+      sleep wait_time
+      wait_time += wait_time
+      retry
+    end
+   
+    data = Hashie::Mash.new(JSON.parse(response.body))
+
+    if data
+      loc = data.results.first.geometry.location
+      return [loc.lat, loc.lng]
+    end
   end
 end
 
