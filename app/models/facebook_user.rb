@@ -412,16 +412,9 @@ class FacebookUser
                                                         :venue_name => venue_name,
                                                         :venue_id => venue_id
                                                        )
+    end
   end
 
-#  def do_redis_checkin(event)
-#    $redis.sadd("checked_in_event_pending#{event.shortid}", self.facebook_id)
-#    $redis.sadd("checked_in_user_pending#{self.facebook_id}", event.shortid)
-#  end
 
-#  def do_redis_uncheckin(event)
-#    $redis.srem("checked_in_event_pending#{event.shortid}", self.facebook_id)
-#    $redis.srem("checked_in_user_pending#{self.facebook_id}", event.shortid)
-#  end
 
 end

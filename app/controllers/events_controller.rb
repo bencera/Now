@@ -94,6 +94,8 @@ class EventsController < ApplicationController
       end
     end
 
+    @events.unshift(*(@user.get_friend_loc_events)) if @user
+
     EventsHelper.personalize_events(@events, @user) if @user 
     EventsHelper.get_event_cards(@events, :v3 => true)
     @events.each {|event| event.set_time_text}
