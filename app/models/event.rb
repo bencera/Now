@@ -1040,7 +1040,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     venue =  OpenStruct.new({:id => options[:venue_id], :name => options[:venue_name]})
 
 
-    fake_event = {:id => options[:event_id],
+    fake_event = OpenStruct.new({:id => options[:event_id],
                   :shortid => options[:event_short_id],
                   :get_description => options[:description] || "",
                   :like_count => 0, 
@@ -1060,7 +1060,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
                   :get_preview_photo_ids => options[:photo_id] || [],
                   :blocks => []
     
-        }
+        })
 
 
 
