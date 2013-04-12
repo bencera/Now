@@ -12,6 +12,7 @@ class TrendingPeople
   #    events.push(*now_bot_events)
     
 
+      Event.where(:_id.in => events.map{|event| event.id}).update_all(:next_update => Time.now.to_i + 15.minutes.to_i)
       
       Rails.logger.info("TrendingPeople: beginning for #{events.count} events")
 
