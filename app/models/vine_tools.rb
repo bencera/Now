@@ -249,7 +249,7 @@ class VineTools
    
     data = Hashie::Mash.new(JSON.parse(response.body))
 
-    if data
+    if data && data.results && data.results.first && data.results.first.geometry && data.results.first.geometry.location
       loc = data.results.first.geometry.location
       return [loc.lat, loc.lng]
     end
