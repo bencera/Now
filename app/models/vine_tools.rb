@@ -8,7 +8,12 @@ class VineTools
     end_time = (event.end_time < 1.hour.ago.to_i) ? event.end_time : Time.now.to_i
 
     keywords_entries = Keywordinator.get_keyphrases(event)
-    top_keys = Keywordinator.top_results(keywords_entries) || []
+
+    photo_count = event.photos.where(:has_vine.ne => true).count
+    top_keys = Keywordinator.top_results(keywords_entries, 
+                                         :phrase_min => [photo_count / 10, 5].max,
+                                         :long_min => [photo_count / 8, 7].max,
+                                         :short_min => [photo_count / 6, 10].max) || []
 
     event.keywords = top_keys
     event.save!

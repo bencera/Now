@@ -36,7 +36,9 @@ class Keywordinator
   def self.get_keyphrases(event)
     #take out #@ at the beginning, !?,. at the end of a word, translate & to and, remove if no alphanumeric chars
 
-    caption_list = event.photos.map{|photo| photo.caption.downcase}.uniq
+    photos = event.photos.where(:has_vine.ne => true).entries
+
+    caption_list = photos.map{|photo| photo.caption.downcase}.uniq
     caption_words = caption_list.map{|caption| caption.split(/\s/).map{ |word| word.gsub(/^[@#]/,"").gsub(/[.,?!]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") } }
 
     keyword_count = Hash.new(0)
@@ -75,7 +77,7 @@ class Keywordinator
 
     key_phrases = []
 
-    n_photos = event.n_photos
+    n_photos = photos.count
     min_captions = 5
 
 
@@ -118,10 +120,15 @@ class Keywordinator
   end
 
   #take the sorted phrase list with scores
-  def self.top_results(phrase_list, reject_words=[])
+  def self.top_results(phrase_list, photo_mins={}, reject_words=[])
     return if phrase_list.nil? || phrase_list.empty?
     top_phrase = nil
     top_words = []
+
+    min_phrases = photo_mins[:phrase_min] || photo_mins[:global_min] || 5
+    min_long_word = photo_mins[:long_min] || photo_mins[:global_min] || 7 
+    min_short_word = photo_mins[:short_min] || photo_mins[:global_min] || 10
+
 
     phrase_list.each do |phrase_entry|
       phrase = phrase_entry[0]
@@ -129,7 +136,7 @@ class Keywordinator
 
       next if CaptionsHelper.restricted_phrases.include?(phrase) 
 
-      break if phrase_entry[1] < 5 || (top_phrase && phrase_entry[0].length < 15 && phrase_entry[0].length < top_phrase[0].length && phrase_entry[1] < (top_phrase[1] * 0.8))
+      break if phrase_entry[1] < min_phrases || (top_phrase && phrase_entry[0].length < 15 && phrase_entry[0].length < top_phrase[0].length && phrase_entry[1] < (top_phrase[1] * 0.8))
 
       phrase_words = phrase.split(" ")
       if phrase_words.count > 1
@@ -160,7 +167,7 @@ class Keywordinator
     phrase_list.each do |phrase_entry|
       phrase = phrase_entry[0]
       score = phrase_entry[1]
-      break if (phrase_entry[0].length > 6 && phrase_entry[1] < 7) || (phrase_entry[0].length <= 6 && phrase_entry[1] < 10) || (phrase_entry[0].length <= 3)
+      break if (phrase_entry[0].length > 6 && phrase_entry[1] < min_long_word) || (phrase_entry[0].length <= 6 && phrase_entry[1] < min_short_word) || (phrase_entry[0].length <= 3)
       next if phrase_entry[0].split(" ").count > 1
       top_words << phrase_entry unless reject_words.include?(phrase_entry[0])
       break if top_words.count > 2
