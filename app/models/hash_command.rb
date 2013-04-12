@@ -227,10 +227,11 @@ class HashCommand
     facebook_user = arg_hash[:facebook_user]
     args = arg_hash[:args]
     
-    theme_id = args[1].to_s
+    theme_id = args[0].to_s
     Theme.add_experience(theme_id, event.id.to_s)
     event.save!
-    
+   
+    puts "TEST"
     return nil
   end
 
