@@ -385,6 +385,7 @@ class FacebookUser
   end
 
   def add_friend_loc(photo, name, picture)
+    self.friend_map ||= FriendMap.new
     self.friend_map.add_entry(photo, name, picture)
     self.save
   end

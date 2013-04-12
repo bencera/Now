@@ -14,7 +14,7 @@ class FriendMap
     
     entry_list = friend_entries.map{|entry| eval entry}
 
-    return if entry_list.select {|entry| entry[:photo_id] == photo.id.to_s} #shouldn't happen
+    return if entry_list.select {|entry| entry[:photo_id] == photo.id.to_s}.any? #shouldn't happen
   
     entry_list.unshift({:timestamp => timestamp,
                         :venue_id => venue_id.to_s,
