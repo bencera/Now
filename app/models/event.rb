@@ -1062,9 +1062,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
                   :get_preview_photo_ids => [BSON::ObjectId(options[:photo_id])] || [],
                   :preview_photos => [],
                   :blocks => [],
-                  :recent_comments => [],
-                  :get_heat => 0
-    
+                  :recent_comments => []
         })
 
 
