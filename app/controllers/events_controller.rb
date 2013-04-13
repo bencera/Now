@@ -17,6 +17,9 @@ class EventsController < ApplicationController
     if params[:venue]
 #      @event = Event.last
       @event = EventsTools.get_venue_event(params[:id], @requesting_user)
+    elsif params[:id].include?("venue")
+      id =  params[:id][/venue(.*)/,1]
+      @event = EventsTools.get_venue_event(id, @requesting_user)
     else
       @event = Event.find(params[:id])
     end

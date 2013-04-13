@@ -400,7 +400,7 @@ class FacebookUser
       friend_name = entry[:name]
       description = "#{friend_name} is here"
 
-      Event.v3_make_fake_index_event(:event_id => "#{venue_id}?venue=true}",
+      Event.v3_make_fake_index_event(:event_id => "venue#{venue_id}}",
                                                         :event_short_id => "FAKE",
                                                         :description => description,
                                                         :coordinates => entry[:coordinates],
