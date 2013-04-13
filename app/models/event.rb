@@ -1059,7 +1059,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
                   :venue => venue,
                   :venue_id => venue.id,
                   :venue_name => venue.name,
-                  :get_preview_photo_ids => options[:photo_id] || [],
+                  :get_preview_photo_ids => [BSON::ObjectId(options[:photo_id])] || [],
                   :blocks => []
     
         })
