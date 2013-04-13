@@ -12,6 +12,8 @@ class FriendMap
     venue_name = photo.venue.name
     coordinates = photo.coordinates
 
+    venue = photo.venue 
+
     if venue.categories.nil? || venue.categories.last.nil? || categories[venue.categories.first["id"]].nil?
       category = "Misc"
     else
