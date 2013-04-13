@@ -18,7 +18,11 @@ node(:personalized) do |u|
         u.personalized
       end
     else
-      u.personalized + 1
+      if u.personalized
+        u.personalized + 1
+      else
+        0
+      end
     end
 end
 
