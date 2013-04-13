@@ -192,8 +192,13 @@ module EventsHelper
       next if event.fake && !options[:v3]
 
       photo_ids = photo_id_hash[event.id]
-      event.event_card_list = all_photos.find_all {|photo| photo_ids.include? photo._id}.
-        sort {|a,b| photo_ids.index(a._id) <=> photo_ids.index(b.id)} 
+      if event.fake
+        event.preview_photos = all_photos.find_all {|photo| photo_ids.include? photo._id}.
+          sort {|a,b| photo_ids.index(a._id) <=> photo_ids.index(b.id)} 
+      else
+        event.event_card_list = all_photos.find_all {|photo| photo_ids.include? photo._id}.
+          sort {|a,b| photo_ids.index(a._id) <=> photo_ids.index(b.id)} 
+      end
     end
 
   end
