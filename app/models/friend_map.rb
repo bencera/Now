@@ -12,6 +12,7 @@ class FriendMap
     venue_name = photo.venue.name
     coordinates = photo.coordinates
 
+    categories = CategoriesHelper.categories
     venue = photo.venue 
 
     if venue.categories.nil? || venue.categories.last.nil? || categories[venue.categories.first["id"]].nil?
