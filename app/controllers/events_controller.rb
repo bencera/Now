@@ -66,7 +66,7 @@ class EventsController < ApplicationController
                                                       :facebook_user => @user)
 
       
-      results[:events].unshift(*(@user.get_friend_loc_events(coordinates,  params[:maxdistance].to_f / 1000))) if @user && scope != "saved" && category.nil?
+      results[:events].push(*(@user.get_friend_loc_events(coordinates,  params[:maxdistance].to_f / 1000))) if @user && scope != "saved" && category.nil?
 
     elsif params[:theme]
       theme_id = params[:theme]
