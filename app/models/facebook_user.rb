@@ -407,11 +407,12 @@ class FacebookUser
                                                         :user_name => friend_name,
                                                         :user_now_id => "0",
                                                         :user_photo => entry[:picture],
-                                                        :personalized => "1",
+                                                        :personalized => 2,
                                                         :photo_id => entry[:photo_id],
                                                         :timestamp => entry[:timestamp],
                                                         :venue_name => venue_name,
-                                                        :venue_id => venue_id
+                                                        :venue_id => venue_id,
+                                                        :category => entry[:category]
                                                        )
     end
   end

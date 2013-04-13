@@ -11,6 +11,12 @@ class FriendMap
     venue_id = photo.venue.id
     venue_name = photo.venue.name
     coordinates = photo.coordinates
+
+    if venue.categories.nil? || venue.categories.last.nil? || categories[venue.categories.first["id"]].nil?
+      category = "Misc"
+    else
+      category = category = categories[venue.categories.first["id"]]
+    end
     
     entry_list = friend_entries.map{|entry| eval entry}
 
@@ -22,7 +28,8 @@ class FriendMap
                         :photo_id => photo.id.to_s,
                         :name => name,
                         :picture => picture,
-                        :coordinates => coordinates
+                        :coordinates => coordinates,
+                        :category => category
                         }) 
 
     self.friend_entries = entry_list.reject {|entry| entry[:timestamp] < 6.hours.ago.to_i}.map{|entry| entry.inspect}
