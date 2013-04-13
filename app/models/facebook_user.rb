@@ -398,21 +398,22 @@ class FacebookUser
       venue_id = entry[:venue_id]
       venue_name = entry[:venue_name]
       friend_name = entry[:name]
-      description = "#{friend_name} is at #{venue_name}"
+      description = "#{friend_name} is here"
 
       Event.v3_make_fake_index_event(:event_id => "#{venue_id}?venue=true}",
                                                         :event_short_id => "FAKE",
                                                         :description => description,
                                                         :coordinates => entry[:coordinates],
                                                         :user_name => friend_name,
-                                                        :user_now_id => "0",
+                                                        :user_now_id => "-1",
                                                         :user_photo => entry[:picture],
                                                         :personalized => 2,
                                                         :photo_id => entry[:photo_id],
                                                         :timestamp => entry[:timestamp],
                                                         :venue_name => venue_name,
                                                         :venue_id => venue_id,
-                                                        :category => entry[:category]
+                                                        :category => entry[:category],
+                                                        :time_text => EventsTools.get_time_text(entry[:timestamp]) 
                                                        )
     end
   end
