@@ -391,7 +391,7 @@ class FacebookUser
   end
 
   def get_friend_loc_events(lon_lat, max_dist)
-    entries = self.friend_map.get_entries.reject {|entry| Geocoder::Calculations.distance_between(lon_lat.reverse, entry[:coordinates].reverse) > max_dist}
+    entries = self.friend_map.get_entries.reject {|entry| Geocoder::Calculations.distance_between(lon_lat.reverse, entry[:coordinates].reverse, :units => :km) > max_dist}
 
     entries.map do |entry| 
 

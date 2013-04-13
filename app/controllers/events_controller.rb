@@ -64,6 +64,10 @@ class EventsController < ApplicationController
       results = EventsTools.get_localized_results(coordinates, max_distance,
                                                       :scope => scope, :category => category,
                                                       :facebook_user => @user)
+
+      
+      results[:events].unshift(*(@user.get_friend_loc_events(coordinates,  params[:maxdistance].to_f / 1000))) if @user && scope != "saved" && category.nil?
+
     elsif params[:theme]
       theme_id = params[:theme]
       results = EventsTools.get_theme_events(theme_id)
@@ -93,8 +97,6 @@ class EventsController < ApplicationController
         @meta_data[:heat_map] = "off"
       end
     end
-
-    @events.unshift(*(@user.get_friend_loc_events(coordinates,  params[:maxdistance].to_f))) if @user && coordinates.any?
 
     EventsHelper.personalize_events(@events, @user) if @user 
     EventsHelper.get_event_cards(@events, :v3 => true)
