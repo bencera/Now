@@ -1,0 +1,142 @@
+
+@font-face {
+    font-family: 'dincond-lightregular';
+    src: url('/assets/font/ff_din_condensed_light-webfont.eot');
+    src: url('/assets/font/ff_din_condensed_light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/assets/font/ff_din_condensed_light-webfont.woff') format('woff'),
+         url('/assets/font/ff_din_condensed_light-webfont.ttf') format('truetype'),
+         url('/assets/font/ff_din_condensed_light-webfont.svg#dincond-lightregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'dincond-boldbold';
+    src: url('/assets/font/ff_din_condensed_bold-webfont.eot');
+    src: url('/assets/font/ff_din_condensed_bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/assets/font/ff_din_condensed_bold-webfont.woff') format('woff'),
+         url('/assets/font/ff_din_condensed_bold-webfont.ttf') format('truetype'),
+         url('/assets/font/ff_din_condensed_bold-webfont.svg#dincond-boldbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+.wrapper .main{
+	height:450px; 
+	background-color:white;
+	text-align:center;
+	
+	h1{
+		font-family: dincond-lightregular;
+		font-weight: normal;
+		font-size: 50px;
+		padding-top: 25px;
+		color: #e74e7a;
+	}
+	span{
+		font-family: dincond-boldbold;
+		font-weight: normal;
+	}
+
+	.video{
+		margin-top: 30px;
+	}
+
+	.appstore{
+		margin-top:10px;
+
+	}
+}
+
+
+.wrapper .summary{
+	height:500px;	
+
+	.left{
+		width:50%;
+		margin-top: 80px;
+		display: inline-block;
+		height:500px;
+		background-color: #e74e7a;
+		float:left;
+
+		.iphone{
+			margin-top: 45px;
+			float:right;
+			margin-right: 100px;
+		}
+	}
+	.right{
+		width: 50%;
+		margin-top: 80px;
+		display: inline-block;
+		height: 500px;
+		background-color: #e74e7a;
+		float:right;
+		color: white;
+
+		.tagline{
+			width: 350px;
+			margin-top:105px;
+			margin-left: 0px;
+			font-size: 50px;
+			text-align: center;
+		}
+		h1{
+			font-family: dincond-boldbold;
+			font-weight: normal;
+			font-size: 50px;
+		}
+		h2{
+			font-family: dincond-lightregular;
+			font-weight: normal;
+			font-size: 50px;
+		}
+
+		.explainer{
+			font-family: dincond-lightregular;
+			font-size: 20px;
+			font-weight: normal;
+		}
+	}
+
+}
+
+#footer{
+	background-color: gray;
+	height: 70px;
+	text-align: center;
+	padding-top: 40px;
+
+	a{
+		color: white;
+		font-family: dincond-lightregular;
+		font-weight: normal;
+		font-size: 20px;
+		margin-right: 10px;
+		margin-top: 10px;
+	}
+
+	.items{
+		margin-top:45px;
+		height:24px;
+		background-color: gray;
+	}
+
+}
+
+/* For modern browsers */
+.wrapper:before,
+.wrapper:after {
+    content:"";
+    display:table;
+}
+.wrapper:after {
+    clear:both;
+}
+/* For IE 6/7 (trigger hasLayout) */
+.wrapper {
+    zoom:1;
+}
