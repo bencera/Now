@@ -45,7 +45,7 @@ class EventDetailBlock
     result.push(*comments) if comments.any?
     
     ## this is just for testing
-    result.push(*(Keywordinator.get_keyphrases(event).map{|phrase| message_block(phrase)}))
+    result.push(*(Keywordinator.get_keyphrases(event).map{|phrase| message_block(phrase.inspect)}))
     
     
     return result
