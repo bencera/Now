@@ -794,7 +794,7 @@ module CaptionsHelper
   end
 
   def self.restricted_phrases
-    ["last night", "good morning", "happy easter", "merry christmas", "he is risen", "happy holidays", "sun rise", "sun set"]
+    ["last night", "good morning", "happy easter", "merry christmas", "he is risen", "happy holidays", "sun rise", "sun set", "fashion show"]
   end
 
 end
