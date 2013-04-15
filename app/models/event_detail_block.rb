@@ -44,6 +44,10 @@ class EventDetailBlock
     result.push(message_block("Comments")) if comments.any?
     result.push(*comments) if comments.any?
     
+    ## this is just for testing
+    result.push(message_block(Keywordinator.get_keyphrases(event).inspect))
+    
+    
     return result
   end
 
