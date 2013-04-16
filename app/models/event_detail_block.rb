@@ -23,7 +23,12 @@ class EventDetailBlock
 
         
     ## this is just for testing
+    
+    n_users = photos.map {|photo| photo.user_id}.uniq.count
+
     result.push( message_block("#{event.n_photos} photos") )
+
+    result.push( message_block("#{n_users} users") )
 
     event_ex = eval event.exceptionality
     if event_ex
