@@ -660,6 +660,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   #new score for ordering results once they come in
+  #
 
   def result_order_score(user, location)
     n_friends = 0
@@ -682,7 +683,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       strength_score = 0
       if keyword_strengths && keyword_strengths.any?
         top_strength = keyword_strengths.sort_by{|x| x[1]}.reverse.first[1]
-        max_possible_strength = [6.hours.to_i, (self.n_photos / 4).hours.to_i].min
+        max_possible_strength = [15.hours.to_i, (self.n_photos / 4).hours.to_i].min
         strength_score = max_possible_strength * top_strength
       end
       n_events = event_ex[:n_events].nil? ? 0 : event_ex[:n_events].to_i
