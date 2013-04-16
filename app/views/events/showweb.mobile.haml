@@ -1,9 +1,9 @@
-.wrapper2
+.wrapper2{:style => "overflow:hidden"}
     .header
-    .event{:style => "width:320px; margin-top:10px"}
-        .map{:style =>"height: 150px"}
-            = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=12&size=320x150&maptype=terrain&sensor=false&scale=2", :width => "320px"
-            .dimmer{:style => "width:320px;height:150px;top:-155px"}
+    .event{:style => "width:319px; margin-top:10px"}
+        .map{:style =>"height: 150px;width:319px;"}
+            = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=12&size=319x150&maptype=terrain&sensor=false&scale=2", :width => "320px"
+            .dimmer{:style => "width:319px;height:150px;top:-155px"}
             .pin{:style => "top:-250px; left:130px;"}
                 = image_tag "http://s3.amazonaws.com/now_assets/Pin%402x.png", :width => "50px"
             .logo.clearfix{:style => "top:-412px"}
@@ -11,7 +11,7 @@
                 %p.brand NOW
                 %a.download{:href => "http://getnowapp.com/download"}
                     = image_tag "https://d3422saexnbpnl.cloudfront.net/static/images/appstorebadge2x.png", :width => "140px"
-        .eventheader.clearfix{:style => "width: 320px"}
+        .eventheader.clearfix{:style => "width: 319px;"}
             .venue
                 %p= @venue.name.upcase
             .description
@@ -19,8 +19,8 @@
         .media
             - if @event.has_vine
                 - @vines.each do |vine|
-                    .twophoto.clearfix{:style => "height:320px"}
-                        <iframe class="vine-embed left photoleft" src="#{vine.external_media_id}/embed/simple" width="320" height="320" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+                    .twophoto.clearfix{:style => "height:319px"}
+                        <iframe class="vine-embed left photoleft" src="#{vine.external_media_id}/embed/simple" width="319" height="319" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
             - @mobile_photos.each do |photos|
                 - if photos.count == 2
                     .twophoto.clearfix{:style => "height:159.81px"}
