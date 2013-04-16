@@ -199,6 +199,8 @@ class Keywordinator
 
     scores = []
 
+    n_users = event.photos.map {|photo| photo.user_id}.uniq.count
+
     keywords_entries.each do |entry|
       skip_entry = false
 
@@ -208,8 +210,12 @@ class Keywordinator
       CaptionsHelper.restricted_phrases.each {|word| skip_entry = true if entry[0].include?(word)}
 
       next if skip_entry
+  
+      keyword_users = event.photos.reject {|photo| photo.caption.nil? || !photo.caption.downcase.include?(entry[0])}.map{|photo| photo.user_id}.uniq.count
 
-      scores << [entry[0], entry[1].to_f / n_photos]
+      next if keyword_users <= 1
+
+      scores << [entry[0], keyword_users.to_f / n_users]
     end
 
     return scores
