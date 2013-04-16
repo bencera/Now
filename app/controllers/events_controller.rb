@@ -400,10 +400,10 @@ class EventsController < ApplicationController
     if @event.has_vine
       has_vine = true
       vines = @event.photos.where(:has_vine => true).entries
+      @vines = vines.clone
     end
     array = @photos[0..50]
 
-    @vines = vines.clone
 
     @mobile_photos = []
 
