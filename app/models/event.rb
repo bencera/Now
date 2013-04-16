@@ -580,8 +580,9 @@ SCORE_HALF_LIFE       = 7.day.to_f
    
 
     strengths = Keywordinator.get_keyword_strengths(self)
+    n_users = self.photos.map {|photo| photo.user_id}.uniq.count
 
-    self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_events => n_events, :stdev => stdev, :key_strengths => strengths}.inspect
+    self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_events => n_events, :stdev => stdev, :key_strengths => strengths, :n_users => n_users}.inspect
 
   end
  
@@ -680,10 +681,11 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     if event_ex && !event_ex.empty?
       keyword_strengths = event_ex[:key_strengths]
+      n_users = event_ex[:n_users]
       strength_score = 0
       if keyword_strengths && keyword_strengths.any?
         top_strength = keyword_strengths.sort_by{|x| x[1]}.reverse.first[1]
-        max_possible_strength = [15.hours.to_i, (self.n_photos / 4).hours.to_i].min
+        max_possible_strength = [15.hours.to_i, (n_users / 4).hours.to_i].min
         strength_score = max_possible_strength * top_strength
       end
       n_events = event_ex[:n_events].nil? ? 0 : event_ex[:n_events].to_i
