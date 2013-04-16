@@ -25,7 +25,7 @@
                         - else
                             = image_tag photos[0].url[1], :width => "479.45px", :class => "left photoleft"
                         - if photos[1].has_vine
-                            <iframe class="vine-embed left" src="#{photos[0].external_media_id}/embed/simple" width="479.45" height="479.45" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+                            <iframe class="vine-embed left" src="#{photos[1].external_media_id}/embed/simple" width="479.45" height="479.45" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
                         - else
                             = image_tag photos[1].url[1], :width => "479.45px", :class => "left"
                 - elsif photos.count == 3 && rand(2) == 0
