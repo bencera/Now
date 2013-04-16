@@ -39,7 +39,7 @@ class Keywordinator
     photos = event.photos.where(:has_vine.ne => true).entries
 
     caption_list = photos.map{|photo| photo.caption.downcase}.uniq
-    caption_words = caption_list.map{|caption| caption.split(/\s/).map{ |word| word.gsub(/^[@#]/,"").gsub(/[.,?!]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") } }
+    caption_words = caption_list.map{|caption| caption.split(/\s/).map{ |word| word.gsub(/^[@#]/,"").gsub(/[.,?!]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") }.uniq }
 
     keyword_count = Hash.new(0)
     caption_words.each {|caption| caption.each {|word| keyword_count[word] += 1 unless word.blank? } }
@@ -179,4 +179,34 @@ class Keywordinator
     
     return return_array
   end
+
+  def self.get_keyword_strengths(event)
+
+    n_photos = event.photos.where(:has_vine.ne => true).count
+
+    keywords_entries = Keywordinator.get_keyphrases(event)
+    venue = event.venue
+
+    venue_words = venue.name.downcase.split(/\s/).map{ |word| word.gsub(/^[@#]/,"").gsub(/[.,?!i()]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") }
+
+    city_words = venue.now_city.name.downcase.split(/\s/)
+
+    scores = []
+
+    keywords_entries.each do |entry|
+      skip_entry = false
+
+      venue_words.each {|word| skip_entry = true if entry[0].include?(word)}
+      city_words.each {|word|  skip_entry = true if entry[0].include?(word)}
+      CaptionsHelper.city_names{|word| skip_entry = true if entry[0].include?(word)}
+      CaptionsHelper.restricted_phrases{|word| skip_entry = true if entry[0].include?(word)}
+
+      next if skip_entry
+
+      scores << [entry[0], entry[1].to_f / n_photos]
+    end
+
+    return scores
+  end
+
 end

@@ -576,7 +576,12 @@ SCORE_HALF_LIFE       = 7.day.to_f
       stdev = photo_count
     end
 
-    self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_events => n_events, :stdev => stdev}.inspect
+    ### calculate keyword strength
+   
+
+    strengths = Keywordinator.get_keyword_strengths(self)
+
+    self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_events => n_events, :stdev => stdev, :key_strengths => strengths}.inspect
 
   end
  
@@ -673,6 +678,13 @@ SCORE_HALF_LIFE       = 7.day.to_f
     #rareness = 0 if it trends once a week
 
     if event_ex && !event_ex.empty?
+      keyword_strengths = event_ex[:key_strengths]
+      strength_score = 0
+      if keyword_strengths.any?
+        top_strength = keyword_strengths.sort_by{|x| x[1]}.reverse.first[1]
+        max_possible_strength = [6.hours.to_i, (self.n_photos / 10).hours.to_i].min
+        strength_score = max_possible_strength * top_strength
+      end
       n_events = event_ex[:n_events].nil? ? 0 : event_ex[:n_events].to_i
       events_per_week = n_events / 13.0
       rareness = 4 - ( 4 * events_per_week)
@@ -683,9 +695,13 @@ SCORE_HALF_LIFE       = 7.day.to_f
       relative_size = n_events == 0 ? 1 : ( self.n_photos.to_f / (photo_count.to_f / n_events ))
 
 #      Rails.logger.info("#{self.venue.name} exceptionality: rel_size = #{relative_size - 1}, rareness: #{rareness}")
-      return self.end_time + [6.hours.to_i, (self.has_vine ? 3.hours.to_i : 0) + (2.minutes.to_i * photo_base) -  (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness)].min
+#      return self.end_time + [6.hours.to_i, (strength_score) + (self.has_vine ? 3.hours.to_i : 0) + (2.minutes.to_i * photo_base) -  (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness)].min
+
+      return self.end_time + [6.hours.to_i, (strength_score)].min
     else
-      return self.end_time + [6.hours.to_i, (self.has_vine ? 3.hours.to_i : 0) + (2.minutes.to_i * photo_base) -  (1.hour.to_i * n_friends)].min
+#      return self.end_time + [6.hours.to_i, (strength_score) + (self.has_vine ? 3.hours.to_i : 0) + (2.minutes.to_i * photo_base) -  (1.hour.to_i * n_friends)].min
+
+      return self.end_time
     end
 
   end
