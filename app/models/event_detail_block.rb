@@ -19,6 +19,27 @@ class EventDetailBlock
 
 
     photo_card = OpenStruct.new({:type => BLOCK_CARD, :block => nil})
+    result = [photo_card]
+
+        
+    ## this is just for testing
+    result.push( message_block("#{event.n_photos} photos") )
+
+    event_ex = eval event.exceptionality
+    if event_ex
+      keyword_strengths = event_ex[:key_strengths]
+      if keyword_strengths && keyword_strengths.any?
+        top_keyword = keyword_strengths.sort_by{|x| x[1]}.reverse.first 
+        result.push(message_block("#{top_keyword[0]} #{(top_keyword[1] * 100).to_i}%"))  
+    
+        related_photos = photos.reject {|photo| photo.caption.nil? || !(photo.caption.include?(top_keyword[0]))}
+
+        r_photos = make_event_photos_block(event, related_photos)
+        result.push(*r_photos) if r_photos.any?
+
+      end
+    end
+
 
     comments = if event.checkins.is_a?(Array)
                  event.checkins.map {|ci| self.comment(ci.get_comment_hash)}
@@ -37,24 +58,12 @@ class EventDetailBlock
 
     photos = make_event_photos_block(event, photos)
     
-    result = [photo_card]
     result.push(*photos) if photos.any?
     result.push(message_block("See who's here")) if users.any?
     result.push(*users) if users.any?
     result.push(message_block("Comments")) if comments.any?
     result.push(*comments) if comments.any?
     
-    ## this is just for testing
-    result.push( message_block("#{event.n_photos} photos") )
-
-    event_ex = eval event.exceptionality
-    if event_ex
-      keyword_strengths = event_ex[:key_strengths]
-      if keyword_strengths && keyword_strengths.any?
-        top_keyword = keyword_strengths.sort_by{|x| x[1]}.reverse.first 
-        result.push(message_block("#{top_keyword[0]} #{(top_keyword[1] * 100).to_i}%"))  
-      end
-    end
     
     return result
   end
