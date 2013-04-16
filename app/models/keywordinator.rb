@@ -198,8 +198,8 @@ class Keywordinator
 
       venue_words.each {|word| skip_entry = true if entry[0].include?(word)}
       city_words.each {|word|  skip_entry = true if entry[0].include?(word)}
-      CaptionsHelper.city_names{|word| skip_entry = true if entry[0].include?(word)}
-      CaptionsHelper.restricted_phrases{|word| skip_entry = true if entry[0].include?(word)}
+      CaptionsHelper.city_names.each {|word| skip_entry = true if entry[0].include?(word)}
+      CaptionsHelper.restricted_phrases.each {|word| skip_entry = true if entry[0].include?(word)}
 
       next if skip_entry
 

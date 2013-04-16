@@ -680,7 +680,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if event_ex && !event_ex.empty?
       keyword_strengths = event_ex[:key_strengths]
       strength_score = 0
-      if keyword_strengths.any?
+      if keyword_strengths && keyword_strengths.any?
         top_strength = keyword_strengths.sort_by{|x| x[1]}.reverse.first[1]
         max_possible_strength = [6.hours.to_i, (self.n_photos / 10).hours.to_i].min
         strength_score = max_possible_strength * top_strength
