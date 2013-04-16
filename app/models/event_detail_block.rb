@@ -52,7 +52,7 @@ class EventDetailBlock
       keyword_strengths = event_ex[:key_strengths]
       if keyword_strengths && keyword_strengths.any?
         top_keyword = keyword_strengths.sort_by{|x| x[1]}.reverse.first[0]  
-        result.push(message_blocka(top_keyword))  
+        result.push(message_blocks(top_keyword))  
       end
     end
     
