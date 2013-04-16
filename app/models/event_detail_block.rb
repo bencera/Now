@@ -37,6 +37,7 @@ class EventDetailBlock
         r_photos = make_event_photos_block(event, related_photos)
         result.push(*r_photos) if r_photos.any?
 
+        result.push(message_block("end"))
       end
     end
 
