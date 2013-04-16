@@ -46,8 +46,15 @@ class EventDetailBlock
     
     ## this is just for testing
     result.push( message_block("#{event.n_photos} photos") )
-    result.push(*(Keywordinator.get_keyphrases(event).map{|phrase| message_block(phrase.join(","))}))
-    
+
+    event_ex = eval self.exceptionality
+    if event_ex
+      keyword_strengths = event_ex[:key_strengths]
+      if keyword_strengths && keyword_strengths.any?
+        top_keyword = keyword_strengths.sort_by{|x| x[1]}.reverse.first[0]  
+        result.push(message_blocka(top_keyword))  
+      end
+    end
     
     return result
   end

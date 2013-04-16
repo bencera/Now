@@ -192,6 +192,7 @@ class Keywordinator
     now_city = venue.now_city || NowCity.where(:coordinates => {"$near" => event.coordinates}).first
     
     city_words = now_city.name.downcase.split(/\s/)
+    city_words.push(city_words.join)
 
     scores = []
 
