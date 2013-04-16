@@ -19,15 +19,15 @@
             - @mobile_photos.each do |photos|
                 - if photos.count == 2
                     .twophoto.clearfix
-                        = image_tag photos[0].url[1], :width => "479.5px", :class => "left photoleft"
-                        = image_tag photos[1].url[1], :width => "479.5px", :class => "left"
+                        = image_tag photos[0].url[1], :width => "479.45px", :class => "left photoleft"
+                        = image_tag photos[1].url[1], :width => "479.45px", :class => "left"
                 - elsif photos.count == 3 && rand(2) == 0
                     .threephoto.clearfix
-                        = image_tag photos[0].url[1], :width => "639.66px", :class => "left photoleft"
-                        = image_tag photos[1].url[1], :width => "319.33px", :class => "left phototop"
-                        = image_tag photos[2].url[1], :width => "319.33px", :height => "320px", :class => "left photo"
+                        = image_tag photos[0].url[1], :width => "639.61px", :class => "left photoleft"
+                        = image_tag photos[1].url[1], :width => "319.28px", :class => "left phototop"
+                        = image_tag photos[2].url[1], :width => "319.28px", :height => "320px", :class => "left photo"
                 - elsif photos.count == 3
                     .threephoto2.clearfix
-                        = image_tag photos[0].url[1], :width => "319.33px", :class => "left photoleft"
-                        = image_tag photos[1].url[1], :width => "319.33px", :class => "left photoleft"
-                        = image_tag photos[2].url[1], :width => "319.33px", :class => "left"
+                        = image_tag photos[0].url[1], :width => "319.28px", :class => "left photoleft"
+                        = image_tag photos[1].url[1], :width => "319.28px", :class => "left photoleft"
+                        = image_tag photos[2].url[1], :width => "319.28px", :class => "left"
