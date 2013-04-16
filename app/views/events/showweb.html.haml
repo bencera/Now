@@ -3,6 +3,7 @@
     .event
         .map
             = image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@venue.coordinates[1]},#{@venue.coordinates[0]}&zoom=12&size=960x200&maptype=terrain&sensor=false&scale=2", :width => "960px"
+            .dimmer
             .pin
                 = image_tag "http://s3.amazonaws.com/now_assets/Pin%402x.png", :width => "50px"
             .logo.clearfix
@@ -10,7 +11,7 @@
                 %p.brand NOW
                 %a.download{:href => "http://getnowapp.com/download"}
                     = image_tag "https://d3422saexnbpnl.cloudfront.net/static/images/appstorebadge2x.png", :width => "140px"
-        .eventheader
+        .eventheader.clearfix
             .venue
                 %p= @venue.name.upcase
             .description

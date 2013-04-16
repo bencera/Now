@@ -133,7 +133,7 @@
 /*Event show page*/
 
 .wrapper2{
-	background-color: #e6e6e6;
+	background-color: #6e6e6e;
 }
 
 .wrapper2 .header{
@@ -141,6 +141,9 @@
 	padding: 0;
 	height:57px;
 	background-color: #fc5376;
+	border-bottom: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: white;
 }
 
 .clearfix{
@@ -150,7 +153,12 @@
 .wrapper2 .event{
 	width:960px;
 	margin: 0 auto;
-	padding: 0;
+	padding: 0;	
+	margin-top: 25px;
+	border: solid;
+	border-width: 1px;
+	border-color: white;
+
 
 	.map{
 		height: 300px;
@@ -163,15 +171,25 @@
     padding:0;
 }
 
+.dimmer {
+	background: rgba(252, 83, 118, 0.5);
+	position: relative;
+
+	top: -305px;
+	left: 0;
+	width: 960px;
+	height: 300px;
+}
+
 .wrapper2 .event .map{ 
 	.pin{
 		position: relative;
-		top: -186px;
+		top: -461px;
 		left:450px;
 	}
 	.logo{
 		position:relative;
-		top: -404px;
+		top: -730px;
 		left:0px;
 	}
 
