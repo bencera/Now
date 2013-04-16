@@ -190,7 +190,8 @@ class Keywordinator
     venue_words = venue.name.downcase.split(/\s/).map{ |word| word.gsub(/^[@#]/,"").gsub(/[.,?!i()]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") }
 
     now_city = venue.now_city || NowCity.where(:coordinates => {"$near" => event.coordinates}).first
-    city_words = venue.now_city.name.downcase.split(/\s/)
+    
+    city_words = now_city.name.downcase.split(/\s/)
 
     scores = []
 
