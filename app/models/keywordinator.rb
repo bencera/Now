@@ -194,8 +194,8 @@ class Keywordinator
     
     city_words = now_city.name.downcase.split(/\s/)
     city_words.push(city_words.join)
-    city_words.push(*(now_city.state.downcase.split(/\s/)))
-    city_words.push(*(now_city.country.downcase.split(/\s/)))
+    city_words.push(*(now_city.state.downcase.split(/\s/))) if now_city.state
+    city_words.push(*(now_city.country.downcase.split(/\s/))) if now_city.country
 
     scores = []
 
