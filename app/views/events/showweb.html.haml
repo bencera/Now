@@ -26,7 +26,7 @@
                         = image_tag photos[0].url[1], :width => "639.66px", :class => "left photoleft"
                         = image_tag photos[1].url[1], :width => "319.33px", :class => "left phototop"
                         = image_tag photos[2].url[1], :width => "319.33px", :height => "320px", :class => "left photo"
-                - else
+                - elsif photos.count == 3
                     .threephoto2
                         = image_tag photos[0].url[1], :width => "319.33px", :class => "left photoleft"
                         = image_tag photos[1].url[1], :width => "319.33px", :class => "left photoleft"
