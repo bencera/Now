@@ -681,7 +681,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     if event_ex && !event_ex.empty?
       keyword_strengths = event_ex[:key_strengths]
-      n_users = event_ex[:n_users]
+      n_users = event_ex[:n_users].to_i
       strength_score = 0
       if keyword_strengths && keyword_strengths.any?
         top_strength = keyword_strengths.sort_by{|x| x[1]}.reverse.first[1]
