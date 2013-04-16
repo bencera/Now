@@ -21,7 +21,7 @@ class TrendingPeople
         Rails.logger.info("EVENT")
         #if the event began today, we can keep trending it, otherwise, it's done
         if event.began_today2?(current_time) && event.end_time > 3.hours.ago.to_i
-          event.next_update = Time.now + 20.minutes.to_i
+          event.next_update = (Time.now + 20.minutes).to_i
           event.save!
           vw = VenueWatch.where("created_at > ? AND venue_ig_id = ?", 1.day.ago, event.venue.ig_venue_id).last
           if vw
