@@ -355,52 +355,11 @@ class EventsController < ApplicationController
 
   def showweb
 
-  #  @event = Event.where(:shortid => params[:shortid]).first
-
-
-    if params[:event]
-      theme_results = WebNameMatcher.load_from_webname(params[:shortid], :main_event_id => params[:event])
-    else
-      theme_results = WebNameMatcher.load_from_webname(params[:shortid])
-    end
-    
-    if theme_results.nil?
-      @event = Event.where(:shortid => params[:shortid]).first
-      @theme = nil
-      @theme_title = nil
-      @is_city = false
-    else
-      theme_id = theme_results[:theme]
-      @theme_title = theme_results[:title]
-      @theme = params[:shortid].downcase
-      events = theme_results[:events]
-      @event = theme_results[:main_event]
-      @is_city = theme_results[:city]
-    end
-
-    @photos = @event.photos.order_by([[:time_taken,:asc]]).entries
-    @category = @event.category.downcase
+    @event = Event.where(:shortid => params[:shortid]).first
     @venue = @event.venue
-
-    @reposts = @event.make_reply_array(@photos)
-    EventsHelper.build_photo_list(@event, @reposts, @photos, :version => 2)
-
-    if theme_id
-      @more_events = events[0..19]
-    else
-     twenty_events = Event.where(:status.in => ["trending", "trending_people"], :end_time.gt => 1.hour.ago.to_i, :category.in => ["Party","Concert","Performance","Conference","Sport"], :n_photos.gt => 8, :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).entries
-     @more_events = twenty_events[0..19]
-    end
- #  @more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
-
-      @themes_and_cities = [*(Theme.get_themes_for_web), *(NowCity.get_cities_for_web)]
-     EventsHelper.get_event_cards(@more_events)
-
-       @event.add_view
-       @event.add_click
+    @photos = @event.photos
 
     array = @photos[0..25]
-
     @mobile_photos = []
 
     while array.any?
@@ -410,6 +369,59 @@ class EventsController < ApplicationController
         @mobile_photos.last << array.pop if array.any?
       end
     end
+
+ #    if params[:event]
+ #      theme_results = WebNameMatcher.load_from_webname(params[:shortid], :main_event_id => params[:event])
+ #    else
+ #      theme_results = WebNameMatcher.load_from_webname(params[:shortid])
+ #    end
+    
+ #    if theme_results.nil?
+ #      @event = Event.where(:shortid => params[:shortid]).first
+ #      @theme = nil
+ #      @theme_title = nil
+ #      @is_city = false
+ #    else
+ #      theme_id = theme_results[:theme]
+ #      @theme_title = theme_results[:title]
+ #      @theme = params[:shortid].downcase
+ #      events = theme_results[:events]
+ #      @event = theme_results[:main_event]
+ #      @is_city = theme_results[:city]
+ #    end
+
+ #    @photos = @event.photos.order_by([[:time_taken,:asc]]).entries
+ #    @category = @event.category.downcase
+ #    @venue = @event.venue
+
+ #    @reposts = @event.make_reply_array(@photos)
+ #    EventsHelper.build_photo_list(@event, @reposts, @photos, :version => 2)
+
+ #    if theme_id
+ #      @more_events = events[0..19]
+ #    else
+ #     twenty_events = Event.where(:status.in => ["trending", "trending_people"], :end_time.gt => 1.hour.ago.to_i, :category.in => ["Party","Concert","Performance","Conference","Sport"], :n_photos.gt => 8, :_id.ne => @event._id.to_s,:coordinates => {"$near" => @event.coordinates}).limit(21).entries
+ #     @more_events = twenty_events[0..19]
+ #    end
+ # #  @more_events = [Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first,Event.first]
+
+ #      @themes_and_cities = [*(Theme.get_themes_for_web), *(NowCity.get_cities_for_web)]
+ #     EventsHelper.get_event_cards(@more_events)
+
+ #       @event.add_view
+ #       @event.add_click
+
+ #    array = @photos[0..25]
+
+ #    @mobile_photos = []
+
+ #    while array.any?
+ #      @mobile_photos << []
+ #      rand_num = [2,3].sample
+ #      rand_num.times do 
+ #        @mobile_photos.last << array.pop if array.any?
+ #      end
+ #    end
   end
   
   def cities

@@ -23,6 +23,8 @@
 
 }
 
+/*Landing Page*/
+
 .wrapper .main{
 	height:450px; 
 	background-color:white;
@@ -127,16 +129,133 @@
 
 }
 
-/* For modern browsers */
-.wrapper:before,
-.wrapper:after {
-    content:"";
-    display:table;
+
+/*Event show page*/
+
+.wrapper2{
+	background-color: #e6e6e6;
 }
-.wrapper:after {
-    clear:both;
+
+.wrapper2 .header{
+	margin: 0 auto;
+	padding: 0;
+	height:57px;
+	background-color: #fc5376;
 }
-/* For IE 6/7 (trigger hasLayout) */
-.wrapper {
-    zoom:1;
+
+.clearfix{
+	display: block;
+	overflow:hidden;
+}
+.wrapper2 .event{
+	width:960px;
+	margin: 0 auto;
+	padding: 0;
+
+	.map{
+		height: 300px;
+	}
+}
+
+.left{
+    float:left;
+    margin:0;
+    padding:0;
+}
+
+.wrapper2 .event .map{ 
+	.pin{
+		position: relative;
+		top: -186px;
+		left:450px;
+	}
+	.logo{
+		position:relative;
+		top: -404px;
+		left:0px;
+	}
+
+	p.brand{
+		font-family: dincond-boldbold;
+		font-weight: normal;
+		color: white;
+		padding-top:15px;
+		font-size: 25px;
+	}
+
+	.download{
+		float:right;
+		margin-top:-37px;
+		margin-right:5px;
+	}
+}
+
+.wrapper2 .event .eventheader{
+	height: 57px;
+	width: 960px;
+	background-color: white;
+	.venue p{
+		margin-left: 5px;
+		height: 30px;
+		font-family: dincond-boldbold;
+		font-weight: normal;
+		font-size: 30px;
+		color: #e74e7a;
+	}
+
+	.description p{
+		margin-left: 5px;
+		height: 24px;
+		font-family: dincond-lightregular;
+		font-weight: normal;
+		font-size: 20px;
+		color: #7b7a77;
+	}
+}
+
+.wrapper2 .event .media .photo{
+	margin:0;
+	padding: 0;
+	vertical-align: top;
+}
+
+.wrapper2 .event .media .twophoto{
+	height:479px;
+	border-bottom: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: white;
+
+	.photoleft {
+		border-right: solid;
+		border-right-width: 1px;
+		border-right-color: white;
+	}
+}
+
+.wrapper2 .event .media .threephoto{
+	height:640px;
+	border-bottom: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: white;
+	.photoleft {
+		border-right: solid;
+		border-right-width: 1px;
+		border-right-color: white;
+	}
+	.phototop {
+		border-bottom: solid;
+		border-bottom-width: 1px;
+		border-bottom-color: white;
+	}
+}
+.wrapper2 .event .media .threephoto2{
+	height:319px;
+	border-bottom: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: white;
+	.photoleft {
+		border-right: solid;
+		border-right-width: 1px;
+		border-right-color: white;
+	}
 }
