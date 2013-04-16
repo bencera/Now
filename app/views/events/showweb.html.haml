@@ -20,15 +20,33 @@
             - @mobile_photos.each do |photos|
                 - if photos.count == 2
                     .twophoto.clearfix
-                        = image_tag photos[0].url[1], :width => "479.45px", :class => "left photoleft"
-                        = image_tag photos[1].url[1], :width => "479.45px", :class => "left"
+                        - if photos[0].has_vine
+                            <iframe class="vine-embed left photoleft" src="#{photos[0].external_media_id}/embed/simple" width="479.45" height="479.45" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+                        - else
+                            = image_tag photos[0].url[1], :width => "479.45px", :class => "left photoleft"
+                        - if photos[1].has_vine
+                            <iframe class="vine-embed left" src="#{photos[0].external_media_id}/embed/simple" width="479.45" height="479.45" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+                        - else
+                            = image_tag photos[1].url[1], :width => "479.45px", :class => "left"
                 - elsif photos.count == 3 && rand(2) == 0
                     .threephoto.clearfix
-                        = image_tag photos[0].url[1], :width => "639.61px", :class => "left photoleft"
+                        - if photos[0].has_vine
+                            <iframe class="vine-embed left photoleft" src="#{photos[0].external_media_id}/embed/simple" width="639.61" height="639.61" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+                        - else
+                            = image_tag photos[0].url[1], :width => "639.61px", :class => "left photoleft"
                         = image_tag photos[1].url[1], :width => "319.28px", :class => "left phototop"
-                        = image_tag photos[2].url[1], :width => "319.28px", :height => "320px", :class => "left photo"
+                        - if photos[2].has_vine
+                            <iframe class="vine-embed left" src="#{photos[2].external_media_id}/embed/simple" width="319.28" height="320" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+                        - else
+                            = image_tag photos[2].url[1], :width => "319.28px", :height => "320px", :class => "left photo"
                 - elsif photos.count == 3
                     .threephoto2.clearfix
-                        = image_tag photos[0].url[1], :width => "319.28px", :class => "left photoleft"
+                        - if photos[0].has_vine
+                            <iframe class="vine-embed left photoleft" src="#{photos[0].external_media_id}/embed/simple" width="319.28" height="319.28" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+                        - else
+                            = image_tag photos[0].url[1], :width => "319.28px", :class => "left photoleft"
                         = image_tag photos[1].url[1], :width => "319.28px", :class => "left photoleft"
-                        = image_tag photos[2].url[1], :width => "319.27px", :class => "left"
+                        - if photos[2].has_vine
+                            <iframe class="vine-embed left" src="#{photos[2].external_media_id}/embed/simple" width="319.27" height="319.27" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>
+                        - else
+                            = image_tag photos[2].url[1], :width => "319.27px", :class => "left"
