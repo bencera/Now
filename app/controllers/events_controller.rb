@@ -403,6 +403,8 @@ class EventsController < ApplicationController
     end
     array = @photos[0..50]
 
+    @vines = vines.clone
+
     @mobile_photos = []
 
     i = 0
