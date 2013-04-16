@@ -47,7 +47,7 @@ class EventDetailBlock
     ## this is just for testing
     result.push( message_block("#{event.n_photos} photos") )
 
-    event_ex = eval self.exceptionality
+    event_ex = eval event.exceptionality
     if event_ex
       keyword_strengths = event_ex[:key_strengths]
       if keyword_strengths && keyword_strengths.any?
