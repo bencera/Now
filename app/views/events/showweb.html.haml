@@ -18,7 +18,7 @@
         .media
             - @mobile_photos.each do |photos|
                 - if photos.count == 2
-                    .twophoto
+                    .twophoto.clearfix
                         = image_tag photos[0].url[1], :width => "479.5px", :class => "left photoleft"
                         = image_tag photos[1].url[1], :width => "479.5px", :class => "left"
                 - elsif photos.count == 3 && rand(2) == 0
@@ -27,7 +27,7 @@
                         = image_tag photos[1].url[1], :width => "319.33px", :class => "left phototop"
                         = image_tag photos[2].url[1], :width => "319.33px", :height => "320px", :class => "left photo"
                 - elsif photos.count == 3
-                    .threephoto2
+                    .threephoto2.clearfix
                         = image_tag photos[0].url[1], :width => "319.33px", :class => "left photoleft"
                         = image_tag photos[1].url[1], :width => "319.33px", :class => "left photoleft"
                         = image_tag photos[2].url[1], :width => "319.33px", :class => "left"
