@@ -108,7 +108,7 @@ class EventsTools
     heat_world_max = $redis.get("HEAT_WORLD_MAX") || 250
 
     meta_data[:heat_world_max] = heat_world_max.to_i
-    results_hash[:events] = events[0..19]
+    results_hash[:events] = events.sort_by{|event| event.result_order_score(nil, [0,0])}.reverse[0..19]
     results_hash[:heat_entries] = heat_entries
     results_hash[:meta] = meta_data
 
