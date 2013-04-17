@@ -375,7 +375,7 @@ class EventsController < ApplicationController
       @is_city = theme_results[:city]
     end
 
-    @photos = @event.photos.where(:has_vine.ne => true).order_by([[:time_taken,:asc]]).entries
+    @photos = @event.photos.where(:has_vine.ne => true).order_by([[:time_taken,:desc]]).entries
     @category = @event.category.downcase
     @venue = @event.venue
 
