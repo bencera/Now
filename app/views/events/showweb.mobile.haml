@@ -13,7 +13,7 @@
                     = image_tag "https://d3422saexnbpnl.cloudfront.net/static/images/appstorebadge2x.png", :width => "140px"
         .eventheader.clearfix{:style => "width: 319px;"}
             .venue
-                %p= @venue.name.upcase
+                %p= truncate(@venue.name.upcase, :length => 23)
             .description
                 %p= @event.description.upcase
         .media
