@@ -627,6 +627,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     Rails.logger.info("transition_status: event #{self.id} transitioning status from #{old_status} to #{ self.status }")
 
+    Resque.enqueue(DoVenueKeywords, self.venue_id.to_s)
+
     #can notify creator of event status if we want here
   end
 
