@@ -221,6 +221,8 @@ class Keywordinator
     venue_words = venue.name.downcase.split(/\s/).map{ |word| word.gsub(/^[@#]/,"").gsub(/[.,?!i()]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") }
     venue_words.push(venue_words.join)
 
+    venue_keywords = venue.venue_keywords || []
+
     now_city = venue.now_city || NowCity.where(:coordinates => {"$near" => event.coordinates}).first
     
     city_words = now_city.name.downcase.split(/\s/)
@@ -238,6 +240,7 @@ class Keywordinator
       next if entry[0].length < 5
 
       venue_words.each {|word| skip_entry = true if entry[0].include?(word)}
+      venue_keywords.each {|word| skip_entry = true if entry[0].include?(word)}
       city_words.each {|word|  skip_entry = true if entry[0].include?(word)}
       CaptionsHelper.city_names.each {|word| skip_entry = true if entry[0].include?(word)}
       CaptionsHelper.restricted_phrases.each {|word| skip_entry = true if entry[0].include?(word)}
