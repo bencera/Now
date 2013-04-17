@@ -30,6 +30,14 @@ class EventDetailBlock
 
     result.push( message_block("#{n_users} users") )
 
+    
+    if event.venue.venue_keywords &&  event.venue.venue_keywords.any?
+      result.push(message_block("venue words"))
+      event.venue.venue_keywords.each do |keyword|
+        result.push(message_block(keyword))
+      end
+    end
+
     event_ex = eval event.exceptionality
     if event_ex
       keyword_strengths = event_ex[:key_strengths]
@@ -46,12 +54,6 @@ class EventDetailBlock
       end
     end
 
-    if event.venue.venue_keywords &&  event.venue.venue_keywords.any?
-      result.push(message_block("venue words"))
-      event.venue.venue_keywords.each do |keyword|
-        result.push(message_block(keyword))
-      end
-    end
 
 
     comments = if event.checkins.is_a?(Array)
