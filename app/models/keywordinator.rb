@@ -204,6 +204,8 @@ class Keywordinator
     keywords_entries.each do |entry|
       skip_entry = false
 
+      next if entry[0].length < 5
+
       venue_words.each {|word| skip_entry = true if entry[0].include?(word)}
       city_words.each {|word|  skip_entry = true if entry[0].include?(word)}
       CaptionsHelper.city_names.each {|word| skip_entry = true if entry[0].include?(word)}
