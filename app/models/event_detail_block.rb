@@ -46,6 +46,13 @@ class EventDetailBlock
       end
     end
 
+    if event.venue.venue_keywords &&  event.venue.venue_keywords.any?
+      result.push(message_block("venue words"))
+      event.venue.venue_keywords.each do |keyword|
+        result.push(message_block(keyword))
+      end
+    end
+
 
     comments = if event.checkins.is_a?(Array)
                  event.checkins.map {|ci| self.comment(ci.get_comment_hash)}
