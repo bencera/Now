@@ -94,6 +94,10 @@ class Maintenance
     #Venue.where(:has_top_event => true).each {|venue| venue.reconsider_top_event}
     #Rails.logger.info("Maintenance: completed venue top event calculation")
 
+
+    #calculate excpetionality
+
+    Event.where(:status.in => Event::TRENDING_STATUSES, :next_update.lt => Time.now.to_i).each {|event| event.calculated_exceptionality; event.save!}
     
     
     #unregister stuck workers
