@@ -29,6 +29,9 @@ class Venue
 
   field :num_photos
 
+  #venue keywords for trending
+  field :venue_keywords, :type => Array, default: []
+
   #we want to fill these in someday
   field :website
   field :street_address
