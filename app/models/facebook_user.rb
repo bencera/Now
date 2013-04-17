@@ -58,6 +58,7 @@ class FacebookUser
   has_many :reactions, dependent: :destroy
 
   embeds_one :user_notification
+  embeds_one :friend_map
 
   validates_numericality_of :score
 
@@ -383,14 +384,41 @@ class FacebookUser
     self.save!
   end
 
-#  def do_redis_checkin(event)
-#    $redis.sadd("checked_in_event_pending#{event.shortid}", self.facebook_id)
-#    $redis.sadd("checked_in_user_pending#{self.facebook_id}", event.shortid)
-#  end
+  def add_friend_loc(photo, name, picture)
+    self.friend_map ||= FriendMap.new
+    self.friend_map.add_entry(photo, name, picture)
+    self.save
+  end
 
-#  def do_redis_uncheckin(event)
-#    $redis.srem("checked_in_event_pending#{event.shortid}", self.facebook_id)
-#    $redis.srem("checked_in_user_pending#{self.facebook_id}", event.shortid)
-#  end
+  def get_friend_loc_events(lon_lat, max_dist)
+    return [] if self.friend_map.nil?
+    entries = self.friend_map.get_entries.reject {|entry| Geocoder::Calculations.distance_between(lon_lat.reverse, entry[:coordinates].reverse, :units => :km) > max_dist}
+
+    entries.map do |entry| 
+
+      venue_id = entry[:venue_id]
+      venue_name = entry[:venue_name]
+      friend_name = entry[:name]
+      description = "#{friend_name} is here"
+
+      Event.v3_make_fake_index_event(:event_id => "venue#{venue_id}",
+                                                        :event_short_id => "FAKE",
+                                                        :description => description,
+                                                        :coordinates => entry[:coordinates],
+                                                        :user_name => friend_name,
+                                                        :user_now_id => "-1",
+                                                        :user_photo => entry[:picture],
+                                                        :personalized => 2,
+                                                        :photo_id => entry[:photo_id],
+                                                        :timestamp => entry[:timestamp],
+                                                        :venue_name => venue_name,
+                                                        :venue_id => venue_id,
+                                                        :category => entry[:category],
+                                                        :time_text => EventsTools.get_time_text(entry[:timestamp]) 
+                                                       )
+    end
+  end
+
+
 
 end

@@ -11,10 +11,18 @@ node(:fake) do |u|
 end
 
 node(:personalized) do |u|
-    if u.fake || u.personalized.nil?
-      0
+    if u.fake
+      if u.personalized.nil?
+        0
+      else
+        u.personalized
+      end
     else
-      u.personalized + 1
+      if u.personalized
+        u.personalized + 1
+      else
+        0
+      end
     end
 end
 

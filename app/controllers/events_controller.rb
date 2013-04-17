@@ -17,6 +17,9 @@ class EventsController < ApplicationController
     if params[:venue]
 #      @event = Event.last
       @event = EventsTools.get_venue_event(params[:id], @requesting_user)
+    elsif params[:id].include?("venue")
+      id =  params[:id][/venue(.*)/,1]
+      @event = EventsTools.get_venue_event(id, @requesting_user)
     else
       @event = Event.find(params[:id])
     end
@@ -24,6 +27,14 @@ class EventsController < ApplicationController
 
     @blocks = EventDetailBlock.get_blocks(@event,@requesting_user)
     @event.set_time_text
+
+    if !@event.fake
+      click_params = {}
+      click_params[:now_token] = params[:nowtoken] if params[:nowtoken]
+      click_params[:udid] = params[:device_id] if params[:deviceid]
+      click_params[:session_token] = cookies[:now_session]
+      @event.add_click(click_params)
+    end
 
   end
 
@@ -64,6 +75,10 @@ class EventsController < ApplicationController
       results = EventsTools.get_localized_results(coordinates, max_distance,
                                                       :scope => scope, :category => category,
                                                       :facebook_user => @user)
+
+      
+      results[:events].push(*(@user.get_friend_loc_events(coordinates,  params[:maxdistance].to_f / 1000))) if @user && scope != "saved" && category.nil?
+
     elsif params[:theme]
       theme_id = params[:theme]
       results = EventsTools.get_theme_events(theme_id)
@@ -81,7 +96,7 @@ class EventsController < ApplicationController
 
     if @heat.empty?
       #make a heatmap for now events
-      @events.each {|event| @heat.push(OpenStruct.new({:coordinates => event.coordinates, :value => event.get_heat(500)})) if Event::TRENDING_STATUSES.include?(event.status)}
+      @events.each {|event| @heat.push(OpenStruct.new({:coordinates => event.coordinates, :value => (event.fake ? 0 : event.get_heat(500))})) if Event::TRENDING_STATUSES.include?(event.status)}
 
       if @heat.any?
         @meta_data[:heat_map] = "on"
@@ -95,7 +110,7 @@ class EventsController < ApplicationController
     end
 
     EventsHelper.personalize_events(@events, @user) if @user 
-    EventsHelper.get_event_cards(@events)
+    EventsHelper.get_event_cards(@events, :v3 => true)
     @events.each {|event| event.set_time_text}
 
     event_ids = []
