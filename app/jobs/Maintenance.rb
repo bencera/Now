@@ -97,7 +97,7 @@ class Maintenance
 
     #calculate excpetionality
 
-    Event.where(:status.in => Event::TRENDING_STATUSES, :next_update.lt => Time.now.to_i).each {|event| event.calculated_exceptionality; event.save!}
+    Event.where(:status.in => Event::TRENDING_STATUSES, :next_update.lt => Time.now.to_i).each {|event| event.calculate_exceptionality; event.save!}
     
     
     #unregister stuck workers
