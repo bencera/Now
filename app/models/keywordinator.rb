@@ -33,10 +33,42 @@ class Keywordinator
 
   end
 
-  def self.get_keyphrases(event)
+  def self.make_keyphrase_timeline(event_photos, event_times, options={})
+    keys = event_photos.keys
+
+    key_phrase_map = {}
+
+    options[:dont_prune] = true
+    options[:min_captions] = 1
+
+    keys.each do |key|
+      photos = event_photos[key]
+      time = event_times[key]
+      keywords = get_photo_keywords(photos, options)
+
+      keywords.each do |keyword|
+        entry = key_phrase_map[keyword[0]] ||= {:timestamps => [], :event_count => 0, :count => 0}
+        entry[:timestamps] << time
+        entry[:event_count] += 1
+        entry[:count] += keyword[1]
+      end
+    end
+
+
+    return key_phrase_map
+  end
+
+  def self.get_keyphrases(event, options={})
     #take out #@ at the beginning, !?,. at the end of a word, translate & to and, remove if no alphanumeric chars
 
     photos = event.photos.where(:has_vine.ne => true).entries
+  
+    self.get_photo_keywords(photos, options)
+  end
+
+  def self.get_photo_keywords(photos, options={})
+
+    min_captions = options[:min_captions] || 5 
 
     caption_list = photos.map{|photo| photo.caption.downcase}.uniq
     caption_words = caption_list.map{|caption| caption.split(/\s/).map{ |word| word.gsub(/^[@#]/,"").gsub(/[.,?!]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") }.uniq }
@@ -45,7 +77,7 @@ class Keywordinator
     caption_words.each {|caption| caption.each {|word| keyword_count[word] += 1 unless word.blank? } }
 
     #take the single keywords
-    keyword_count_ar = keyword_count.sort_by {|x| x[1]}.reverse.delete_if {|x| x[1] < 5 }
+    keyword_count_ar = keyword_count.sort_by {|x| x[1]}.reverse.delete_if {|x| x[1] < min_captions }
     keywords = keyword_count_ar.map {|x| x[0]}
     
     
@@ -71,15 +103,14 @@ class Keywordinator
     end
 
     #delete 1s
-    prune_hash(trees)
+    prune_hash(trees) unless options[:dont_prune]
 
     #lets get a list of phrases
 
     key_phrases = []
 
     n_photos = photos.count
-    min_captions = 5
-
+    
 
     keywords.each do |word| 
       next if trees[word][1] < min_captions
