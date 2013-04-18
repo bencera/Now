@@ -1063,8 +1063,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
                   :preview_photos => [],
                   :blocks => [],
                   :recent_comments => [],
-                  :time_text => options[:time_text] || ""
-        })
+                  :time_text => options[:time_text] || "",
+                  :exceptionality => ""})
 
 
 
@@ -1101,7 +1101,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
                   :preview_photos => photo_card_list,
                   :photos => photos,
                   :checkins => [],
-                  :recent_comments => []}
+                  :recent_comments => [],
+                  :exceptionality => ""}
 
     OpenStruct.new(fake_event)
 
