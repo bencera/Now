@@ -1,4 +1,43 @@
 class Keywordinator
+
+  def self.get_caption(event)
+    key_phrases = get_keyphrases(event, :min_captions => 1, :dont_prune => true)
+    restricted_words = event.venue.venue_keywords || []
+    restricted_words.push(*CaptionsHelper.restricted_phrases)
+
+    best_short_phrase = nil
+    end_search = false
+    short_phrase_count = 0
+
+    key_phrases.each do |phrase|
+      if !restricted_words.include?(phrase[0]) && phrase[1] > 1
+        break if short_phrase_count > phrase[1]
+        best_short_phrase = phrase[0] if best_short_phrase.nil? || (phrase[0].length > best_short_phrase.length)
+      end
+    end
+
+    longest_good_phrase = nil
+    if best_short_phrase
+      key_phrases.each do |phrase|
+        longest_good_phrase = phrase[0] if (longest_good_phrase.nil? || longest_good_phrase.length < phrase[0].length) && phrase[0].include?(best_short_phrase)
+      end
+    end
+
+    if longest_good_phrase
+      return longest_good_phrase
+    elsif best_short_phrase
+      return best_short_phrase
+    else
+      best_caption = nil
+      event.captions.each do |caption|
+        best_caption = caption if best_caption.nil? || (best_caption.length < 10 && caption.length > best_caption.length) ||
+          (best_caption.length > 40 && caption.length < best_caption.length)
+      end
+
+      return best_caption
+    end
+  end
+
   def self.get_hashtag(event)
 
     caption_list = event.photos.map{|photo| photo.caption.downcase}.uniq
