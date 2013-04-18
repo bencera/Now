@@ -101,7 +101,7 @@ class Maintenance
     
     world_venues = []
     world_events.sort_by{|event| event.result_order_score(nil, [0,0])}.each do |world_event|
-      world_venues << world_event.venue unless world_event.venue.looked_for_keywords 
+      world_venues << world_event.venue unless world_event.venue.looked_for_keywords
     end
 
     world_venues.each do |venue|

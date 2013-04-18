@@ -5,8 +5,10 @@ class DoVenueKeywords
     venue = Venue.find(venue_id)
     events = venue.events.where(:created_at.gt => 3.months.ago).entries; puts
 
+    young_venue = venue.created_at && (venue.created_at > 7.days.ago)
+
     venue.looked_for_keywords = true
-    if (venue.created_at && venue.created_at > 14.days.ago) || events.count < 4
+    if events.count < 4
       venue.save!
       return
     end
@@ -35,9 +37,9 @@ class DoVenueKeywords
       return_val = false
       return_val = true if v[:event_count] < 3 || v[:count] < min_occur
 
-      if !return_val
+      if !return_val && !young_venue
         timespan = v[:timestamps].max - v[:timestamps].min
-        return_val = timespan < 14.days.to_i
+        return_val = timespan < 7.days.to_i
       end
       return_val
     end
