@@ -95,10 +95,19 @@ class Maintenance
     #Rails.logger.info("Maintenance: completed venue top event calculation")
 
 
-    #calculate excpetionality
+    #take top world events, calculate venue_keywords if possible
 
-    Event.where(:status.in => Event::TRENDING_STATUSES, :next_update.lt => Time.now.to_i).each {|event| event.calculate_exceptionality; event.save!}
+    world_events =  Event.find($redis.smembers("WORLD_EXP_LIST")).entries
     
+    world_venues = []
+    world_events.sort_by{|event| event.result_order_score(nil, [0,0])}.each do |world_event|
+      world_venues << world_event.venue unless world_event.venue.looked_for_keywords 
+    end
+
+    world_venues.each do |venue|
+      Resque.enqueue(DoVenueKeywords, venue.id.to_s)
+    end
+
     
     #unregister stuck workers
     Resque.workers.each {|worker| worker.unregister_worker if worker.job["run_at"] && (Time.now.to_i - Time.parse(worker.job["run_at"]).to_i > 2000)}

@@ -31,6 +31,7 @@ class Venue
 
   #venue keywords for trending
   field :venue_keywords, :type => Array, default: []
+  field :looked_for_keywords, :type => Boolean, default: false
 
   #we want to fill these in someday
   field :website

@@ -5,8 +5,11 @@ class DoVenueKeywords
     venue = Venue.find(venue_id)
     events = venue.events.where(:created_at.gt => 3.months.ago).entries; puts
 
-    return if venue.created_at && venue.created_at > 14.days.ago
-    return if events.count < 4
+    venue.looked_for_keywords = true
+    if (venue.created_at && venue.created_at > 14.days.ago) || events.count < 4
+      venue.save!
+      return
+    end
 
     total_venue_photos = events.map{|event| event.n_photos}.sum
 
@@ -41,6 +44,7 @@ class DoVenueKeywords
 
 
     venue.venue_keywords = test.sort_by {|k,v| v[:event_count]}.map{|v| v[0]}
+    
     venue.save!
 
   end
