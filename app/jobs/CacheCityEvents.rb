@@ -31,6 +31,15 @@ class CacheCityEvents
       $redis.del("#{city_key}_EXP_LIST")
       world_events.each {|event_id| $redis.sadd("#{city_key}_EXP_LIST", event_id)}
     end
+
+    world_events.each do |event|
+      next if event.su_renamed
+      my_caption = Keywordinator.get_caption(event)
+      if !my_caption.blank?
+        event.description = my_caption
+        event.save!
+      end
+    end
   end
 end
 

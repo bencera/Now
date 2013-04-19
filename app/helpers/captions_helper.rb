@@ -471,7 +471,7 @@ module CaptionsHelper
         "behind", "being", "believe", "below", "beside", "besides", "best", "better", "between", "beyond", "both", "brief", "but", "by",
          "c'mon", "c's", "came", "can", "can't", "cannot", "cant", "cause", "causes", "certain", "certainly", "changes", "clearly", "co",
         "com", "come", "comes", "concerning", "consequently", "consider", "considering", "contain", "containing", "contains", 
-        "corresponding", "could", "couldn't", "course", "currently", "definitely", "described", "despite", "did", "didn't", "different",
+        "corresponding", "could", "couldn't", "course", "currently", "da", "definitely", "described", "despite", "did", "didn't", "different",
         "do", "does", "doesn't", "doing", "don't", "done", "down", "downwards", "during", "each", "edu", "eg", "eight", "either", 
          "else", "elsewhere", "enough", "entirely", "especially", "et", "etc", "even", "ever", "every", "everybody", "everyone", 
           "everything", "everywhere", "ex", "exactly", "example", "except", "far", "few", "fifth", "first", "five", "followed",
@@ -494,7 +494,7 @@ module CaptionsHelper
                "see", "seeing", "seem", "seemed", "seeming", "seems", "seen", "self", "selves", "sensible", "sent", "serious", 
          "seriously", "seven", "several", "shall", "she", "should", "shouldn't", "since", "six", "so", "some", "somebody",
           "somehow", "someone", "something", "sometime", "sometimes", "somewhat", "somewhere", "soon", "sorry", "specified",
-         "specify", "specifying", "still", "sub", "such", "sup", "sure", "t's", "take", "taken", "tell", "tends", "th", 
+         "specify", "specifying", "still", "sub", "such", "sup", "sure", "t's", "take", "taken", "tell", "tends", "th", "tha", 
            "than", "thank", "thanks", "thanx", "that", "that's", "thats", "the", "their", "theirs", "them", "themselves", 
           "then", "thence", "there", "there's", "thereafter", "thereby", "therefore", "therein", "theres", "thereupon", 
           "these", "they", "they'd", "they'll", "they're", "they've", "think", "third", "this", "thorough", "thoroughly",
@@ -790,11 +790,26 @@ module CaptionsHelper
   end
 
   def self.city_names
-    ["tokyo", "jakarta", "seoul", "delhi", "shanghai", "manila", "karachi", "new york city", "new york", "nyc", "brooklyn", "sao paulo", "mexico city", "cairo", "beijing", "osaka", "mumbai", "bombay", "guangzhou", "moscow", "los angeles", "la", "calcutta", "dhaka", "buenos aires", "istanbul", "rio de janeiro", "shenzhen", "lagos", "paris", "nagoya", "lima", "chicago", "kinshasa", "tianjin", "chennai", "bogota", "bengaluru", "london", "taipei", "ho chi minh city", "dongguan", "hyderabad", "chengdu", "lahore", "johannesburg", "tehran", "essen", "bangkok", "hong kong", "wuhan", "ahmedabad", "chongqung", "baghdad", "hangzhou", "toronto", "kuala lumpur", "santiago", "dallas", "fort worth", "san francisco", "san jose", "quanzhou", "miami", "shenyang", "belo horizonte", "philadelphia", "philly", "nanjing", "madrid", "houston", "xi'an-xianyang", "milan", "luanda", "pune", "singapore", "riyadh", "khartoum", "saint petersburg", "atlanta", "surat", "washington", "bandung", "surabaya", "yangoon", "alexandria", "guadalajara", "harbin", "boston", "zhengzhou", "qingdao", "abidjan", "barcelona", "monterrey", "ankara", "suzhou", "phoenix", "mesa", "salvador", "porto alegre", "rome", "accra", "sydney", "recife", "naples", "detroit", "dalian", "fuzhou", "medellin", "newyorkcity", "newyork", "saopaulo", "mexicocity", "losangeles", "buenosaires", "riodejaneiro", "hochiminhcity", "hongkong", "kualalumpur", "fortworth", "sanfrancisco", "sanjose", "belohorizonte", "saintpetersburg", "portoalegre", "salem"]
+    ["tokyo", "jakarta", "seoul", "delhi", "shanghai", "manila", "karachi", "new york city", "new york", "nyc", "brooklyn", "sao paulo", "mexico city", "cairo", "beijing", "osaka", "mumbai", "bombay", "guangzhou", "moscow", "los angeles", "la", "calcutta", "dhaka", "buenos aires", "istanbul", "rio de janeiro", "shenzhen", "lagos", "paris", "nagoya", "lima", "chicago", "kinshasa", "tianjin", "chennai", "bogota", "bengaluru", "london", "taipei", "ho chi minh city", "dongguan", "hyderabad", "chengdu", "lahore", "johannesburg", "tehran", "essen", "bangkok", "hong kong", "wuhan", "ahmedabad", "chongqung", "baghdad", "hangzhou", "toronto", "kuala lumpur", "santiago", "dallas", "fort worth", "san francisco", "sf", "san jose", "quanzhou", "miami", "shenyang", "belo horizonte", "philadelphia", "philly", "nanjing", "madrid", "houston", "xi'an-xianyang", "milan", "luanda", "pune", "singapore", "riyadh", "khartoum", "saint petersburg", "atlanta", "surat", "washington", "bandung", "surabaya", "yangoon", "alexandria", "guadalajara", "harbin", "boston", "zhengzhou", "qingdao", "abidjan", "barcelona", "monterrey", "ankara", "suzhou", "phoenix", "mesa", "salvador", "porto alegre", "rome", "accra", "sydney", "recife", "naples", "detroit", "dalian", "fuzhou", "medellin", "newyorkcity", "newyork", "saopaulo", "mexicocity", "losangeles", "buenosaires", "riodejaneiro", "hochiminhcity", "hongkong", "kualalumpur", "fortworth", "sanfrancisco", "sanjose", "belohorizonte", "saintpetersburg", "portoalegre", "salem"]
   end
 
   def self.restricted_phrases
-    ["last night", "good morning", "happy easter", "merry christmas", "he is risen", "happy holidays", "sun rise", "sun set", "fashion show", "today", "now", "right now"]
+    ["last night", "good morning", "happy easter", "merry christmas", "he is risen", "happy holidays", "sun rise", "sun set", "fashion show", "today", "now", "right now"].push(*self.never_keyword)
+  
+  end
+
+  def self.never_keyword
+
+    ["iphonesia", "iphonegraphy", "iphotography", "ig", "igers", "igdaily", "instago", "instagood", "instagram", "instamood", "instadaily", "instagramers", "instagramhub", "instagramaddict", "picoftheday", "photooftheday", "bestoftheday", "webstagram", "statigram", "all_shots"]
+
+  end
+
+  def self.cannot_end_sentence
+    ["in", "at", "to", "with", "for", "a", "x", "by", "on", "but", "is"] 
+  end
+
+  def self.cannot_start
+    ["and", "in", "at", "to", "with", "for", "by", "but", "is"]
   end
 
 end
