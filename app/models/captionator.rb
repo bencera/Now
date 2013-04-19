@@ -54,7 +54,9 @@ class Captionator
 
   def self.get_caption(event)
     #STOP WORDS
-    self.get_caption_from_photos(event.photos, event.venue)
+    caption = Keywordinator.get_caption(event)
+    caption ||= self.get_caption_from_photos(event.photos, event.venue)
+    return caption
   end
 
   def self.remove_stopchars(text)
