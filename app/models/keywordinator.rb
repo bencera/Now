@@ -2,20 +2,43 @@ class Keywordinator
 
   def self.get_caption(event)
 
-    return if event.exceptionality.blank?
+    caption = nil
 
-    ex_hash = eval(event.exceptionality)
+    if !event.exceptionality.blank?
+      ex_hash = eval(event.exceptionality)
+      if !ex_hash[:key_strengths].empty? 
 
-    return if ex_hash[:key_strengths].empty? 
+        phrases = ex_hash[:key_strengths].map{|entry| entry[0]}
 
-    phrases = ex_hash[:key_strengths].map{|entry| entry[0]}
+        photos = event.photos.where(:has_vine.ne => true).entries
 
-    photos = event.photos.where(:has_vine.ne => true).entries
-    
-    #occurrences = self.count_occurrences(phrases, photos).sort_by{|k,v| v[0]}
+        caption = Keywordinator.get_caption_from_photos(phrases, photos)
+      end
+    end
+
+    if caption.blank? && $redis.get("DO_ALL_CAPTIONS")
+
+      venue = event.venue
+
+      photos = venue.photos.limit(100).where(:has_vine.ne => true, :time_taken.gt => 3.months.ago.to_i).entries
+
+      venue_keywords = event.venue.venue_keywords
+      if venue_keywords.nil? || venue_keywords.empty?
+        #find keywords from the photos
+      else
+        caption = Keywordinator.get_caption_from_photos(venue_keywords, photos)
+      end
+    end
+
+    return caption
+  end
+
+  def self.get_caption_from_photos(phrases, photos)
+
+   #occurrences = self.count_occurrences(phrases, photos).sort_by{|k,v| v[0]}
     occurrences = Keywordinator.count_occurrences(phrases, photos).sort_by{|k,v| v[0]}
 
-    return if occurrences.empty?
+    return nil if occurrences.empty?
     #find top keyphrase that occurs at least once as a real word
     keyword = nil
     failover = if occurrences.last[1][1][0] == 0
@@ -36,7 +59,7 @@ class Keywordinator
 
     keyword ||= failover
 
-    return if keyword.nil?    
+    return nil if keyword.nil?    
 
     #key_phrases = self.get_photo_keywords(photos, :min_captions => 2, :max_phrase_len => 7, :keep_hashes => true)
     key_phrases = Keywordinator.get_photo_keywords(photos, :min_captions => 2, :max_phrase_len => 7, :keep_hashes => true)
