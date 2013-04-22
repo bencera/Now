@@ -152,7 +152,8 @@ class SentPush < ActiveRecord::Base
           n.subscription = subscription
           n.alert = message
           n.event = event_id 
-          n.deliver
+#CONALL -- take this out until we fix this
+#          n.deliver
         end
       end
     rescue 
