@@ -746,12 +746,19 @@ SCORE_HALF_LIFE       = 7.day.to_f
   end
 
   ################################################################################
-  # set the photo card for the event -- vine first, then liked photos
+  # set the photo card for the event -- vine first, then liked photos, then themed
   ################################################################################
 
   def update_photo_card(options={})
     event_photos = self.photos.where(:now_likes.gt => 0).order_by([[:now_likes, :desc]]).entries.map {|photo| photo.id}
     vine_photos = self.photos.where(:has_vine => true).order_by([[:now_likes, :desc], [:time_taken, :desc]]).entries
+    
+    ex_hash = self.exceptionality ? eval self.exceptionality : {}
+
+    if self.exceptionality[:keyword_strengths]
+      keyword = self.exceptionality[:keyword_strengths].max_by{|x| x[1]}[0]
+      keyword_photos = Keywordinator.get_photos_by_keyphrase(keyword, event.photos)
+    end
 
     if vine_photos.any?
       vine_photo = vine_photos.first.id 
@@ -759,10 +766,15 @@ SCORE_HALF_LIFE       = 7.day.to_f
       self.has_vine = true
     end
 
+    if event_photos.count < 6 && keyword_photos.any?
+      more_photos = 6 - event_photos.count
+      event_photos.push(*(keyword_photos[0..(more_photos -1)]))
+    end
+
     event_photos = event_photos.uniq
 
     if event_photos.count > 0
-      self.photo_card = event_photos
+      self.photo_card = event_photos[0..5]
     end
   end
 

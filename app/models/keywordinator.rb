@@ -33,6 +33,20 @@ class Keywordinator
     return caption
   end
 
+  def self.get_photos_by_keyphrase(phrase, photos, options={})
+    normalized_phrase = Keywordinator.normalize_caption(phrase)
+
+    related_photos = []
+    photos.each do |photo| 
+      caption = Keywordinator.normalize_caption(photo.caption)
+      if caption.include?(normalized_phrase)
+        related_photos << photo
+      end
+    end
+
+    return related_photos
+  end
+
   def self.get_caption_from_photos(phrases, photos)
 
    #occurrences = self.count_occurrences(phrases, photos).sort_by{|k,v| v[0]}

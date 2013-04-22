@@ -35,6 +35,7 @@ class TrendingPeople
             end
           else
             event.fetch_and_add_photos(current_time) 
+            event.update_photo_card
           end
           event.venue.notify_subscribers(event)
         else
