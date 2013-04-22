@@ -753,7 +753,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     event_photos = self.photos.where(:now_likes.gt => 0).order_by([[:now_likes, :desc]]).entries.map {|photo| photo.id}
     vine_photos = self.photos.where(:has_vine => true).order_by([[:now_likes, :desc], [:time_taken, :desc]]).entries
     
-    ex_hash = self.exceptionality ? eval self.exceptionality : {}
+    ex_hash = self.exceptionality ? (eval self.exceptionality) : {}
 
     if self.exceptionality[:keyword_strengths]
       keyword = self.exceptionality[:keyword_strengths].max_by{|x| x[1]}[0]
