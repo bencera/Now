@@ -329,7 +329,6 @@ class FacebookUser
         n.subscription = subscription
         n.alert = message
         n.event = event_id 
-        #CONALL -- take this out until push is fixed
         n.deliver
       end
     end
