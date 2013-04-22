@@ -94,7 +94,7 @@ class EventDetailBlock
 
     custom_blocks.each do |block|
       if block[:type] == BLOCK_PHOTOS
-        referenced_photo_ids << (*block[:photo_ids])
+        referenced_photo_ids.push(*(block[:photo_ids]))
       end
     end
     
