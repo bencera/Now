@@ -98,7 +98,7 @@ class EventDetailBlock
       end
     end
     
-    photos = event.photos.where(:id.in => referenced_photo_ids).entries
+    photos = event.photos.where(:_id.in => referenced_photo_ids).entries
 
     photo_map = {}
     photos.each {|photo| photo_map[photo.id] = photo}
