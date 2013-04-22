@@ -42,7 +42,8 @@ class SendBatchPush2
             n.subscription = sub
             n.alert = message 
             n.event = event.id
-            n.deliver
+            # CONALL -- taking this out until push is fixed
+            #n.deliver
           end
         rescue
           failed_devs << device
