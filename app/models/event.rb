@@ -139,6 +139,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   # come up with exceptionality
   field :exceptionality, :default => "{}"
+  field :customized_view, :type => Array, :default => []
 
   #these fields are only used for places updating without subscription
   field :last_update

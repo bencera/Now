@@ -86,7 +86,57 @@ class SentPush < ActiveRecord::Base
   end
 
   def self.do_world_push(message, event)
+    conall = FacebookUser.where(:now_id => "2").first
+    
+    i = 0 
+    wait_time = 50.seconds
 
+    devices = APN::Device.where(:facebook_user_id => nil).order_by([[:updated_at, :desc]]).entries; puts
+    fb_users = FacebookUser.where("now_profile.notify_world" => {"$ne" => false} ).entries; puts
+
+
+    fb_user_groups = [[]]
+    fb_users.each do |fb_user|
+      fb_user_groups.last << fb_user.id.to_s
+      fb_user_groups.push([]) if fb_user_groups.last.count >= 100
+    end; puts
+
+
+    device_groups = [[]]
+    devices.each do |device|
+      if device.facebook_user_id.nil?
+        if device_groups.last.count >= 100
+          device_groups << []
+        end
+        device_groups.last << device.id
+      end
+    end; puts ""
+
+    event_id = event.id.to_s
+
+    first_batch = true
+    total_count = devices.count
+
+    conall.send_notification(message, event_id)
+    conall.send_notification("batches: #{device_groups.count} devs, #{fb_user_groups.count} fb users", event_id)
+
+    
+#    device_groups.each do |device_group|
+#      Resque.enqueue_in((i * wait_time), SendBatchPush3, 
+#                        {:message => message, :event_id => event_id.to_s, :device_ids => device_group, 
+#                         :first_batch => first_batch, :total_count => total_count, :type => SentPush::TYPE_WORLD_EVENT}.inspect)
+#      i += 1
+#      first_batch = false
+#    end; puts ""
+#
+#    fb_user_groups.each do |user_group|
+#      Resque.enqueue_in((i * wait_time), SendBatchPush3, 
+#                        {:message => message, :event_id => event_id, :facebook_user_ids => user_group, 
+#                         :first_batch => first_batch, :total_count => total_count, :type => SentPush::TYPE_WORLD_EVENT}.inspect)
+#      i += 1
+#      first_batch = false
+#    end; puts ""
+  
   end
 
   def self.notify_user(message, event_id, fb_user, options={})

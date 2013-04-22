@@ -10,6 +10,10 @@ class EventDetailBlock
 
   def self.get_blocks(event, user)
 
+    if event.customized_view
+      return render_customized_view(event)
+    end
+
     photos = if event.photos.is_a?(Array)
                event.photos.sort_by{|photo| photo.time_taken}.reverse
              else
@@ -83,6 +87,43 @@ class EventDetailBlock
     return result
   end
 
+  def self.render_customized_view(event)
+    custom_blocks = event.customized_view.map{|entry| eval entry}
+
+    referenced_photo_ids = []
+
+    custom_blocks.each do |block|
+      if block[:type] == BLOCK_PHOTOS
+        referenced_photo_ids << *(block[:photo_ids])
+      end
+    end
+    
+    photos = event.photos.where(:id.in => referenced_photo_ids).entries
+
+    photo_map = {}
+    photos.each {|photo| photo_map[photo.id] = photo}
+
+    photo_card = OpenStruct.new({:type => BLOCK_CARD, :block => nil})
+    return_blocks = [photo_card]
+
+    custom_blocks.each do |block|
+      next_block = case block[:type]
+                   when BLOCK_COMMENTS
+                     self.comment(block[:comment_hash])
+                   when BLOCK_PHOTOS
+                     batch = block[:photo_ids].map{|id| photo_map[id]}
+                     self.make_photo_block(batch)
+                   when BLOCK_MESSAGE
+                     self.message_block(block[:message])
+                   end
+
+      return_blocks << next_block
+
+    end
+
+    return_blocks
+  end
+
   def self.comment(comment_hash)
     OpenStruct.new({:type => BLOCK_COMMENTS, :data => OpenStruct.new(comment_hash)})
   end
@@ -129,6 +170,10 @@ class EventDetailBlock
     end
 
     return entries
+  end
+
+  def self.make_photo_block(batch)
+    OpenStruct.new({:type => BLOCK_PHOTOS, :data => OpenStruct.new({:photos => batch, :timestamp => batch.first.time_taken})})
   end
 
   def self.message_block(message)
