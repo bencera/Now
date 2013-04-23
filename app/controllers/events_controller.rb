@@ -95,6 +95,10 @@ class EventsController < ApplicationController
       results = EventsTools.get_user_created_or_reposted(@user)
     end
 
+    if params[:firstload] && (results[:events].nil? || results[:events].empty?)
+      results = EventsTools.get_world_events
+    end
+
     @meta_data = results[:meta] || {}
     @events = results[:events] || []
     @heat = results[:heat_entries] || []
