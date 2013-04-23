@@ -10,7 +10,7 @@ class EventDetailBlock
 
   def self.get_blocks(event, user)
 
-    if event.customized_view
+    if event.customized_view && event.customized_view.any?
       return render_customized_view(event)
     end
 
