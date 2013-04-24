@@ -756,7 +756,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     
     ex_hash = self.exceptionality ? (eval self.exceptionality) : {}
 
-    if self.exceptionality[:keyword_strengths]
+    if ex_hash[:keyword_strengths]
       keyword = self.exceptionality[:keyword_strengths].max_by{|x| x[1]}[0]
       keyword_photos = Keywordinator.get_photos_by_keyphrase(keyword, event.photos)
     end
