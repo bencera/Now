@@ -761,7 +761,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       keyword_photos = Keywordinator.get_photos_by_keyphrase(keyword, event.photos)
     end
 
-    if vine_photos.any?
+    if vine_photos && vine_photos.any?
       vine_photo = vine_photos.first.id 
       event_photos.unshift(vine_photo)
       self.has_vine = true
