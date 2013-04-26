@@ -18,9 +18,9 @@ class EventDetailBlock
       customized_view = render_customized_view(event)
       result.push(*(customized_view[:blocks]))
       return result if customized_view[:done]
-      seen_photo_ids = customized_view[:seen_photo_ids]
-      seen_comment_ids = customized_view[:seen_comment_ids]
-    end
+      seen_photo_ids = customized_view[:seen_photo_ids] || []
+      seen_comment_ids = customized_view[:seen_comment_ids] || []
+    end 
 
     photos = if event.photos.is_a?(Array)
                event.photos.sort_by{|photo| photo.time_taken}.reverse.reject {|photo| seen_photo_ids.include?(photo.id)}
