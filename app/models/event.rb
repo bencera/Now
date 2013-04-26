@@ -767,7 +767,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       self.has_vine = true
     end
 
-    if event_photos.count < 6 && keyword_photos.any?
+    if event_photos.count < 6 && keyword_photos && keyword_photos.any?
       more_photos = 6 - event_photos.count
       event_photos.push(*(keyword_photos[0..(more_photos -1)]))
     end
