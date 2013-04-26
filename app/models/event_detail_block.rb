@@ -122,8 +122,8 @@ class EventDetailBlock
     custom_blocks.each do |block|
       next_block = case block[:type]
                    when BLOCK_COMMENTS
-                     self.comment(block[:comment_hash])
                      response_hash[:seen_comment_ids].push(block[:comment_id]) if block[:comment_id]
+                     self.comment(block[:comment_hash])
                    when BLOCK_PHOTOS
                      batch = block[:photo_ids].map{|id| photo_map[id]}
                      self.make_photo_block(batch)
