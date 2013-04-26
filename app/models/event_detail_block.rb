@@ -18,7 +18,7 @@ class EventDetailBlock
       customized_view = render_customized_view(event)
       result.push(*(customized_view[:blocks]))
       return result if customized_view[:done]
-      seen_photo_ids = customized_view[:seen_photos]
+      seen_photo_ids = customized_view[:seen_photo_ids]
       seen_comment_ids = customized_view[:seen_comment_ids]
     end
 
