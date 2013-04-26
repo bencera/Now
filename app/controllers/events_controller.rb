@@ -379,9 +379,6 @@ class EventsController < ApplicationController
 
   def showweb
 
-  #  @event = Event.where(:shortid => params[:shortid]).first
-
-
     if params[:event]
       theme_results = WebNameMatcher.load_from_webname(params[:shortid], :main_event_id => params[:event])
     else
@@ -402,7 +399,7 @@ class EventsController < ApplicationController
       @is_city = theme_results[:city]
     end
 
-    @photos = @event.photos.order_by([[:time_taken,:asc]]).entries
+    @photos = @event.photos.where(:has_vine.ne => true).order_by([[:time_taken,:desc]]).entries
     @category = @event.category.downcase
     @venue = @event.venue
 
@@ -423,17 +420,42 @@ class EventsController < ApplicationController
        @event.add_view
        @event.add_click
 
-    array = @photos[0..25]
+      has_vine = false
+    if @event.has_vine
+      has_vine = true
+      vines = @event.photos.where(:has_vine => true).entries
+      @vines = vines.clone
+    end
+    array = @photos[0..50]
+
 
     @mobile_photos = []
 
+    i = 0
     while array.any?
       @mobile_photos << []
       rand_num = [2,3].sample
-      rand_num.times do 
-        @mobile_photos.last << array.pop if array.any?
-      end
+       if has_vine && vines.count > 0
+          if i % 2 == 0
+            @mobile_photos.last << vines.pop if vines.any?
+            i = i + 1
+            (rand_num -1).times do
+              @mobile_photos.last << array.pop if array.any?
+            end
+          else
+            (rand_num -1).times do
+              @mobile_photos.last << array.pop if array.any?
+            end
+            @mobile_photos.last << vines.pop if vines.any?
+            i = i + 1
+          end
+        else
+          rand_num.times do
+            @mobile_photos.last << array.pop if array.any?
+          end
+        end
     end
+
   end
   
   def cities

@@ -9,7 +9,9 @@
     %meta{:name => "description", :content => "Now is a free iphone app that let's you know in real time about events happening in your city."}
     %meta{:name => "keywords", :content => "realtime, photos, events, trending, iphone, explore, discover, things to do, news, city"}
     %link{:rel=>"shortcut icon", :href=>"/assets/favicon.ico"}
-    = stylesheet_link_tag "nowweb"
+    %link{:rel=>"stylesheet", :type=>"text/css", :href=>"http://yui.yahooapis.com/3.9.1/build/cssreset/cssreset-min.css"}
+    //= stylesheet_link_tag "reset"
+    = stylesheet_link_tag "newnow"
     %script{:type=>"text/javascript",:src=>"http://maps.googleapis.com/maps/api/js?key=AIzaSyDaB7Lbgnwfni3jrzOephB8HW7_6tJf-Es&sensor=false"}
     - if @theme
         %meta{:property=>"og:title", :content=> @theme_title}

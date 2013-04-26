@@ -32,6 +32,31 @@
     src: local('League Gothic Regular'), local('LeagueGothic-Regular'), url('League_Gothic.otf') format('opentype');
   }
 
+
+@font-face {
+    font-family: 'dincond-lightregular';
+    src: url('/assets/font/ff_din_condensed_light-webfont.eot');
+    src: url('/assets/font/ff_din_condensed_light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/assets/font/ff_din_condensed_light-webfont.woff') format('woff'),
+         url('/assets/font/ff_din_condensed_light-webfont.ttf') format('truetype'),
+         url('/assets/font/ff_din_condensed_light-webfont.svg#dincond-lightregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'dincond-boldbold';
+    src: url('/assets/font/ff_din_condensed_bold-webfont.eot');
+    src: url('/assets/font/ff_din_condensed_bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/assets/font/ff_din_condensed_bold-webfont.woff') format('woff'),
+         url('/assets/font/ff_din_condensed_bold-webfont.ttf') format('truetype'),
+         url('/assets/font/ff_din_condensed_bold-webfont.svg#dincond-boldbold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 /* Site styles
 ================================================== */
 
@@ -145,11 +170,16 @@ a:hover {}
 .venueName{
   color: #ff4a6f;
   font-weight: bold;
+  font-family: dincond-boldbold;
+  font-weight: normal;
+  font-size: 20px;
 }
 
-.venueDescription .timeAgo {
-  float: right;
+.venueDescription {
   color: gray;
+  font-family: dincond-lightregular;
+  font-weight: normal;
+  font-size: 20px;
 }
 
 .clearfix:after {
