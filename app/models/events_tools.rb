@@ -45,6 +45,8 @@ class EventsTools
     elsif scope == "now"
       event_query = event_query.where(:status.in => Event::TRENDED_OR_TRENDING) 
       event_query = event_query.where(:end_time.gt => 3.hours.ago.to_i)
+    else
+      event_query = event_query.where(:status.in => Event::TRENDED_OR_TRENDING) 
     end
 
     if category == "arts"
