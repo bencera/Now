@@ -131,9 +131,10 @@ class EventDetailBlock
                      self.message_block(block[:message])
                    when "rest"
                      response_hash[:done] = false
+                     next
                    end
 
-      return_blocks << next_block
+      return_blocks << next_block if next_block
 
     end
 
