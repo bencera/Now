@@ -10,21 +10,30 @@ class EventDetailBlock
 
   def self.get_blocks(event, user)
 
+    result = []
+    seen_photo_ids = []
+    seen_comment_ids = []
+
     if event.customized_view && event.customized_view.any?
-      return render_customized_view(event)
+      customized_view = render_customized_view(event)
+      result.push(*(customized_view[:blocks]))
+      return result if customized_view[:done]
+      seen_photo_ids = customized_view[:seen_photos]
+      seen_comment_ids = customized_view[:seen_comment_ids]
     end
 
     photos = if event.photos.is_a?(Array)
-               event.photos.sort_by{|photo| photo.time_taken}.reverse
+               event.photos.sort_by{|photo| photo.time_taken}.reverse.reject {|photo| seen_photo_ids.include?(photo.id)}
              else
-               event.photos.order_by([[:now_likes, :desc],[:time_taken, :desc]]).entries
+               event.photos.order_by([[:now_likes, :desc],[:time_taken, :desc]]).entries.reject {|photo| seen_photo_ids.include?(photo.id)}
              end
 
 
 
-    photo_card = OpenStruct.new({:type => BLOCK_CARD, :block => nil})
-    result = [photo_card]
-
+    unless customized_view
+      photo_card = OpenStruct.new({:type => BLOCK_CARD, :block => nil})
+      result.push(photo_card)
+    end
         
     ## this is just for testing
     
@@ -61,9 +70,9 @@ class EventDetailBlock
 
 
     comments = if event.checkins.is_a?(Array)
-                 event.checkins.map {|ci| self.comment(ci.get_comment_hash)}
+                 event.checkins.reject {|comment| seen_comment_ids.include?(comment.id)}.map {|ci| self.comment(ci.get_comment_hash)}       
                else
-                event.checkins.order_by([[:created_at, :asc]]).map {|ci| self.comment(ci.get_comment_hash)}
+                event.checkins.order_by([[:created_at, :asc]]).reject {|comment| seen_comment_ids.include?(comment.id)}.map {|ci| self.comment(ci.get_comment_hash)}
                end
 
     user_entries = if event.fake
@@ -91,12 +100,16 @@ class EventDetailBlock
     custom_blocks = event.customized_view.map{|entry| eval entry}
 
     referenced_photo_ids = []
+    response_hash = {:seen_photo_ids => [], :seen_comments => [], :done => true}
 
     custom_blocks.each do |block|
       if block[:type] == BLOCK_PHOTOS
         referenced_photo_ids.push(*(block[:photo_ids]))
+        response_hash[:seen_photo_ids].push(*(block[:photo_ids]))
       end
     end
+
+
     
     photos = event.photos.where(:_id.in => referenced_photo_ids).entries
 
@@ -110,18 +123,22 @@ class EventDetailBlock
       next_block = case block[:type]
                    when BLOCK_COMMENTS
                      self.comment(block[:comment_hash])
+                     response_hash[:seen_comment_ids].push(block[:comment_id]) if block[:comment_id]
                    when BLOCK_PHOTOS
                      batch = block[:photo_ids].map{|id| photo_map[id]}
                      self.make_photo_block(batch)
                    when BLOCK_MESSAGE
                      self.message_block(block[:message])
+                   when "rest"
+                     response_hash[:done] = false
                    end
 
       return_blocks << next_block
 
     end
 
-    return_blocks
+    response_hash[:blocks] = return_blocks
+    return response_hash
   end
 
   def self.comment(comment_hash)
