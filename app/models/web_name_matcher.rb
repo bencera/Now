@@ -9,7 +9,16 @@ class WebNameMatcher
     
     result_array = theme_result.split("|")
 
-    if result_array.count > 1
+    if result_array.count == 3
+      #single event
+      event_id = result_array[1]
+      title = result_array[2]
+      event = Event.find(event_id)
+      
+      results[:main_event] = nil
+      results[:events] = [event]
+      results[:title] = title
+    elsif result_array.count == 2
       #city
       results[:city] = true
       city_key = result_array[1]
