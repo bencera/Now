@@ -37,36 +37,36 @@ class EventDetailBlock
         
     ## this is just for testing
     
-    n_users = photos.map {|photo| photo.user_id}.uniq.count
-
-    result.push( message_block("#{event.n_photos} photos") )
-
-    result.push( message_block("#{n_users} users") )
-
-    
-    if event.venue.venue_keywords &&  event.venue.venue_keywords.any?
-      result.push(message_block("venue words"))
-      event.venue.venue_keywords.each do |keyword|
-        result.push(message_block(keyword))
-      end
-    end
-
-    event_ex = eval event.exceptionality
-    if event_ex
-      keyword_strengths = event_ex[:key_strengths]
-      if keyword_strengths && keyword_strengths.any?
-        top_keyword = keyword_strengths.sort_by{|x| x[1]}.reverse.first 
-        result.push(message_block("#{top_keyword[0]} #{(top_keyword[1] * 100).to_i}%"))  
-    
-        related_photos = photos.reject {|photo| photo.caption.nil? || !(photo.caption.downcase.include?(top_keyword[0]))}
-
-        r_photos = make_event_photos_block(event, related_photos)
-        result.push(*r_photos) if r_photos.any?
-
-        result.push(message_block("#{related_photos.count} photos"))
-      end
-    end
-
+#    n_users = photos.map {|photo| photo.user_id}.uniq.count
+#
+#    result.push( message_block("#{event.n_photos} photos") )
+#
+#    result.push( message_block("#{n_users} users") )
+#
+#    
+#    if event.venue.venue_keywords &&  event.venue.venue_keywords.any?
+#      result.push(message_block("venue words"))
+#      event.venue.venue_keywords.each do |keyword|
+#        result.push(message_block(keyword))
+#      end
+#    end
+#
+#    event_ex = eval event.exceptionality
+#    if event_ex
+#      keyword_strengths = event_ex[:key_strengths]
+#      if keyword_strengths && keyword_strengths.any?
+#        top_keyword = keyword_strengths.sort_by{|x| x[1]}.reverse.first 
+#        result.push(message_block("#{top_keyword[0]} #{(top_keyword[1] * 100).to_i}%"))  
+#    
+#        related_photos = photos.reject {|photo| photo.caption.nil? || !(photo.caption.downcase.include?(top_keyword[0]))}
+#
+#        r_photos = make_event_photos_block(event, related_photos)
+#        result.push(*r_photos) if r_photos.any?
+#
+#        result.push(message_block("#{related_photos.count} photos"))
+#      end
+#    end
+#
 
 
     comments = if event.checkins.is_a?(Array)
