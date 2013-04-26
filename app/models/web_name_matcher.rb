@@ -15,7 +15,7 @@ class WebNameMatcher
       title = result_array[2]
       event = Event.find(event_id)
       
-      results[:main_event] = nil
+      results[:main_event] = event
       results[:events] = [event]
       results[:title] = title
     elsif result_array.count == 2
