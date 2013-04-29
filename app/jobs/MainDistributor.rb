@@ -26,7 +26,7 @@ class MainDistributor
 
 
       #enque a max of 14 groups each cycle -- gotta limit this somehow
-      user_groups[0..4].each do |user_group|
+      user_groups[0..9].each do |user_group|
         user_id_list = user_group.map{|user| user.now_id}
         user_group.each {|user| user.last_ig_queue = queue_time; user.save!}
         Resque.enqueue(UserFollow3, {:user_id_list => user_id_list}.inspect) if user_id_list.any?
@@ -72,7 +72,7 @@ class MainDistributor
 
       venue_to_watch[vw.venue_ig_id] = vw
 
-      vw_groups << [] if vw_groups.last.count >3 
+      vw_groups << [] if vw_groups.last.count >9 
       vw_groups.last << vw
     end
 
