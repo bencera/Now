@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130401231209) do
+ActiveRecord::Schema.define(:version => 20130429193624) do
 
   create_table "archive_events", :force => true do |t|
     t.string   "coordinates"
@@ -236,6 +236,11 @@ ActiveRecord::Schema.define(:version => 20130401231209) do
     t.string   "trigger_media_profile_photo"
   end
 
+  add_index "venue_watches", ["end_time"], :name => "index_venue_watches_on_end_time"
+  add_index "venue_watches", ["event_id"], :name => "index_venue_watches_on_event_id"
+  add_index "venue_watches", ["last_examination"], :name => "index_venue_watches_on_last_examination"
+  add_index "venue_watches", ["last_queued"], :name => "index_venue_watches_on_last_queued"
   add_index "venue_watches", ["trigger_media_ig_id", "user_now_id"], :name => "index_venue_watches_on_trigger_media_ig_id_and_user_now_id", :unique => true
+  add_index "venue_watches", ["venue_ig_id"], :name => "index_venue_watches_on_venue_ig_id"
 
 end
