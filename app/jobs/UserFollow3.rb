@@ -10,6 +10,8 @@ class UserFollow3
 
     max_updates = params[:max_updates] || 70
 
+    new_venues = Venue.where(:created_at.gt => 1.hour.ago).count
+
     #pull list of all users to do personalization update for
     if params[:user_id_list]
       users = FacebookUser.where(:now_id.in => params[:user_id_list]).entries
@@ -65,8 +67,9 @@ class UserFollow3
           photo = Photo.where(:ig_media_id => media.id).first
           if !photo
             #we want to put your friends on the map now, so create the photo if possible, but not if it means creating a new venue
-            venue = Venue.where(:ig_venue_id => venue_ig_id).first
-            if venue
+            
+            if new_venues < 1000 || (venue = Venue.where(:ig_venue_id => venue_ig_id).first)
+              new_venues += 1 unless venue
               photo = Photo.create_photo("ig", media, nil)
             end
           end
