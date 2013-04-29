@@ -101,7 +101,7 @@ class UserFollow3
 
         #don't check people too often if they're not showing us a ton of 
 
-        time_padding = (30 * [2 - new_media_count, 0].max).minutes.to_i
+        time_padding = (30 * [4 - new_media_count, 0].max).minutes.to_i
 
         ig_user.last_ig_queue = Time.now.to_i + time_padding
         ig_user.last_ig_update = Time.now.to_i
