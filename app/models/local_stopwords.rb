@@ -13,14 +13,16 @@ class LocalStopwords
 
   field :keyword_entries, :default => "{}"
   field :coordinates, :type => Array
+  field :venue_ids, :type => Array, :default => []
 
   reverse_geocoded_by :coordinates
 
-  has_many :venues
+  
 
   def add_keywords(venue, keyword_list)
 
-    self.venues.push(venue) unless self.venues.include?(venue)
+    self.venue_ids ||= []
+    self.venue_ids.push(venue.id) unless self.venue_ids.include?(venue.id)
 
     keyword_hash = eval(self.keyword_entries)
 
@@ -42,7 +44,7 @@ class LocalStopwords
   end
 
   def get_venue_count()
-    return self.venues.count
+    return self.venue_ids.count
   end
   
 
