@@ -27,11 +27,11 @@ class LocalStopwords
     keyword_hash = eval(self.keyword_entries)
 
     keyword_list.each do |keyword|
-      keyword_hash[keyword_hash] ||= []
+      keyword_hash[keyword] ||=  []
       keyword_hash[keyword].push(venue.id) unless keyword_hash[keyword].include?(venue.id)
     end
 
-    self.keyword_entries = keyword_list.inspect
+    self.keyword_entries = keyword_hash.inspect
   end
 
   def get_keyword_count(keyword)
