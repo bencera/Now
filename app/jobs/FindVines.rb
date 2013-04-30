@@ -40,10 +40,10 @@ class FindVines
         event.update_photo_card
         
         #notify when vines are added to an event
-        if photos.count > 0
-          users = FacebookUser.where(:now_id.in => ["1","2"])
-          users.each {|user| user.send_notification("Added #{photos.count} vines to event", event.id)} 
-        end
+#        if photos.count > 0
+#          users = FacebookUser.where(:now_id.in => ["1","2"])
+#          users.each {|user| user.send_notification("Added #{photos.count} vines to event", event.id)} 
+#        end
       end
       event.save! if event.changed?
     end
