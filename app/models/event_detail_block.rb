@@ -191,7 +191,9 @@ class EventDetailBlock
   end
 
   def self.make_photo_block(batch)
-    OpenStruct.new({:type => BLOCK_PHOTOS, :data => OpenStruct.new({:photos => batch, :timestamp => batch.first.time_taken})})
+    if batch.any?
+      OpenStruct.new({:type => BLOCK_PHOTOS, :data => OpenStruct.new({:photos => batch, :timestamp => batch.first.time_taken})})
+    end
   end
 
   def self.message_block(message)

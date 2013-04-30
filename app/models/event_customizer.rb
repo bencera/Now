@@ -17,9 +17,12 @@ class EventCustomizer
   def add_vine(vine_url)
     vine = VineTools.pull_vine(vine_url, :twitter_user => "nownowchris")
 
-    photo = venue.photos.new
-    photo.set_from_vine(vine, :timestamp => Time.now.to_i)
-    photo.save!
+    photo = Photo.where(:ig_media_id => "vi|#{vine_url}").first
+    if photo.nil?
+      photo = @event.venue.photos.new
+      photo.set_from_vine(vine, :timestamp => Time.now.to_i)
+      photo.save!
+    end
 
     @photos.push(photo) unless @photos.include?(photo)
 
@@ -36,7 +39,7 @@ class EventCustomizer
   end
 
   def add_title(message)
-    @blocks << {:type => "message", :message => "message"}.inspect
+    @blocks << {:type => "message", :message => message}.inspect
 
   end
 
@@ -62,6 +65,7 @@ class EventCustomizer
     @event.insert_photos_safe(@photos)
     @event.customized_view = @blocks
     @event.save!
+    @blocks.pop
   end
 
   def output_customization_script
