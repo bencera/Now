@@ -12,6 +12,9 @@ class LocalStopwords
 
 
   field :keyword_entries, :default => "{}"
+  field :coordinates, :type => Array
+
+  reverse_geocoded_by :coordinates
 
   has_many :venues
 
