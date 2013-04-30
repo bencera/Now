@@ -44,8 +44,18 @@ class DoVenueKeywords
       return_val
     end
 
-
     venue.venue_keywords = test.sort_by {|k,v| v[:event_count]}.map{|v| v[0]}
+
+    stop_points = LocalStopwords.where(:coordinates.within =>  {"$center" => [venue.coordinates, 1 / 110.0]}).entries
+
+    if stop_points.count == 0
+      stop_points = [LocalStopwords.new(:coordinates => venue.coordinates)]
+    end
+
+    stop_points.each do |stop_point|
+      stop_point.add_keywords(venue, venue.venue_keywords)
+      stop_point.save!
+    end
     
     venue.save!
 
