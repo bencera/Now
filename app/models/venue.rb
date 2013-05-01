@@ -33,6 +33,8 @@ class Venue
   field :venue_keywords, :type => Array, default: []
   field :looked_for_keywords, :type => Boolean, default: false
 
+  field :customized_view, :type => Array, default: [] #storing top topics and related photo ids 
+
   #we want to fill these in someday
   field :website
   field :street_address

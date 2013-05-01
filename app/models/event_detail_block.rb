@@ -20,6 +20,12 @@ class EventDetailBlock
       return result if customized_view[:done]
       seen_photo_ids = customized_view[:seen_photo_ids] || []
       seen_comment_ids = customized_view[:seen_comment_ids] || []
+    elsif event.venue.customized_view && event.venue.customized_view.any? 
+      customized_view = render_customized_venue_view(venue)
+      result.push(*(customized_view[:blocks]))
+      return result if customized_view[:done]
+      seen_photo_ids = customized_view[:seen_photo_ids] || []
+      seen_comment_ids = customized_view[:seen_comment_ids] || []
     end 
 
     photos = if event.photos.is_a?(Array)
@@ -96,22 +102,45 @@ class EventDetailBlock
     return result
   end
 
+
   def self.render_customized_view(event)
     custom_blocks = event.customized_view.map{|entry| eval entry}
 
     referenced_photo_ids = []
-    response_hash = {:seen_photo_ids => [], :seen_comments => [], :done => true}
 
     custom_blocks.each do |block|
       if block[:type] == BLOCK_PHOTOS
         referenced_photo_ids.push(*(block[:photo_ids]))
-        response_hash[:seen_photo_ids].push(*(block[:photo_ids]))
       end
     end
-
-
     
     photos = event.photos.where(:_id.in => referenced_photo_ids).entries
+  
+    self.render_customized_from_blocks(custom_blocks, photos, referenced_photo_ids)
+  end
+
+  
+  def self.render_customized_venue_view(venue)
+    custom_blocks = venue.customized_view.map{|entry| eval entry}
+
+    referenced_photo_ids = []
+
+    custom_blocks.each do |block|
+      if block[:type] == BLOCK_PHOTOS
+        referenced_photo_ids.push(*(block[:photo_ids]))
+      end
+    end
+    
+    photos = venue.photos.where(:_id.in => referenced_photo_ids).entries
+  
+    self.render_customized_from_blocks(custom_blocks, photos, referenced_photo_ids)
+  end
+
+
+
+  def self.render_customized_from_blocks(custom_blocks, photos, referenced_photo_ids)
+    
+    response_hash = {:seen_photo_ids => referenced_photo_ids, :seen_comments => [], :done => true}
 
     photo_map = {}
     photos.each {|photo| photo_map[photo.id] = photo}

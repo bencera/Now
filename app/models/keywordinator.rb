@@ -299,6 +299,11 @@ class Keywordinator
   def self.clean_and_split(photos, options={})
 
     caption_list = photos.uniq{|photo| "#{photo.user_id}#{photo.caption && photo.caption.downcase}"}.map{|photo| options[:no_downcase] ? photo.caption : photo.caption.downcase}
+
+    if options[:break_up_hashes]
+      caption_list = caption_list.map{|caption| caption.split(/#\S+/).map{|entry| entry.strip}.reject{|phrase| phrase.blank?}}.flatten
+    end
+
     if options[:keep_hashes] #will also turn @s into #s
       caption_words = caption_list.map{|caption| caption.split(/\s/).map{ |word| word.gsub(/^[@]+/,"#").gsub(/^[\]\[!"$%&'()*+,.\/:;<=>?\^_{|}~-]+/,"").gsub(/[.,?!\W]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") }.reject{|word| word.blank?} }
     else
