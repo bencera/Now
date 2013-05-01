@@ -69,7 +69,7 @@ class EventCustomizer
   end
 
   def output_customization_script
-    puts "event = Event.find(#{@event.id})"
+    puts "event = Event.find(\"#{@event.id}\")"
     puts "blocks = []"
 
     @blocks.each do |block|
