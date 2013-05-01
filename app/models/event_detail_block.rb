@@ -21,7 +21,7 @@ class EventDetailBlock
       seen_photo_ids = customized_view[:seen_photo_ids] || []
       seen_comment_ids = customized_view[:seen_comment_ids] || []
     elsif event.venue.customized_view && event.venue.customized_view.any? 
-      customized_view = render_customized_venue_view(venue)
+      customized_view = render_customized_venue_view(event.venue)
       result.push(*(customized_view[:blocks]))
       return result if customized_view[:done]
       seen_photo_ids = customized_view[:seen_photo_ids] || []
