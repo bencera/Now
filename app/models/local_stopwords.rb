@@ -47,6 +47,9 @@ class LocalStopwords
     return self.venue_ids.count
   end
   
-
+  def get_ordered_list
+    keyword_hash = eval(self.keyword_entries)
+    keyword_hash.sort_by {|k,v| v.count}.map {|x| x[0], x[1].count]}
+  end
   
 end
