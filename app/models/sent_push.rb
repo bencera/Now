@@ -120,23 +120,22 @@ class SentPush < ActiveRecord::Base
     conall.send_notification(message, event_id)
     conall.send_notification("batches: #{device_groups.count} devs, #{fb_user_groups.count} fb users", event_id)
 
+
+    fb_user_groups.each do |user_group|
+      Resque.enqueue_in((i * wait_time), SendBatchPush3, 
+                        {:message => message, :event_id => event_id, :facebook_user_ids => user_group, 
+                         :first_batch => first_batch, :total_count => total_count, :type => SentPush::TYPE_WORLD_EVENT}.inspect)
+      i += 1
+      first_batch = false
+    end; puts ""
     
-#    device_groups.each do |device_group|
-#      Resque.enqueue_in((i * wait_time), SendBatchPush3, 
-#                        {:message => message, :event_id => event_id.to_s, :device_ids => device_group, 
-#                         :first_batch => first_batch, :total_count => total_count, :type => SentPush::TYPE_WORLD_EVENT}.inspect)
-#      i += 1
-#      first_batch = false
-#    end; puts ""
-#
-#    fb_user_groups.each do |user_group|
-#      Resque.enqueue_in((i * wait_time), SendBatchPush3, 
-#                        {:message => message, :event_id => event_id, :facebook_user_ids => user_group, 
-#                         :first_batch => first_batch, :total_count => total_count, :type => SentPush::TYPE_WORLD_EVENT}.inspect)
-#      i += 1
-#      first_batch = false
-#    end; puts ""
-  
+    device_groups.each do |device_group|
+      Resque.enqueue_in((i * wait_time), SendBatchPush3, 
+                        {:message => message, :event_id => event_id.to_s, :device_ids => device_group, 
+                         :first_batch => first_batch, :total_count => total_count, :type => SentPush::TYPE_WORLD_EVENT}.inspect)
+      i += 1
+      first_batch = false
+    end; puts ""
   end
 
   def self.notify_user(message, event_id, fb_user, options={})
