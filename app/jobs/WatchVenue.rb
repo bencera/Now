@@ -151,6 +151,16 @@ class WatchVenue
 
         vw.save! if vw.changed?
 
+        #create photos if we already have the venue (we should most of the time now)
+        if venue
+          response.data.each do |photo|
+            unless Photo.where(:ig_media_id => photo.id).first
+              new_photo = Photo.create_photo("ig", photo, nil)
+            end
+          end
+
+        end
+
         #without category, needs more photos
         min_photos = (venue.nil? || (venue.categories && venue.categories.any?)) ? 3 : 5
 
