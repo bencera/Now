@@ -1,5 +1,28 @@
 class Keywordinator
 
+  ACCENTS_MAPPING = {
+    'E' => [200,201,202,203],
+    'e' => [232,233,234,235],
+    'A' => [192,193,194,195,196,197],
+    'a' => [224,225,226,227,228,229,230],
+    'C' => [199],
+    'c' => [231],
+    'O' => [210,211,212,213,214,216],
+    'o' => [242,243,244,245,246,248],
+    'I' => [204,205,206,207],
+    'i' => [236,237,238,239],
+    'U' => [217,218,219,220],
+    'u' => [249,250,251,252],
+    'N' => [209],
+    'n' => [241],
+    'Y' => [221],
+    'y' => [253,255],
+    'AE' => [306],
+    'ae' => [346],
+    'OE' => [188],
+    'oe' => [189]
+  }
+
   def self.get_caption(event)
 
     caption = nil
@@ -298,21 +321,32 @@ class Keywordinator
 
   def self.clean_and_split(photos, options={})
 
-    caption_list = photos.uniq{|photo| "#{photo.user_id}#{photo.caption && photo.caption.downcase}"}.map{|photo| options[:no_downcase] ? photo.caption : photo.caption.downcase}
+    caption_list = photos.uniq{|photo| "#{photo.user_id}#{photo.caption && photo.caption.downcase}"}.map{|photo|self.remove_diacriticals(options[:no_downcase] ? photo.caption : photo.caption.downcase)}
 
     if options[:break_up_hashes]
-      caption_list = caption_list.map{|caption| caption.split(/#\S+/).map{|entry| entry.strip}.reject{|phrase| phrase.blank?}}.flatten
+      caption_list = caption_list.map{|caption| caption.split(/[@#]\S+/).map{|entry| entry.strip}.reject{|phrase| phrase.blank?}}.flatten
     end
 
     if options[:keep_hashes] #will also turn @s into #s
       caption_words = caption_list.map{|caption| caption.split(/\s/).map{ |word| word.gsub(/^[@]+/,"#").gsub(/^[\]\[!"$%&'()*+,.\/:;<=>?\^_{|}~-]+/,"").gsub(/[.,?!\W]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") }.reject{|word| word.blank?} }
     else
-      caption_words = caption_list.map{|caption| caption.split(/\s/).map{ |word| word.gsub(/^[@#]+/,"").gsub(/^[\]\[!"$%&'()*+,.\/:;<=>?\^_{|}~-]+/,"").gsub(/[.,?!\W]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") }.reject{|word| word.blank?} }
+      caption_words = caption_list.map{|caption| caption.split(/\s/).map{ |word| word.gsub(/^[@#]+/,"").gsub(/^[\]\[!"$%&'()*+,.\/:;<=>?\^_{|}~-]+/,"").gsub(/[.,?!\W]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") }.reject{|word| word.blank?} }.map
     end
 
     return caption_words
   end
 
+  #have to call this on words, not whole strings -- removes whitespace
+  def self.remove_diacriticals(string)
+    str = String.new(string)
+    ACCENTS_MAPPING.each {|letter,accents|
+      packed = accents.pack('U*')
+      rxp = Regexp.new("[#{packed}]", nil)
+      str.gsub!(rxp, letter)
+    }
+    
+    str
+  end
 
   def self.normalize_caption(caption, options = {})
     my_caption = if options[:no_downcase]
