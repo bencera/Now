@@ -931,7 +931,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
   def insert_photos_safe(new_photos)
     has_vine = false
-    new_photos.each {|new_photo| has_vine ||= new_photo.has_vine; self.photos.push new_photo unless new_photo.nil? || self.photo_ids.include?(new_photo.id) }
+    new_photos.each {|new_photo| next if new_photo.nil?;  has_vine ||= new_photo.has_vine; self.photos.push new_photo unless new_photo.nil? || self.photo_ids.include?(new_photo.id) }
 
     if has_vine
       self.has_vine = true

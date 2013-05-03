@@ -244,7 +244,8 @@ class WatchVenue
 
           event = Event.find(event_id)
 
-          event.insert_photos_safe(additional_photos)
+          additional_photos = additional_photos.compact
+          event.insert_photos_safe(additional_photos) if additional_photos.any?
 
           photo_in_event = false
           
