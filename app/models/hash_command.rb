@@ -37,8 +37,8 @@ class HashCommand
   ALL_FUNCTIONS = ADMIN_FUNCTIONS
 
   def self.check_and_execute(message_string, facebook_user, event)
-    words = message_string.downcase.split(" ")
-    command = words.first
+    words = message_string.split(" ")
+    command = words.first.downcase
     args = words[1..-1]
     
     admin = facebook_user.admin_user 
