@@ -26,6 +26,12 @@ class LocalStopwords
 
     keyword_hash = eval(self.keyword_entries)
 
+    #remove old keywords
+    keyword_hash.keys.each do |keyword|
+      entry = keyword_hash[keyword]
+      entry.delete(venue.id)
+    end
+
     keyword_list.each do |keyword|
       keyword_hash[keyword] ||=  []
       keyword_hash[keyword].push(venue.id) unless keyword_hash[keyword].include?(venue.id)
