@@ -450,6 +450,8 @@ class Keywordinator
 
     n_users = event.photos.map {|photo| photo.user_id}.uniq.count
 
+    local_stop_words = LocalStopwords.get_stop_words(event.coordinates)
+
     keywords_entries.each do |entry|
       skip_entry = false
 
@@ -461,6 +463,7 @@ class Keywordinator
       CaptionsHelper.city_names.each {|word| skip_entry = true if entry[0] == word}
       CaptionsHelper.restricted_phrases.each {|word| skip_entry = true if entry[0] == word}
       CaptionsHelper.never_keyword.each {|word| skip_entry = true if entry[0].include?(word)}
+      local_stop_words.each {|word| skip_entry = true if word == entry[0]}
 
       next if skip_entry
   

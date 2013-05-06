@@ -57,5 +57,18 @@ class LocalStopwords
     keyword_hash = eval(self.keyword_entries)
     keyword_hash.sort_by {|k,v| v.count}.map {|x| [x[0], x[1].count]}
   end
+
+  def get_stop_words(coordinates)
+      
+    stop_points = LocalStopwords.where(:coordinates.within => {"$center" => [coordinates, 3.0/111]}).entries; puts
+
+    word_hash = {}
+
+    stop_points.each do |stop_point|
+      word_hash.merge!(eval(stop_point.keyword_entries)){|key, oldval, newval| (oldval + newval).uniq}
+    end; nil 
+
+    word_hash.map {|k,v| [k, v.count]}.sort_by {|x| x[1]}.reject{|x| x[1] < 15 }.map {|x| x[0]}  
+  end
   
 end
