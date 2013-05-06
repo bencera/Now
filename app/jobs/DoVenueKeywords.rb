@@ -29,7 +29,7 @@ class DoVenueKeywords
       event_times[event.id] = event.end_time
     end; puts
 
-    keyword_list = Keywordinator.make_keyphrase_timeline(event_photos, event_times); puts
+    keyword_list = Keywordinator.make_keyphrase_timeline(event_photos, event_times, :break_up_hashes => true); puts
 
     min_occur = photos.count * 0.03
 

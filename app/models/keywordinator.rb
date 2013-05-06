@@ -216,7 +216,7 @@ class Keywordinator
       keywords = get_photo_keywords(photos, options)
 
       keywords.each do |keyword|
-        entry = key_phrase_map[keyword[0]] ||= {:timestamps => [], :event_count => 0, :count => 0, :break_up_hashes => true}
+        entry = key_phrase_map[keyword[0]] ||= {:timestamps => [], :event_count => 0, :count => 0}
         entry[:timestamps] << time
         entry[:event_count] += 1
         entry[:count] += keyword[1]
