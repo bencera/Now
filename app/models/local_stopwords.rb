@@ -58,7 +58,7 @@ class LocalStopwords
     keyword_hash.sort_by {|k,v| v.count}.map {|x| [x[0], x[1].count]}
   end
 
-  def get_stop_words(coordinates)
+  def self.get_stop_words(coordinates)
       
     stop_points = LocalStopwords.where(:coordinates.within => {"$center" => [coordinates, 3.0/111]}).entries; puts
 
