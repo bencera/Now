@@ -431,7 +431,7 @@ class Keywordinator
 
     n_photos = event.photos.where(:has_vine.ne => true).count
 
-    keywords_entries = Keywordinator.get_keyphrases(event)
+    keywords_entries = Keywordinator.get_keyphrases(event, :break_up_hashes => true)
     venue = event.venue
 
     venue_words = venue.name.downcase.split(/\s/).map{ |word| word.gsub(/^[@#]/,"").gsub(/[.,?!i()]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") }
