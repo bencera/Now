@@ -33,6 +33,9 @@ class Venue
   field :venue_keywords, :type => Array, default: []
   field :looked_for_keywords, :type => Boolean, default: false
 
+  #storing what people talk about
+  field :talked_about, :type => Array, :default []
+
   field :customized_view, :type => Array, default: [] #storing top topics and related photo ids 
 
   #we want to fill these in someday

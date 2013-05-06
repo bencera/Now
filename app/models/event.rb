@@ -583,7 +583,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     strengths = Keywordinator.get_keyword_strengths(self)
     n_users = self.photos.map {|photo| photo.user_id}.uniq.count
 
-    self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_events => n_events, :stdev => stdev, :key_strengths => strengths, :n_users => n_users}.inspect
+    self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_events => n_events, :stdev => stdev, :key_strengths => strengths, :n_users => n_users, :talked_about => venue.talked_about}.inspect
 
   end
  
