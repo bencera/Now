@@ -5,6 +5,11 @@ class Event
   include EventsHelper
 
 
+  
+AGE_GROUPS = [0, 2.hours, 12.hours, 1.day, 1.week, 1.month, 3.months]
+
+
+
 # EXCEPTIONALITY LEVELS
 EXC_HIGH = "hi"
 EXC_MID = "mi"
@@ -595,6 +600,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
     other_keywords = []
     venue_keywords = self.venue.venue_keywords 
 
+    LocalStopwords.clear
+
     venue_keywords.each do |keyword|
       user_count = Keywordinator.phrase_user_count(keyword, self.photos)
       next if user_count < 1
@@ -695,7 +702,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       n_friends = personalization["friend_names"].count
     end
 
-    photo_base = [0, [self.n_photos - 5, 60].min].max
+    has_friends = n_friends > 0
 
     #calculate exceptionality score
 
@@ -704,33 +711,38 @@ SCORE_HALF_LIFE       = 7.day.to_f
     #rareness = 0 if it trends once a week
 
     if event_ex && !event_ex.empty?
-      keyword_strengths = event_ex[:key_strengths]
-      n_users = event_ex[:n_users].to_i
-      strength_score = 0
-      if keyword_strengths && keyword_strengths.any?
-        top_strength = keyword_strengths.sort_by{|x| x[1]}.reverse.first[1]
-        max_possible_strength = [15.hours.to_i, (n_users / 4).hours.to_i].min
-        strength_score = max_possible_strength * top_strength
-      end
-      n_events = event_ex[:n_events].nil? ? 0 : event_ex[:n_events].to_i
-      events_per_week = n_events / 13.0
-      rareness = 4 - ( 4 * events_per_week)
+      age_group = self.get_age_group
+      event_key_strengths = event_ex[:key_strengths]
+      best_keyword_score = if event_key_strengths.empty?
+                             0
+                           else
+                             event_key_strengths.sort_by{|x| x[1]}.reverse.first[1]
+                           end
 
-      photo_count = event_ex[:photo_count] || 0
       
-      #rather do this with stats -- stdev etc
-      relative_size = n_events == 0 ? 1 : ( self.n_photos.to_f / (photo_count.to_f / n_events ))
+      venue_keywords = event_ex[:other_keywords]
 
-#      Rails.logger.info("#{self.venue.name} exceptionality: rel_size = #{relative_size - 1}, rareness: #{rareness}")
-#      return self.end_time + [6.hours.to_i, (strength_score) + (self.has_vine ? 3.hours.to_i : 0) + (2.minutes.to_i * photo_base) -  (1.hour.to_i * n_friends) + (1.hour.to_i * (relative_size - 1)) + (1.hour.to_i * rareness)].min
+      hi_keywords = venue_keywords.count{|word| word[1] == "hi"}
+      mi_keywords = venue_keywords.count{|word| word[1] == "mi"}
+      lo_keywords = venue_keywords.count{|word| word[1] == "lo"}
+      uk_keywords = venue_keywords.count{|word| word[1] == "uk"} 
 
-      return Time.now.to_i + [6.hours.to_i, (strength_score)].min
+      return [age_group, 0 - best_keyword_score, 0 - hi_keywords, 0 - mi_keywords, 0 - uk_keywords, 0 - lo_keywords]
+    
     else
-#      return self.end_time + [6.hours.to_i, (strength_score) + (self.has_vine ? 3.hours.to_i : 0) + (2.minutes.to_i * photo_base) -  (1.hour.to_i * n_friends)].min
+      return [self.get_age_group]
+    end
+  end
 
-      return self.end_time
+  def get_age_group
+    i = 0
+    diff = Time.now.to_i - self.end_time
+
+    while diff < AGE_GROUPS[i] && i < AGE_GROUPS.count
+      i += 1
     end
 
+    return i
   end
 
   def update_keywords
