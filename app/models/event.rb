@@ -720,7 +720,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
                            end
 
       
-      venue_keywords = event_ex[:other_keywords]
+      venue_keywords = event_ex[:other_keywords] || []
 
       hi_keywords = venue_keywords.count{|word| word[1] == "hi"}
       mi_keywords = venue_keywords.count{|word| word[1] == "mi"}
