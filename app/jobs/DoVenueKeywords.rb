@@ -44,7 +44,9 @@ class DoVenueKeywords
       return_val
     end
 
-    venue.venue_keywords = test.sort_by {|k,v| v[:event_count]}.map{|v| v[0]}
+    venue_name_words = Keywordinator.remove_diacriticals(venue.name.downcase).split(" ")
+
+    venue.venue_keywords = test.sort_by {|k,v| v[:event_count]}.map{|v| v[0]}.reject {|phrase| venue_name_words.include?(phrase) || (phrase.split(" ") - venue_name_words).count == 0}
 
     stop_points = LocalStopwords.where(:coordinates.within =>  {"$center" => [venue.coordinates, 1 / 110.0]}).entries
 

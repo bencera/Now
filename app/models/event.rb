@@ -4,6 +4,13 @@ class Event
   include Mongoid::Timestamps
   include EventsHelper
 
+
+# EXCEPTIONALITY LEVELS
+EXC_HIGH = "hi"
+EXC_MID = "mi"
+EXC_LOW = "lo"
+EXC_UNKNOWN = "uk"
+
 ##### CONSTANTS
 
 TRENDING              = "trending"
@@ -583,7 +590,21 @@ SCORE_HALF_LIFE       = 7.day.to_f
     strengths = Keywordinator.get_keyword_strengths(self)
     n_users = self.photos.map {|photo| photo.user_id}.uniq.count
 
-    self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_events => n_events, :stdev => stdev, :key_strengths => strengths, :n_users => n_users, :talked_about => venue.talked_about}.inspect
+    #venue keywords
+
+    other_keywords = []
+    venue_keywords = self.venue.venue_keywords 
+
+    venue_keywords.each do |keyword|
+      user_count = Keywordinator.phrase_user_count(keyword, self.photos)
+      next if user_count < 1
+      exc = LocalStopwords.get_word_exceptionality(keyword, venue.coordinates)
+
+      level = exc[1] < 5 ? EXC_UNKNOWN : ( (exc[0].to_f / exc[1] >= 0.1) ? (EXC_LOW) : ((exc[0].to_f / exc[1] < 0.01) ? (EXC_HIGH) : (EXC_MID) ) )
+      other_keywords << [keyword, level]
+    end
+
+    self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_events => n_events, :stdev => stdev, :key_strengths => strengths, :n_users => n_users, :other_keywords => other_keywords, :talked_about => venue.talked_about}.inspect
 
   end
  
