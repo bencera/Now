@@ -434,7 +434,7 @@ class Keywordinator
     keywords_entries = Keywordinator.get_keyphrases(event, :break_up_hashes => true)
     venue = event.venue
 
-    venue_words = venue.name.downcase.split(/\s/).map{ |word| word.gsub(/^[@#]/,"").gsub(/[.,?!i()]+$/,"").gsub(/^[&]$/,"and").gsub(/^[\W]+$/,"") }
+    venue_words = self.remove_diacriticals(self.normalize_caption(venue.name)).split(" ")    
     venue_words.push(venue_words.join)
 
     venue_keywords = venue.venue_keywords || []

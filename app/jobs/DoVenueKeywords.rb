@@ -31,11 +31,12 @@ class DoVenueKeywords
 
     keyword_list = Keywordinator.make_keyphrase_timeline(event_photos, event_times, :break_up_hashes => true); puts
 
-    min_occur = photos.count * 0.03
+    min_events = 3
+    min_occur = [photos.count * 0.03, 50].min
 
     test = keyword_list.reject do |k, v|  
       return_val = false
-      return_val = true if v[:event_count] < 3 || v[:count] < min_occur
+      return_val = true if v[:event_count] < min_events || v[:count] < min_occur
 
       if !return_val && !young_venue
         timespan = v[:timestamps].max - v[:timestamps].min
@@ -44,7 +45,7 @@ class DoVenueKeywords
       return_val
     end
 
-    venue_name_words = Keywordinator.remove_diacriticals(venue.name.downcase).split(" ") + CaptionsHelper.stop_words
+    venue_name_words = Keywordinator.remove_diacriticals(Keywordinator.normalize_caption(venue.name)).split(" ") + CaptionsHelper.stop_words
 
     venue.venue_keywords = test.sort_by {|k,v| v[:event_count]}.map{|v| v[0]}.reject {|phrase| venue_name_words.include?(phrase) || (phrase.split(" ") - venue_name_words).count == 0}
 
