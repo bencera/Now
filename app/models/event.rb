@@ -713,7 +713,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     if event_ex && !event_ex.empty?
       age_group = self.get_age_group
       event_key_strengths = event_ex[:key_strengths]
-      best_keyword_score = if event_key_strengths.empty?
+      best_keyword_score = if event_key_strengths.nil? || event_key_strengths.empty?
                              0
                            else
                              event_key_strengths.sort_by{|x| x[1]}.reverse.first[1]
