@@ -712,8 +712,8 @@ SCORE_HALF_LIFE       = 7.day.to_f
 
     if event_ex && !event_ex.empty?
       age_group = self.get_age_group
-      event_key_strengths = event_ex[:key_strengths]
-      best_keyword_score = if event_key_strengths.nil? || event_key_strengths.empty?
+      event_key_strengths = event_ex[:key_strengths] || []
+      best_keyword_score = if event_key_strengths.empty?
                              0
                            else
                              event_key_strengths.sort_by{|x| x[1]}.reverse.first[1]
@@ -727,7 +727,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       lo_keywords = venue_keywords.count{|word| word[1] == "lo"}
       uk_keywords = venue_keywords.count{|word| word[1] == "uk"} 
 
-      return [7 - age_group, 1 - best_keyword_score, hi_keywords,  mi_keywords,  uk_keywords,  lo_keywords]
+      return [7 - age_group, best_keyword_score, hi_keywords,  mi_keywords,  uk_keywords,  lo_keywords]
     
     else
       return [self.get_age_group]
