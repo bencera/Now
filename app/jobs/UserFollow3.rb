@@ -68,7 +68,7 @@ class UserFollow3
           if !photo
             #we want to put your friends on the map now, so create the photo if possible, but not if it means creating a new venue
             
-            if new_venues < 1000 || (venue = Venue.where(:ig_venue_id => venue_ig_id).first)
+            if new_venues < 300 || (venue = Venue.where(:ig_venue_id => venue_ig_id).first)
               new_venues += 1 unless venue
               photo = Photo.create_photo("ig", media, nil)
             end
