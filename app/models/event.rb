@@ -727,7 +727,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       lo_keywords = venue_keywords.count{|word| word[1] == "lo"}
       uk_keywords = venue_keywords.count{|word| word[1] == "uk"} 
 
-      return [age_group, 0 - best_keyword_score, 0 - hi_keywords, 0 - mi_keywords, 0 - uk_keywords, 0 - lo_keywords]
+      return [age_group,  best_keyword_score, hi_keywords,  mi_keywords,  uk_keywords,  lo_keywords]
     
     else
       return [self.get_age_group]
