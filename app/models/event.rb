@@ -738,7 +738,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
     i = 0
     diff = Time.now.to_i - self.end_time
 
-    while diff < AGE_GROUPS[i] && i < AGE_GROUPS.count
+    while diff > AGE_GROUPS[i] && i < AGE_GROUPS.count
       i += 1
     end
 
