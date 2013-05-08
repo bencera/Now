@@ -6,7 +6,7 @@ class Event
 
 
   
-AGE_GROUPS = [0, 2.hours, 12.hours, 1.day, 1.week, 1.month, 3.months]
+AGE_GROUPS = [0, 2.hours.to_i, 12.hours.to_i, 1.day.to_i, 1.week.to_i, 1.month.to_i, 3.months.to_i]
 
 
 
