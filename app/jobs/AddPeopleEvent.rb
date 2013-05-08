@@ -218,6 +218,8 @@ class AddPeopleEvent
       event.save!
     end
 
+    Resque.enqueue(DoVenueKeywords, event.venue.id)
+
     Rails.logger.info("AddPeopleEvent finished")
   end
 
