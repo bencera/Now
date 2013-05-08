@@ -369,7 +369,11 @@ class FacebookUser
   def attending_event(event, options={})
     return if event.nil? || (self.attended_events && self.attended_events.include?(event.id.to_s))
     self.attended_events ||= []
-    self.attended_events << event.id
+
+    unless self.attended_events.include? event.id
+      SentPush.notify_user("You're at a trending event", event.id, self, :type => SentPush::TYPE_SELF)
+      self.attended_events << event.id
+    end
   end
 
   def get_notifications

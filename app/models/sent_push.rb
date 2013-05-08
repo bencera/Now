@@ -153,14 +153,16 @@ class SentPush < ActiveRecord::Base
       blocked = true
     end
     
-    if (options[:type] == TYPE_FRIEND && now_profile && !now_profile.notify_friends) ||
-              (options[:type] == TYPE_COMMENT && now_profile && !now_profile.notify_reply) ||
-              (options[:type] == TYPE_WORLD_EVENT && now_profile && !now_profile.notify_world) ||
-              (options[:type] == TYPE_FOF && now_profile && !now_profile.notify_fof) ||
-              (options[:type] == TYPE_SELF && now_profile && !now_profile.notify_self) 
+    if now_profile && (options[:type] == TYPE_FRIEND && !now_profile.notify_friends) ||
+              (options[:type] == TYPE_COMMENT && !now_profile.notify_reply) ||
+              (options[:type] == TYPE_WORLD_EVENT && !now_profile.notify_world) ||
+              (options[:type] == TYPE_FOF  && !now_profile.notify_fof) ||
+              (options[:type] == TYPE_LOCAL_EVENT && !now_profile.notify_local) ||
+              (options[:type] == TYPE_SELF && !now_profile.notify_self) 
       blocked = true
     end
 
+    options[:type] = TYPE_LOCAL_EVENT if options[:type] == TYPE_SELF
     begin 
       Rails.logger.info("notifying #{fb_user.now_id}")
       fb_user.send_notification(message, event_id.to_s) unless options[:test] || blocked
