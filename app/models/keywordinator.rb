@@ -43,7 +43,7 @@ class Keywordinator
         photos = event.photos.where(:has_vine.ne => true).entries
 
         #would like to limit the keywords by all hi, or top 5 or something, but not sure what's best
-        phrases = ex_hash[:other_keywords].sort_by {|x| [x[2] || Event::EXC_RANK[x[1]], 0 - Keywordinator.phrase_user_count(x[0], photos)]}.map{|x| x[0]}[0..5]
+        phrases = ex_hash[:other_keywords].sort_by {|x| [x[2] || Event::EXC_RANK[x[1]], 0 - Keywordinator.phrase_user_count(x[0], photos)]}.map{|x| x[0]}.reject{|word| word.length < 4}[0..2]
         caption = Keywordinator.get_caption_from_photos(phrases, photos)
 
       end
