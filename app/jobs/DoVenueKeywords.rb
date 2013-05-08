@@ -32,7 +32,7 @@ class DoVenueKeywords
     keyword_list = Keywordinator.make_keyphrase_timeline(event_photos, event_times, :break_up_hashes => true); puts
 
     min_events = 3
-    min_occur = [photos.count * 0.03, 50].min
+    min_occur = [photos.count * 0.03, 25].min
 
     test = keyword_list.reject do |k, v|  
       return_val = false
