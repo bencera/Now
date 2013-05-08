@@ -727,6 +727,10 @@ SCORE_HALF_LIFE       = 7.day.to_f
       lo_keywords = venue_keywords.count{|word| word[1] == "lo"}
       uk_keywords = venue_keywords.count{|word| word[1] == "uk"} 
 
+      if (hi_keywords + mi_keywords + lo_keywords + uk_keywords == 0) || event.n_photos < 6
+        age_group += 1
+      end
+
       return [7 - age_group, best_keyword_score, hi_keywords,  mi_keywords,  uk_keywords,  lo_keywords]
     
     else
