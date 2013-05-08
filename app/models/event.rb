@@ -16,6 +16,11 @@ EXC_MID = "mi"
 EXC_LOW = "lo"
 EXC_UNKNOWN = "uk"
 
+EXC_RANK = {EXC_HIGH => 0,
+            EXC_MID => 1,
+            EXC_UNKNOWN => 2,
+            EXC_LOW => 3}
+
 ##### CONSTANTS
 
 TRENDING              = "trending"
@@ -608,7 +613,7 @@ SCORE_HALF_LIFE       = 7.day.to_f
       exc = LocalStopwords.get_word_exceptionality(keyword, venue.coordinates)
 
       level = exc[1] < 5 ? EXC_UNKNOWN : ( (exc[0].to_f / exc[1] >= 0.1) ? (EXC_LOW) : ((exc[0].to_f / exc[1] < 0.01) ? (EXC_HIGH) : (EXC_MID) ) )
-      other_keywords << [keyword, level]
+      other_keywords << [keyword, level, exc[0]]
     end
 
     self.exceptionality = {:frequency => frequency, :last_trended => last_trended, :photo_count => photo_count, :n_events => n_events, :stdev => stdev, :key_strengths => strengths, :n_users => n_users, :other_keywords => other_keywords, :talked_about => venue.talked_about}.inspect
